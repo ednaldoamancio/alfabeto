@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Parque das Letras – Jogo da Memória</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <style>
+        :root {
+            --primary: #ff6f61; --secondary: #ffca28; --bg-soft: #f3e9d7; --text: #3e2723;
+            --card-bg: #fff; --card-back: linear-gradient(135deg, #42a5f5, #29b6f6);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg-soft); color: var(--text);
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            transition: background 0.3s, color 0.3s;
+        }
+        body.dark {
+            --bg-soft: #101017; --text: #f5f5f5; --card-bg: #1e1e2d;
+            --card-back: linear-gradient(135deg, #303f9f, #1976d2);
+        }
+        .app { width: 100%; max-width: 800px; padding: 16px; text-align: center; }
+        
+        /* Folha pautada */
+        .card-container {
+            position: relative; background: var(--card-bg); border-radius: 18px; padding: 24px 16px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.15); overflow: hidden;
+            background-image: repeating-linear-gradient(to bottom, transparent 0px, transparent 28px, rgba(195, 217, 244, 0.4) 29px);
+            background-size: 100% 29px;
+        }
+        body.dark .card-container {
+            box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+            background-image: repeating-linear-gradient(to bottom, transparent 0px, transparent 28px, rgba(255, 255, 255, 0.05) 29px);
+        }
+        .card-container::before {
+            content: ""; position: absolute; top: 0; bottom: 0; left: 40px; width: 2px;
+            background: rgba(255, 82, 82, 0.4);
+        }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 2; margin-bottom: 20px;}
+        .title { font-size: clamp(20px, 5vw, 28px); font-weight: 900; color: var(--primary); }
+        .theme-toggle, .btn-back {
+            width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1);
+            background: rgba(255,255,255,0.8); cursor: pointer; font-size: 18px;
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        body.dark .theme-toggle, body.dark .btn-back { background: rgba(30,30,45,0.8); border-color: rgba(255,255,255,0.1); }
+        
+        /* Grid do Jogo */
+        .game-board {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+            max-width: 450px; margin: 0 auto; position: relative; z-index: 1; perspective: 1000px;
+        }
+        @media (max-width: 400px) { .game-board { gap: 6px; } }
+        
+        .memory-card {
+            aspect-ratio: 1 / 1.1; position: relative; cursor: pointer;
+            transform-style: preserve-3d; transition: transform 0.5s;
+        }
+        .memory-card.flip { transform: rotateY(180deg); }
+        
+        .front-face, .back-face {
+            width: 100%; height: 100%; position: absolute; border-radius: 12px;
+            backface-visibility: hidden; display: flex; align-items: center; justify-content: center;
+            font-size: clamp(32px, 8vw, 48px); font-weight: 900; box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            user-select: none;
+        }
+        .front-face { background: #fff; color: var(--primary); transform: rotateY(180deg); border: 2px solid var(--primary); }
+        body.dark .front-face { background: #2a2a3e; }
+        .back-face { background: var(--card-back); color: #fff; font-size: 24px; }
+        
+        .win-msg {
+            display: none; font-size: 24px; font-weight: 800; color: var(--accent-green); margin-top: 16px;
+            animation: popIn 0.5s ease-out; position: relative; z-index: 2;
+        }
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        
+        .btn-restart {
+            margin-top: 20px; padding: 10px 20px; border-radius: 20px; border: none; font-size: 16px; font-weight: 800;
+            background: var(--secondary); color: #3e2723; cursor: pointer; position: relative; z-index: 2;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body>
+
+<div class="app">
+    <div class="card-container">
+        <div class="header">
+            <button class="btn-back" onclick="window.location.href='index.html'" aria-label="Voltar">⬅️</button>
+            <h1 class="title">Jogo da Memória</h1>
+            <button class="theme-toggle" id="themeToggle" aria-label="Alternar modo noturno">🌞</button>
+        </div>
+        
+        <div class="game-board" id="gameBoard"></div>
+        
+        <div class="win-msg" id="winMsg">🎉 Você encontrou todos os pares! 🎉</div>
+        <button class="btn-restart" onclick="iniciarJogo()">🔄 Jogar Novamente</button>
+    </div>
+</div>
+
+<script>
+    // ---------- MODO NOTURNO ----------
+    const themeToggleBtn = document.getElementById("themeToggle");
+    function setTheme(theme) {
+        if (theme === "dark") {
+            document.body.classList.add("dark"); themeToggleBtn.textContent = "🌙";
+        } else {
+            document.body.classList.remove("dark"); themeToggleBtn.textContent = "🌞";
+        }
+        localStorage.setItem("alfacel-theme", theme);
+    }
+    function initTheme() {
+        const saved = localStorage.getItem("alfacel-theme");
+        setTheme(saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+    }
+    themeToggleBtn.addEventListener("click", () => {
+        setTheme(document.body.classList.contains("dark") ? "light" : "dark");
+    });
+    initTheme();
+
+    // ---------- LÓGICA DO JOGO DA MEMÓRIA ----------
+    const board = document.getElementById('gameBoard');
+    const winMsg = document.getElementById('winMsg');
+    
+    // Escolhemos 8 letras (16 cartas no total para formar um grid 4x4)
+    const letras = ['A', 'E', 'I', 'O', 'U', 'B', 'C', 'D'];
+    let cartas = [];
+    let cartaVirada = false;
+    let travaTabuleiro = false;
+    let primeiraCarta, segundaCarta;
+    let paresEncontrados = 0;
+
+    function iniciarJogo() {
+        board.innerHTML = ''; winMsg.style.display = 'none';
+        paresEncontrados = 0; cartaVirada = false; travaTabuleiro = false;
+        
+        // Duplicar e embaralhar
+        cartas = [...letras, ...letras];
+        cartas.sort(() => Math.random() - 0.5);
+
+        // Criar cartas HTML
+        cartas.forEach(letra => {
+            const cardElement = document.createElement('div');
+            cardElement.classList.add('memory-card');
+            cardElement.dataset.letra = letra;
+            cardElement.innerHTML = `
+                <div class="front-face">${letra}</div>
+                <div class="back-face">?</div>
+            `;
+            cardElement.addEventListener('click', virarCarta);
+            board.appendChild(cardElement);
+        });
+    }
+
+    function virarCarta() {
+        if (travaTabuleiro) return;
+        if (this === primeiraCarta) return;
+
+        this.classList.add('flip');
+
+        if (!cartaVirada) {
+            cartaVirada = true;
+            primeiraCarta = this;
+            falar(this.dataset.letra); // Opcional: fala a letra
+            return;
+        }
+
+        segundaCarta = this;
+        falar(this.dataset.letra);
+        verificarPar();
+    }
+
+    function verificarPar() {
+        let ehPar = primeiraCarta.dataset.letra === segundaCarta.dataset.letra;
+        ehPar ? desativarCartas() : desvirarCartas();
+    }
+
+    function desativarCartas() {
+        primeiraCarta.removeEventListener('click', virarCarta);
+        segundaCarta.removeEventListener('click', virarCarta);
+        paresEncontrados++;
+        resetarVariaveis();
+        if (paresEncontrados === letras.length) {
+            setTimeout(() => { winMsg.style.display = 'block'; falar("Parabéns! Você ganhou!"); }, 500);
+        }
+    }
+
+    function desvirarCartas() {
+        travaTabuleiro = true;
+        setTimeout(() => {
+            primeiraCarta.classList.remove('flip');
+            segundaCarta.classList.remove('flip');
+            resetarVariaveis();
+        }, 1000);
+    }
+
+    function resetarVariaveis() {
+        [cartaVirada, travaTabuleiro] = [false, false];
+        [primeiraCarta, segundaCarta] = [null, null];
+    }
+
+    // Speech API (Fala as letras ao clicar)
+    function falar(texto) {
+        if (!window.speechSynthesis) return;
+        window.speechSynthesis.cancel();
+        let u = new SpeechSynthesisUtterance(texto);
+        u.lang = 'pt-BR'; u.rate = 0.85; u.pitch = 1.1;
+        window.speechSynthesis.speak(u);
+    }
+
+    window.addEventListener("load", iniciarJogo);
+</script>
+</body>
+</html>
+
