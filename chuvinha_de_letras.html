@@ -151,8 +151,8 @@
     let animationId;
     let jogoRodando = true;
 
-    // Música de fundo estilo Fliperama
-    const musicaFundo = new Audio('musica_fundo.ogg'); // Substitua pelo seu arquivo arcade
+    // 🎵 Música de fundo estilo Fliperama atualizada! 🎵
+    const musicaFundo = new Audio('musica_fundo_sebran.ogg');
     musicaFundo.loop = true; 
     musicaFundo.volume = 0.4;
 
@@ -295,6 +295,7 @@
         atualizarEnergia(maxScore); 
         document.getElementById('tela-vitoria').style.display = 'flex';
         
+        // 🎉 CHUVA DE CONFETES ATIVADA! 🎉
         for (let i = 0; i < 200; i++) {
             const c = document.createElement('div');
             c.className = 'confete';
