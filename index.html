@@ -5,6 +5,8 @@
     <title>Parque das Letras - Menu Principal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
     
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+        
     <style>
         :root {
             --primary: #ff6f61;
@@ -17,9 +19,10 @@
             
             /* Cores dos botões do menu */
             --btn-1: linear-gradient(135deg, #ff6f61, #ff8a65);
+            --btn-chuvinha: linear-gradient(135deg, #b39ddb, #ce93d8); /* Cor nova para Chuvinha */
             --btn-2: linear-gradient(135deg, #42a5f5, #29b6f6);
             --btn-3: linear-gradient(135deg, #66bb6a, #81c784);
-            --btn-4: linear-gradient(135deg, #ab47bc, #ec407a); /* Cor para o botão de pesca */
+            --btn-4: linear-gradient(135deg, #ab47bc, #ec407a);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -59,6 +62,18 @@
             background: var(--margin-line); transition: background 0.3s;
         }
 
+        /* Botão de Voltar */
+        .btn-back {
+            position: absolute; top: 12px; left: 16px; padding: 6px 14px;
+            border-radius: 999px; background: rgba(255,255,255,0.9);
+            border: 1px solid rgba(0,0,0,0.12); color: var(--text);
+            text-decoration: none; font-weight: 700; font-size: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 10;
+            display: flex; align-items: center; gap: 6px; transition: transform 0.2s;
+        }
+        .btn-back:hover { transform: scale(1.05); }
+        body.dark .btn-back { background: rgba(30,30,45,0.9); border-color: rgba(255,255,255,0.15); }
+
         /* Botão Modo Noturno */
         .theme-toggle {
             position: absolute; top: 12px; right: 16px; width: 38px; height: 38px;
@@ -77,7 +92,7 @@
             z-index: 1;
         }
         body.dark .stamp { border-color: rgba(255,255,255,0.15); background: rgba(18,18,28,0.95); }
-        .stamp-1 { top: 14px; left: 16px; transform: rotate(-10deg); }
+        .stamp-1 { top: 65px; left: 16px; transform: rotate(-10deg); } /* Descemos um pouquinho para não bater no botão voltar */
         .stamp-2 { bottom: 20px; right: 16px; transform: rotate(8deg); }
 
         .title {
@@ -117,6 +132,7 @@
         }
 
         .btn-alfabeto { background: var(--btn-1); }
+        .btn-chuvinha { background: var(--btn-chuvinha); }
         .btn-chuva { background: var(--btn-2); }
         .btn-memoria { background: var(--btn-3); }
         .btn-pesca { background: var(--btn-4); }
@@ -131,6 +147,7 @@
         .btn-text span:last-child { font-size: 13px; font-weight: 600; opacity: 0.9; margin-top: 2px; }
 
         .mascot { font-size: 60px; margin-bottom: 10px; animation: float 3s ease-in-out infinite; position: relative; z-index: 2; }
+        
         @keyframes float {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
@@ -143,19 +160,19 @@
 
 <div class="app">
     <div class="card">
-        <!-- Modo Noturno -->
+        <a href="https://letramento-vogais.vercel.app/index.html" class="btn-back" aria-label="Voltar para a página inicial">
+            ⬅️ Voltar
+        </a>
+
         <button class="theme-toggle" id="themeToggle" aria-label="Alternar modo noturno">🌞</button>
 
-        <!-- Decorações -->
         <div class="stamp stamp-1">🎪</div>
         <div class="stamp stamp-2">🎈</div>
 
-        <!-- Cabeçalho -->
         <div class="mascot">🛝</div>
         <h1 class="title">Parque das Letras</h1>
         <p class="subtitle">Escolha uma brincadeira para aprender se divertindo!</p>
 
-        <!-- Navegação do Menu -->
         <div class="menu-grid">
             
             <a href="alfabeto.html" class="menu-btn btn-alfabeto">
@@ -163,6 +180,14 @@
                 <div class="btn-text">
                     <span>Aprenda o Alfabeto</span>
                     <span>Conheça e ouça as letras</span>
+                </div>
+            </a>
+
+            <a href="chuvinha_de_letras.html" class="menu-btn btn-chuvinha">
+                <div class="btn-icon">🌦️</div>
+                <div class="btn-text">
+                    <span>Chuvinha de Letras</span>
+                    <span>Uma chuvinha leve e divertida</span>
                 </div>
             </a>
 
@@ -224,9 +249,18 @@
         setTheme(isDark ? "light" : "dark");
     });
 
-    window.addEventListener("load", initTheme);
+    // Inicia o tema e solta os confetes quando a página carrega! 🎉
+    window.addEventListener("load", () => {
+        initTheme();
+        
+        confetti({
+            particleCount: 120,
+            spread: 80,
+            origin: { y: 0.6 },
+            colors: ['#ff6f61', '#ffca28', '#42a5f5', '#66bb6a', '#ab47bc']
+        });
+    });
 </script>
 
 </body>
 </html>
-
