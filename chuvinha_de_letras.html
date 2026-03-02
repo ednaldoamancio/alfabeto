@@ -28,7 +28,9 @@
             background: rgba(255,255,255,0.2); border: 2px solid #fff; border-radius: 50%;
             width: 50px; height: 50px; font-size: 24px; cursor: pointer; color: white;
             display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px);
+            transition: transform 0.2s;
         }
+        .btn-acao:active { transform: scale(0.9); }
 
         /* HUD - Informações na tela */
         .hud { position: absolute; top: 15px; left: 20px; z-index: 100; }
@@ -88,7 +90,10 @@
 
     </style>
 </head>
-<body class="dark-mode"> <div class="controles-topo">
+<body class="dark-mode"> 
+
+<div class="controles-topo">
+    <button class="btn-acao" onclick="toggleMusica()" id="btnMusica" title="Música On/Off">🔇</button>
     <button class="btn-acao" onclick="abrirTeclado()" title="Abrir Teclado Mobile">⌨️</button>
     <button class="btn-acao" onclick="toggleTheme()" id="btnTheme" title="Alternar Fundo">☀️</button>
 </div>
@@ -111,18 +116,58 @@
 </div>
 
 <script>
+    // --- SISTEMA DE VOZ (Web Speech API) ---
+    const synth = window.speechSynthesis;
+    let voicePtBr = null;
+
+    function loadVoices() {
+        const voices = synth.getVoices();
+        voicePtBr = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("pt-br")) || null;
+    }
+    loadVoices();
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    function falarLetra(letra) {
+        if (!letra) return;
+        synth.cancel(); // Corta a fala anterior se a criança for muito rápida
+        const u = new SpeechSynthesisUtterance(letra);
+        u.lang = "pt-BR";
+        if (voicePtBr) u.voice = voicePtBr;
+        u.rate = 0.9; // Um pouquinho mais lento para ficar claro
+        u.pitch = 1.2; // Voz levemente mais aguda/infantil
+        synth.speak(u);
+    }
+    // ---------------------------------------
+
     const alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     let indexAtual = 0;
-    let score = 200; // Começa com 200
-    const maxScore = 1000; // Nova pontuação máxima
+    let score = 200; 
+    const maxScore = 1000; 
     
     const velocidadeQuedaBase = 2.5; 
     let letrasEmJogo = [];
     let animationId;
     let jogoRodando = true;
 
-    const musicaFundo = new Audio('musica_fundo.ogg');
-    musicaFundo.loop = true; musicaFundo.volume = 0.4;
+    // Música de fundo estilo Fliperama
+    const musicaFundo = new Audio('musica_fundo.ogg'); // Substitua pelo seu arquivo arcade
+    musicaFundo.loop = true; 
+    musicaFundo.volume = 0.4;
+
+    function toggleMusica() {
+        const btn = document.getElementById('btnMusica');
+        if (musicaFundo.paused) {
+            musicaFundo.play();
+            btn.innerText = '🎵';
+            // Fala a primeira letra se o jogo acabou de começar e a pessoa ligou a música
+            if (indexAtual === 0) falarLetra(alfabeto[0]);
+        } else {
+            musicaFundo.pause();
+            btn.innerText = '🔇';
+        }
+    }
 
     function toggleTheme() {
         const isDark = document.body.classList.toggle('dark-mode');
@@ -131,7 +176,8 @@
 
     function abrirTeclado() {
         document.getElementById('mobile-input').focus();
-        if(musicaFundo.paused) musicaFundo.play().catch(()=>{});
+        // Aproveita o clique no teclado para destravar o áudio no celular
+        if (indexAtual === 0 && musicaFundo.paused) falarLetra(alfabeto[0]); 
     }
 
     function corAleatoria() {
@@ -145,7 +191,6 @@
         el.innerText = letra;
         el.style.color = corAleatoria();
         
-        // Posicionamento horizontal exato (3.84vw por letra)
         el.style.left = (index * 3.84) + 'vw';
         el.style.top = '-100px'; 
 
@@ -154,7 +199,6 @@
         return {
             elemento: el,
             letra: letra,
-            // Atraso menor para que o jogador super rápido não fique esperando tanto
             y: -50 - (index * 120), 
             velocidade: velocidadeQuedaBase + (Math.random() * 1.2),
             congelada: false
@@ -186,7 +230,7 @@
                 if(obj.y > alturaTela) {
                     obj.y = -50; 
                     tocarSom('trovao.ogg');
-                    atualizarEnergia(-5); // Perde um pouco se bater no chão
+                    atualizarEnergia(-5); 
                 }
                 obj.elemento.style.top = obj.y + 'px';
             }
@@ -195,6 +239,7 @@
     }
 
     window.addEventListener('keydown', processarTecla);
+    
     document.getElementById('mobile-input').addEventListener('input', (e) => {
         const val = e.target.value;
         if(val.length > 0) {
@@ -207,20 +252,19 @@
         if(!jogoRodando) return;
         const tecla = e.key.toUpperCase();
         if(!/^[A-Z]$/.test(tecla)) return; 
-        if(musicaFundo.paused) musicaFundo.play().catch(()=>{});
 
         const letraEsperada = alfabeto[indexAtual];
 
         if(tecla === letraEsperada) {
-            tocarSom('estampido.ogg');
-            atualizarEnergia(35); // Ganha bem ao acertar
+            // O famoso som de Pucuc! kkkk
+            tocarSom('pucuc.ogg'); 
+            atualizarEnergia(35); 
             
             const objLetra = letrasEmJogo[indexAtual];
             objLetra.congelada = true;
             
-            // A MÁGICA DOS DIGITADORES VELOZES: Se a letra estiver fora da tela, ela aparece colada no teto!
             if (objLetra.y < 20) {
-                objLetra.y = 80; // Força a exibição na parte de cima da tela
+                objLetra.y = 80; 
             }
             objLetra.elemento.style.top = objLetra.y + 'px';
             objLetra.elemento.classList.add('congelada');
@@ -230,12 +274,15 @@
             if(indexAtual < alfabeto.length) {
                 document.getElementById('alvo-atual').innerText = alfabeto[indexAtual];
                 document.getElementById('alvo-atual').style.color = corAleatoria();
+                
+                // Fala a próxima letra que a criança tem que acertar!
+                falarLetra(alfabeto[indexAtual]); 
             } else {
                 vencerJogo();
             }
         } else {
             tocarSom('erro.ogg');
-            atualizarEnergia(-15); // Perde ponto ao errar digitação
+            atualizarEnergia(-15); 
             document.body.animate([
                 { transform: 'translateX(-10px)' }, { transform: 'translateX(10px)' }, { transform: 'translateX(0)' }
             ], { duration: 150 });
@@ -245,10 +292,9 @@
     function vencerJogo() {
         jogoRodando = false;
         tocarSom('aplausos.ogg');
-        atualizarEnergia(maxScore); // Enche a barra no final
+        atualizarEnergia(maxScore); 
         document.getElementById('tela-vitoria').style.display = 'flex';
         
-        // A clássica chuva de confetes!
         for (let i = 0; i < 200; i++) {
             const c = document.createElement('div');
             c.className = 'confete';
