@@ -89,14 +89,23 @@
     let indexAtual = 0;
     let score = 0;
     const maxScore = 1000;
-    const tempoQuedaSegundos = 2.0; // Ajustado para ser mais pedagógico
+    const tempoQuedaSegundos = 2.0; 
     let letrasEmJogo = [];
     let jogoRodando = false;
+
+    // Configuração de Áudio
+    const musicaFundo = new Audio('musica_fundo.ogg');
+    musicaFundo.loop = true;
+    musicaFundo.volume = 0.4;
+
+    function tocarSom(arq) {
+        const som = new Audio(arq);
+        som.play().catch(() => {}); // Catch para evitar erros se o arquivo faltar
+    }
 
     const inputMobile = document.getElementById('mobile-input');
     const btnStart = document.getElementById('btn-start');
 
-    // Inicialização do Array de Letras
     for(let i = 0; i < alfabeto.length; i++) {
         const el = document.createElement('div');
         el.className = 'letra-chuva';
@@ -111,9 +120,12 @@
     function iniciarJogo() {
         if(jogoRodando) return;
         document.getElementById('tela-inicio').style.display = 'none';
-        inputMobile.focus(); // Abre teclado mobile
         
-        // Pequena pausa para o teclado subir e o aluno se preparar
+        // Tenta tocar a música de fundo após o clique
+        musicaFundo.play().catch(() => {});
+        
+        inputMobile.focus(); 
+        
         setTimeout(() => {
             jogoRodando = true;
             iniciarLetra(0);
@@ -129,7 +141,6 @@
         const porc = (score / maxScore) * 100;
         barra.style.height = porc + '%';
 
-        // Lógica de Cores da Barra
         if (porc < 25) { barra.style.backgroundColor = '#ff0000'; barra.style.color = '#ff0000'; }
         else if (porc < 50) { barra.style.backgroundColor = '#ff8800'; barra.style.color = '#ff8800'; }
         else if (porc < 75) { barra.style.backgroundColor = '#ffff00'; barra.style.color = '#ffff00'; }
@@ -162,7 +173,10 @@
                 obj.y = alturaChao;
                 obj.resolvida = true;
                 obj.elemento.classList.add('perdida');
+                
+                tocarSom('trovao.ogg'); // Som de erro por tempo
                 atualizarEnergia(-30);
+                
                 indexAtual++;
                 iniciarLetra(indexAtual);
             }
@@ -177,8 +191,8 @@
         const objAtual = letrasEmJogo[indexAtual];
 
         if(letraDigitada === objAtual.letra) {
+            tocarSom('estampido.ogg'); // Som de acerto
             const progresso = (Date.now() - objAtual.startTime) / (tempoQuedaSegundos * 1000);
-            // Pontuação baseada em velocidade: quanto mais alto acertar, mais pontos (máx 40)
             const pontosGanhos = Math.max(15, Math.floor(40 * (1 - progresso)));
             atualizarEnergia(pontosGanhos);
             
@@ -187,12 +201,12 @@
             indexAtual++;
             iniciarLetra(indexAtual);
         } else {
+            tocarSom('erro.ogg'); // Som de tecla errada
             atualizarEnergia(-15);
             document.body.animate([{opacity: 0.5}, {opacity: 1}], 100);
         }
     }
 
-    // EVENTOS
     btnStart.addEventListener('click', iniciarJogo);
     window.addEventListener('keydown', (e) => {
         if(e.key === "Enter" && !jogoRodando) iniciarJogo();
@@ -208,6 +222,9 @@
 
     function vencerJogo() {
         jogoRodando = false;
+        musicaFundo.pause();
+        tocarSom('aplausos.ogg'); // Som de vitória
+        
         document.getElementById('tela-vitoria').style.display = 'flex';
         document.getElementById('pontuacao-final').innerText = score + " PONTOS";
     }
