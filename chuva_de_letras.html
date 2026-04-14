@@ -6,280 +6,213 @@
     <title>Chuva de Letras - Alfabeto Ninja</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <style>
-        /* MODO NOTURNO ABSOLUTO E OBRIGATÓRIO (com opção de alternância) */
-        :root { --bg-color: #000000; --hud-bg: rgba(255, 255, 255, 0.1); }
-        body.light-mode { --bg-color: #1a1a3a; --hud-bg: rgba(0, 255, 255, 0.1); }
-
+        :root { --bg-color: #000000; }
         body {
             margin: 0; padding: 0; background-color: var(--bg-color); color: #ffffff;
             font-family: 'Fredoka One', cursive; overflow: hidden;
             touch-action: none; transition: background-color 0.5s;
         }
 
-        /* BARRA DE RANKING NO TOPO */
-        .ranking-container {
-            position: absolute; top: 0; left: 0; width: 100%; height: 25px;
-            background: #222; z-index: 1000; box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+        /* BARRA VERTICAL DE PONTUAÇÃO (DIREITA) */
+        .ranking-lateral {
+            position: absolute; right: 20px; top: 100px; bottom: 50px;
+            width: 30px; background: #222; border-radius: 15px;
+            border: 2px solid #444; overflow: hidden; z-index: 1000;
         }
-        .ranking-barra {
-            height: 100%; width: 0%; /* Inicia zerada e cresce até 100% (1000 pontos) */
-            background: linear-gradient(to right, #ff0000, #ffff00, #00ff00);
-            transition: width 0.2s ease-out;
-        }
-        .pontuacao-texto {
-            position: absolute; top: 2px; left: 50%; transform: translateX(-50%);
-            color: white; font-size: 18px; text-shadow: 1px 1px 2px #000; margin: 0;
+        .ranking-preenchimento {
+            position: absolute; bottom: 0; width: 100%; height: 0%;
+            transition: height 0.3s ease-out, background 0.3s;
+            box-shadow: 0 0 15px currentColor;
         }
 
-        /* HUD e Controles */
-        .controles-topo { position: absolute; top: 40px; right: 20px; z-index: 200; display: flex; gap: 15px; }
-        .btn-acao {
-            background: rgba(255,255,255,0.2); border: 2px solid #fff; border-radius: 50%;
-            width: 50px; height: 50px; font-size: 24px; cursor: pointer; color: white;
-            display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px);
+        /* TELAS (START / VITÓRIA) */
+        .overlay {
+            position: absolute; inset: 0; background: rgba(0,0,0,0.95);
+            z-index: 2000; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; text-align: center;
         }
-        .hud { position: absolute; top: 35px; left: 20px; z-index: 100; }
-        .letra-alvo { font-size: clamp(20px, 4vw, 30px); color: #fff; text-shadow: 0 0 10px #fff; margin: 0; }
-
-        /* As Letras da Chuva */
-        .letra-chuva {
-            position: absolute; width: 3.84vw; text-align: center;
-            font-size: clamp(25px, 4vw, 60px); font-weight: bold;
-            text-shadow: 0 0 20px currentColor; opacity: 0; /* Começa invisível */
-            user-select: none; transition: filter 0.3s;
-        }
-
-        /* Letra Congelada no ar (Acerto) */
-        .congelada {
-            opacity: 1 !important; filter: drop-shadow(0 0 30px currentColor);
-            border-bottom: 4px solid currentColor; z-index: 50;
-            animation: piscar 0.5s alternate infinite;
-        }
-        @keyframes piscar { from { transform: scale(1); } to { transform: scale(1.3); } }
-
-        /* Letra no Chão (Erro/Demora) */
-        .perdida {
-            opacity: 0.3 !important; filter: grayscale(100%);
-            border-bottom: 2px solid red; z-index: 10;
-        }
-
-        #mobile-input { position: absolute; opacity: 0; top: -1000px; }
-
-        /* Confetes Mágicos */
-        .confete { position: absolute; width: 14px; height: 14px; z-index: 999; animation: cairConfete linear forwards; }
-        @keyframes cairConfete { to { transform: translateY(110vh) rotate(1080deg); } }
+        h1 { font-size: clamp(30px, 6vw, 60px); color: #fff; margin-bottom: 20px; }
         
-        #tela-vitoria {
-            display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.92);
-            z-index: 2000; flex-direction: column; align-items: center; justify-content: center; text-align: center;
-        }
-        #tela-vitoria h1 { font-size: clamp(40px, 8vw, 80px); color: #00ff00; text-shadow: 0 0 30px #00ff00; margin: 0;}
-        .pontos-finais { font-size: 40px; color: gold; margin-top: 10px; }
         .btn-jogar {
-            margin-top: 30px; padding: 20px 50px; font-family: 'Fredoka One'; font-size: 24px;
-            background: #00ff00; color: #000; border: none; border-radius: 50px; cursor: pointer;
-            box-shadow: 0 8px 0 #008800; transition: 0.2s;
+            padding: 20px 60px; font-family: 'Fredoka One'; font-size: 24px;
+            background: #00ff00; color: #000; border: none; border-radius: 50px;
+            cursor: pointer; box-shadow: 0 8px 0 #008800; transition: 0.2s;
         }
         .btn-jogar:active { transform: translateY(8px); box-shadow: none; }
+
+        /* HUD */
+        .hud { position: absolute; top: 20px; left: 20px; z-index: 100; }
+        .letra-alvo { font-size: 24px; margin: 0; }
+        #alvo-atual { font-size: 60px; display: block; }
+
+        .letra-chuva {
+            position: absolute; width: 3.8vw; text-align: center;
+            font-size: clamp(25px, 4vw, 60px); font-weight: bold;
+            text-shadow: 0 0 20px currentColor; opacity: 0;
+            user-select: none;
+        }
+        .congelada { opacity: 1 !important; border-bottom: 4px solid currentColor; animation: piscar 0.5s alternate infinite; }
+        .perdida { opacity: 0.2 !important; filter: grayscale(100%); }
+        
+        @keyframes piscar { from { transform: scale(1); } to { transform: scale(1.2); } }
+        #mobile-input { position: absolute; opacity: 0; pointer-events: none; }
     </style>
 </head>
 <body>
 
-<div class="ranking-container">
-    <div class="ranking-barra" id="barra-energia"></div>
-    <p class="pontuacao-texto"><span id="score-display">0</span> / 1000</p>
+<input type="text" id="mobile-input" autocomplete="off" autocapitalize="characters">
+
+<div id="tela-inicio" class="overlay">
+    <h1>ALFABETO NINJA</h1>
+    <p>Aprenda a sequência e a posição das letras!</p>
+    <button class="btn-jogar" id="btn-start">INICIAR JOGO</button>
+    <p style="margin-top: 20px; font-size: 14px; opacity: 0.7;">Pressione ENTER ou Toque para começar</p>
 </div>
 
-<div class="controles-topo">
-    <button class="btn-acao" onclick="abrirTeclado()" title="Abrir Teclado Mobile">⌨️</button>
-    <button class="btn-acao" onclick="toggleTheme()" id="btnTheme" title="Alternar Fundo">☀️</button>
+<div id="tela-vitoria" class="overlay" style="display: none;">
+    <h1 id="titulo-vitoria">🏆 FANTÁSTICO! 🏆</h1>
+    <div style="font-size: 40px; color: gold;" id="pontuacao-final">0 PONTOS</div>
+    <button class="btn-jogar" onclick="location.reload()" style="margin-top: 30px;">JOGAR DE NOVO</button>
 </div>
 
 <div class="hud">
-    <p class="letra-alvo">PRÓXIMA: <span id="alvo-atual" style="color: #ff00ff; font-size: clamp(40px, 6vw, 60px);">A</span></p>
+    <p class="letra-alvo">PRÓXIMA:<br><span id="alvo-atual">A</span></p>
+    <p>PONTOS: <span id="score-text">0</span></p>
 </div>
 
-<input type="text" id="mobile-input" autocomplete="off" autocorrect="off" autocapitalize="characters">
-
-<div id="tela-vitoria">
-    <h1 id="titulo-vitoria">🏆 FANTÁSTICO! 🏆</h1>
-    <div class="pontos-finais" id="pontuacao-final">1000 PONTOS</div>
-    <button class="btn-jogar" onclick="location.reload()">JOGAR DE NOVO</button>
+<div class="ranking-lateral">
+    <div id="barra-energia" class="ranking-preenchimento"></div>
 </div>
 
 <script>
     const alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     let indexAtual = 0;
-    let score = 0; // Começa do zero e vai até 1000
+    let score = 0;
     const maxScore = 1000;
-    
-    // Matemática: 40 segundos para 26 letras = 1.538 segundos por letra
-    const tempoQuedaSegundos = 40 / 26; 
+    const tempoQuedaSegundos = 2.0; // Ajustado para ser mais pedagógico
     let letrasEmJogo = [];
-    let jogoRodando = true;
+    let jogoRodando = false;
 
-    const musicaFundo = new Audio('musica_fundo.ogg');
-    musicaFundo.loop = true; musicaFundo.volume = 0.4;
+    const inputMobile = document.getElementById('mobile-input');
+    const btnStart = document.getElementById('btn-start');
 
-    function toggleTheme() {
-        const isLight = document.body.classList.toggle('light-mode');
-        document.getElementById('btnTheme').innerText = isLight ? '🌙' : '☀️';
-    }
-
-    function abrirTeclado() {
-        document.getElementById('mobile-input').focus();
-        if(musicaFundo.paused) musicaFundo.play().catch(()=>{});
-    }
-
-    function corAleatoria() {
-        const cores = ['#ff00ff', '#00ffff', '#00ff00', '#ffff00', '#ff5500', '#ff0055', '#5500ff'];
-        return cores[Math.floor(Math.random() * cores.length)];
-    }
-
-    // Prepara as letras (mas esconde todas no início)
+    // Inicialização do Array de Letras
     for(let i = 0; i < alfabeto.length; i++) {
         const el = document.createElement('div');
         el.className = 'letra-chuva';
         el.innerText = alfabeto[i];
-        el.style.color = corAleatoria();
-        el.style.left = (i * 3.84) + 'vw';
+        el.style.color = `hsl(${i * 13}, 100%, 60%)`;
+        el.style.left = (i * 3.5 + 2) + 'vw';
         el.style.top = '-100px'; 
         document.body.appendChild(el);
+        letrasEmJogo.push({ elemento: el, letra: alfabeto[i], y: -100, ativa: false, resolvida: false });
+    }
 
-        letrasEmJogo.push({
-            elemento: el, letra: alfabeto[i], y: -100, 
-            startTime: 0, ativa: false, resolvida: false
-        });
+    function iniciarJogo() {
+        if(jogoRodando) return;
+        document.getElementById('tela-inicio').style.display = 'none';
+        inputMobile.focus(); // Abre teclado mobile
+        
+        // Pequena pausa para o teclado subir e o aluno se preparar
+        setTimeout(() => {
+            jogoRodando = true;
+            iniciarLetra(0);
+            loopJogo();
+        }, 1000);
     }
 
     function atualizarEnergia(mudanca) {
-        score += mudanca;
-        if(score > maxScore) score = maxScore;
-        if(score < 0) score = 0;
+        score = Math.max(0, Math.min(maxScore, score + mudanca));
+        document.getElementById('score-text').innerText = score;
         
-        document.getElementById('score-display').innerText = score;
-        const porcentagem = (score / maxScore) * 100;
-        document.getElementById('barra-energia').style.width = porcentagem + '%';
+        const barra = document.getElementById('barra-energia');
+        const porc = (score / maxScore) * 100;
+        barra.style.height = porc + '%';
+
+        // Lógica de Cores da Barra
+        if (porc < 25) { barra.style.backgroundColor = '#ff0000'; barra.style.color = '#ff0000'; }
+        else if (porc < 50) { barra.style.backgroundColor = '#ff8800'; barra.style.color = '#ff8800'; }
+        else if (porc < 75) { barra.style.backgroundColor = '#ffff00'; barra.style.color = '#ffff00'; }
+        else { barra.style.backgroundColor = '#00ff00'; barra.style.color = '#00ff00'; }
     }
 
     function iniciarLetra(index) {
-        if(index >= alfabeto.length) {
-            vencerJogo();
-            return;
-        }
-        document.getElementById('alvo-atual').innerText = alfabeto[index];
-        document.getElementById('alvo-atual').style.color = letrasEmJogo[index].elemento.style.color;
+        if(index >= alfabeto.length) { vencerJogo(); return; }
         
         const obj = letrasEmJogo[index];
+        document.getElementById('alvo-atual').innerText = obj.letra;
+        document.getElementById('alvo-atual').style.color = obj.elemento.style.color;
+        
         obj.ativa = true;
         obj.startTime = Date.now();
-        obj.elemento.style.opacity = '1'; // Revela a letra no topo
+        obj.elemento.style.opacity = '1';
     }
 
     function loopJogo() {
         if(!jogoRodando) return;
-        
+        const obj = letrasEmJogo[indexAtual];
         const alturaChao = window.innerHeight - 80;
 
-        // Anima apenas a letra atual
-        const obj = letrasEmJogo[indexAtual];
-        
         if (obj && obj.ativa && !obj.resolvida) {
             const decorrido = (Date.now() - obj.startTime) / 1000;
             const progresso = decorrido / tempoQuedaSegundos;
-
             obj.y = -100 + (progresso * (alturaChao + 100));
 
-            // Se bateu no chão
             if (progresso >= 1.0) {
                 obj.y = alturaChao;
                 obj.resolvida = true;
                 obj.elemento.classList.add('perdida');
-                
-                tocarSom('trovao.ogg');
-                atualizarEnergia(-20); // Penalidade por deixar cair
-                
-                // Passa para a próxima letra IMEDIATAMENTE
+                atualizarEnergia(-30);
                 indexAtual++;
                 iniciarLetra(indexAtual);
             }
-            
             obj.elemento.style.top = obj.y + 'px';
         }
-
         requestAnimationFrame(loopJogo);
     }
 
-    window.addEventListener('keydown', processarTecla);
-    document.getElementById('mobile-input').addEventListener('input', (e) => {
-        const val = e.target.value;
-        if(val.length > 0) { processarTecla({ key: val.charAt(val.length-1) }); e.target.value = ''; }
-    });
-
-    function processarTecla(e) {
+    function processarTecla(tecla) {
         if(!jogoRodando || indexAtual >= alfabeto.length) return;
-        const tecla = e.key.toUpperCase();
-        if(!/^[A-Z]$/.test(tecla)) return; 
-        if(musicaFundo.paused) musicaFundo.play().catch(()=>{});
-
+        const letraDigitada = tecla.toUpperCase();
         const objAtual = letrasEmJogo[indexAtual];
-        const letraEsperada = objAtual.letra;
 
-        if(tecla === letraEsperada) {
-            tocarSom('estampido.ogg');
-            
-            // CÁLCULO DE PONTOS: Mais alto = mais pontos (máx 38 por letra para chegar a ~1000)
+        if(letraDigitada === objAtual.letra) {
             const progresso = (Date.now() - objAtual.startTime) / (tempoQuedaSegundos * 1000);
-            const pontosGanhos = Math.max(10, Math.floor(39 * (1 - progresso)));
+            // Pontuação baseada em velocidade: quanto mais alto acertar, mais pontos (máx 40)
+            const pontosGanhos = Math.max(15, Math.floor(40 * (1 - progresso)));
             atualizarEnergia(pontosGanhos);
             
-            // Congela a letra exatamente onde ela está
             objAtual.resolvida = true;
             objAtual.elemento.classList.add('congelada');
-
-            // Passa para a próxima letra IMEDIATAMENTE
             indexAtual++;
             iniciarLetra(indexAtual);
         } else {
-            // Digitou a letra errada
-            tocarSom('erro.ogg');
-            atualizarEnergia(-10); // Penalidade leve por erro de digitação
-            document.body.animate([
-                { transform: 'translateX(-10px)' }, { transform: 'translateX(10px)' }, { transform: 'translateX(0)' }
-            ], { duration: 150 });
+            atualizarEnergia(-15);
+            document.body.animate([{opacity: 0.5}, {opacity: 1}], 100);
         }
     }
+
+    // EVENTOS
+    btnStart.addEventListener('click', iniciarJogo);
+    window.addEventListener('keydown', (e) => {
+        if(e.key === "Enter" && !jogoRodando) iniciarJogo();
+        if(jogoRodando && /^[a-zA-Z]$/.test(e.key)) processarTecla(e.key);
+    });
+    inputMobile.addEventListener('input', (e) => {
+        const val = e.target.value;
+        if(val.length > 0) { 
+            processarTecla(val.charAt(val.length-1)); 
+            e.target.value = ''; 
+        }
+    });
 
     function vencerJogo() {
         jogoRodando = false;
-        tocarSom('aplausos.ogg');
-        
-        const telaVitoria = document.getElementById('tela-vitoria');
-        document.getElementById('pontuacao-final').innerText = score + " PONTOS!";
-        
-        if(score >= 900) { document.getElementById('titulo-vitoria').innerText = "🏆 NINJA SUPREMO! 🏆"; }
-        else if (score >= 500) { document.getElementById('titulo-vitoria').innerText = "⭐ MUITO RÁPIDO! ⭐"; }
-        else { document.getElementById('titulo-vitoria').innerText = "👏 BOM TRABALHO! 👏"; }
-
-        telaVitoria.style.display = 'flex';
-        
-        // Chuva de Confetes Lúdica!
-        for (let i = 0; i < 200; i++) {
-            const c = document.createElement('div');
-            c.className = 'confete';
-            c.style.left = Math.random() * 100 + 'vw';
-            c.style.backgroundColor = corAleatoria();
-            c.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            document.body.appendChild(c);
-        }
+        document.getElementById('tela-vitoria').style.display = 'flex';
+        document.getElementById('pontuacao-final').innerText = score + " PONTOS";
     }
 
-    function tocarSom(arq) { new Audio(arq).play().catch(() => {}); }
-
-    // Inicia a primeira letra e o loop
     atualizarEnergia(0);
-    iniciarLetra(0);
-    loopJogo();
 </script>
 </body>
 </html>
