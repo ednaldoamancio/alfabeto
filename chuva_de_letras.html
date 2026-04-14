@@ -14,23 +14,34 @@
         }
 
         /* BARRA VERTICAL DE PONTUAÇÃO (DIREITA) */
+        /* Z-INDEX 3000 garante que ela fique acima inclusive da tela de vitória */
         .ranking-lateral {
             position: absolute; right: 20px; top: 100px; bottom: 50px;
             width: 30px; background: #222; border-radius: 15px;
-            border: 2px solid #444; overflow: hidden; z-index: 1000;
+            border: 2px solid #444; overflow: hidden; z-index: 3000;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
         .ranking-preenchimento {
             position: absolute; bottom: 0; width: 100%; height: 0%;
             transition: height 0.3s ease-out, background 0.3s;
-            box-shadow: 0 0 15px currentColor;
+            box-shadow: 0 0 20px currentColor;
         }
 
         /* TELAS (START / VITÓRIA) */
         .overlay {
-            position: absolute; inset: 0; background: rgba(0,0,0,0.95);
-            z-index: 2000; display: flex; flex-direction: column;
+            position: absolute; inset: 0; z-index: 2000; 
+            display: flex; flex-direction: column;
             align-items: center; justify-content: center; text-align: center;
         }
+        
+        #tela-inicio { background: rgba(0,0,0,0.95); }
+
+        /* TELA DE VITÓRIA COM TRANSPARÊNCIA INTELIGENTE */
+        #tela-vitoria { 
+            background: rgba(0,0,0,0.6); 
+            backdrop-filter: blur(4px);
+        }
+
         h1 { font-size: clamp(30px, 6vw, 60px); color: #fff; margin-bottom: 20px; }
         
         .btn-jogar {
@@ -71,7 +82,7 @@
 
 <div id="tela-vitoria" class="overlay" style="display: none;">
     <h1 id="titulo-vitoria">🏆 FANTÁSTICO! 🏆</h1>
-    <div style="font-size: 40px; color: gold;" id="pontuacao-final">0 PONTOS</div>
+    <div style="font-size: 40px; color: gold; text-shadow: 2px 2px 8px #000;" id="pontuacao-final">0 PONTOS</div>
     <button class="btn-jogar" onclick="location.reload()" style="margin-top: 30px;">JOGAR DE NOVO</button>
 </div>
 
@@ -93,14 +104,14 @@
     let letrasEmJogo = [];
     let jogoRodando = false;
 
-    // Configuração de Áudio
+    // Áudios
     const musicaFundo = new Audio('musica_fundo.ogg');
     musicaFundo.loop = true;
     musicaFundo.volume = 0.4;
 
     function tocarSom(arq) {
         const som = new Audio(arq);
-        som.play().catch(() => {}); // Catch para evitar erros se o arquivo faltar
+        som.play().catch(() => {});
     }
 
     const inputMobile = document.getElementById('mobile-input');
@@ -120,10 +131,7 @@
     function iniciarJogo() {
         if(jogoRodando) return;
         document.getElementById('tela-inicio').style.display = 'none';
-        
-        // Tenta tocar a música de fundo após o clique
         musicaFundo.play().catch(() => {});
-        
         inputMobile.focus(); 
         
         setTimeout(() => {
@@ -149,11 +157,9 @@
 
     function iniciarLetra(index) {
         if(index >= alfabeto.length) { vencerJogo(); return; }
-        
         const obj = letrasEmJogo[index];
         document.getElementById('alvo-atual').innerText = obj.letra;
         document.getElementById('alvo-atual').style.color = obj.elemento.style.color;
-        
         obj.ativa = true;
         obj.startTime = Date.now();
         obj.elemento.style.opacity = '1';
@@ -173,10 +179,8 @@
                 obj.y = alturaChao;
                 obj.resolvida = true;
                 obj.elemento.classList.add('perdida');
-                
-                tocarSom('trovao.ogg'); // Som de erro por tempo
+                tocarSom('trovao.ogg');
                 atualizarEnergia(-30);
-                
                 indexAtual++;
                 iniciarLetra(indexAtual);
             }
@@ -191,17 +195,16 @@
         const objAtual = letrasEmJogo[indexAtual];
 
         if(letraDigitada === objAtual.letra) {
-            tocarSom('estampido.ogg'); // Som de acerto
+            tocarSom('estampido.ogg');
             const progresso = (Date.now() - objAtual.startTime) / (tempoQuedaSegundos * 1000);
             const pontosGanhos = Math.max(15, Math.floor(40 * (1 - progresso)));
             atualizarEnergia(pontosGanhos);
-            
             objAtual.resolvida = true;
             objAtual.elemento.classList.add('congelada');
             indexAtual++;
             iniciarLetra(indexAtual);
         } else {
-            tocarSom('erro.ogg'); // Som de tecla errada
+            tocarSom('erro.ogg');
             atualizarEnergia(-15);
             document.body.animate([{opacity: 0.5}, {opacity: 1}], 100);
         }
@@ -223,8 +226,7 @@
     function vencerJogo() {
         jogoRodando = false;
         musicaFundo.pause();
-        tocarSom('aplausos.ogg'); // Som de vitória
-        
+        tocarSom('aplausos.ogg');
         document.getElementById('tela-vitoria').style.display = 'flex';
         document.getElementById('pontuacao-final').innerText = score + " PONTOS";
     }
