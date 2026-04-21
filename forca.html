@@ -16,67 +16,71 @@
             height: 100vh;
             margin: 0;
             padding: 10px;
-            overflow: hidden; /* Voltamos ao hidden, mas com medidas internas melhores */
+            overflow: hidden;
         }
 
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 40px;
+            height: 45px;
             flex-shrink: 0;
         }
 
         h1 { font-size: 1.1rem; margin: 0; letter-spacing: 2px; }
 
-        .audio-controls { display: flex; gap: 10px; align-items: center; }
-        #stats { font-size: 0.8rem; }
-
         .audio-btn {
             background: none;
             border: 1.5px solid #fff;
             color: #fff;
-            padding: 4px 8px;
+            padding: 5px 10px;
             cursor: pointer;
             font-weight: bold;
-            border-radius: 4px;
+            border-radius: 5px;
             font-size: 0.7rem;
         }
 
-        main {
+        /* CONTAINER PRINCIPAL DO JOGO */
+        #game-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 10px;
+            min-height: 0; /* Permite encolhimento */
+        }
+
+        /* LINHA SUPERIOR: FORCA E TECLADO */
+        #top-row {
             display: flex;
             flex: 1;
             align-items: center;
-            justify-content: center;
+            justify-content: space-around;
             gap: 15px;
-            min-height: 0; /* Permite que o conteúdo encolha para caber */
+            min-height: 150px;
         }
 
         #hangman-container {
             flex: 1;
             height: 100%;
-            max-height: 300px; /* Garante que a forca não suma */
-            min-height: 150px; /* Altura mínima para o desenho aparecer */
             display: flex;
             justify-content: center;
-            align-items: center;
         }
 
         #hangman-svg {
             height: 100%;
             width: auto;
-            max-width: 100%;
         }
 
         #keyboard-container {
             flex: 1.5;
-            max-width: 500px;
+            max-width: 450px;
         }
 
         #keyboard {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
+            gap: 5px;
         }
 
         .key {
@@ -86,37 +90,42 @@
             padding: 12px 0;
             font-size: 1.1rem;
             font-weight: bold;
-            cursor: pointer;
             border-radius: 6px;
         }
 
-        .key:disabled { opacity: 0.2; }
-
-        footer {
-            height: 120px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-top: 2px solid #333;
-            flex-shrink: 0;
+        /* CAMPO DAS PALAVRAS (AGORA FORA DO RODAPÉ) */
+        #display-section {
+            padding: 15px 0;
+            text-align: center;
+            border-top: 1px solid #333;
+            background: #000;
         }
 
         #word-display {
-            font-size: 2.2rem;
-            letter-spacing: 8px;
+            font-size: 2.3rem;
+            letter-spacing: 12px;
             font-weight: 900;
             text-transform: uppercase;
-            text-align: center;
-            width: 100%;
+        }
+
+        /* RODAPÉ VAZIO/ESTATÍSTICAS */
+        footer {
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #888;
+            flex-shrink: 0;
         }
 
         #message {
-            height: 20px;
-            font-size: 1rem;
-            color: #ff4444;
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
             font-weight: bold;
-            margin-bottom: 5px;
+            color: #ff4444;
         }
 
         line, circle, path { stroke: #fff; stroke-width: 6; fill: none; }
@@ -124,26 +133,24 @@
 
         #reset-btn {
             position: fixed;
-            top: 50%;
+            top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
             padding: 20px 40px;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             background: #fff;
             color: #000;
             font-weight: bold;
             z-index: 100;
             display: none;
-            box-shadow: 0 0 20px rgba(255,255,255,0.4);
         }
 
+        /* AJUSTE PARA TABLET VERTICAL */
         @media (max-width: 768px) {
-            main { flex-direction: column; }
-            #hangman-container { height: 35%; max-height: 180px; }
+            #top-row { flex-direction: column; }
+            #hangman-container { height: 30%; }
             #keyboard { grid-template-columns: repeat(9, 1fr); }
-            .key { padding: 8px 0; font-size: 0.9rem; }
-            #word-display { font-size: 1.6rem; letter-spacing: 4px; }
-            footer { height: 100px; }
+            #word-display { font-size: 1.8rem; letter-spacing: 6px; }
         }
     </style>
 </head>
@@ -152,44 +159,50 @@
     <header>
         <h1>FORCA</h1>
         <div class="audio-controls">
-            <div id="stats">FALTAM: <span id="count">100</span></div>
-            <button id="bg-music-btn" class="audio-btn" onclick="toggleMusic()">SOM: DESLIGADO</button>
+            <button id="bg-music-btn" class="audio-btn" onclick="toggleMusic()">SOM: OFF</button>
         </div>
     </header>
 
-    <main>
-        <div id="hangman-container">
-            <svg id="hangman-svg" viewBox="0 0 200 250">
-                <line x1="20" y1="230" x2="180" y2="230" />
-                <line x1="50" y1="230" x2="50" y2="20" />
-                <line x1="50" y1="20" x2="130" y2="20" />
-                <line x1="130" y1="20" x2="130" y2="50" />
-                <g id="head-group" style="display:none">
-                    <circle id="head-circle" cx="130" cy="75" r="20" />
-                    <g id="dead-details" style="display:none">
-                        <line x1="120" y1="65" x2="128" y2="73" class="dead-face" />
-                        <line x1="128" y1="65" x2="120" y2="73" class="dead-face" />
-                        <line x1="132" y1="65" x2="140" y2="73" class="dead-face" />
-                        <line x1="140" y1="65" x2="132" y2="73" class="dead-face" />
-                        <path d="M 120 85 Q 130 75 140 85" class="dead-face" />
+    <div id="game-area">
+        <div id="top-row">
+            <div id="hangman-container">
+                <svg id="hangman-svg" viewBox="0 0 200 250">
+                    <line x1="20" y1="230" x2="180" y2="230" />
+                    <line x1="50" y1="230" x2="50" y2="20" />
+                    <line x1="50" y1="20" x2="130" y2="20" />
+                    <line x1="130" y1="20" x2="130" y2="50" />
+                    <g id="head-group" style="display:none">
+                        <circle id="head-circle" cx="130" cy="75" r="20" />
+                        <g id="dead-details" style="display:none">
+                            <line x1="120" y1="65" x2="128" y2="73" class="dead-face" />
+                            <line x1="128" y1="65" x2="120" y2="73" class="dead-face" />
+                            <line x1="132" y1="65" x2="140" y2="73" class="dead-face" />
+                            <line x1="140" y1="65" x2="132" y2="73" class="dead-face" />
+                            <path d="M 120 85 Q 130 75 140 85" class="dead-face" />
+                        </g>
                     </g>
-                </g>
-                <line id="body" x1="130" y1="95" x2="130" y2="170" style="display:none" />
-                <line id="arm-l" x1="130" y1="120" x2="100" y2="150" style="display:none" />
-                <line id="arm-r" x1="130" y1="120" x2="160" y2="150" style="display:none" />
-                <line id="leg-l" x1="130" y1="170" x2="100" y2="210" style="display:none" />
-                <line id="leg-r" x1="130" y1="170" x2="160" y2="210" style="display:none" />
-            </svg>
+                    <line id="body" x1="130" y1="95" x2="130" y2="170" style="display:none" />
+                    <line id="arm-l" x1="130" y1="120" x2="100" y2="150" style="display:none" />
+                    <line id="arm-r" x1="130" y1="120" x2="160" y2="150" style="display:none" />
+                    <line id="leg-l" x1="130" y1="170" x2="100" y2="210" style="display:none" />
+                    <line id="leg-r" x1="130" y1="170" x2="160" y2="210" style="display:none" />
+                </svg>
+            </div>
+
+            <div id="keyboard-container">
+                <div id="keyboard"></div>
+            </div>
         </div>
 
-        <div id="keyboard-container">
-            <div id="keyboard"></div>
+        <div id="display-section">
+            <div id="word-display">_ _ _ _ _</div>
         </div>
-    </main>
+    </div>
+
+    <div id="message"></div>
 
     <footer>
-        <div id="message"></div>
-        <div id="word-display">_ _ _ _ _</div>
+        PALAVRAS RESTANTES: <span id="count">100</span>
     </footer>
 
     <button id="reset-btn" onclick="nextRound()">PRÓXIMA PALAVRA</button>
@@ -218,15 +231,8 @@
         function toggleMusic() {
             const bg = document.getElementById('snd-bg');
             const btn = document.getElementById('bg-music-btn');
-            if (!musicPlaying) {
-                bg.play();
-                btn.innerText = "SOM: LIGADO";
-                btn.classList.add('active');
-            } else {
-                bg.pause();
-                btn.innerText = "SOM: DESLIGADO";
-                btn.classList.remove('active');
-            }
+            if (!musicPlaying) { bg.play(); btn.innerText = "SOM: ON"; }
+            else { bg.pause(); btn.innerText = "SOM: OFF"; }
             musicPlaying = !musicPlaying;
         }
 
@@ -309,10 +315,8 @@
             if (win) {
                 playSnd('snd-vitoria');
                 msg.innerText = "PARABÉNS!";
-                msg.style.color = "#44ff44";
             } else {
                 msg.innerText = "A PALAVRA ERA: " + currentWordRaw;
-                msg.style.color = "#ff4444";
                 document.getElementById('word-display').innerText = currentWordRaw.split('').join(' ');
             }
             document.getElementById('reset-btn').style.display = "block";
