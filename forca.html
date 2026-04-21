@@ -207,117 +207,153 @@
     <audio id="snd-bg" src="musica_fundo_sebran.ogg" loop></audio>
 
     <script>
-        const words = ["AMARELINHA", "BONECA", "CARRINHO", "PETECA", "PEÃO", "PULA CORDA", "ESCONDE-ESCONDE", "PEGA-PEGA", "PIPA", "IOIO", "BALANCO", "ESCORREGADOR", "GIRAGIRA", "DOMINO", "XADREZ", "DAMA", "LUDO", "QUEBRA CABEÇA", "MASSINHA", "AQUARELA", "CINDERELA", "PINÓQUIO", "BRANCADENEVE", "RAPUNZEL", "ALADDIN", "PETER PAN", "SININHO", "O GATO DE BOTAS", "JOÂO E MARIA", "LOBO MAU", "CHAPEUZINHO VERMELHO", "OS TRÊS PORQUINHOS", "O PATO FEIO", "A BELA E A FERA", "A PEQUENA SEREIA", "REI LEAO", "POCAHONTAS", "MULAN", "TARZAN", "ALICE", "FADA MADRINHA", "PALHAÇO", "MÁGICO", "BAMBOLÊ", "CATAVENTO", "BOLINHA DE SABÃO", "QUEIMADA", "CABO DE GUERRA", "ESTÁTUA", "PASSANEL", "TELEFONE SEM FIO", "BATATA QUENTE", "CADEIRAS", "CORRE COTIA", "PULA-PULA", "LEGO", "BARBIE", "PELÚCIA", "MARIONETE", "FANTOCHE", "DEDOCHE", "CASTELO", "DRAGAO", "PRINCESA", "PRINCIPE", "PIRATA", "UNICÓRNIO"];
+    // Lista com a grafia correta
+    const words = ["AMARELINHA", "BONECA", "CARRINHO", "PETECA", "PEÃO", "PULA CORDA", "ESCONDE-ESCONDE", "PEGA-PEGA", "PIPA", "IOIÔ", "BALANÇO", "ESCORREGADOR", "GIRA-GIRA", "DOMINÓ", "XADREZ", "DAMA", "LUDO", "QUEBRA-CABEÇA", "MASSINHA", "AQUARELA", "CINDERELA", "PINÓQUIO", "BRANCA DE NEVE", "RAPUNZEL", "ALADDIN", "PETER PAN", "SININHO", "O GATO DE BOTAS", "JOÃO E MARIA", "LOBO MAU", "CHAPEUZINHO VERMELHO", "OS TRÊS PORQUINHOS", "O PATO FEIO", "A BELA E A FERA", "A PEQUENA SEREIA", "REI LEÃO", "POCAHONTAS", "MULAN", "TARZAN", "ALICE", "FADA MADRINHA", "PALHAÇO", "MÁGICO", "BAMBOLÊ", "CATAVENTO", "BOLINHA DE SABÃO", "QUEIMADA", "CABO DE GUERRA", "ESTÁTUA", "PASSANEL", "TELEFONE SEM FIO", "BATATA QUENTE", "CADEIRAS", "CORRE COTIA", "PULA-PULA", "LEGO", "BARBIE", "PELÚCIA", "MARIONETE", "FANTOCHE", "DEDOCHE", "CASTELO", "DRAGÃO", "PRINCESA", "PRÍNCIPE", "PIRATA", "UNICÓRNIO"];
+    
+    let availableWords = [...words]; 
+    let currentWordRaw = ""; // Palavra com acentos/espaços
+    let currentWordNormalized = ""; // Palavra para lógica (sem acentos)
+    let guessedLetters = [];
+    let mistakes = 0;
+    let musicPlaying = false;
+    const bodyParts = ['head-group', 'body', 'arm-l', 'arm-r', 'leg-l', 'leg-r'];
+
+    function playSnd(id) {
+        const snd = document.getElementById(id);
+        snd.currentTime = 0;
+        snd.play().catch(e => console.log("Áudio bloqueado"));
+    }
+
+    function toggleMusic() {
+        const bg = document.getElementById('snd-bg');
+        const btn = document.getElementById('bg-music-btn');
+        if (!musicPlaying) {
+            bg.play();
+            btn.innerText = "SOM: LIGADO";
+            btn.classList.add('active');
+        } else {
+            bg.pause();
+            btn.innerText = "SOM: DESLIGADO";
+            btn.classList.remove('active');
+        }
+        musicPlaying = !musicPlaying;
+    }
+
+    // Função para remover acentos para comparação lógica
+    function normalize(str) {
+        return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+    }
+
+    function initGame() {
+        if (availableWords.length === 0) {
+            document.getElementById('message').innerText = "VOCÊ VENCEU TODAS AS ETAPAS!";
+            return;
+        }
+        const idx = Math.floor(Math.random() * availableWords.length);
         
-        let availableWords = [...words].map(w => w.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
-        let currentWord = "";
-        let guessedLetters = [];
-        let mistakes = 0;
-        let musicPlaying = false;
-        const bodyParts = ['head-group', 'body', 'arm-l', 'arm-r', 'leg-l', 'leg-r'];
+        currentWordRaw = availableWords.splice(idx, 1)[0].toUpperCase();
+        currentWordNormalized = normalize(currentWordRaw);
+        
+        guessedLetters = [];
+        mistakes = 0;
+        
+        document.getElementById('count').innerText = availableWords.length;
+        document.getElementById('reset-btn').style.display = "none";
+        document.getElementById('dead-details').style.display = "none";
+        document.getElementById('head-circle').classList.remove('dead-face');
+        bodyParts.forEach(p => document.getElementById(p).style.display = "none");
+        
+        renderWord();
+        renderKeyboard();
+        document.getElementById('message').innerText = "";
+    }
 
-        function playSnd(id) {
-            const snd = document.getElementById(id);
-            snd.currentTime = 0;
-            snd.play().catch(e => console.log("Áudio pendente de interação"));
-        }
+    function renderWord() {
+        const container = document.getElementById('word-display');
+        let displayStr = "";
+        let winCounter = 0;
 
-        function toggleMusic() {
-            const bg = document.getElementById('snd-bg');
-            const btn = document.getElementById('bg-music-btn');
-            if (!musicPlaying) {
-                bg.play();
-                btn.innerText = "SOM: LIGADO";
-                btn.classList.add('active');
-            } else {
-                bg.pause();
-                btn.innerText = "SOM: DESLIGADO";
-                btn.classList.remove('active');
-            }
-            musicPlaying = !musicPlaying;
-        }
+        for (let i = 0; i < currentWordRaw.length; i++) {
+            const charRaw = currentWordRaw[i];
+            const charNorm = currentWordNormalized[i];
 
-        function initGame() {
-            if (availableWords.length === 0) {
-                document.getElementById('message').innerText = "VOCÊ VENCEU TODAS AS 100 ETAPAS!";
-                return;
-            }
-            const idx = Math.floor(Math.random() * availableWords.length);
-            currentWord = availableWords.splice(idx, 1)[0];
-            guessedLetters = [];
-            mistakes = 0;
-            document.getElementById('count').innerText = availableWords.length;
-            document.getElementById('reset-btn').style.display = "none";
-            document.getElementById('dead-details').style.display = "none";
-            document.getElementById('head-circle').classList.remove('dead-face');
-            bodyParts.forEach(p => document.getElementById(p).style.display = "none");
-            renderWord();
-            renderKeyboard();
-            document.getElementById('message').innerText = "";
-        }
-
-        function renderWord() {
-            const d = currentWord.split('').map(l => guessedLetters.includes(l) ? l : "_").join(" ");
-            document.getElementById('word-display').innerText = d;
-            if (!d.includes("_")) endGame(true);
-        }
-
-        function renderKeyboard() {
-            const kb = document.getElementById('keyboard');
-            kb.innerHTML = "";
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').forEach(l => {
-                const b = document.createElement('button');
-                b.innerText = l;
-                b.className = 'key';
-                b.id = 'k-' + l;
-                b.onclick = () => handleGuess(l);
-                kb.appendChild(b);
-            });
-        }
-
-        function handleGuess(l) {
-            if (guessedLetters.includes(l) || mistakes >= 6) return;
-            const btn = document.getElementById('k-' + l);
-            if (btn) btn.disabled = true;
-
-            if (currentWord.includes(l)) {
-                guessedLetters.push(l);
-                playSnd('snd-acerto');
-                renderWord();
-            } else {
-                mistakes++;
-                playSnd('snd-erro');
-                document.getElementById(bodyParts[mistakes-1]).style.display = "block";
-                if (mistakes === 6) {
-                    document.getElementById('dead-details').style.display = "block";
-                    document.getElementById('head-circle').classList.add('dead-face');
-                    endGame(false);
-                }
+            // Se for espaço ou hífen, mostra direto
+            if (charRaw === " " || charRaw === "-") {
+                displayStr += charRaw === " " ? "\u00A0\u00A0" : "- ";
+            } 
+            // Se a letra (ou sua versão acentuada) foi adivinhada
+            else if (guessedLetters.includes(charNorm)) {
+                displayStr += charRaw + " ";
+            } 
+            // Caso contrário, oculta
+            else {
+                displayStr += "_ ";
+                winCounter++;
             }
         }
 
-        function endGame(win) {
-            const msg = document.getElementById('message');
-            if (win) {
-                playSnd('snd-vitoria');
-                msg.innerText = "PARABÉNS!";
-                msg.style.color = "#44ff44";
-            } else {
-                msg.innerText = "FIM DE JOGO! PALAVRA: " + currentWord;
-                msg.style.color = "#ff4444";
-            }
-            document.getElementById('reset-btn').style.display = "block";
-        }
+        container.innerText = displayStr;
+        if (winCounter === 0) endGame(true);
+    }
 
-        function nextRound() { initGame(); }
-
-        window.addEventListener('keydown', (e) => {
-            const key = e.key.toUpperCase();
-            if (/^[A-Z]$/.test(key)) handleGuess(key);
+    function renderKeyboard() {
+        const kb = document.getElementById('keyboard');
+        kb.innerHTML = "";
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').forEach(l => {
+            const b = document.createElement('button');
+            b.innerText = l;
+            b.className = 'key';
+            b.id = 'k-' + l;
+            b.onclick = () => handleGuess(l);
+            kb.appendChild(b);
         });
+    }
 
-        initGame();
-    </script>
+    function handleGuess(l) {
+        if (guessedLetters.includes(l) || mistakes >= 6) return;
+        
+        const btn = document.getElementById('k-' + l);
+        if (btn) btn.disabled = true;
+
+        if (currentWordNormalized.includes(l)) {
+            guessedLetters.push(l);
+            playSnd('snd-acerto');
+            renderWord();
+        } else {
+            mistakes++;
+            playSnd('snd-erro');
+            document.getElementById(bodyParts[mistakes-1]).style.display = "block";
+            if (mistakes === 6) {
+                document.getElementById('dead-details').style.display = "block";
+                document.getElementById('head-circle').classList.add('dead-face');
+                endGame(false);
+            }
+        }
+    }
+
+    function endGame(win) {
+        const msg = document.getElementById('message');
+        if (win) {
+            playSnd('snd-vitoria');
+            msg.innerText = "PARABÉNS!";
+            msg.style.color = "#44ff44";
+        } else {
+            msg.innerText = "A PALAVRA ERA: " + currentWordRaw;
+            msg.style.color = "#ff4444";
+            document.getElementById('word-display').innerText = currentWordRaw.split('').join(' ');
+        }
+        document.getElementById('reset-btn').style.display = "block";
+    }
+
+    function nextRound() { initGame(); }
+
+    window.addEventListener('keydown', (e) => {
+        const key = e.key.toUpperCase();
+        if (/^[A-Z]$/.test(key)) handleGuess(key);
+    });
+
+    initGame();
+</script>
 </body>
 </html>
 
