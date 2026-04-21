@@ -13,151 +13,134 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            min-height: 100vh; /* Mudado de height para min-height */
             margin: 0;
-            padding: 5px 15px;
-            overflow: hidden;
+            padding: 10px;
+            /* Removido o overflow: hidden para permitir ajuste em telas pequenas */
         }
 
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 40px;
+            height: 50px;
             flex-shrink: 0;
         }
 
-        h1 { font-size: 1.1rem; margin: 0; letter-spacing: 2px; }
+        h1 { font-size: 1.2rem; margin: 0; letter-spacing: 2px; }
 
-        .audio-controls { display: flex; gap: 8px; align-items: center; }
-        #stats { font-size: 0.8rem; }
+        .audio-controls { display: flex; gap: 10px; align-items: center; }
 
         .audio-btn {
             background: none;
-            border: 1.5px solid #fff;
+            border: 2px solid #fff;
             color: #fff;
-            padding: 4px 8px;
+            padding: 5px 10px;
             cursor: pointer;
             font-weight: bold;
-            border-radius: 4px;
-            font-size: 0.7rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
         }
 
-        .audio-btn.active { background-color: #fff; color: #000; }
-
-        /* Área Central Ajustada */
         main {
             display: flex;
             flex: 1;
-            align-items: flex-start; /* Alinha ao topo para ganhar espaço embaixo */
-            justify-content: space-around;
-            gap: 10px;
-            min-height: 0;
-            padding-top: 10px;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 10px 0;
         }
 
         #hangman-container {
-            flex: 0.8; /* Diminuído para dar mais espaço ao teclado */
-            height: 60%; /* Altura reduzida para subir o layout */
+            flex: 1;
+            max-height: 250px; /* Limita a altura da forca */
             display: flex;
             justify-content: center;
-            align-items: center;
         }
 
         #hangman-svg {
             height: 100%;
-            width: auto;
+            max-width: 150px;
         }
 
         #keyboard-container {
-            flex: 1.2;
-            max-width: 450px;
-            margin-top: 10px;
+            flex: 2;
+            max-width: 500px;
         }
 
         #keyboard {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
+            gap: 8px;
         }
 
         .key {
             background-color: #111;
             color: #fff;
-            border: 1.5px solid #fff;
-            padding: 10px 0;
-            font-size: 1.1rem;
+            border: 2px solid #fff;
+            padding: 12px 0;
+            font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
-            border-radius: 6px;
+            border-radius: 8px;
         }
 
-        .key:disabled { opacity: 0.2; border-color: #444; }
+        .key:disabled { opacity: 0.2; }
 
-        /* Rodapé Reforçado */
+        /* Rodapé Fixo na Base para garantir visibilidade */
         footer {
-            height: 140px; /* Aumentado para garantir visibilidade */
+            width: 100%;
+            background-color: #000;
+            padding: 15px 0;
+            border-top: 2px solid #333;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            border-top: 2px solid #333;
             flex-shrink: 0;
-            background-color: #000;
-            z-index: 10;
         }
 
         #word-display {
             font-size: 2.2rem;
-            letter-spacing: 8px;
+            letter-spacing: 10px;
             font-weight: 900;
             text-transform: uppercase;
             text-align: center;
-            word-wrap: break-word;
-            width: 100%;
-            color: #fff;
-            margin-top: 10px;
+            min-height: 50px;
         }
 
         #message {
-            height: 20px;
-            font-size: 1rem;
+            height: 25px;
+            font-size: 1.1rem;
             color: #ff4444;
             font-weight: bold;
+            margin-bottom: 5px;
         }
 
-        line, circle, path {
-            stroke: #fff;
-            stroke-width: 6;
-            fill: none;
-        }
-
+        line, circle, path { stroke: #fff; stroke-width: 6; fill: none; }
         .dead-face { stroke: #ff4444 !important; }
 
         #reset-btn {
             position: fixed;
-            top: 40%; /* Subiu um pouco */
+            top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            padding: 15px 30px;
-            font-size: 1.2rem;
+            padding: 20px 40px;
+            font-size: 1.5rem;
             background: #fff;
             color: #000;
-            border: none;
             font-weight: bold;
-            z-index: 100;
+            z-index: 1000;
             display: none;
-            box-shadow: 0 0 20px rgba(255,255,255,0.5);
         }
 
-        /* Ajustes Mobile/Tablet Vertical */
-        @media (max-width: 768px) {
-            main { flex-direction: column; align-items: center; }
-            #hangman-container { height: 30%; flex: none; }
-            #keyboard-container { width: 100%; max-width: 100%; }
-            #keyboard { grid-template-columns: repeat(9, 1fr); }
-            #word-display { font-size: 1.6rem; letter-spacing: 4px; }
-            footer { height: 120px; }
+        /* Ajustes específicos para Tablets e Celulares */
+        @media (max-width: 850px) {
+            main { flex-direction: column; }
+            #hangman-container { max-height: 150px; }
+            #keyboard { grid-template-columns: repeat(9, 1fr); gap: 5px; }
+            .key { padding: 8px 0; font-size: 1rem; }
+            #word-display { font-size: 1.8rem; letter-spacing: 6px; }
         }
     </style>
 </head>
@@ -166,8 +149,8 @@
     <header>
         <h1>FORCA</h1>
         <div class="audio-controls">
-            <div id="stats">PALAVRAS: <span id="count">100</span></div>
-            <button id="bg-music-btn" class="audio-btn" onclick="toggleMusic()">SOM: DESLIGADO</button>
+            <div id="stats">FALTAM: <span id="count">100</span></div>
+            <button id="bg-music-btn" class="audio-btn" onclick="toggleMusic()">SOM: OFF</button>
         </div>
     </header>
 
@@ -214,9 +197,7 @@
     <audio id="snd-bg" src="musica_fundo_sebran.ogg" loop></audio>
 
     <script>
-        // O código JavaScript permanece o mesmo que o anterior (lógica de acentuação e espaços)
         const words = ["AMARELINHA", "BONECA", "CARRINHO", "PETECA", "PEÃO", "PULA CORDA", "ESCONDE-ESCONDE", "PEGA-PEGA", "PIPA", "IOIÔ", "BALANÇO", "ESCORREGADOR", "GIRA-GIRA", "DOMINÓ", "XADREZ", "DAMA", "LUDO", "QUEBRA-CABEÇA", "MASSINHA", "AQUARELA", "CINDERELA", "PINÓQUIO", "BRANCA DE NEVE", "RAPUNZEL", "ALADDIN", "PETER PAN", "SININHO", "O GATO DE BOTAS", "JOÃO E MARIA", "LOBO MAU", "CHAPEUZINHO VERMELHO", "OS TRÊS PORQUINHOS", "O PATO FEIO", "A BELA E A FERA", "A PEQUENA SEREIA", "REI LEÃO", "POCAHONTAS", "MULAN", "TARZAN", "ALICE", "FADA MADRINHA", "PALHAÇO", "MÁGICO", "BAMBOLÊ", "CATAVENTO", "BOLINHA DE SABÃO", "QUEIMADA", "CABO DE GUERRA", "ESTÁTUA", "PASSANEL", "TELEFONE SEM FIO", "BATATA QUENTE", "CADEIRAS", "CORRE COTIA", "PULA-PULA", "LEGO", "BARBIE", "PELÚCIA", "MARIONETE", "FANTOCHE", "DEDOCHE", "CASTELO", "DRAGÃO", "PRINCESA", "PRÍNCIPE", "PIRATA", "UNICÓRNIO"];
-        
         let availableWords = [...words]; 
         let currentWordRaw = ""; 
         let currentWordNormalized = ""; 
@@ -228,21 +209,14 @@
         function playSnd(id) {
             const snd = document.getElementById(id);
             snd.currentTime = 0;
-            snd.play().catch(e => console.log("Áudio bloqueado"));
+            snd.play().catch(e => {});
         }
 
         function toggleMusic() {
             const bg = document.getElementById('snd-bg');
             const btn = document.getElementById('bg-music-btn');
-            if (!musicPlaying) {
-                bg.play();
-                btn.innerText = "SOM: LIGADO";
-                btn.classList.add('active');
-            } else {
-                bg.pause();
-                btn.innerText = "SOM: DESLIGADO";
-                btn.classList.remove('active');
-            }
+            if (!musicPlaying) { bg.play(); btn.innerText = "SOM: ON"; }
+            else { bg.pause(); btn.innerText = "SOM: OFF"; }
             musicPlaying = !musicPlaying;
         }
 
@@ -252,7 +226,7 @@
 
         function initGame() {
             if (availableWords.length === 0) {
-                document.getElementById('message').innerText = "VOCÊ VENCEU!";
+                document.getElementById('message').innerText = "FIM DO JOGO!";
                 return;
             }
             const idx = Math.floor(Math.random() * availableWords.length);
@@ -263,7 +237,6 @@
             document.getElementById('count').innerText = availableWords.length;
             document.getElementById('reset-btn').style.display = "none";
             document.getElementById('dead-details').style.display = "none";
-            document.getElementById('head-circle').classList.remove('dead-face');
             bodyParts.forEach(p => document.getElementById(p).style.display = "none");
             renderWord();
             renderKeyboard();
@@ -305,8 +278,7 @@
 
         function handleGuess(l) {
             if (guessedLetters.includes(l) || mistakes >= 6) return;
-            const btn = document.getElementById('k-' + l);
-            if (btn) btn.disabled = true;
+            document.getElementById('k-' + l).disabled = true;
             if (currentWordNormalized.includes(l)) {
                 guessedLetters.push(l);
                 playSnd('snd-acerto');
@@ -317,7 +289,6 @@
                 document.getElementById(bodyParts[mistakes-1]).style.display = "block";
                 if (mistakes === 6) {
                     document.getElementById('dead-details').style.display = "block";
-                    document.getElementById('head-circle').classList.add('dead-face');
                     endGame(false);
                 }
             }
@@ -338,12 +309,6 @@
         }
 
         function nextRound() { initGame(); }
-
-        window.addEventListener('keydown', (e) => {
-            const key = e.key.toUpperCase();
-            if (/^[A-Z]$/.test(key)) handleGuess(key);
-        });
-
         initGame();
     </script>
 </body>
