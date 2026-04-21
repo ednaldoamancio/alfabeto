@@ -13,105 +13,107 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* Mudado de height para min-height */
+            height: 100vh;
             margin: 0;
             padding: 10px;
-            /* Removido o overflow: hidden para permitir ajuste em telas pequenas */
+            overflow: hidden; /* Voltamos ao hidden, mas com medidas internas melhores */
         }
 
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 50px;
+            height: 40px;
             flex-shrink: 0;
         }
 
-        h1 { font-size: 1.2rem; margin: 0; letter-spacing: 2px; }
+        h1 { font-size: 1.1rem; margin: 0; letter-spacing: 2px; }
 
         .audio-controls { display: flex; gap: 10px; align-items: center; }
+        #stats { font-size: 0.8rem; }
 
         .audio-btn {
             background: none;
-            border: 2px solid #fff;
+            border: 1.5px solid #fff;
             color: #fff;
-            padding: 5px 10px;
+            padding: 4px 8px;
             cursor: pointer;
             font-weight: bold;
-            border-radius: 5px;
-            font-size: 0.8rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
         }
 
         main {
             display: flex;
             flex: 1;
-            flex-direction: row;
             align-items: center;
             justify-content: center;
-            gap: 20px;
-            padding: 10px 0;
+            gap: 15px;
+            min-height: 0; /* Permite que o conteúdo encolha para caber */
         }
 
         #hangman-container {
             flex: 1;
-            max-height: 250px; /* Limita a altura da forca */
+            height: 100%;
+            max-height: 300px; /* Garante que a forca não suma */
+            min-height: 150px; /* Altura mínima para o desenho aparecer */
             display: flex;
             justify-content: center;
+            align-items: center;
         }
 
         #hangman-svg {
             height: 100%;
-            max-width: 150px;
+            width: auto;
+            max-width: 100%;
         }
 
         #keyboard-container {
-            flex: 2;
+            flex: 1.5;
             max-width: 500px;
         }
 
         #keyboard {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
+            gap: 6px;
         }
 
         .key {
             background-color: #111;
             color: #fff;
-            border: 2px solid #fff;
+            border: 1.5px solid #fff;
             padding: 12px 0;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
-            border-radius: 8px;
+            border-radius: 6px;
         }
 
         .key:disabled { opacity: 0.2; }
 
-        /* Rodapé Fixo na Base para garantir visibilidade */
         footer {
-            width: 100%;
-            background-color: #000;
-            padding: 15px 0;
-            border-top: 2px solid #333;
+            height: 120px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            border-top: 2px solid #333;
             flex-shrink: 0;
         }
 
         #word-display {
             font-size: 2.2rem;
-            letter-spacing: 10px;
+            letter-spacing: 8px;
             font-weight: 900;
             text-transform: uppercase;
             text-align: center;
-            min-height: 50px;
+            width: 100%;
         }
 
         #message {
-            height: 25px;
-            font-size: 1.1rem;
+            height: 20px;
+            font-size: 1rem;
             color: #ff4444;
             font-weight: bold;
             margin-bottom: 5px;
@@ -126,21 +128,22 @@
             left: 50%;
             transform: translate(-50%, -50%);
             padding: 20px 40px;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             background: #fff;
             color: #000;
             font-weight: bold;
-            z-index: 1000;
+            z-index: 100;
             display: none;
+            box-shadow: 0 0 20px rgba(255,255,255,0.4);
         }
 
-        /* Ajustes específicos para Tablets e Celulares */
-        @media (max-width: 850px) {
+        @media (max-width: 768px) {
             main { flex-direction: column; }
-            #hangman-container { max-height: 150px; }
-            #keyboard { grid-template-columns: repeat(9, 1fr); gap: 5px; }
-            .key { padding: 8px 0; font-size: 1rem; }
-            #word-display { font-size: 1.8rem; letter-spacing: 6px; }
+            #hangman-container { height: 35%; max-height: 180px; }
+            #keyboard { grid-template-columns: repeat(9, 1fr); }
+            .key { padding: 8px 0; font-size: 0.9rem; }
+            #word-display { font-size: 1.6rem; letter-spacing: 4px; }
+            footer { height: 100px; }
         }
     </style>
 </head>
@@ -150,7 +153,7 @@
         <h1>FORCA</h1>
         <div class="audio-controls">
             <div id="stats">FALTAM: <span id="count">100</span></div>
-            <button id="bg-music-btn" class="audio-btn" onclick="toggleMusic()">SOM: OFF</button>
+            <button id="bg-music-btn" class="audio-btn" onclick="toggleMusic()">SOM: DESLIGADO</button>
         </div>
     </header>
 
@@ -215,8 +218,15 @@
         function toggleMusic() {
             const bg = document.getElementById('snd-bg');
             const btn = document.getElementById('bg-music-btn');
-            if (!musicPlaying) { bg.play(); btn.innerText = "SOM: ON"; }
-            else { bg.pause(); btn.innerText = "SOM: OFF"; }
+            if (!musicPlaying) {
+                bg.play();
+                btn.innerText = "SOM: LIGADO";
+                btn.classList.add('active');
+            } else {
+                bg.pause();
+                btn.innerText = "SOM: DESLIGADO";
+                btn.classList.remove('active');
+            }
             musicPlaying = !musicPlaying;
         }
 
@@ -226,7 +236,7 @@
 
         function initGame() {
             if (availableWords.length === 0) {
-                document.getElementById('message').innerText = "FIM DO JOGO!";
+                document.getElementById('message').innerText = "VOCÊ VENCEU!";
                 return;
             }
             const idx = Math.floor(Math.random() * availableWords.length);
