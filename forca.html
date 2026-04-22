@@ -87,25 +87,32 @@
             transition: all 0.2s;
         }
 
-        /* ESTILO PARA LETRAS JÁ TOCADAS (DESATIVADAS) */
         .key:disabled { 
-            opacity: 0.15;            /* Fica bem clarinho */
-            border-color: #333;       /* Borda escurece */
-            color: #555;              /* Letra fica cinza escuro */
+            opacity: 0.15;
+            border-color: #333;
+            color: #555;
             cursor: default;
         }
 
         #display-section {
-            padding: 20px 0 40px 0;
+            padding: 15px 0 35px 0;
             text-align: center;
             border-top: 1px solid #333;
             background: #000;
             flex-shrink: 0;
         }
 
+        #category-info {
+            font-size: 0.9rem;
+            color: #ffeb3b;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
         #word-display {
-            font-size: 2.1rem;
-            letter-spacing: 10px;
+            font-size: 2rem;
+            letter-spacing: 8px;
             font-weight: 900;
             text-transform: uppercase;
             line-height: 1.2;
@@ -124,12 +131,15 @@
 
         #message {
             position: absolute;
-            top: 50px;
+            top: 45px;
             left: 50%;
             transform: translateX(-50%);
             font-weight: bold;
             color: #ff4444;
             z-index: 5;
+            text-align: center;
+            width: 90%;
+            font-size: 1.1rem;
         }
 
         line, circle, path { stroke: #fff; stroke-width: 6; fill: none; }
@@ -147,11 +157,13 @@
             font-weight: bold;
             z-index: 100;
             display: none;
+            border-radius: 10px;
+            border: none;
         }
 
         @media (max-width: 768px) {
             #top-row { flex-direction: column; padding-top: 20px; }
-            #hangman-container { height: 25%; min-height: 100px; }
+            #hangman-container { height: 25%; min-height: 110px; }
             #keyboard { grid-template-columns: repeat(9, 1fr); }
             #word-display { font-size: 1.6rem; letter-spacing: 5px; }
             #display-section { padding-bottom: 50px; }
@@ -201,12 +213,13 @@
         </div>
 
         <div id="display-section">
+            <div id="category-info">CATEGORIA</div>
             <div id="word-display">_ _ _ _ _</div>
         </div>
     </div>
 
     <footer>
-        PALAVRAS RESTANTES: <span id="count">100</span>
+        BOM JOGO!
     </footer>
 
     <button id="reset-btn" onclick="nextRound()">PRÓXIMA PALAVRA</button>
@@ -217,10 +230,18 @@
     <audio id="snd-bg" src="musica_fundo_sebran.ogg" loop></audio>
 
     <script>
-        const words = ["AMARELINHA", "BONECA", "CARRINHO", "PETECA", "PEÃO", "PULA CORDA", "ESCONDE-ESCONDE", "PEGA-PEGA", "PIPA", "IOIÔ", "BALANÇO", "ESCORREGADOR", "GIRA-GIRA", "DOMINÓ", "XADREZ", "DAMA", "LUDO", "QUEBRA-CABEÇA", "MASSINHA", "AQUARELA", "CINDERELA", "PINÓQUIO", "BRANCA DE NEVE", "RAPUNZEL", "ALADDIN", "PETER PAN", "SININHO", "O GATO DE BOTAS", "JOÃO E MARIA", "LOBO MAU", "CHAPEUZINHO VERMELHO", "OS TRÊS PORQUINHOS", "O PATO FEIO", "A BELA E A FERA", "A PEQUENA SEREIA", "REI LEÃO", "POCAHONTAS", "MULAN", "TARZAN", "ALICE", "FADA MADRINHA", "PALHAÇO", "MÁGICO", "BAMBOLÊ", "CATAVENTO", "BOLINHA DE SABÃO", "QUEIMADA", "CABO DE GUERRA", "ESTÁTUA", "PASSANEL", "TELEFONE SEM FIO", "BATATA QUENTE", "CADEIRAS", "CORRE COTIA", "PULA-PULA", "LEGO", "BARBIE", "PELÚCIA", "MARIONETE", "FANTOCHE", "DEDOCHE", "CASTELO", "DRAGÃO", "PRINCESA", "PRÍNCIPE", "PIRATA", "UNICÓRNIO"];
-        let availableWords = [...words]; 
+        const database = {
+            "ANIMAIS": ["CACHORRO", "GATO", "ELEFANTE", "GIRAFA", "LEÃO", "TIGRE", "ZEBRA", "MACACO", "COELHO", "RATO", "CAVALO", "VACA", "PORCO", "GALINHA", "PATO", "OVELHA", "BODE", "URSO", "LOBO", "RAPOSA", "ESQUILO", "CANGURU", "PANDA", "PINGUIM", "TUBARÃO", "BALEIA", "GOLFINHO", "TARTARUGA", "JACARÉ", "COBRA", "SAPO", "ABELHA", "FORMIGA", "BORBOLETA", "ARANHA", "ESCORPIÃO", "MORCEGO", "CORUJA", "ÁGUIA", "PAPAGAIO", "TUCANO", "AVESTRUZ", "CAMELO", "HIPOPÓTAMO", "RINOCERONTE", "ESQUILO", "CASTOR", "HAMSTER", "GUEPARDO", "COALA"],
+            "CASA": ["CADEIRA", "MESA", "SOFÁ", "CAMA", "ARMÁRIO", "GELADEIRA", "FOGÃO", "TELEVISÃO", "JANELA", "PORTA", "TAPETE", "CORTINA", "LÂMPADA", "ESPELHO", "TRAVESSEIRO", "LENÇOL", "TOALHA", "CHUVEIRO", "VASO", "PIA", "COPO", "PRATO", "TALHER", "PANELA", "VASSOURA", "BALDE", "RELOGIO", "QUADRO", "ESTANTE", "MICROONDAS", "GARFO", "FACA", "COLHER", "XÍCARA", "BULE", "FRIGIDEIRA", "ABAJUR", "COBERTOR", "CABIDE", "PENTE"],
+            "PAÍSES": ["BRASIL", "ARGENTINA", "CHILE", "MÉXICO", "CANADÁ", "ESTADOS UNIDOS", "PORTUGAL", "ESPANHA", "FRANÇA", "ITÁLIA", "ALEMANHA", "INGLATERRA", "JAPÃO", "CHINA", "EGITO", "AUSTRÁLIA", "RÚSSIA", "ÍNDIA", "ANGOLA", "GRÉCIA", "URUGUAI", "PARAGUAI", "PERU", "COLÔMBIA", "CANADÁ", "MÉXICO", "NORUEGA", "SUÉCIA", "EGITO", "MARROCOS"],
+            "ALIMENTOS": ["BANANA", "MAÇÃ", "LARANJA", "UVA", "MORANGO", "MELANCIA", "ABACAXI", "PERA", "MAMÃO", "LIMÃO", "BATATA", "CENOURA", "TOMATE", "ALFACE", "FEIJÃO", "ARROZ", "MACARRÃO", "CARNE", "OVO", "LEITE", "PÃO", "QUEIJO", "BOLO", "BISCOITO", "SUCO", "PIPOCA", "GELATINA", "CHOCOLATE", "PIZZA", "HAMBÚRGUER"],
+            "PROFISSÕES": ["PROFESSOR", "MÉDICO", "DENTISTA", "POLICIAL", "BOMBEIRO", "PADEIRO", "MOTORISTA", "COZINHEIRO", "PINTOR", "PEDREIRO", "CARPINTEIRO", "MECÂNICO", "VENDEDOR", "ARTISTA", "CANTOR", "Dançarino", "ATLETA", "JORNALISTA", "CIENTISTA", "ASTRONAUTA", "VETERINÁRIO", "ADVOGADO", "PILOTO", "CARTEIRO", "JARDINEIRO"],
+            "CORPO HUMANO": ["CABEÇA", "OMBRO", "JOELHO", "PÉ", "OLHO", "OUVIDO", "BOCA", "NARIZ", "MÃO", "DEDO", "BRAÇO", "PERNA", "BARRIGA", "COSTA", "PESCOÇO", "DENTE", "LÍNGUA", "UNHA", "CABELO", "CORAÇÃO", "PULMÃO", "ESTÔMAGO", "CÉREBRO", "SANGUE", "OSSO"]
+        };
+
         let currentWordRaw = ""; 
         let currentWordNormalized = ""; 
+        let currentCategory = "";
         let guessedLetters = [];
         let mistakes = 0;
         let musicPlaying = false;
@@ -245,19 +266,20 @@
         }
 
         function initGame() {
-            if (availableWords.length === 0) {
-                document.getElementById('message').innerText = "VOCÊ VENCEU!";
-                return;
-            }
-            const idx = Math.floor(Math.random() * availableWords.length);
-            currentWordRaw = availableWords.splice(idx, 1)[0].toUpperCase();
+            const categories = Object.keys(database);
+            currentCategory = categories[Math.floor(Math.random() * categories.length)];
+            const wordsInCategory = database[currentCategory];
+            currentWordRaw = wordsInCategory[Math.floor(Math.random() * wordsInCategory.length)].toUpperCase();
+            
             currentWordNormalized = normalize(currentWordRaw);
             guessedLetters = [];
             mistakes = 0;
-            document.getElementById('count').innerText = availableWords.length;
+
+            document.getElementById('category-info').innerText = "CATEGORIA: " + currentCategory;
             document.getElementById('reset-btn').style.display = "none";
             document.getElementById('dead-details').style.display = "none";
             bodyParts.forEach(p => document.getElementById(p).style.display = "none");
+            
             renderWord();
             renderKeyboard();
             document.getElementById('message').innerText = "";
@@ -298,8 +320,6 @@
 
         function handleGuess(l) {
             if (guessedLetters.includes(l) || mistakes >= 6) return;
-            
-            // Aqui desativamos o botão e o CSS cuida do visual "apagado"
             document.getElementById('k-' + l).disabled = true;
 
             if (currentWordNormalized.includes(l)) {
@@ -322,8 +342,10 @@
             if (win) {
                 playSnd('snd-vitoria');
                 msg.innerText = "PARABÉNS!";
+                msg.style.color = "#44ff44";
             } else {
-                msg.innerText = "A PALAVRA ERA: " + currentWordRaw;
+                msg.innerText = "OPS! A PALAVRA ERA: " + currentWordRaw;
+                msg.style.color = "#ff4444";
                 document.getElementById('word-display').innerText = currentWordRaw.split('').join(' ');
             }
             document.getElementById('reset-btn').style.display = "block";
