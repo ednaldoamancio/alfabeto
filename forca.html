@@ -29,6 +29,11 @@
 
         h1 { font-size: 1rem; margin: 0; letter-spacing: 2px; }
 
+        .audio-controls {
+            display: flex;
+            gap: 8px;
+        }
+
         .audio-btn {
             background: none;
             border: 1.5px solid #fff;
@@ -38,6 +43,12 @@
             font-weight: bold;
             border-radius: 5px;
             font-size: 0.7rem;
+        }
+
+        /* Botão de Tela Cheia com cor de destaque */
+        #fullscreen-btn {
+            border-color: #44ff44;
+            color: #44ff44;
         }
 
         #game-area {
@@ -175,6 +186,7 @@
     <header>
         <h1>FORCA</h1>
         <div class="audio-controls">
+            <button id="fullscreen-btn" class="audio-btn" onclick="toggleFullscreen()">TELA CHEIA</button>
             <button id="bg-music-btn" class="audio-btn" onclick="toggleMusic()">SOM: OFF</button>
         </div>
     </header>
@@ -246,6 +258,21 @@
         let mistakes = 0;
         let musicPlaying = false;
         const bodyParts = ['head-group', 'body', 'arm-l', 'arm-r', 'leg-l', 'leg-r'];
+
+        // FUNÇÃO DE TELA CHEIA
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`Erro ao tentar ativar tela cheia: ${err.message}`);
+                });
+                document.getElementById('fullscreen-btn').innerText = "SAIR TELA CHEIA";
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    document.getElementById('fullscreen-btn').innerText = "TELA CHEIA";
+                }
+            }
+        }
 
         function playSnd(id) {
             const snd = document.getElementById(id);
