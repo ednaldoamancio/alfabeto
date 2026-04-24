@@ -3,283 +3,271 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Parque das Letras - Pesca de Letrinhas</title>
+    <title>Pesca de Letrinhas - EdHumanas</title>
     
     <style>
         :root {
-            --primary: #ab47bc; --secondary: #ffca28; --bg-soft: #f3e9d7; --text: #3e2723;
-            --card-bg: #fffdf8; --line-color: #d6e2f5; --margin-line: rgba(255, 82, 82, 0.5);
-            --water-top: #4fc3f7; --water-bottom: #0288d1;
+            --primary: #ab47bc; 
+            --secondary: #ffca28; 
+            --text-light: #ffffff;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
 
         body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background: var(--bg-soft); color: var(--text);
-            min-height: 100vh; display: flex; align-items: center; justify-content: center;
-            transition: background 0.3s ease, color 0.3s ease;
-            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #000; color: var(--text-light);
+            width: 100vw; height: 100vh; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
         }
 
-        body.dark {
-            --bg-soft: #101017; --text: #f5f5f5; --card-bg: #181824; 
-            --line-color: #2a3142; --margin-line: rgba(255, 138, 101, 0.7);
-            --water-top: #0277bd; --water-bottom: #01579b;
+        #bg-video {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover; z-index: 0;
+            opacity: 0.7;
         }
 
-        .app { width: 100%; max-width: 900px; padding: 10px; text-align: center; }
-
-        /* Estilo Caderno Pautado */
-        .card {
-            position: relative; background-color: var(--card-bg); border-radius: 18px; 
-            padding: 20px 10px 30px; text-align: center;
-            box-shadow: 0 16px 40px rgba(0,0,0,0.16), 0 0 0 4px rgba(255,255,255,0.9);
-            background-image: repeating-linear-gradient(to bottom, transparent 0px, transparent 28px, var(--line-color) 29px);
-            background-size: 100% 29px;
-        }
-        body.dark .card { box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 0 2px rgba(255,255,255,0.06); }
-        .card::before {
-            content: ""; position: absolute; top: 0; bottom: 0; left: 45px; width: 2px;
-            background: var(--margin-line);
+        #game-wrapper {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%; z-index: 10;
+            display: flex; flex-direction: column;
         }
 
-        /* Top Bar */
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 0 10px 10px; position: relative; z-index: 2;}
-        .title { font-size: clamp(22px, 5vw, 30px); color: var(--primary); font-weight: 900; }
+        .top-bar {
+            position: absolute; top: 20px; left: 20px; z-index: 100;
+            display: flex; gap: 15px;
+        }
         
-        .theme-toggle, .btn-back {
-            width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1);
-            background: rgba(255,255,255,0.9); cursor: pointer; font-size: 20px;
-            display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        .icon-btn {
+            background: rgba(0, 0, 0, 0.6); border: 2px solid var(--secondary); color: white;
+            width: 50px; height: 50px; border-radius: 50%; cursor: pointer;
+            font-size: 24px; display: flex; justify-content: center; align-items: center;
         }
-        body.dark .theme-toggle, body.dark .btn-back { background: rgba(30,30,45,0.9); border-color: rgba(255,255,255,0.15); }
 
-        /* Painel de Jogo */
+        .game-info-container {
+            width: 100%; padding-top: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            z-index: 20; pointer-events: none;
+        }
+
         .game-info {
-            display: flex; justify-content: space-around; background: rgba(255,255,255,0.8);
-            padding: 10px; border-radius: 12px; margin: 0 10px 15px; font-weight: 800; font-size: 18px;
-            position: relative; z-index: 2; border: 2px dashed rgba(0,0,0,0.1);
+            display: flex; gap: 30px; background: rgba(0, 0, 0, 0.7);
+            padding: 10px 30px; border-radius: 50px; border: 2px solid var(--primary);
+            font-weight: bold; font-size: 22px;
         }
-        body.dark .game-info { background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.1); }
 
-        .instrucao { font-size: 24px; font-weight: 900; margin-bottom: 15px; position: relative; z-index: 2;}
-        #letraAlvo { color: var(--primary); font-size: 36px; text-shadow: 1px 1px 0px rgba(0,0,0,0.1); }
+        .instrucao { 
+            font-size: 32px; font-weight: 900; margin-top: 15px; 
+            background: rgba(0,0,0,0.6); padding: 5px 20px; border-radius: 15px;
+        }
+        #letraAlvo { color: var(--secondary); font-size: 45px; }
 
-        /* Oceano / Aquário */
         .oceano {
-            width: 95%; max-width: 800px; height: 350px; margin: 0 auto; 
-            background: linear-gradient(to bottom, var(--water-top), var(--water-bottom));
-            border-radius: 30px; position: relative; overflow: hidden;
-            border: 8px solid rgba(255,255,255,0.5); box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
-            z-index: 2;
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%; z-index: 5;
+            overflow: hidden; pointer-events: none;
         }
 
-        /* Peixinhos */
         .peixinho {
-            position: absolute; cursor: pointer; display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; width: 80px; height: 80px;
-            transition: transform 0.2s; -webkit-tap-highlight-color: transparent;
+            position: absolute; cursor: pointer; display: flex; 
+            align-items: center; justify-content: center; width: 100px; height: 100px;
+            pointer-events: auto;
         }
         
-        .peixinho:active { transform: scale(0.9) !important; }
-
-        .peixe-corpo { font-size: 55px; filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.3)); position: absolute;}
-        
+        .peixe-corpo { font-size: 75px; position: absolute; z-index: 1; }
         .letra-peixe {
-            font-size: 28px; font-weight: 900; color: white; position: relative; z-index: 5;
-            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+            font-size: 35px; font-weight: 900; color: white; position: absolute; z-index: 2;
+            text-shadow: 2px 2px 0 #000;
         }
 
-        /* Animações dos peixes */
-        @keyframes nadar-direita {
-            0% { left: -100px; transform: scaleX(-1); }
-            100% { left: 100%; transform: scaleX(-1); }
+        @keyframes nadar-direita { 0% { left: -120px; } 100% { left: 100%; } }
+        @keyframes nadar-esquerda { 0% { left: 100%; } 100% { left: -120px; } }
+
+        /* BOLHAS DE VITÓRIA (ETAPA CONCLUÍDA) */
+        .bolha {
+            position: absolute; bottom: -50px;
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 15;
+            animation: subir-bolha linear forwards;
         }
-        @keyframes nadar-esquerda {
-            0% { left: 100%; transform: scaleX(1); }
-            100% { left: -100px; transform: scaleX(1); }
+        @keyframes subir-bolha {
+            to { transform: translateY(-120vh) translateX(50px); opacity: 0; }
         }
 
-        /* Efeito de Erro e Acerto */
-        .erro-anim { animation: tremer 0.4s; filter: grayscale(100%); }
-        @keyframes tremer { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
-
-        /* Modal de Acerto */
-        #modal-acerto {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+        /* MODAL DE ETAPA CONCLUÍDA */
+        #modal-vitoria {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92);
             z-index: 1000; flex-direction: column; align-items: center; justify-content: center;
-            animation: fadeIn 0.3s;
+            text-align: center; padding: 20px;
         }
-        .letra-gigante { font-size: 140px; font-weight: 900; color: var(--secondary); margin-bottom: 20px; text-shadow: 0 10px 20px rgba(0,0,0,0.5); animation: pular 1s infinite alternate; }
-        .btn-proximo { padding: 15px 30px; font-size: 24px; font-weight: 900; background: var(--primary); color: white; border: none; border-radius: 20px; cursor: pointer; box-shadow: 0 6px 0px #7b1fa2;}
-        .btn-proximo:active { transform: translateY(6px); box-shadow: 0 0px 0px #7b1fa2; }
+        .vitoria-texto { font-size: 5vh; color: var(--secondary); font-weight: bold; margin: 20px 0; }
+        .icone-vitoria { font-size: 15vh; margin-bottom: 20px; }
         
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes pular { from { transform: translateY(0); } to { transform: translateY(-30px); } }
+        .btn-proximo { 
+            padding: 20px 50px; font-size: 28px; font-weight: bold; background: var(--primary); 
+            color: white; border: none; border-radius: 50px; cursor: pointer; margin-top: 30px;
+        }
+
+        .erro-anim { animation: tremer 0.4s; filter: grayscale(100%); }
+        @keyframes tremer { 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
     </style>
 </head>
 <body>
 
-<div class="app">
-    <div class="card">
-        <div class="header">
-            <button class="btn-back" onclick="window.location.href='index.html'" aria-label="Voltar">⬅️</button>
-            <h1 class="title">🎣 Pesca de Letrinhas</h1>
-            <button class="theme-toggle" id="themeToggle" aria-label="Alternar modo noturno">🌞</button>
-        </div>
+<video autoplay loop muted playsinline id="bg-video">
+    <source src="video_mar.mp4" type="video/mp4">
+</video>
 
-        <div class="game-info">
-            <div>Fase: <span id="faseText">1</span></div>
-            <div>Pontos: <span id="pontosText" style="color:var(--primary);">0</span></div>
-        </div>
+<audio id="bg-audio" src="som_fundo_do_mar.mp3" loop></audio>
 
-        <p class="instrucao">Pesque a letra: <span id="letraAlvo">?</span></p>
-
-        <div class="oceano" id="aquario">
-            <!-- Peixes gerados via JS -->
-        </div>
+<div id="game-wrapper">
+    <div class="top-bar">
+        <button class="icon-btn" onclick="window.location.href='index.html'">⬅️</button>
+        <button id="btn-audio" class="icon-btn" onclick="toggleAudio()">🔇</button>
+        <button class="icon-btn" onclick="toggleFullscreen()">⛶</button>
     </div>
+
+    <div class="game-info-container">
+        <div class="game-info">
+            <div>Etapa: <span id="faseText">1</span></div>
+            <div>Pescados: <span id="pontosText">0</span></div>
+        </div>
+        <p class="instrucao">Pesque a letra: <span id="letraAlvo">?</span></p>
+    </div>
+
+    <div class="oceano" id="aquario"></div>
 </div>
 
-<!-- Tela de Vitória da Rodada -->
-<div id="modal-acerto">
-    <div class="letra-gigante" id="letraVitoria">A</div>
-    <button class="btn-proximo" onclick="proximaRodada()">Continuar Pescando! 🎣</button>
+<div id="modal-vitoria">
+    <div class="icone-vitoria">🏆</div>
+    <div class="vitoria-texto">Parabéns! Você venceu!</div>
+    <div class="vitoria-texto" style="font-size: 3vh; color: #fff;">Vamos para a próxima fase?</div>
+    <button class="btn-proximo" onclick="proximaEtapa()">SIM! 🎣</button>
 </div>
 
 <script>
-    // ---------- MODO NOTURNO ----------
-    const themeToggleBtn = document.getElementById("themeToggle");
-    function setTheme(theme) {
-        if (theme === "dark") {
-            document.body.classList.add("dark"); themeToggleBtn.textContent = "🌙";
-        } else {
-            document.body.classList.remove("dark"); themeToggleBtn.textContent = "🌞";
-        }
-        localStorage.setItem("alfacel-theme", theme);
-    }
-    themeToggleBtn.addEventListener("click", () => {
-        setTheme(document.body.classList.contains("dark") ? "light" : "dark");
-    });
-    window.addEventListener("load", () => {
-        setTheme(localStorage.getItem("alfacel-theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
-    });
+    let audioEnabled = false;
+    const bgAudio = document.getElementById("bg-audio");
+    const btnAudio = document.getElementById("btn-audio");
 
-    // ---------- SÍNTESE DE VOZ (Speech API) ----------
-    function falar(texto, pitch = 1.2) {
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+        else document.exitFullscreen();
+    }
+
+    function toggleAudio() {
+        audioEnabled = !audioEnabled;
+        btnAudio.innerText = audioEnabled ? "🔊" : "🔇";
+        audioEnabled ? bgAudio.play() : bgAudio.pause();
+    }
+
+    function falar(texto) {
         if (!window.speechSynthesis) return;
         window.speechSynthesis.cancel();
         let u = new SpeechSynthesisUtterance(texto);
-        u.lang = 'pt-BR'; u.rate = 0.85; u.pitch = pitch;
+        u.lang = 'pt-BR'; u.rate = 0.9;
         window.speechSynthesis.speak(u);
     }
 
-    // ---------- LÓGICA DO JOGO ----------
+    function criarEfeitoBolhas() {
+        for(let i=0; i<40; i++) {
+            setTimeout(() => {
+                const bolha = document.createElement("div");
+                bolha.className = "bolha";
+                const tam = Math.random() * 40 + 10 + "px";
+                bolha.style.width = tam; bolha.style.height = tam;
+                bolha.style.left = Math.random() * 100 + "vw";
+                bolha.style.animationDuration = Math.random() * 2 + 2 + "s";
+                document.body.appendChild(bolha);
+                setTimeout(() => bolha.remove(), 4000);
+            }, i * 40);
+        }
+    }
+
     const alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
     const emojisPeixe = ["🐟", "🐠", "🐡", "🦑"];
-    
     let faseAtual = 1;
-    let pontos = 0;
+    let acertosNaEtapa = 0;
+    let pontosTotais = 0;
     let letraCerta = "";
-    let peixesNaTela = 3; // Começa com 3 peixes (1 certo, 2 errados)
+    let peixesNaTela = 4;
 
     const aquario = document.getElementById("aquario");
-    const letraAlvoEl = document.getElementById("letraAlvo");
-    const modalAcerto = document.getElementById("modal-acerto");
+    const modalVitoria = document.getElementById("modal-vitoria");
 
-    function iniciarFase() {
-        // Sorteia a letra que a criança deve pescar
+    function iniciarRodada() {
         letraCerta = alfabeto[Math.floor(Math.random() * alfabeto.length)];
-        letraAlvoEl.innerText = letraCerta;
-        
+        document.getElementById("letraAlvo").innerText = letraCerta;
         document.getElementById("faseText").innerText = faseAtual;
-        document.getElementById("pontosText").innerText = pontos;
-
-        // Limpa o aquário
+        document.getElementById("pontosText").innerText = pontosTotais;
         aquario.innerHTML = "";
 
-        // Lista de letras que vão aparecer (1 certa, o resto aleatório)
         let letrasRodada = [letraCerta];
         while (letrasRodada.length < peixesNaTela) {
-            let aleatoria = alfabeto[Math.floor(Math.random() * alfabeto.length)];
-            if (!letrasRodada.includes(aleatoria)) letrasRodada.push(aleatoria);
+            let aleat = alfabeto[Math.floor(Math.random() * alfabeto.length)];
+            if (!letrasRodada.includes(aleat)) letrasRodada.push(aleat);
         }
 
-        // Embaralha as letras
-        letrasRodada.sort(() => Math.random() - 0.5);
-
-        // Cria os peixes no HTML
-        letrasRodada.forEach(letra => criarPeixe(letra));
-
-        // Fala a instrução
+        letrasRodada.sort(() => Math.random() - 0.5).forEach(letra => criarPeixe(letra));
         setTimeout(() => falar("Pesque a letra " + letraCerta), 500);
     }
 
     function criarPeixe(letra) {
         const peixe = document.createElement("div");
         peixe.className = "peixinho";
-        
-        // Posição Y aleatória (evitando bordas)
-        peixe.style.top = Math.floor(Math.random() * 70) + 10 + "%";
+        peixe.style.top = Math.floor(Math.random() * 60) + 20 + "%";
 
-        // Define a direção do nado e tempo (dificuldade)
-        const vaiParaDireita = Math.random() > 0.5;
-        const tempoNado = (Math.random() * 5) + (8 - (faseAtual * 0.3)); // Fica mais rápido nas fases altas
-        
-        peixe.style.animation = vaiParaDireita 
-            ? `nadar-direita ${tempoNado}s linear infinite` 
-            : `nadar-esquerda ${tempoNado}s linear infinite`;
+        const dir = Math.random() > 0.5;
+        const speed = (Math.random() * 5) + 8;
+        peixe.style.animation = dir ? `nadar-direita ${speed}s linear infinite` : `nadar-esquerda ${speed}s linear infinite`;
 
         const emoji = emojisPeixe[Math.floor(Math.random() * emojisPeixe.length)];
-        
-        peixe.innerHTML = `
-            <span class="peixe-corpo">${emoji}</span>
-            <span class="letra-peixe">${letra}</span>
-        `;
+        const flip = dir ? 'transform: scaleX(-1);' : '';
 
-        // Evento de clique / toque
-        peixe.addEventListener("click", function() {
-            if (letra === letraCerta) {
-                acertou();
-            } else {
-                errou(peixe);
-            }
-        });
-
+        peixe.innerHTML = `<span class="peixe-corpo" style="${flip}">${emoji}</span><span class="letra-peixe">${letra}</span>`;
+        peixe.onclick = () => (letra === letraCerta) ? validarAcerto() : errou(peixe);
         aquario.appendChild(peixe);
     }
 
-    function acertou() {
-        falar("Muito bem! Letra " + letraCerta, 1.5);
-        pontos += 10;
+    function validarAcerto() {
+        acertosNaEtapa++;
+        pontosTotais++;
         
-        // A cada 3 acertos, sobe de fase e aumenta a quantidade de peixes (até limite de 8)
-        if (pontos % 30 === 0 && peixesNaTela < 8) {
-            faseAtual++;
-            peixesNaTela++;
+        // Se ainda não completou a etapa (ex: 5 acertos)
+        if (acertosNaEtapa < 5) {
+            falar("Muito bem! Letra " + letraCerta);
+            iniciarRodada();
+        } else {
+            // FIM DA ETAPA: Ativa celebração e modal
+            concluirEtapa();
         }
-
-        document.getElementById("letraVitoria").innerText = letraCerta;
-        modalAcerto.style.display = "flex";
     }
 
-    function errou(peixeObj) {
-        falar("Ops! Essa não.", 0.8);
-        peixeObj.classList.add("erro-anim");
-        // Remove a animação de erro para poder errar de novo o mesmo peixe se quiser
-        setTimeout(() => peixeObj.classList.remove("erro-anim"), 500);
+    function concluirEtapa() {
+        criarEfeitoBolhas();
+        falar("Parabéns! Você venceu! Vamos para a próxima fase?");
+        modalVitoria.style.display = "flex";
     }
 
-    function proximaRodada() {
-        modalAcerto.style.display = "none";
-        iniciarFase();
+    function proximaEtapa() {
+        faseAtual++;
+        acertosNaEtapa = 0;
+        peixesNaTela = Math.min(peixesNaTela + 1, 10);
+        modalVitoria.style.display = "none";
+        iniciarRodada();
     }
 
-    // Inicia o jogo ao carregar
-    window.addEventListener("load", iniciarFase);
+    function errou(p) {
+        falar("Essa é a letra " + p.innerText);
+        p.classList.add("erro-anim");
+        setTimeout(() => p.classList.remove("erro-anim"), 500);
+    }
+
+    window.onload = iniciarRodada;
 </script>
-
 </body>
 </html>
-
