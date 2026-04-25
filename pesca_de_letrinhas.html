@@ -84,7 +84,18 @@
         @keyframes nadar-direita { 0% { left: -120px; } 100% { left: 100%; } }
         @keyframes nadar-esquerda { 0% { left: 100%; } 100% { left: -120px; } }
 
-        /* BOLHAS DE VITÓRIA (ETAPA CONCLUÍDA) */
+        /* NOVA ANIMAÇÃO DE PESCADO: Sobe de onde estiver */
+        .pescado {
+            animation: subir-vertical 0.7s ease-in forwards !important;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        @keyframes subir-vertical {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100vh) scale(0.6); opacity: 0; }
+        }
+
         .bolha {
             position: absolute; bottom: -50px;
             background: rgba(255, 255, 255, 0.4);
@@ -98,7 +109,6 @@
             to { transform: translateY(-120vh) translateX(50px); opacity: 0; }
         }
 
-        /* MODAL DE ETAPA CONCLUÍDA */
         #modal-vitoria {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92);
             z-index: 1000; flex-direction: column; align-items: center; justify-content: center;
@@ -123,6 +133,7 @@
 </video>
 
 <audio id="bg-audio" src="som_fundo_do_mar.mp3" loop></audio>
+<audio id="sfx-pescado" src="pescado.ogg"></audio>
 
 <div id="game-wrapper">
     <div class="top-bar">
@@ -152,6 +163,7 @@
 <script>
     let audioEnabled = false;
     const bgAudio = document.getElementById("bg-audio");
+    const sfxPescado = document.getElementById("sfx-pescado");
     const btnAudio = document.getElementById("btn-audio");
 
     function toggleFullscreen() {
@@ -229,22 +241,40 @@
         const flip = dir ? 'transform: scaleX(-1);' : '';
 
         peixe.innerHTML = `<span class="peixe-corpo" style="${flip}">${emoji}</span><span class="letra-peixe">${letra}</span>`;
-        peixe.onclick = () => (letra === letraCerta) ? validarAcerto() : errou(peixe);
+        peixe.onclick = () => (letra === letraCerta) ? validarAcerto(peixe) : errou(peixe);
         aquario.appendChild(peixe);
     }
 
-    function validarAcerto() {
+    function validarAcerto(peixeElemento) {
+        if(audioEnabled) {
+            sfxPescado.currentTime = 0;
+            sfxPescado.play().catch(e => {});
+        }
+
+        // 1. Captura a posição exata onde o peixe está no momento do clique
+        const rect = peixeElemento.getBoundingClientRect();
+        
+        // 2. Trava o peixe nessa posição exata e remove a animação lateral
+        peixeElemento.style.animation = "none";
+        peixeElemento.style.left = rect.left + "px";
+        peixeElemento.style.top = rect.top + "px";
+
+        // 3. Aplica a classe de subida (que agora usa transform relativo ao ponto atual)
+        setTimeout(() => {
+            peixeElemento.classList.add("pescado");
+        }, 10);
+
         acertosNaEtapa++;
         pontosTotais++;
         
-        // Se ainda não completou a etapa (ex: 5 acertos)
-        if (acertosNaEtapa < 5) {
-            falar("Muito bem! Letra " + letraCerta);
-            iniciarRodada();
-        } else {
-            // FIM DA ETAPA: Ativa celebração e modal
-            concluirEtapa();
-        }
+        setTimeout(() => {
+            if (acertosNaEtapa < 5) {
+                falar("Muito bem! Letra " + letraCerta);
+                iniciarRodada();
+            } else {
+                concluirEtapa();
+            }
+        }, 750);
     }
 
     function concluirEtapa() {
