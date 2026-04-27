@@ -81,10 +81,6 @@
             text-shadow: 2px 2px 0 #000;
         }
 
-        @keyframes nadar-direita { 0% { left: -120px; } 100% { left: 100%; } }
-        @keyframes nadar-esquerda { 0% { left: 100%; } 100% { left: -120px; } }
-
-        /* NOVA ANIMAÇÃO DE PESCADO: Sobe de onde estiver */
         .pescado {
             animation: subir-vertical 0.7s ease-in forwards !important;
             pointer-events: none;
@@ -96,6 +92,9 @@
             100% { transform: translateY(-100vh) scale(0.6); opacity: 0; }
         }
 
+        @keyframes nadar-direita { 0% { left: -120px; } 100% { left: 100%; } }
+        @keyframes nadar-esquerda { 0% { left: 100%; } 100% { left: -120px; } }
+
         .bolha {
             position: absolute; bottom: -50px;
             background: rgba(255, 255, 255, 0.4);
@@ -105,9 +104,7 @@
             z-index: 15;
             animation: subir-bolha linear forwards;
         }
-        @keyframes subir-bolha {
-            to { transform: translateY(-120vh) translateX(50px); opacity: 0; }
-        }
+        @keyframes subir-bolha { to { transform: translateY(-120vh) translateX(50px); opacity: 0; } }
 
         #modal-vitoria {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92);
@@ -116,11 +113,6 @@
         }
         .vitoria-texto { font-size: 5vh; color: var(--secondary); font-weight: bold; margin: 20px 0; }
         .icone-vitoria { font-size: 15vh; margin-bottom: 20px; }
-        
-        .btn-proximo { 
-            padding: 20px 50px; font-size: 28px; font-weight: bold; background: var(--primary); 
-            color: white; border: none; border-radius: 50px; cursor: pointer; margin-top: 30px;
-        }
 
         .erro-anim { animation: tremer 0.4s; filter: grayscale(100%); }
         @keyframes tremer { 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
@@ -144,8 +136,8 @@
 
     <div class="game-info-container">
         <div class="game-info">
-            <div>Etapa: <span id="faseText">1</span></div>
-            <div>Pescados: <span id="pontosText">0</span></div>
+            <div>Etapa: <span id="faseText">1</span>/2</div>
+            <div>Letras: <span id="pontosText">0</span>/26</div>
         </div>
         <p class="instrucao">Pesque a letra: <span id="letraAlvo">?</span></p>
     </div>
@@ -154,10 +146,9 @@
 </div>
 
 <div id="modal-vitoria">
-    <div class="icone-vitoria">🏆</div>
-    <div class="vitoria-texto">Parabéns! Você venceu!</div>
-    <div class="vitoria-texto" style="font-size: 3vh; color: #fff;">Vamos para a próxima fase?</div>
-    <button class="btn-proximo" onclick="proximaEtapa()">SIM! 🎣</button>
+    <div class="icone-vitoria" id="vitoria-icone">🏆</div>
+    <div class="vitoria-texto" id="vitoria-msg-topo">Parabéns! Etapa Concluída!</div>
+    <div class="vitoria-texto" id="vitoria-msg-sub" style="font-size: 3vh; color: #fff;">Preparando próxima fase...</div>
 </div>
 
 <script>
@@ -165,6 +156,14 @@
     const bgAudio = document.getElementById("bg-audio");
     const sfxPescado = document.getElementById("sfx-pescado");
     const btnAudio = document.getElementById("btn-audio");
+    const aquario = document.getElementById("aquario");
+    const modalVitoria = document.getElementById("modal-vitoria");
+
+    const alfabetoCompleto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").sort(() => Math.random() - 0.5);
+    let indiceLetraAtual = 0;
+    let faseAtual = 1;
+    let peixesNaTela = 5;
+    const emojisPeixe = ["🐟", "🐠", "🐡", "🦑"];
 
     function toggleFullscreen() {
         if (!document.fullscreenElement) document.documentElement.requestFullscreen();
@@ -177,11 +176,30 @@
         audioEnabled ? bgAudio.play() : bgAudio.pause();
     }
 
-    function falar(texto) {
+    // Ajuste fonético pedagógico para as vogais
+    function ajustarPronuncia(texto) {
+        let t = texto.toUpperCase();
+        if (t === "E") return "Ê";
+        if (t === "O") return "Ô";
+        return texto
+            .replace(/\bletra E\b/gi, "letra Ê")
+            .replace(/\bletra O\b/gi, "letra Ô");
+    }
+
+    function falar(texto, callback) {
         if (!window.speechSynthesis) return;
         window.speechSynthesis.cancel();
-        let u = new SpeechSynthesisUtterance(texto);
-        u.lang = 'pt-BR'; u.rate = 0.9;
+        
+        const textoAjustado = ajustarPronuncia(texto);
+        let u = new SpeechSynthesisUtterance(textoAjustado);
+        u.lang = 'pt-BR';
+        u.rate = 0.85; 
+
+        if(callback) {
+            u.onend = () => {
+                setTimeout(callback, 200);
+            };
+        }
         window.speechSynthesis.speak(u);
     }
 
@@ -200,35 +218,29 @@
         }
     }
 
-    const alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-    const emojisPeixe = ["🐟", "🐠", "🐡", "🦑"];
-    let faseAtual = 1;
-    let acertosNaEtapa = 0;
-    let pontosTotais = 0;
-    let letraCerta = "";
-    let peixesNaTela = 4;
-
-    const aquario = document.getElementById("aquario");
-    const modalVitoria = document.getElementById("modal-vitoria");
-
     function iniciarRodada() {
-        letraCerta = alfabeto[Math.floor(Math.random() * alfabeto.length)];
+        if (indiceLetraAtual >= alfabetoCompleto.length) {
+            finalizarJogoGeral();
+            return;
+        }
+
+        const letraCerta = alfabetoCompleto[indiceLetraAtual];
         document.getElementById("letraAlvo").innerText = letraCerta;
         document.getElementById("faseText").innerText = faseAtual;
-        document.getElementById("pontosText").innerText = pontosTotais;
+        document.getElementById("pontosText").innerText = indiceLetraAtual;
         aquario.innerHTML = "";
 
         let letrasRodada = [letraCerta];
         while (letrasRodada.length < peixesNaTela) {
-            let aleat = alfabeto[Math.floor(Math.random() * alfabeto.length)];
+            let aleat = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random() * 26)];
             if (!letrasRodada.includes(aleat)) letrasRodada.push(aleat);
         }
 
-        letrasRodada.sort(() => Math.random() - 0.5).forEach(letra => criarPeixe(letra));
-        setTimeout(() => falar("Pesque a letra " + letraCerta), 500);
+        letrasRodada.sort(() => Math.random() - 0.5).forEach(letra => criarPeixe(letra, letraCerta));
+        setTimeout(() => falar("Pesque a letra " + letraCerta), 600);
     }
 
-    function criarPeixe(letra) {
+    function criarPeixe(letra, letraCerta) {
         const peixe = document.createElement("div");
         peixe.className = "peixinho";
         peixe.style.top = Math.floor(Math.random() * 60) + 20 + "%";
@@ -241,7 +253,14 @@
         const flip = dir ? 'transform: scaleX(-1);' : '';
 
         peixe.innerHTML = `<span class="peixe-corpo" style="${flip}">${emoji}</span><span class="letra-peixe">${letra}</span>`;
-        peixe.onclick = () => (letra === letraCerta) ? validarAcerto(peixe) : errou(peixe);
+        
+        peixe.onclick = () => {
+            if (letra === letraCerta) {
+                validarAcerto(peixe);
+            } else {
+                errou(peixe, letra);
+            }
+        };
         aquario.appendChild(peixe);
     }
 
@@ -251,48 +270,50 @@
             sfxPescado.play().catch(e => {});
         }
 
-        // 1. Captura a posição exata onde o peixe está no momento do clique
         const rect = peixeElemento.getBoundingClientRect();
-        
-        // 2. Trava o peixe nessa posição exata e remove a animação lateral
         peixeElemento.style.animation = "none";
         peixeElemento.style.left = rect.left + "px";
         peixeElemento.style.top = rect.top + "px";
 
-        // 3. Aplica a classe de subida (que agora usa transform relativo ao ponto atual)
-        setTimeout(() => {
-            peixeElemento.classList.add("pescado");
-        }, 10);
-
-        acertosNaEtapa++;
-        pontosTotais++;
+        setTimeout(() => peixeElemento.classList.add("pescado"), 10);
+        indiceLetraAtual++;
         
-        setTimeout(() => {
-            if (acertosNaEtapa < 5) {
-                falar("Muito bem! Letra " + letraCerta);
-                iniciarRodada();
-            } else {
+        falar("Muito bem!", () => {
+            if (indiceLetraAtual === 13 && faseAtual === 1) {
                 concluirEtapa();
+            } else if (indiceLetraAtual === 26) {
+                finalizarJogoGeral();
+            } else {
+                iniciarRodada();
             }
-        }, 750);
+        });
     }
 
     function concluirEtapa() {
+        faseAtual = 2;
         criarEfeitoBolhas();
-        falar("Parabéns! Você venceu! Vamos para a próxima fase?");
+        document.getElementById("vitoria-msg-topo").innerText = "Etapa 1 Concluída!";
         modalVitoria.style.display = "flex";
+        
+        falar("Parabéns! Você venceu a primeira etapa! Vamos para a segunda.", () => {
+            setTimeout(() => {
+                modalVitoria.style.display = "none";
+                iniciarRodada();
+            }, 2000);
+        });
     }
 
-    function proximaEtapa() {
-        faseAtual++;
-        acertosNaEtapa = 0;
-        peixesNaTela = Math.min(peixesNaTela + 1, 10);
-        modalVitoria.style.display = "none";
-        iniciarRodada();
+    function finalizarJogoGeral() {
+        criarEfeitoBolhas();
+        document.getElementById("vitoria-icone").innerText = "🌟";
+        document.getElementById("vitoria-msg-topo").innerText = "Alfabeto Completo!";
+        document.getElementById("vitoria-msg-sub").innerText = "Você é um mestre da pescaria!";
+        modalVitoria.style.display = "flex";
+        falar("Incrível! Você pescou todo o alfabeto! Parabéns!");
     }
 
-    function errou(p) {
-        falar("Essa é a letra " + p.innerText);
+    function errou(p, letraErrada) {
+        falar(letraErrada); 
         p.classList.add("erro-anim");
         setTimeout(() => p.classList.remove("erro-anim"), 500);
     }
