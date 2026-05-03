@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Famílias Silábicas - Pronúncia Correta | EdHumanas</title>
+    
+    <style>
+        :root {
+            --primary: #1e88e5;
+            --secondary: #ffb74d;
+            --accent: #43a047;
+            --text-light: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+        body {
+            font-family: 'Segoe UI', 'Comic Neue', 'Comic Sans MS', Tahoma, sans-serif;
+            background: #000;
+            color: var(--text-light);
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #bg-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.75;
+        }
+
+        #game-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-bar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .icon-btn {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid var(--secondary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+            transition: transform 0.2s;
+        }
+        
+        .icon-btn:hover { transform: scale(1.05); }
+
+        .game-info-container {
+            width: 100%;
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .game-info {
+            display: flex;
+            gap: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 30px;
+            border-radius: 50px;
+            border: 2px solid var(--primary);
+            font-weight: bold;
+            font-size: 22px;
+            backdrop-filter: blur(4px);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .instrucao { 
+            font-size: 28px;
+            font-weight: 900;
+            margin-top: 15px;
+            background: rgba(0,0,0,0.6);
+            padding: 8px 24px;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+        }
+        
+        #silabaAlvo {
+            color: var(--secondary);
+            font-size: 52px;
+            font-weight: bold;
+            background: #000000aa;
+            padding: 0 18px;
+            border-radius: 50px;
+            letter-spacing: 3px;
+            text-shadow: 0 0 5px #ff9800;
+        }
+
+        .oceano {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .peixinho {
+            position: absolute;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 120px;
+            height: 120px;
+            pointer-events: auto;
+            transition: filter 0.1s;
+        }
+        
+        .peixe-corpo {
+            font-size: 90px;
+            position: absolute;
+            z-index: 1;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
+        }
+        
+        .silaba-peixe {
+            font-size: 30px;
+            font-weight: bold;
+            color: #fff9c4;
+            position: absolute;
+            z-index: 2;
+            text-shadow: 3px 3px 0 #0a2f5a;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+
+        .pescado {
+            animation: subir-vertical 0.7s ease-in forwards !important;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        @keyframes subir-vertical {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+        }
+
+        @keyframes nadar-direita {
+            0% { left: -150px; }
+            100% { left: 100%; }
+        }
+        @keyframes nadar-esquerda {
+            0% { left: 100%; }
+            100% { left: -150px; }
+        }
+
+        .bolha {
+            position: absolute;
+            bottom: -50px;
+            background: radial-gradient(circle, rgba(255,255,255,0.6), rgba(100,200,255,0.2));
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 15;
+            animation: subir-bolha linear forwards;
+        }
+        @keyframes subir-bolha {
+            to { transform: translateY(-120vh) translateX(40px); opacity: 0; }
+        }
+
+        #modal-vitoria {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,20,45,0.96);
+            backdrop-filter: blur(14px);
+            z-index: 1000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .vitoria-texto {
+            font-size: 5vh;
+            color: var(--secondary);
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .icone-vitoria { font-size: 15vh; margin-bottom: 20px; animation: float 2s infinite; }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
+        
+        .score-panel { font-size: 28px; background: #1e2a3a; padding: 12px 28px; border-radius: 60px; margin-top: 20px; border: 1px solid var(--secondary); }
+
+        .erro-anim {
+            animation: tremer 0.4s ease;
+            filter: grayscale(0.5) brightness(0.7);
+        }
+        @keyframes tremer {
+            0% { transform: translateX(0px); }
+            25% { transform: translateX(-12px) rotate(-3deg); }
+            75% { transform: translateX(12px) rotate(3deg); }
+            100% { transform: translateX(0px); }
+        }
+        
+        .feedback-correto {
+            position: fixed;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2e7d32dd;
+            backdrop-filter: blur(8px);
+            padding: 14px 28px;
+            border-radius: 60px;
+            font-size: 32px;
+            font-weight: bold;
+            z-index: 200;
+            animation: fadeUp 0.8s ease-out forwards;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateX(-50%) translateY(30px); }
+            20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-50px); }
+        }
+        
+        .star-point {
+            position: absolute;
+            font-size: 44px;
+            pointer-events: none;
+            z-index: 150;
+            animation: estrelaPular 0.6s ease-out forwards;
+        }
+        
+        @keyframes estrelaPular {
+            0% { transform: scale(0.2) translateY(0); opacity: 1; }
+            100% { transform: scale(1.2) translateY(-90px); opacity: 0; }
+        }
+        
+        .progresso-familia {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.6);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 16px;
+            backdrop-filter: blur(5px);
+            z-index: 25;
+            font-weight: bold;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+<video autoplay loop muted playsinline id="bg-video">
+    <source src="video_mar.mp4" type="video/mp4">
+</video>
+
+<audio id="bg-audio" src="som_fundo_do_mar.mp3" loop></audio>
+<audio id="sfx-pescado" src="pescado.ogg"></audio>
+<audio id="sfx-erro" src="erro.mp3"></audio>
+
+<div id="game-wrapper">
+    <div class="top-bar">
+        <button class="icon-btn" onclick="window.location.href='index.html'">⬅️</button>
+        <button id="btn-audio" class="icon-btn" onclick="toggleAudio()">🔇</button>
+        <button class="icon-btn" onclick="toggleFullscreen()">⛶</button>
+    </div>
+
+    <div class="game-info-container">
+        <div class="game-info">
+            <div>📚 Etapa: <span id="faseText">1</span>/3</div>
+            <div>🏆 Pontos: <span id="pontosText">0</span></div>
+            <div>🎯 Progresso: <span id="acertosFase">0</span>/<span id="totalEtapa">0</span></div>
+            <div>🔤 Família: <span id="familiaAtual">B</span></div>
+        </div>
+        <p class="instrucao">🐠 Pesque a sílaba: <span id="silabaAlvo">---</span></p>
+    </div>
+    <div class="oceano" id="aquario"></div>
+    <div class="progresso-familia" id="progressHint">🌟 B → BA, BE, BI, BO, BU, BÃO</div>
+</div>
+
+<div id="modal-vitoria">
+    <div class="icone-vitoria" id="vitoria-icone">🎣✨</div>
+    <div class="vitoria-texto" id="vitoria-msg-topo">Parabéns!</div>
+    <div class="score-panel" id="scoreFinalModal">Pontuação: 0</div>
+    <div class="vitoria-texto" id="vitoria-msg-sub" style="font-size: 3vh; color: #fff;">Preparando próximo nível...</div>
+</div>
+
+<script>
+    // ========== FAMÍLIAS SILÁBICAS COMPLETAS (NORMA CULTA) ==========
+    // CORREÇÃO: Ç só existe antes de A, O, U (ÇA, ÇO, ÇU, ÇÃO)
+    // CE e CI permanecem na família C com som de "sê" e "si"
+    const familiasCompletas = [
+        { letra: "B", silabas: ["BA", "BE", "BI", "BO", "BU", "BÃO"] },
+        { letra: "C", silabas: ["CA", "CE", "CI", "CO", "CU", "CÃO"] },
+        { letra: "Ç", silabas: ["ÇA", "ÇO", "ÇU", "ÇÃO"] },  // Ç apenas com A, O, U
+        { letra: "D", silabas: ["DA", "DE", "DI", "DO", "DU", "DÃO"] },
+        { letra: "F", silabas: ["FA", "FE", "FI", "FO", "FU", "FÃO"] },
+        { letra: "G", silabas: ["GA", "GUE", "GUI", "GO", "GU", "GÃO", "GE", "GI"] },
+        { letra: "H", silabas: ["HA", "HE", "HI", "HO", "HU", "HÃO"] },
+        { letra: "J", silabas: ["JA", "JE", "JI", "JO", "JU", "JÃO"] },
+        { letra: "K", silabas: ["KA", "KE", "KI", "KO", "KU", "KÃO"] },
+        { letra: "L", silabas: ["LA", "LE", "LI", "LO", "LU", "LÃO"] },
+        { letra: "M", silabas: ["MA", "ME", "MI", "MO", "MU", "MÃO"] },
+        { letra: "N", silabas: ["NA", "NE", "NI", "NO", "NU", "NÃO"] },
+        { letra: "P", silabas: ["PA", "PE", "PI", "PO", "PU", "PÃO"] },
+        { letra: "Q", silabas: ["QUA", "QUE", "QUI", "QUO", "QUÃO"] },
+        { letra: "R", silabas: ["RA", "RE", "RI", "RO", "RU", "RÃO"] },
+        { letra: "S", silabas: ["SA", "SE", "SI", "SO", "SU", "SÃO"] },
+        { letra: "T", silabas: ["TA", "TE", "TI", "TO", "TU", "TÃO"] },
+        { letra: "V", silabas: ["VA", "VE", "VI", "VO", "VU", "VÃO"] },
+        { letra: "W", silabas: ["WA", "WE", "WI", "WO", "WU", "WÃO"] },
+        { letra: "X", silabas: ["XA", "XE", "XI", "XO", "XU", "XÃO"] },
+        { letra: "Y", silabas: ["YA", "YE", "YI", "YO", "YU", "YÃO"] },
+        { letra: "Z", silabas: ["ZA", "ZE", "ZI", "ZO", "ZU", "ZÃO"] }
+    ];
+    
+    // ========== SISTEMA DE PRONÚNCIA PERFEITO PARA PORTUGUÊS BRASILEIRO ==========
+    function obterPronunciaPerfeita(silaba) {
+        if (!silaba) return "";
+        const s = silaba.toUpperCase();
+        
+        // Casos especiais com til (sílabas terminadas em ÃO)
+        const casosTil = {
+            "BÃO": "bão", "CÃO": "cão", "DÃO": "dão", "FÃO": "fão", "GÃO": "gão",
+            "HÃO": "hão", "JÃO": "jão", "KÃO": "cão", "LÃO": "lão", "MÃO": "mão",
+            "NÃO": "não", "PÃO": "pão", "QUÃO": "quão", "RÃO": "rão", "SÃO": "são",
+            "TÃO": "tão", "VÃO": "vão", "WÃO": "uão", "XÃO": "chão", "YÃO": "ião", "ZÃO": "zão",
+            "ÇÃO": "ção"
+        };
+        if (casosTil[s]) return casosTil[s];
+        
+        // Casos especiais da família Q (escrita com QU)
+        if (s === "QUA") return "quá";
+        if (s === "QUE") return "quê";
+        if (s === "QUI") return "qui";
+        if (s === "QUO") return "quô";
+        
+        // Casos especiais da família G com U (GUE = guê, GUI = gui)
+        if (s === "GUE") return "guê";
+        if (s === "GUI") return "gui";
+        
+        // Casos especiais da família Ç (cê-cedilhado - apenas antes de A, O, U)
+        if (s === "ÇA") return "sá";
+        if (s === "ÇO") return "sô";
+        if (s === "ÇU") return "su";
+        
+        // Sílabas de duas letras: BA, BE, BI, BO, BU, etc.
+        if (s.length === 2) {
+            const consoante = s[0];
+            const vogal = s[1];
+            
+            let somConsoante = consoante.toLowerCase();
+            // Ajustes fonéticos
+            if (consoante === 'C') somConsoante = 'c';
+            if (consoante === 'G') somConsoante = 'g';
+            if (consoante === 'X') somConsoante = 'ch';
+            if (consoante === 'Y') somConsoante = 'i';
+            if (consoante === 'W') somConsoante = 'u';
+            if (consoante === 'K') somConsoante = 'c';
+            if (consoante === 'Ç') somConsoante = 's';
+            
+            // Vogais com som aberto correto: A=á, E=ê, O=ô
+            if (vogal === 'A') return `${somConsoante}á`;
+            if (vogal === 'E') return `${somConsoante}ê`;
+            if (vogal === 'I') return `${somConsoante}i`;
+            if (vogal === 'O') return `${somConsoante}ô`;
+            if (vogal === 'U') return `${somConsoante}u`;
+        }
+        
+        // Sílabas de três letras com QU
+        if (s.length === 3 && s.startsWith("QU")) {
+            const vogal = s[2];
+            if (vogal === 'A') return "quá";
+            if (vogal === 'E') return "quê";
+            if (vogal === 'I') return "qui";
+            if (vogal === 'O') return "quô";
+        }
+        
+        // Sílabas de três letras GE e GI (som j)
+        if (s === "GE") return "jê";
+        if (s === "GI") return "ji";
+        
+        return silaba.toLowerCase();
+    }
+    
+    // Função para garantir que a voz leia texto de forma natural
+    function falarComPronunciaCorreta(texto, callback) {
+        if (!window.speechSynthesis) {
+            if (callback) callback();
+            return;
+        }
+        
+        window.speechSynthesis.cancel();
+        
+        let textoParaFalar = texto;
+        
+        // Processa frases completas substituindo sílabas conhecidas
+        if (texto.length > 4) {
+            // Substitui sílabas especiais dentro de frases
+            textoParaFalar = texto
+                .replace(/GUE/gi, "guê")
+                .replace(/GUI/gi, "gui")
+                .replace(/QUA/gi, "quá")
+                .replace(/QUE/gi, "quê")
+                .replace(/QUI/gi, "qui")
+                .replace(/QUO/gi, "quô")
+                .replace(/ÇA/gi, "sá")
+                .replace(/ÇO/gi, "sô")
+                .replace(/ÇU/gi, "su")
+                .replace(/GE\b/gi, "jê")
+                .replace(/GI\b/gi, "ji");
+        } else if (texto.length <= 4 && /^[A-ZÀ-ÚÇ]{2,4}$/i.test(texto)) {
+            textoParaFalar = obterPronunciaPerfeita(texto);
+        }
+        
+        const utterance = new SpeechSynthesisUtterance(textoParaFalar);
+        utterance.lang = 'pt-BR';
+        utterance.rate = 0.85;
+        utterance.pitch = 1.0;
+        
+        // Tenta usar uma voz feminina e clara do sistema
+        const voices = window.speechSynthesis.getVoices();
+        const ptBrVoice = voices.find(v => v.lang === 'pt-BR' && (v.name.includes('Google') || v.name.includes('Microsoft') || v.name.includes('Maria') || v.name.includes('Natural') || v.name.includes('Samantha')));
+        if (ptBrVoice) utterance.voice = ptBrVoice;
+        
+        if (callback) {
+            utterance.onend = () => setTimeout(callback, 150);
+        }
+        window.speechSynthesis.speak(utterance);
+    }
+    
+    function falarSilaba(silaba, callback) {
+        falarComPronunciaCorreta(silaba, callback);
+    }
+    
+    function falarMensagem(msg, callback) {
+        falarComPronunciaCorreta(msg, callback);
+    }
+    
+    // Divisão em 3 etapas (ajustado para 22 famílias totais)
+    const etapas = [
+        familiasCompletas.slice(0, 7),   // B, C, Ç, D, F, G, H
+        familiasCompletas.slice(7, 14),  // J, K, L, M, N, P, Q
+        familiasCompletas.slice(14, 22)  // R, S, T, V, W, X, Y, Z
+    ];
+    
+    let faseAtual = 1;
+    let pontuacaoTotal = 0;
+    let acertosNaEtapa = 0;
+    let filaSilabas = [];
+    let indiceSilabaAtual = 0;
+    let familiaCorrente = "B";
+    
+    let jogoAtivo = true;
+    let aguardandoProxima = false;
+    let peixesNaTela = 5;
+    let speechPending = false;
+    
+    let audioEnabled = false;
+    const bgAudio = document.getElementById("bg-audio");
+    const sfxPescado = document.getElementById("sfx-pescado");
+    const sfxErro = document.getElementById("sfx-erro");
+    const btnAudio = document.getElementById("btn-audio");
+    const aquario = document.getElementById("aquario");
+    const modalVitoria = document.getElementById("modal-vitoria");
+    
+    const emojisPeixe = ["🐟", "🐠", "🐡", "🐋", "🦈", "🐙", "🐬", "🐳"];
+    
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+        else document.exitFullscreen();
+    }
+    
+    function toggleAudio() {
+        audioEnabled = !audioEnabled;
+        btnAudio.innerText = audioEnabled ? "🔊" : "🔇";
+        if (audioEnabled) {
+            bgAudio.play().catch(e => console.log("autoplay bloqueado"));
+        } else {
+            bgAudio.pause();
+        }
+    }
+    
+    function atualizarUI() {
+        document.getElementById("faseText").innerHTML = faseAtual;
+        document.getElementById("pontosText").innerHTML = pontuacaoTotal;
+        document.getElementById("acertosFase").innerHTML = acertosNaEtapa;
+        document.getElementById("totalEtapa").innerHTML = filaSilabas.length;
+        document.getElementById("familiaAtual").innerHTML = familiaCorrente;
+        
+        const hintDiv = document.getElementById("progressHint");
+        let familiaObj = familiasCompletas.find(f => f.letra === familiaCorrente);
+        if (familiaObj) {
+            hintDiv.innerHTML = `🐟 ${familiaCorrente} → ${familiaObj.silabas.join(" · ")}`;
+        }
+    }
+    
+    function criarEfeitoBolhas(quantidade = 35) {
+        for(let i = 0; i < quantidade; i++) {
+            setTimeout(() => {
+                const bolha = document.createElement("div");
+                bolha.className = "bolha";
+                const tam = Math.random() * 45 + 12 + "px";
+                bolha.style.width = tam;
+                bolha.style.height = tam;
+                bolha.style.left = Math.random() * 100 + "vw";
+                bolha.style.animationDuration = Math.random() * 2.5 + 2 + "s";
+                bolha.style.opacity = Math.random() * 0.6 + 0.2;
+                document.body.appendChild(bolha);
+                setTimeout(() => bolha.remove(), 4500);
+            }, i * 30);
+        }
+    }
+    
+    function mostrarEstrela(x, y) {
+        const star = document.createElement("div");
+        star.className = "star-point";
+        star.innerText = "⭐";
+        star.style.left = x + "px";
+        star.style.top = y + "px";
+        document.body.appendChild(star);
+        setTimeout(() => star.remove(), 700);
+    }
+    
+    function mostrarFeedback(texto, isAcerto) {
+        const div = document.createElement("div");
+        div.className = "feedback-correto";
+        div.style.background = isAcerto ? "#2e7d32dd" : "#c62828dd";
+        div.innerText = texto;
+        document.body.appendChild(div);
+        setTimeout(() => div.remove(), 850);
+    }
+    
+    function construirFilaEtapa(etapaIndex) {
+        const familiasEtapa = etapas[etapaIndex];
+        let silabasOrdenadas = [];
+        for (let fam of familiasEtapa) {
+            silabasOrdenadas.push(...fam.silabas);
+        }
+        return silabasOrdenadas;
+    }
+    
+    function iniciarEtapa() {
+        if (faseAtual > 3) {
+            finalizarJogoCompleto();
+            return;
+        }
+        
+        filaSilabas = construirFilaEtapa(faseAtual - 1);
+        if (filaSilabas.length === 0) {
+            concluirEtapa();
+            return;
+        }
+        indiceSilabaAtual = 0;
+        acertosNaEtapa = 0;
+        const primeiraSilaba = filaSilabas[0];
+        const fam = familiasCompletas.find(f => f.silabas.includes(primeiraSilaba));
+        familiaCorrente = fam ? fam.letra : "?";
+        
+        atualizarUI();
+        jogoAtivo = true;
+        aguardandoProxima = false;
+        carregarProximaSilaba();
+    }
+    
+    function atualizarFamiliaCorrente(silabaAlvo) {
+        const encontrada = familiasCompletas.find(f => f.silabas.includes(silabaAlvo));
+        if (encontrada) {
+            familiaCorrente = encontrada.letra;
+        }
+        document.getElementById("familiaAtual").innerHTML = familiaCorrente;
+        const hintDiv = document.getElementById("progressHint");
+        if (encontrada) {
+            hintDiv.innerHTML = `🐟 ${familiaCorrente} → ${encontrada.silabas.join(" · ")}`;
+        }
+    }
+    
+    function carregarProximaSilaba() {
+        if (indiceSilabaAtual >= filaSilabas.length) {
+            concluirEtapa();
+            return;
+        }
+        
+        const silabaCerta = filaSilabas[indiceSilabaAtual];
+        document.getElementById("silabaAlvo").innerText = silabaCerta;
+        atualizarFamiliaCorrente(silabaCerta);
+        atualizarUI();
+        
+        aquario.innerHTML = "";
+        
+        let opcoes = [silabaCerta];
+        let todasSilabasDaEtapa = [...filaSilabas];
+        let distratores = todasSilabasDaEtapa.filter(s => s !== silabaCerta);
+        if (distratores.length < peixesNaTela - 1) {
+            const todas = familiasCompletas.flatMap(f => f.silabas);
+            let extras = todas.filter(s => !opcoes.includes(s) && s !== silabaCerta);
+            extras = extras.slice(0, peixesNaTela);
+            opcoes.push(...extras);
+        } else {
+            distratores.sort(() => 0.5 - Math.random());
+            opcoes.push(...distratores.slice(0, peixesNaTela - 1));
+        }
+        
+        let finalOpcoes = [...new Set(opcoes)].slice(0, peixesNaTela);
+        while(finalOpcoes.length < peixesNaTela) finalOpcoes.push("ZÃO");
+        finalOpcoes.sort(() => Math.random() - 0.5);
+        
+        finalOpcoes.forEach(sil => criarPeixe(sil, silabaCerta));
+        
+        setTimeout(() => {
+            if (jogoAtivo && !aguardandoProxima && !speechPending) {
+                speechPending = true;
+                falarSilaba(silabaCerta, () => { speechPending = false; });
+            }
+        }, 400);
+    }
+    
+    function criarPeixe(silaba, silabaAlvo) {
+        const peixe = document.createElement("div");
+        peixe.className = "peixinho";
+        peixe.style.top = Math.floor(Math.random() * 65 + 15) + "%";
+        
+        const direita = Math.random() > 0.5;
+        const duracao = (Math.random() * 6) + 7;
+        peixe.style.animation = direita ? `nadar-direita ${duracao}s linear infinite` : `nadar-esquerda ${duracao}s linear infinite`;
+        
+        const emoji = emojisPeixe[Math.floor(Math.random() * emojisPeixe.length)];
+        const flip = direita ? 'transform: scaleX(-1);' : '';
+        
+        // Ajuste de largura para sílabas maiores
+        const fontSize = silaba.length > 3 ? "26px" : "32px";
+        peixe.innerHTML = `<span class="peixe-corpo" style="${flip}">${emoji}</span><span class="silaba-peixe" style="font-size: ${fontSize};">${silaba}</span>`;
+        
+        peixe.onclick = (event) => {
+            event.stopPropagation();
+            if (!jogoAtivo || aguardandoProxima) return;
+            if (silaba === silabaAlvo) {
+                acertou(peixe, silaba);
+            } else {
+                errou(peixe, silaba);
+            }
+        };
+        aquario.appendChild(peixe);
+    }
+    
+    function acertou(peixeElem, silabaClicada) {
+        if (!jogoAtivo) return;
+        jogoAtivo = false;
+        
+        if (audioEnabled) {
+            sfxPescado.currentTime = 0;
+            sfxPescado.play().catch(e=>{});
+        }
+        
+        const rect = peixeElem.getBoundingClientRect();
+        peixeElem.style.animation = "none";
+        peixeElem.style.left = rect.left + "px";
+        peixeElem.style.top = rect.top + "px";
+        peixeElem.classList.add("pescado");
+        
+        pontuacaoTotal += 10;
+        acertosNaEtapa++;
+        atualizarUI();
+        
+        mostrarEstrela(rect.left + 45, rect.top + 40);
+        mostrarFeedback(`✅ +10  ${silabaClicada}`, true);
+        
+        speechPending = true;
+        falarMensagem("Muito bem! " + silabaClicada, () => {
+            speechPending = false;
+            indiceSilabaAtual++;
+            if (indiceSilabaAtual < filaSilabas.length) {
+                jogoAtivo = true;
+                carregarProximaSilaba();
+            } else {
+                concluirEtapa();
+            }
+        });
+    }
+    
+    function errou(peixeElem, silabaErrada) {
+        if (!jogoAtivo) return;
+        if (audioEnabled && sfxErro) {
+            sfxErro.currentTime = 0;
+            sfxErro.play().catch(e=>{});
+        }
+        mostrarFeedback(`❌ ${silabaErrada}`, false);
+        peixeElem.classList.add("erro-anim");
+        setTimeout(() => peixeElem.classList.remove("erro-anim"), 500);
+        
+        speechPending = true;
+        falarSilaba(silabaErrada, () => { speechPending = false; });
+    }
+    
+    function concluirEtapa() {
+        if (aguardandoProxima) return;
+        aguardandoProxima = true;
+        jogoAtivo = false;
+        aquario.innerHTML = "";
+        criarEfeitoBolhas(50);
+        
+        let titulo = "";
+        if (faseAtual === 1) titulo = "✨ Etapa 1 - Famílias B a H ✨";
+        else if (faseAtual === 2) titulo = "🌟 Etapa 2 - Famílias J a Q 🌟";
+        else titulo = "🏅 Etapa 3 - Famílias R a Z 🏅";
+        
+        document.getElementById("vitoria-icone").innerHTML = "🎣🏆";
+        document.getElementById("vitoria-msg-topo").innerHTML = titulo;
+        document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${filaSilabas.length}   |   Pontos: ${pontuacaoTotal}`;
+        document.getElementById("vitoria-msg-sub").innerHTML = faseAtual < 3 ? "🐠 Próxima etapa em ordem alfabética..." : "🎉 PARABÉNS! Todas as famílias do B ao Z! 🎉";
+        modalVitoria.style.display = "flex";
+        
+        let msg = faseAtual < 3 ? "Parabéns! Vamos para a próxima etapa das famílias silábicas!" : "Você é campeão! Aprendeu todas as famílias do B ao Z!";
+        falarMensagem(msg, () => {
+            setTimeout(() => {
+                modalVitoria.style.display = "none";
+                if (faseAtual < 3) {
+                    faseAtual++;
+                    iniciarEtapa();
+                } else {
+                    finalizarJogoCompleto();
+                }
+            }, 1800);
+        });
+    }
+    
+    function finalizarJogoCompleto() {
+        jogoAtivo = false;
+        aquario.innerHTML = "";
+        criarEfeitoBolhas(70);
+        document.getElementById("vitoria-icone").innerHTML = "🎓📖🐟";
+        document.getElementById("vitoria-msg-topo").innerHTML = "🏅 MESTRE DAS SÍLABAS 🏅";
+        document.getElementById("vitoria-msg-sub").innerHTML = "Ordem alfabética: B, C, Ç, D... Z! Pronúncia perfeita!";
+        document.getElementById("scoreFinalModal").innerHTML = `🌟 Pontuação final: ${pontuacaoTotal} 🌟`;
+        modalVitoria.style.display = "flex";
+        falarMensagem("Parabéns! Você completou o alfabeto silábico com pronúncia correta!");
+    }
+    
+    // Bolhas contínuas durante o jogo
+    setInterval(() => {
+        if (jogoAtivo && !aguardandoProxima && Math.random() > 0.75) {
+            const bolha = document.createElement("div");
+            bolha.className = "bolha";
+            bolha.style.width = Math.random() * 35 + 8 + "px";
+            bolha.style.height = bolha.style.width;
+            bolha.style.left = Math.random() * 100 + "vw";
+            bolha.style.animationDuration = Math.random() * 3 + 2.5 + "s";
+            document.body.appendChild(bolha);
+            setTimeout(() => bolha.remove(), 5000);
+        }
+    }, 1100);
+    
+    // Inicialização com carregamento de vozes
+    window.onload = () => {
+        if (window.speechSynthesis) {
+            window.speechSynthesis.getVoices();
+        }
+        faseAtual = 1;
+        pontuacaoTotal = 0;
+        iniciarEtapa();
+    };
+</script>
+</body>
+</html>
