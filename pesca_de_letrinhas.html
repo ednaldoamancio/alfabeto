@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Pesca de Letrinhas - EdHumanas</title>
     
     <style>
@@ -12,7 +12,7 @@
             --text-light: #ffffff;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Segoe UI', 'Comic Neue', 'Comic Sans MS', Tahoma, sans-serif;
@@ -24,6 +24,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: fixed;
         }
 
         #bg-video {
@@ -34,7 +35,7 @@
             height: 100%;
             object-fit: cover;
             z-index: 0;
-            opacity: 0.75;
+            opacity: 0.7;
         }
 
         #game-wrapper {
@@ -50,22 +51,22 @@
 
         .top-bar {
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 10px;
+            left: 10px;
             z-index: 100;
             display: flex;
-            gap: 15px;
+            gap: 10px;
         }
         
         .icon-btn {
             background: rgba(0, 0, 0, 0.6);
             border: 2px solid var(--secondary);
             color: white;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 24px;
+            font-size: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -73,11 +74,22 @@
             transition: transform 0.2s;
         }
         
-        .icon-btn:hover { transform: scale(1.05); }
+        @media (min-width: 768px) {
+            .icon-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+            .top-bar {
+                top: 20px;
+                left: 20px;
+                gap: 15px;
+            }
+        }
 
         .game-info-container {
             width: 100%;
-            padding-top: 20px;
+            padding-top: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -87,40 +99,66 @@
 
         .game-info {
             display: flex;
-            gap: 30px;
+            gap: 15px;
             background: rgba(0, 0, 0, 0.7);
-            padding: 10px 30px;
-            border-radius: 50px;
+            padding: 8px 20px;
+            border-radius: 40px;
             border: 2px solid var(--primary);
             font-weight: bold;
-            font-size: 22px;
+            font-size: 14px;
             backdrop-filter: blur(4px);
             flex-wrap: wrap;
             justify-content: center;
         }
+        
+        @media (min-width: 768px) {
+            .game-info {
+                gap: 30px;
+                padding: 10px 30px;
+                font-size: 22px;
+            }
+        }
 
         .instrucao { 
-            font-size: 28px;
+            font-size: 18px;
             font-weight: 900;
-            margin-top: 15px;
+            margin-top: 8px;
             background: rgba(0,0,0,0.6);
-            padding: 8px 24px;
-            border-radius: 40px;
+            padding: 6px 16px;
+            border-radius: 30px;
             backdrop-filter: blur(4px);
             display: flex;
             align-items: baseline;
-            gap: 12px;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        @media (min-width: 768px) {
+            .instrucao {
+                font-size: 28px;
+                margin-top: 15px;
+                padding: 8px 24px;
+                gap: 12px;
+            }
         }
         
         #letraAlvo {
             color: var(--secondary);
-            font-size: 52px;
+            font-size: 32px;
             font-weight: bold;
             background: #000000aa;
-            padding: 0 18px;
-            border-radius: 50px;
-            letter-spacing: 3px;
+            padding: 0 12px;
+            border-radius: 40px;
+            letter-spacing: 2px;
             text-shadow: 0 0 5px #ff9800;
+            cursor: pointer;
+        }
+        
+        @media (min-width: 768px) {
+            #letraAlvo {
+                font-size: 52px;
+                padding: 0 18px;
+            }
         }
 
         .oceano {
@@ -140,27 +178,65 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 110px;
-            height: 110px;
+            width: 70px;
+            height: 70px;
             pointer-events: auto;
             transition: filter 0.1s;
         }
         
+        @media (min-width: 768px) {
+            .peixinho {
+                width: 100px;
+                height: 100px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .peixinho {
+                width: 120px;
+                height: 120px;
+            }
+        }
+        
         .peixe-corpo {
-            font-size: 85px;
+            font-size: 50px;
             position: absolute;
             z-index: 1;
             filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
         }
         
+        @media (min-width: 768px) {
+            .peixe-corpo {
+                font-size: 75px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .peixe-corpo {
+                font-size: 85px;
+            }
+        }
+        
         .letra-peixe {
-            font-size: 34px;
+            font-size: 24px;
             font-weight: bold;
             color: #fff9c4;
             position: absolute;
             z-index: 2;
-            text-shadow: 3px 3px 0 #0a2f5a;
+            text-shadow: 2px 2px 0 #0a2f5a;
             font-family: 'Courier New', monospace;
+        }
+        
+        @media (min-width: 768px) {
+            .letra-peixe {
+                font-size: 32px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .letra-peixe {
+                font-size: 35px;
+            }
         }
 
         .pescado {
@@ -175,12 +251,23 @@
         }
 
         @keyframes nadar-direita {
-            0% { left: -150px; }
+            0% { left: -100px; }
             100% { left: 100%; }
         }
         @keyframes nadar-esquerda {
             0% { left: 100%; }
-            100% { left: -150px; }
+            100% { left: -100px; }
+        }
+        
+        @media (min-width: 768px) {
+            @keyframes nadar-direita {
+                0% { left: -150px; }
+                100% { left: 100%; }
+            }
+            @keyframes nadar-esquerda {
+                0% { left: 100%; }
+                100% { left: -150px; }
+            }
         }
 
         .bolha {
@@ -196,7 +283,7 @@
             to { transform: translateY(-120vh) translateX(40px); opacity: 0; }
         }
 
-        #modal-vitoria {
+        #modal-vitoria, #modal-navegacao {
             display: none;
             position: fixed;
             inset: 0;
@@ -211,38 +298,64 @@
         }
         
         .vitoria-texto {
-            font-size: 5vh;
+            font-size: 4vh;
             color: var(--secondary);
             font-weight: bold;
-            margin: 20px 0;
+            margin: 15px 0;
         }
         
-        .icone-vitoria { font-size: 15vh; margin-bottom: 20px; animation: float 2s infinite; }
+        @media (min-width: 768px) {
+            .vitoria-texto {
+                font-size: 5vh;
+                margin: 20px 0;
+            }
+        }
+        
+        .icone-vitoria { font-size: 10vh; margin-bottom: 15px; animation: float 2s infinite; }
+        @media (min-width: 768px) {
+            .icone-vitoria { font-size: 15vh; margin-bottom: 20px; }
+        }
+        
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
         
-        .score-panel { font-size: 28px; background: #1e2a3a; padding: 12px 28px; border-radius: 60px; margin-top: 20px; border: 1px solid var(--secondary); }
+        .score-panel { 
+            font-size: 18px; 
+            background: #1e2a3a; 
+            padding: 8px 20px; 
+            border-radius: 40px; 
+            margin-top: 15px; 
+            border: 1px solid var(--secondary);
+        }
+        
+        @media (min-width: 768px) {
+            .score-panel { 
+                font-size: 28px; 
+                padding: 12px 28px; 
+                border-radius: 60px; 
+                margin-top: 20px;
+            }
+        }
 
         .erro-anim {
             animation: tremer 0.4s ease;
             filter: grayscale(0.5) brightness(0.7);
         }
         @keyframes tremer {
-            0% { transform: translateX(0px); }
-            25% { transform: translateX(-12px) rotate(-3deg); }
-            75% { transform: translateX(12px) rotate(3deg); }
-            100% { transform: translateX(0px); }
+            25% { transform: translateX(-8px) rotate(-2deg); }
+            75% { transform: translateX(8px) rotate(2deg); }
+            100% { transform: translateX(0); }
         }
         
         .feedback-correto {
             position: fixed;
-            bottom: 20%;
+            bottom: 25%;
             left: 50%;
             transform: translateX(-50%);
             background: #2e7d32dd;
             backdrop-filter: blur(8px);
-            padding: 14px 28px;
-            border-radius: 60px;
-            font-size: 32px;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 20px;
             font-weight: bold;
             z-index: 200;
             animation: fadeUp 0.8s ease-out forwards;
@@ -250,103 +363,125 @@
             white-space: nowrap;
         }
         
+        @media (min-width: 768px) {
+            .feedback-correto {
+                bottom: 20%;
+                padding: 14px 28px;
+                font-size: 32px;
+            }
+        }
+        
         @keyframes fadeUp {
-            0% { opacity: 0; transform: translateX(-50%) translateY(30px); }
+            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
             20% { opacity: 1; transform: translateX(-50%) translateY(0); }
             80% { opacity: 1; transform: translateX(-50%) translateY(0); }
-            100% { opacity: 0; transform: translateX(-50%) translateY(-50px); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-40px); }
         }
         
         .star-point {
             position: absolute;
-            font-size: 44px;
+            font-size: 30px;
             pointer-events: none;
             z-index: 150;
             animation: estrelaPular 0.6s ease-out forwards;
         }
         
-        @keyframes estrelaPular {
-            0% { transform: scale(0.2) translateY(0); opacity: 1; }
-            100% { transform: scale(1.2) translateY(-90px); opacity: 0; }
+        @media (min-width: 768px) {
+            .star-point {
+                font-size: 44px;
+            }
         }
         
-        /* Botão flutuante para navegar para o jogo de sílabas */
+        @keyframes estrelaPular {
+            0% { transform: scale(0.2) translateY(0); opacity: 1; }
+            100% { transform: scale(1.2) translateY(-70px); opacity: 0; }
+        }
+        
         .btn-silabas {
             position: absolute;
-            bottom: 30px;
-            right: 30px;
+            bottom: 15px;
+            right: 15px;
             background: linear-gradient(135deg, #ff8c00, #ff5722);
             border: none;
-            border-radius: 60px;
-            padding: 14px 28px;
-            font-size: 20px;
+            border-radius: 40px;
+            padding: 8px 16px;
+            font-size: 14px;
             font-weight: bold;
             color: white;
             cursor: pointer;
             z-index: 200;
             display: flex;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            gap: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             transition: all 0.3s ease;
             font-family: inherit;
             backdrop-filter: blur(4px);
-            animation: pulse-glow 2s infinite;
         }
         
-        .btn-silabas:hover {
-            transform: scale(1.05);
-            background: linear-gradient(135deg, #ff9d2e, #ff6a3a);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        @media (min-width: 768px) {
+            .btn-silabas {
+                bottom: 30px;
+                right: 30px;
+                padding: 14px 28px;
+                font-size: 20px;
+                gap: 12px;
+            }
         }
         
-        @keyframes pulse-glow {
-            0% { box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.5); }
-            70% { box-shadow: 0 0 0 12px rgba(255, 140, 0, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 140, 0, 0); }
+        .btn-silabas:active {
+            transform: scale(0.95);
         }
         
         .btn-silabas span {
-            font-size: 28px;
+            font-size: 18px;
         }
         
-        /* Modal de confirmação para trocar de jogo */
-        #modal-navegacao {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(12px);
-            z-index: 1100;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
+        @media (min-width: 768px) {
+            .btn-silabas span {
+                font-size: 28px;
+            }
         }
         
         .nav-buttons {
             display: flex;
-            gap: 30px;
-            margin-top: 30px;
+            gap: 15px;
+            margin-top: 20px;
             flex-wrap: wrap;
             justify-content: center;
+        }
+        
+        @media (min-width: 768px) {
+            .nav-buttons {
+                gap: 30px;
+                margin-top: 30px;
+            }
         }
         
         .nav-btn {
             background: linear-gradient(135deg, var(--primary), #7b1fa2);
             border: 2px solid var(--secondary);
-            padding: 15px 35px;
-            font-size: 24px;
+            padding: 10px 20px;
+            font-size: 16px;
             font-weight: bold;
-            border-radius: 60px;
+            border-radius: 40px;
             cursor: pointer;
             transition: all 0.3s;
             color: white;
             font-family: inherit;
         }
         
-        .nav-btn:hover { transform: scale(1.05); background: linear-gradient(135deg, #7b1fa2, #ab47bc); }
+        @media (min-width: 768px) {
+            .nav-btn {
+                padding: 15px 35px;
+                font-size: 24px;
+                border-radius: 60px;
+            }
+        }
+        
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
         
         .nav-btn.cancelar {
             background: linear-gradient(135deg, #555, #333);
@@ -359,14 +494,23 @@
         
         .dica-som {
             position: absolute;
-            bottom: 20px;
-            left: 20px;
+            bottom: 15px;
+            left: 15px;
             background: rgba(0,0,0,0.5);
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 10px;
             color: #aaa;
             pointer-events: none;
+        }
+        
+        @media (min-width: 768px) {
+            .dica-som {
+                bottom: 20px;
+                left: 20px;
+                padding: 5px 12px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -392,31 +536,31 @@
             <div>📚 Etapa: <span id="faseText">1</span>/2</div>
             <div>🏆 Letras: <span id="pontosText">0</span>/26</div>
         </div>
-        <p class="instrucao">🐠 Pesque a letra: <span id="letraAlvo">?</span></p>
+        <p class="instrucao" id="btnRepetirLetra">
+            🐠 Pesque a letra: <span id="letraAlvo">?</span> 🔊
+        </p>
     </div>
 
     <div class="oceano" id="aquario"></div>
     
-    <!-- Botão para acessar o jogo das sílabas -->
     <button class="btn-silabas" id="btnMudarSilabas">
         <span>🐟📖</span> Aprender Sílabas
     </button>
     
-    <div class="dica-som">💡 Clique na letra para ouvir novamente</div>
+    <div class="dica-som">💡 Clique na letra para ouvir</div>
 </div>
 
 <div id="modal-vitoria">
-    <div class="icone-vitoria" id="vitoria-icone">🏆</div>
+    <div class="icone-vitoria">🏆</div>
     <div class="vitoria-texto" id="vitoria-msg-topo">Parabéns! Etapa Concluída!</div>
     <div class="score-panel" id="scoreFinalModal">Pontuação: 0</div>
-    <div class="vitoria-texto" id="vitoria-msg-sub" style="font-size: 3vh; color: #fff;">Preparando próxima fase...</div>
+    <div class="vitoria-texto" id="vitoria-msg-sub" style="font-size: 2.5vh; color: #fff;">Preparando próxima fase...</div>
 </div>
 
-<!-- Modal de confirmação para navegação -->
 <div id="modal-navegacao">
-    <div class="icone-vitoria" style="font-size: 12vh;">🎣➡️📚</div>
-    <div class="vitoria-texto" style="font-size: 4vh;">Vamos aprender as famílias silábicas?</div>
-    <div class="vitoria-texto" style="font-size: 2.5vh; color: #ccc;">Você vai pescar sílabas como BA, BE, BI, BO, BU e muitas outras!</div>
+    <div class="icone-vitoria">🎣➡️📚</div>
+    <div class="vitoria-texto" style="font-size: 3.5vh;">Vamos aprender as famílias silábicas?</div>
+    <div class="vitoria-texto" style="font-size: 2vh; color: #ccc;">Você vai pescar sílabas como BA, BE, BI, BO, BU e muitas outras!</div>
     <div class="nav-buttons">
         <button class="nav-btn cancelar" id="btnCancelarNavegacao">❌ Continuar aqui</button>
         <button class="nav-btn confirmar" id="btnConfirmarNavegacao">🐟 Vamos pescar sílabas!</button>
@@ -437,14 +581,22 @@
     let indiceLetraAtual = 0;
     let faseAtual = 1;
     let pontuacaoTotal = 0;
-    let peixesNaTela = 5;
+    let peixesNaTela = 4;
     let jogoAtivo = true;
     let aguardandoProxima = false;
     let speechPending = false;
     
+    // Ajuste responsivo do número de peixes
+    if (window.innerWidth < 768) {
+        peixesNaTela = 3;
+    } else if (window.innerWidth < 1024) {
+        peixesNaTela = 4;
+    } else {
+        peixesNaTela = 5;
+    }
+    
     const emojisPeixe = ["🐟", "🐠", "🐡", "🐋", "🦈", "🐙", "🐬", "🐳"];
 
-    // ========== SISTEMA DE PRONÚNCIA ==========
     function obterPronunciaLetra(letra) {
         const upper = letra.toUpperCase();
         const pronunciaMap = {
@@ -462,26 +614,17 @@
             if (callback) callback();
             return;
         }
-        
         window.speechSynthesis.cancel();
         
         const pronuncia = obterPronunciaLetra(letra);
-        
         const utterance = new SpeechSynthesisUtterance(pronuncia);
         utterance.lang = 'pt-BR';
         utterance.rate = 0.85;
         utterance.pitch = 1.0;
         
-        const voices = window.speechSynthesis.getVoices();
-        const ptBrVoice = voices.find(v => v.lang === 'pt-BR' && 
-            (v.name.includes('Google') || v.name.includes('Microsoft') || 
-             v.name.includes('Maria') || v.name.includes('Natural')));
-        if (ptBrVoice) utterance.voice = ptBrVoice;
-        
         if (callback) {
             utterance.onend = () => setTimeout(callback, 150);
         }
-        
         window.speechSynthesis.speak(utterance);
     }
     
@@ -490,7 +633,6 @@
             if (callback) callback();
             return;
         }
-        
         window.speechSynthesis.cancel();
         
         const utterance = new SpeechSynthesisUtterance(msg);
@@ -498,16 +640,9 @@
         utterance.rate = 0.85;
         utterance.pitch = 1.0;
         
-        const voices = window.speechSynthesis.getVoices();
-        const ptBrVoice = voices.find(v => v.lang === 'pt-BR' && 
-            (v.name.includes('Google') || v.name.includes('Microsoft') || 
-             v.name.includes('Maria') || v.name.includes('Natural')));
-        if (ptBrVoice) utterance.voice = ptBrVoice;
-        
         if (callback) {
             utterance.onend = () => setTimeout(callback, 150);
         }
-        
         window.speechSynthesis.speak(utterance);
     }
     
@@ -516,27 +651,18 @@
             if (callback) callback();
             return;
         }
-        
         window.speechSynthesis.cancel();
         
         const pronuncia = obterPronunciaLetra(letra);
         const textoCompleto = `Muito bem! ${pronuncia}`;
-        
         const utterance = new SpeechSynthesisUtterance(textoCompleto);
         utterance.lang = 'pt-BR';
         utterance.rate = 0.85;
         utterance.pitch = 1.0;
         
-        const voices = window.speechSynthesis.getVoices();
-        const ptBrVoice = voices.find(v => v.lang === 'pt-BR' && 
-            (v.name.includes('Google') || v.name.includes('Microsoft') || 
-             v.name.includes('Maria') || v.name.includes('Natural')));
-        if (ptBrVoice) utterance.voice = ptBrVoice;
-        
         if (callback) {
             utterance.onend = () => setTimeout(callback, 150);
         }
-        
         window.speechSynthesis.speak(utterance);
     }
 
@@ -567,12 +693,13 @@
         }
     }
 
-    function criarEfeitoBolhas(quantidade = 40) {
-        for(let i = 0; i < quantidade; i++) {
+    function criarEfeitoBolhas(quantidade = 30) {
+        const qtd = window.innerWidth < 768 ? 25 : quantidade;
+        for(let i = 0; i < qtd; i++) {
             setTimeout(() => {
                 const bolha = document.createElement("div");
                 bolha.className = "bolha";
-                const tam = Math.random() * 40 + 12 + "px";
+                const tam = Math.random() * (window.innerWidth < 768 ? 30 : 45) + 10 + "px";
                 bolha.style.width = tam;
                 bolha.style.height = tam;
                 bolha.style.left = Math.random() * 100 + "vw";
@@ -580,7 +707,7 @@
                 bolha.style.opacity = Math.random() * 0.6 + 0.2;
                 document.body.appendChild(bolha);
                 setTimeout(() => bolha.remove(), 4500);
-            }, i * 35);
+            }, i * 30);
         }
     }
     
@@ -588,8 +715,8 @@
         const star = document.createElement("div");
         star.className = "star-point";
         star.innerText = "⭐";
-        star.style.left = x + "px";
-        star.style.top = y + "px";
+        star.style.left = (x - 20) + "px";
+        star.style.top = (y - 20) + "px";
         document.body.appendChild(star);
         setTimeout(() => star.remove(), 700);
     }
@@ -631,7 +758,7 @@
         peixe.style.top = Math.floor(Math.random() * 65 + 15) + "%";
 
         const dir = Math.random() > 0.5;
-        const duracao = (Math.random() * 6) + 7;
+        const duracao = (Math.random() * 5) + 6;
         peixe.style.animation = dir ? `nadar-direita ${duracao}s linear infinite` : `nadar-esquerda ${duracao}s linear infinite`;
 
         const emoji = emojisPeixe[Math.floor(Math.random() * emojisPeixe.length)];
@@ -639,7 +766,19 @@
 
         peixe.innerHTML = `<span class="peixe-corpo" style="${flip}">${emoji}</span><span class="letra-peixe">${letra}</span>`;
         
-        peixe.onclick = () => {
+        peixe.ontouchstart = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!jogoAtivo || aguardandoProxima) return;
+            if (letra === letraCerta) {
+                validarAcerto(peixe, letra);
+            } else {
+                errou(peixe, letra);
+            }
+        };
+        
+        peixe.onclick = (e) => {
+            e.stopPropagation();
             if (!jogoAtivo || aguardandoProxima) return;
             if (letra === letraCerta) {
                 validarAcerto(peixe, letra);
@@ -669,7 +808,7 @@
         pontuacaoTotal += 10;
         indiceLetraAtual++;
         
-        mostrarEstrela(rect.left + 45, rect.top + 40);
+        mostrarEstrela(rect.left + 30, rect.top + 30);
         mostrarFeedback(`✅ +10  ${letraClicada}`, true);
         
         speechPending = true;
@@ -688,10 +827,9 @@
 
     function concluirEtapa() {
         faseAtual = 2;
-        criarEfeitoBolhas(50);
-        document.getElementById("vitoria-icone").innerHTML = "🏆✨";
+        criarEfeitoBolhas(40);
         document.getElementById("vitoria-msg-topo").innerText = "Etapa 1 Concluída!";
-        document.getElementById("scoreFinalModal").innerHTML = `✅ Letras pescadas: ${indiceLetraAtual}   |   Pontos: ${pontuacaoTotal}`;
+        document.getElementById("scoreFinalModal").innerHTML = `✅ Letras: ${indiceLetraAtual}   |   Pontos: ${pontuacaoTotal}`;
         document.getElementById("vitoria-msg-sub").innerHTML = "Preparando segunda etapa...";
         modalVitoria.style.display = "flex";
         
@@ -705,13 +843,16 @@
     }
 
     function finalizarJogoGeral() {
-        criarEfeitoBolhas(70);
-        document.getElementById("vitoria-icone").innerHTML = "🌟🏆🐟";
+        criarEfeitoBolhas(50);
         document.getElementById("vitoria-msg-topo").innerText = "Alfabeto Completo!";
-        document.getElementById("vitoria-msg-sub").innerText = "Você é um mestre da pescaria!";
+        document.getElementById("vitoria-msg-sub").innerHTML = "Você é um mestre da pescaria!";
         document.getElementById("scoreFinalModal").innerHTML = `🌟 Pontuação final: ${pontuacaoTotal} 🌟`;
         modalVitoria.style.display = "flex";
         falarMensagem("Incrível! Você pescou todo o alfabeto! Parabéns!");
+        
+        setTimeout(() => {
+            modalVitoria.style.display = "none";
+        }, 5000);
     }
 
     function errou(peixeElem, letraErrada) {
@@ -725,7 +866,6 @@
         setTimeout(() => peixeElem.classList.remove("erro-anim"), 500);
     }
 
-    // ========== FUNÇÕES DE NAVEGAÇÃO PARA O JOGO DAS SÍLABAS ==========
     function convidarParaSilabas() {
         if (aguardandoProxima) return;
         modalNavegacao.style.display = "flex";
@@ -734,49 +874,51 @@
     
     function fecharModalNavegacao() {
         modalNavegacao.style.display = "none";
-        falarMensagem("Continue pescando letras!");
     }
     
     function irParaSilabas() {
         modalNavegacao.style.display = "none";
-        criarEfeitoBolhas(40);
-        falarMensagem("Vamos pescar sílabas!", () => {
+        criarEfeitoBolhas(30);
+        falarMensagem("Vamos pescar sílabas!");
+        setTimeout(() => {
             window.location.href = "pesca_silabica.html";
-        });
+        }, 500);
     }
     
-    // Configurar eventos
     document.getElementById("btnMudarSilabas").addEventListener("click", convidarParaSilabas);
     document.getElementById("btnCancelarNavegacao").addEventListener("click", fecharModalNavegacao);
     document.getElementById("btnConfirmarNavegacao").addEventListener("click", irParaSilabas);
     
-    // Clique na letra alvo para repetir
+    document.getElementById("btnRepetirLetra").addEventListener("click", repetirLetraAlvo);
     document.getElementById("letraAlvo").addEventListener("click", function(e) {
         e.stopPropagation();
         repetirLetraAlvo();
     });
     
-    document.querySelector(".instrucao").addEventListener("click", function(e) {
-        if (e.target !== document.getElementById("letraAlvo")) {
-            repetirLetraAlvo();
-        }
-    });
-    
-    // Bolhas contínuas
     setInterval(() => {
-        if (jogoAtivo && !aguardandoProxima && Math.random() > 0.75) {
+        if (jogoAtivo && !aguardandoProxima && Math.random() > 0.8) {
             const bolha = document.createElement("div");
             bolha.className = "bolha";
-            bolha.style.width = Math.random() * 35 + 8 + "px";
-            bolha.style.height = bolha.style.width;
+            const tam = Math.random() * (window.innerWidth < 768 ? 25 : 35) + 8 + "px";
+            bolha.style.width = tam;
+            bolha.style.height = tam;
             bolha.style.left = Math.random() * 100 + "vw";
-            bolha.style.animationDuration = Math.random() * 3 + 2.5 + "s";
+            bolha.style.animationDuration = Math.random() * 3 + 2 + "s";
             document.body.appendChild(bolha);
             setTimeout(() => bolha.remove(), 5000);
         }
-    }, 1100);
+    }, 1200);
     
-    // Inicialização
+    window.addEventListener('resize', () => {
+        if (window.innerWidth < 768) {
+            peixesNaTela = 3;
+        } else if (window.innerWidth < 1024) {
+            peixesNaTela = 4;
+        } else {
+            peixesNaTela = 5;
+        }
+    });
+    
     window.onload = () => {
         if (window.speechSynthesis) {
             window.speechSynthesis.getVoices();
