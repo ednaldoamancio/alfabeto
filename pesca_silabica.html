@@ -135,11 +135,24 @@
             text-shadow: 0 0 5px #ff9800;
             cursor: pointer;
             transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
         
         #silabaAlvo:hover {
             background: #000000cc;
             text-shadow: 0 0 10px #ff9800;
+        }
+        
+        .speaker-icon {
+            font-size: 28px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        
+        .instrucao:hover .speaker-icon {
+            opacity: 1;
         }
 
         .oceano {
@@ -342,7 +355,7 @@
             <div>🔤 Família: <span id="familiaAtual">B</span></div>
         </div>
         <p class="instrucao" id="btnRepetirSilaba">
-            🐠 Pesque a sílaba: <span id="silabaAlvo">---</span> 🔊
+            🐠 Pesque a sílaba: <span id="silabaAlvo">---</span> <span class="speaker-icon">🔊</span>
         </p>
     </div>
     <div class="oceano" id="aquario"></div>
@@ -366,9 +379,9 @@
         { letra: "D", silabas: ["DA", "DE", "DI", "DO", "DU", "DÃO"] },
         { letra: "F", silabas: ["FA", "FE", "FI", "FO", "FU", "FÃO"] },
         { letra: "G", silabas: ["GA", "GUE", "GUI", "GO", "GU", "GÃO", "GE", "GI"] },
-        // Família H - H é MUDO! Apenas a vogal soa
         { letra: "H", silabas: ["HA", "HE", "HI", "HO", "HU", "HÃO"] },
         { letra: "J", silabas: ["JA", "JE", "JI", "JO", "JU", "JÃO"] },
+        // Família K - Corrigida: KA = "cá", KE = "quê", KI = "qui", KO = "cô", KU = "cu", KÃO = "cão"
         { letra: "K", silabas: ["KA", "KE", "KI", "KO", "KU", "KÃO"] },
         { letra: "L", silabas: ["LA", "LE", "LI", "LO", "LU", "LÃO"] },
         { letra: "M", silabas: ["MA", "ME", "MI", "MO", "MU", "MÃO"] },
@@ -386,7 +399,6 @@
     ];
     
     // ========== DICIONÁRIO COMPLETO DE PRONÚNCIAS ==========
-    // IMPORTANTE: Família H tem H mudo! HA = á, HE = ê, HI = i, HO = ô, HU = u, HÃO = ão
     const pronunciaMap = {
         // Família B
         "BA": "bá", "BE": "bê", "BI": "bi", "BO": "bô", "BU": "bu", "BÃO": "bão",
@@ -400,12 +412,12 @@
         "FA": "fá", "FE": "fê", "FI": "fi", "FO": "fô", "FU": "fu", "FÃO": "fão",
         // Família G
         "GA": "gá", "GUE": "guê", "GUI": "gui", "GO": "gô", "GU": "gu", "GÃO": "gão", "GE": "jê", "GI": "ji",
-        // Família H - H É MUDO! Apenas o som da vogal
+        // Família H - H é mudo
         "HA": "á", "HE": "ê", "HI": "i", "HO": "ô", "HU": "u", "HÃO": "ão",
         // Família J
         "JA": "já", "JE": "jê", "JI": "ji", "JO": "jô", "JU": "ju", "JÃO": "jão",
-        // Família K
-        "KA": "cá", "KE": "cê", "KI": "ci", "KO": "cô", "KU": "cu", "KÃO": "cão",
+        // Família K - Corrigida: KE = "quê" (como queijo), KI = "qui" (como quiabo)
+        "KA": "cá", "KE": "quê", "KI": "qui", "KO": "cô", "KU": "cu", "KÃO": "cão",
         // Família L
         "LA": "lá", "LE": "lê", "LI": "li", "LO": "lô", "LU": "lu", "LÃO": "lão",
         // Família M
@@ -434,7 +446,7 @@
         "ZA": "zá", "ZE": "zê", "ZI": "zi", "ZO": "zô", "ZU": "zu", "ZÃO": "zão"
     };
     
-    // Função para obter a pronúncia correta de qualquer sílaba
+    // Função para obter a pronúncia correta
     function obterPronunciaCorreta(silaba) {
         const upperSilaba = silaba.toUpperCase();
         if (pronunciaMap[upperSilaba]) {
@@ -443,7 +455,7 @@
         return silaba.toLowerCase();
     }
     
-    // Função principal de fala para sílabas
+    // Função principal de fala
     let speechSynthesisActive = false;
     
     function falarSilaba(silaba, callback) {
@@ -452,7 +464,6 @@
             return;
         }
         
-        // Cancela qualquer fala anterior
         window.speechSynthesis.cancel();
         
         const pronuncia = obterPronunciaCorreta(silaba);
@@ -462,7 +473,6 @@
         utterance.rate = 0.85;
         utterance.pitch = 1.0;
         
-        // Tenta usar uma voz natural do sistema
         const voices = window.speechSynthesis.getVoices();
         const ptBrVoice = voices.find(v => v.lang === 'pt-BR' && 
             (v.name.includes('Google') || v.name.includes('Microsoft') || 
@@ -477,7 +487,6 @@
         window.speechSynthesis.speak(utterance);
     }
     
-    // Função para falar "Muito bem! + sílaba"
     function falarParabensESilaba(silaba, callback) {
         if (!window.speechSynthesis) {
             if (callback) callback();
@@ -533,17 +542,18 @@
         window.speechSynthesis.speak(utterance);
     }
     
-    // Função para repetir a sílaba alvo (quando a criança clicar nela)
+    // Função para repetir a sílaba alvo (corrigida para funcionar corretamente)
     function repetirSilabaAlvo() {
         const silabaAtual = document.getElementById("silabaAlvo").innerText;
         if (silabaAtual && silabaAtual !== "---" && jogoAtivo && !aguardandoProxima) {
-            // Pequeno feedback visual
+            // Feedback visual
             const elemento = document.getElementById("silabaAlvo");
             elemento.style.transform = "scale(1.1)";
             setTimeout(() => {
                 elemento.style.transform = "scale(1)";
             }, 200);
             
+            // Fala a sílaba
             falarSilaba(silabaAtual);
         }
     }
@@ -669,7 +679,7 @@
         familiaCorrente = fam ? fam.letra : "?";
         
         atualizarUI();
-        jogoAtivo = true;
+        juegoAtivo = true;
         aguardandoProxima = false;
         carregarProximaSilaba();
     }
@@ -846,9 +856,16 @@
         falarMensagem("Parabéns! Você completou o alfabeto silábico com pronúncia correta!");
     }
     
-    // Configurar o clique na sílaba alvo para repetir a pronúncia
-    document.getElementById("btnRepetirSilaba").addEventListener("click", repetirSilabaAlvo);
-    document.getElementById("silabaAlvo").addEventListener("click", function(e) {
+    // Configurar os cliques para repetir a sílaba alvo
+    const btnRepetir = document.getElementById("btnRepetirSilaba");
+    const silabaSpan = document.getElementById("silabaAlvo");
+    
+    btnRepetir.addEventListener("click", function(e) {
+        e.stopPropagation();
+        repetirSilabaAlvo();
+    });
+    
+    silabaSpan.addEventListener("click", function(e) {
         e.stopPropagation();
         repetirSilabaAlvo();
     });
