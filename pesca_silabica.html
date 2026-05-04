@@ -203,6 +203,7 @@
             letter-spacing: 2px;
             text-shadow: 0 0 5px #ff9800;
             cursor: pointer;
+            display: inline-block;
         }
         
         @media (min-width: 768px) {
@@ -222,6 +223,7 @@
         .speaker-icon {
             font-size: 14px;
             opacity: 0.7;
+            cursor: pointer;
         }
         
         @media (min-width: 768px) {
@@ -638,9 +640,9 @@
             <div>🎯 Progresso: <span id="acertosFase">0</span>/<span id="totalEtapa">0</span></div>
             <div>🔤 Família: <span id="familiaAtual">B</span></div>
         </div>
-        <p class="instrucao" id="btnRepetirSilaba">
+        <div class="instrucao" id="btnRepetirSilaba">
             🐠 Pesque a sílaba: <span id="silabaAlvo">---</span> <span class="speaker-icon">🔊</span>
-        </p>
+        </div>
     </div>
     <div class="oceano" id="aquario"></div>
     <div class="progresso-familia" id="progressHint">🌟 B → BA, BE, BI, BO, BU, BÃO</div>
@@ -765,7 +767,6 @@
         isSpeaking = true;
         const next = speechQueue.shift();
         
-        // Cancela qualquer fala travada na memória do celular antes de iniciar a próxima
         if (window.speechSynthesis) {
             window.speechSynthesis.cancel();
         }
@@ -784,7 +785,6 @@
         let callbackExecutado = false;
         let falhaTimeout;
         
-        // Função unificada para garantir que o jogo continue sempre
         const finalizarFala = () => {
             if (!callbackExecutado) {
                 callbackExecutado = true;
@@ -797,8 +797,6 @@
         utterance.onend = finalizarFala;
         utterance.onerror = finalizarFala;
         
-        // Failsafe: Se o celular não terminar a fala (ou travar) em 3 segundos,
-        // forçamos o jogo a avançar para não frustrar o aluno.
         falhaTimeout = setTimeout(finalizarFala, 3000);
         
         window.speechSynthesis.speak(utterance);
@@ -846,7 +844,6 @@
         }
     };
     
-    // Captura a primeira interação do usuário
     document.addEventListener('touchstart', desbloquearVoz, { once: true });
     document.addEventListener('click', desbloquearVoz, { once: true });
     document.addEventListener('keydown', desbloquearVoz, { once: true });
@@ -982,7 +979,6 @@
         finalOpcoes.sort(() => Math.random() - 0.5);
         finalOpcoes.forEach(sil => criarPeixe(sil, silabaCerta));
         
-        // PRONÚNCIA DA SÍLABA ALVO - com delay maior para mobile
         setTimeout(() => {
             if (jogoAtivo && !aguardandoProxima) {
                 falarSilaba(silabaCerta);
@@ -1100,8 +1096,24 @@
         setTimeout(() => { window.location.href = "pesca_de_letrinhas.html"; }, 500);
     }
     
-    document.getElementById("btnRepetirSilaba").addEventListener("click", repetirSilabaAlvo);
-    document.getElementById("silabaAlvo").addEventListener("click", (e) => { e.stopPropagation(); repetirSilabaAlvo(); });
+    // ========== CONTROLE DE TOQUE OTIMIZADO PARA MOBILE ==========
+    const acionarAudioSilaba = (e) => {
+        if (e.type === 'touchstart' && e.cancelable) {
+            e.preventDefault();
+        }
+        e.stopPropagation();
+        repetirSilabaAlvo();
+    };
+    
+    const btnRepetir = document.getElementById("btnRepetirSilaba");
+    const spanSilaba = document.getElementById("silabaAlvo");
+    
+    btnRepetir.addEventListener("click", acionarAudioSilaba);
+    btnRepetir.addEventListener("touchstart", acionarAudioSilaba, { passive: false });
+    
+    spanSilaba.addEventListener("click", acionarAudioSilaba);
+    spanSilaba.addEventListener("touchstart", acionarAudioSilaba, { passive: false });
+    
     document.getElementById("btnVoltarAlfabeto").addEventListener("click", voltarParaAlfabeto);
     document.getElementById("btnCancelarVolta").addEventListener("click", fecharModalVolta);
     document.getElementById("btnConfirmarVolta").addEventListener("click", confirmarVolta);
