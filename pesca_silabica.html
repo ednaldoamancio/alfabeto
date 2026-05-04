@@ -36,7 +36,6 @@
             }
         }
 
-        /* Cursor personalizado - ANZOL (apenas desktop) */
         .custom-cursor {
             position: fixed;
             width: 40px;
@@ -756,7 +755,7 @@
         return pronunciaMap[upperSilaba] || silaba.toLowerCase();
     }
     
-    // Sistema de fila de fala para evitar conflitos em mobile
+    // ========== SISTEMA DE FILA DE FALA OTIMIZADO PARA MOBILE ==========
     function processSpeechQueue() {
         if (speechQueue.length === 0) {
             isSpeaking = false;
@@ -765,6 +764,11 @@
         
         isSpeaking = true;
         const next = speechQueue.shift();
+        
+        // Cancela qualquer fala travada na memória do celular antes de iniciar a próxima
+        if (window.speechSynthesis) {
+            window.speechSynthesis.cancel();
+        }
         
         const utterance = new SpeechSynthesisUtterance(next.texto);
         utterance.lang = 'pt-BR';
@@ -777,15 +781,25 @@
              v.name.includes('Maria') || v.name.includes('Natural')));
         if (ptBrVoice) utterance.voice = ptBrVoice;
         
-        utterance.onend = () => {
-            if (next.callback) next.callback();
-            processSpeechQueue();
+        let callbackExecutado = false;
+        let falhaTimeout;
+        
+        // Função unificada para garantir que o jogo continue sempre
+        const finalizarFala = () => {
+            if (!callbackExecutado) {
+                callbackExecutado = true;
+                clearTimeout(falhaTimeout);
+                if (next.callback) next.callback();
+                processSpeechQueue();
+            }
         };
         
-        utterance.onerror = () => {
-            if (next.callback) next.callback();
-            processSpeechQueue();
-        };
+        utterance.onend = finalizarFala;
+        utterance.onerror = finalizarFala;
+        
+        // Failsafe: Se o celular não terminar a fala (ou travar) em 3 segundos,
+        // forçamos o jogo a avançar para não frustrar o aluno.
+        falhaTimeout = setTimeout(finalizarFala, 3000);
         
         window.speechSynthesis.speak(utterance);
     }
@@ -817,6 +831,26 @@
         falarComFila(`Muito bem! ${pronuncia}`, callback);
     }
     
+    // ========== DESBLOQUEIO DA API DE VOZ NO MOBILE ==========
+    let vozDesbloqueada = false;
+    const desbloquearVoz = () => {
+        if (!vozDesbloqueada && window.speechSynthesis) {
+            const u = new SpeechSynthesisUtterance("");
+            u.volume = 0;
+            window.speechSynthesis.speak(u);
+            vozDesbloqueada = true;
+            document.removeEventListener('touchstart', desbloquearVoz);
+            document.removeEventListener('click', desbloquearVoz);
+            document.removeEventListener('keydown', desbloquearVoz);
+            console.log("Voz desbloqueada para mobile");
+        }
+    };
+    
+    // Captura a primeira interação do usuário
+    document.addEventListener('touchstart', desbloquearVoz, { once: true });
+    document.addEventListener('click', desbloquearVoz, { once: true });
+    document.addEventListener('keydown', desbloquearVoz, { once: true });
+    
     function repetirSilabaAlvo() {
         const silabaAtual = document.getElementById("silabaAlvo").innerText;
         if (silabaAtual && silabaAtual !== "---" && jogoAtivo && !aguardandoProxima) {
@@ -826,6 +860,14 @@
             falarSilaba(silabaAtual);
         }
     }
+    
+    // ========== EVENTO DE TECLADO PARA ACESSIBILIDADE ==========
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' || e.code === 'Enter') {
+            e.preventDefault();
+            repetirSilabaAlvo();
+        }
+    });
     
     function toggleFullscreen() {
         if (!document.fullscreenElement) document.documentElement.requestFullscreen();
@@ -940,12 +982,12 @@
         finalOpcoes.sort(() => Math.random() - 0.5);
         finalOpcoes.forEach(sil => criarPeixe(sil, silabaCerta));
         
-        // PRONÚNCIA DA SÍLABA ALVO - corrigido para mobile
+        // PRONÚNCIA DA SÍLABA ALVO - com delay maior para mobile
         setTimeout(() => {
             if (jogoAtivo && !aguardandoProxima) {
                 falarSilaba(silabaCerta);
             }
-        }, 500);
+        }, 600);
     }
     
     function criarPeixe(silaba, silabaAlvo) {
