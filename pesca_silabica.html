@@ -2,18 +2,17 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Famílias Silábicas - Pronúncia Correta | EdHumanas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Famílias Silábicas - EdHumanas</title>
     
     <style>
         :root {
             --primary: #1e88e5;
             --secondary: #ffb74d;
-            --accent: #43a047;
             --text-light: #ffffff;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Segoe UI', 'Comic Neue', 'Comic Sans MS', Tahoma, sans-serif;
@@ -22,9 +21,7 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: fixed;
         }
 
         #bg-video {
@@ -51,34 +48,44 @@
 
         .top-bar {
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 10px;
+            left: 10px;
             z-index: 100;
             display: flex;
-            gap: 15px;
+            gap: 10px;
         }
         
         .icon-btn {
             background: rgba(0, 0, 0, 0.6);
             border: 2px solid var(--secondary);
             color: white;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 24px;
+            font-size: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             backdrop-filter: blur(4px);
-            transition: transform 0.2s;
         }
         
-        .icon-btn:hover { transform: scale(1.05); }
+        @media (min-width: 768px) {
+            .icon-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+            .top-bar {
+                top: 20px;
+                left: 20px;
+                gap: 15px;
+            }
+        }
 
         .game-info-container {
             width: 100%;
-            padding-top: 20px;
+            padding-top: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -88,71 +95,100 @@
 
         .game-info {
             display: flex;
-            gap: 30px;
+            gap: 10px;
             background: rgba(0, 0, 0, 0.7);
-            padding: 10px 30px;
-            border-radius: 50px;
+            padding: 6px 15px;
+            border-radius: 30px;
             border: 2px solid var(--primary);
             font-weight: bold;
-            font-size: 22px;
+            font-size: 11px;
             backdrop-filter: blur(4px);
             flex-wrap: wrap;
             justify-content: center;
         }
+        
+        @media (min-width: 768px) {
+            .game-info {
+                gap: 20px;
+                padding: 10px 25px;
+                font-size: 18px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .game-info {
+                gap: 30px;
+                padding: 10px 30px;
+                font-size: 22px;
+            }
+        }
 
         .instrucao { 
-            font-size: 28px;
+            font-size: 16px;
             font-weight: 900;
-            margin-top: 15px;
+            margin-top: 8px;
             background: rgba(0,0,0,0.6);
-            padding: 8px 24px;
-            border-radius: 40px;
+            padding: 6px 14px;
+            border-radius: 30px;
             backdrop-filter: blur(4px);
             display: flex;
             align-items: baseline;
-            gap: 12px;
+            gap: 6px;
             cursor: pointer;
-            transition: transform 0.2s, background 0.2s;
         }
         
-        .instrucao:hover {
-            transform: scale(1.02);
-            background: rgba(0,0,0,0.8);
+        @media (min-width: 768px) {
+            .instrucao {
+                font-size: 24px;
+                margin-top: 15px;
+                padding: 8px 20px;
+                gap: 10px;
+            }
         }
         
-        .instrucao:active {
-            transform: scale(0.98);
+        @media (min-width: 1024px) {
+            .instrucao {
+                font-size: 28px;
+                padding: 8px 24px;
+                gap: 12px;
+            }
         }
         
         #silabaAlvo {
             color: var(--secondary);
-            font-size: 52px;
+            font-size: 28px;
             font-weight: bold;
             background: #000000aa;
-            padding: 0 18px;
-            border-radius: 50px;
-            letter-spacing: 3px;
+            padding: 0 10px;
+            border-radius: 30px;
+            letter-spacing: 2px;
             text-shadow: 0 0 5px #ff9800;
             cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
         }
         
-        #silabaAlvo:hover {
-            background: #000000cc;
-            text-shadow: 0 0 10px #ff9800;
+        @media (min-width: 768px) {
+            #silabaAlvo {
+                font-size: 42px;
+                padding: 0 16px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            #silabaAlvo {
+                font-size: 52px;
+                padding: 0 18px;
+            }
         }
         
         .speaker-icon {
-            font-size: 28px;
+            font-size: 16px;
             opacity: 0.7;
-            transition: opacity 0.2s;
         }
         
-        .instrucao:hover .speaker-icon {
-            opacity: 1;
+        @media (min-width: 768px) {
+            .speaker-icon {
+                font-size: 24px;
+            }
         }
 
         .oceano {
@@ -172,28 +208,64 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 120px;
-            height: 120px;
+            width: 70px;
+            height: 70px;
             pointer-events: auto;
-            transition: filter 0.1s;
+        }
+        
+        @media (min-width: 768px) {
+            .peixinho {
+                width: 100px;
+                height: 100px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .peixinho {
+                width: 120px;
+                height: 120px;
+            }
         }
         
         .peixe-corpo {
-            font-size: 90px;
+            font-size: 50px;
             position: absolute;
             z-index: 1;
             filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
         }
         
+        @media (min-width: 768px) {
+            .peixe-corpo {
+                font-size: 75px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .peixe-corpo {
+                font-size: 90px;
+            }
+        }
+        
         .silaba-peixe {
-            font-size: 30px;
+            font-size: 20px;
             font-weight: bold;
             color: #fff9c4;
             position: absolute;
             z-index: 2;
-            text-shadow: 3px 3px 0 #0a2f5a;
+            text-shadow: 2px 2px 0 #0a2f5a;
             font-family: 'Courier New', monospace;
-            letter-spacing: 1px;
+        }
+        
+        @media (min-width: 768px) {
+            .silaba-peixe {
+                font-size: 28px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .silaba-peixe {
+                font-size: 30px;
+            }
         }
 
         .pescado {
@@ -208,12 +280,23 @@
         }
 
         @keyframes nadar-direita {
-            0% { left: -150px; }
+            0% { left: -100px; }
             100% { left: 100%; }
         }
         @keyframes nadar-esquerda {
             0% { left: 100%; }
-            100% { left: -150px; }
+            100% { left: -100px; }
+        }
+        
+        @media (min-width: 768px) {
+            @keyframes nadar-direita {
+                0% { left: -150px; }
+                100% { left: 100%; }
+            }
+            @keyframes nadar-esquerda {
+                0% { left: 100%; }
+                100% { left: -150px; }
+            }
         }
 
         .bolha {
@@ -229,7 +312,7 @@
             to { transform: translateY(-120vh) translateX(40px); opacity: 0; }
         }
 
-        #modal-vitoria {
+        #modal-vitoria, #modal-navegacao {
             display: none;
             position: fixed;
             inset: 0;
@@ -244,38 +327,64 @@
         }
         
         .vitoria-texto {
-            font-size: 5vh;
+            font-size: 4vh;
             color: var(--secondary);
             font-weight: bold;
-            margin: 20px 0;
+            margin: 15px 0;
         }
         
-        .icone-vitoria { font-size: 15vh; margin-bottom: 20px; animation: float 2s infinite; }
+        @media (min-width: 768px) {
+            .vitoria-texto {
+                font-size: 5vh;
+                margin: 20px 0;
+            }
+        }
+        
+        .icone-vitoria { font-size: 10vh; margin-bottom: 15px; animation: float 2s infinite; }
+        @media (min-width: 768px) {
+            .icone-vitoria { font-size: 15vh; margin-bottom: 20px; }
+        }
+        
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
         
-        .score-panel { font-size: 28px; background: #1e2a3a; padding: 12px 28px; border-radius: 60px; margin-top: 20px; border: 1px solid var(--secondary); }
+        .score-panel { 
+            font-size: 16px; 
+            background: #1e2a3a; 
+            padding: 8px 20px; 
+            border-radius: 40px; 
+            margin-top: 15px; 
+            border: 1px solid var(--secondary);
+        }
+        
+        @media (min-width: 768px) {
+            .score-panel { 
+                font-size: 24px; 
+                padding: 12px 28px; 
+                border-radius: 60px; 
+                margin-top: 20px;
+            }
+        }
 
         .erro-anim {
             animation: tremer 0.4s ease;
             filter: grayscale(0.5) brightness(0.7);
         }
         @keyframes tremer {
-            0% { transform: translateX(0px); }
-            25% { transform: translateX(-12px) rotate(-3deg); }
-            75% { transform: translateX(12px) rotate(3deg); }
-            100% { transform: translateX(0px); }
+            25% { transform: translateX(-8px) rotate(-2deg); }
+            75% { transform: translateX(8px) rotate(2deg); }
+            100% { transform: translateX(0); }
         }
         
         .feedback-correto {
             position: fixed;
-            bottom: 20%;
+            bottom: 25%;
             left: 50%;
             transform: translateX(-50%);
             background: #2e7d32dd;
             backdrop-filter: blur(8px);
-            padding: 14px 28px;
-            border-radius: 60px;
-            font-size: 32px;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 18px;
             font-weight: bold;
             z-index: 200;
             animation: fadeUp 0.8s ease-out forwards;
@@ -283,50 +392,166 @@
             white-space: nowrap;
         }
         
+        @media (min-width: 768px) {
+            .feedback-correto {
+                bottom: 20%;
+                padding: 12px 24px;
+                font-size: 28px;
+            }
+        }
+        
         @keyframes fadeUp {
-            0% { opacity: 0; transform: translateX(-50%) translateY(30px); }
+            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
             20% { opacity: 1; transform: translateX(-50%) translateY(0); }
             80% { opacity: 1; transform: translateX(-50%) translateY(0); }
-            100% { opacity: 0; transform: translateX(-50%) translateY(-50px); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-40px); }
         }
         
         .star-point {
             position: absolute;
-            font-size: 44px;
+            font-size: 30px;
             pointer-events: none;
             z-index: 150;
             animation: estrelaPular 0.6s ease-out forwards;
         }
         
+        @media (min-width: 768px) {
+            .star-point {
+                font-size: 44px;
+            }
+        }
+        
         @keyframes estrelaPular {
             0% { transform: scale(0.2) translateY(0); opacity: 1; }
-            100% { transform: scale(1.2) translateY(-90px); opacity: 0; }
+            100% { transform: scale(1.2) translateY(-70px); opacity: 0; }
         }
         
         .progresso-familia {
             position: absolute;
-            bottom: 20px;
-            right: 20px;
+            bottom: 10px;
+            right: 10px;
             background: rgba(0,0,0,0.6);
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 16px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
             backdrop-filter: blur(5px);
-            z-index: 25;
             font-weight: bold;
             pointer-events: none;
         }
         
+        @media (min-width: 768px) {
+            .progresso-familia {
+                bottom: 20px;
+                right: 20px;
+                padding: 8px 16px;
+                font-size: 16px;
+                border-radius: 30px;
+            }
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        @media (min-width: 768px) {
+            .nav-buttons {
+                gap: 30px;
+                margin-top: 30px;
+            }
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, var(--primary), #7b1fa2);
+            border: 2px solid var(--secondary);
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            font-family: inherit;
+        }
+        
+        @media (min-width: 768px) {
+            .nav-btn {
+                padding: 15px 35px;
+                font-size: 24px;
+                border-radius: 60px;
+            }
+        }
+        
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .nav-btn.cancelar {
+            background: linear-gradient(135deg, #555, #333);
+            border-color: #888;
+        }
+        
+        .nav-btn.confirmar {
+            background: linear-gradient(135deg, #ff8c00, #ff5722);
+        }
+        
         .dica-som {
             position: absolute;
-            bottom: 20px;
-            left: 20px;
+            bottom: 10px;
+            left: 10px;
             background: rgba(0,0,0,0.5);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 9px;
             color: #aaa;
             pointer-events: none;
+        }
+        
+        @media (min-width: 768px) {
+            .dica-som {
+                bottom: 20px;
+                left: 20px;
+                padding: 5px 12px;
+                font-size: 12px;
+                border-radius: 20px;
+            }
+        }
+        
+        .btn-voltar-alfabeto {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: linear-gradient(135deg, #ab47bc, #7b1fa2);
+            border: none;
+            border-radius: 40px;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            font-family: inherit;
+        }
+        
+        @media (min-width: 768px) {
+            .btn-voltar-alfabeto {
+                bottom: 30px;
+                left: 30px;
+                padding: 12px 24px;
+                font-size: 18px;
+                gap: 10px;
+            }
+        }
+        
+        .btn-voltar-alfabeto:active {
+            transform: scale(0.95);
         }
     </style>
 </head>
@@ -360,18 +585,30 @@
     </div>
     <div class="oceano" id="aquario"></div>
     <div class="progresso-familia" id="progressHint">🌟 B → BA, BE, BI, BO, BU, BÃO</div>
-    <div class="dica-som">💡 Clique na sílaba para ouvir novamente</div>
+    
+    <button class="btn-voltar-alfabeto" id="btnVoltarAlfabeto">
+        <span>🔤</span> Voltar ao Alfabeto
+    </button>
 </div>
 
 <div id="modal-vitoria">
-    <div class="icone-vitoria" id="vitoria-icone">🎣✨</div>
+    <div class="icone-vitoria">🎣✨</div>
     <div class="vitoria-texto" id="vitoria-msg-topo">Parabéns!</div>
     <div class="score-panel" id="scoreFinalModal">Pontuação: 0</div>
-    <div class="vitoria-texto" id="vitoria-msg-sub" style="font-size: 3vh; color: #fff;">Preparando próximo nível...</div>
+    <div class="vitoria-texto" id="vitoria-msg-sub" style="font-size: 2.5vh; color: #fff;">Preparando próximo nível...</div>
+</div>
+
+<div id="modal-navegacao">
+    <div class="icone-vitoria">🔤➡️🐟</div>
+    <div class="vitoria-texto" style="font-size: 3.5vh;">Voltar para o jogo do alfabeto?</div>
+    <div class="vitoria-texto" style="font-size: 2vh; color: #ccc;">Você vai pescar letras individuais novamente!</div>
+    <div class="nav-buttons">
+        <button class="nav-btn cancelar" id="btnCancelarVolta">❌ Ficar nas sílabas</button>
+        <button class="nav-btn confirmar" id="btnConfirmarVolta">🔤 Voltar ao alfabeto</button>
+    </div>
 </div>
 
 <script>
-    // ========== FAMÍLIAS SILÁBICAS COMPLETAS (NORMA CULTA) ==========
     const familiasCompletas = [
         { letra: "B", silabas: ["BA", "BE", "BI", "BO", "BU", "BÃO"] },
         { letra: "C", silabas: ["CA", "CE", "CI", "CO", "CU", "CÃO"] },
@@ -381,7 +618,6 @@
         { letra: "G", silabas: ["GA", "GUE", "GUI", "GO", "GU", "GÃO", "GE", "GI"] },
         { letra: "H", silabas: ["HA", "HE", "HI", "HO", "HU", "HÃO"] },
         { letra: "J", silabas: ["JA", "JE", "JI", "JO", "JU", "JÃO"] },
-        // Família K - Corrigida: KA = "cá", KE = "quê", KI = "qui", KO = "cô", KU = "cu", KÃO = "cão"
         { letra: "K", silabas: ["KA", "KE", "KI", "KO", "KU", "KÃO"] },
         { letra: "L", silabas: ["LA", "LE", "LI", "LO", "LU", "LÃO"] },
         { letra: "M", silabas: ["MA", "ME", "MI", "MO", "MU", "MÃO"] },
@@ -398,193 +634,97 @@
         { letra: "Z", silabas: ["ZA", "ZE", "ZI", "ZO", "ZU", "ZÃO"] }
     ];
     
-    // ========== DICIONÁRIO COMPLETO DE PRONÚNCIAS ==========
     const pronunciaMap = {
-        // Família B
         "BA": "bá", "BE": "bê", "BI": "bi", "BO": "bô", "BU": "bu", "BÃO": "bão",
-        // Família C
         "CA": "cá", "CE": "sê", "CI": "si", "CO": "cô", "CU": "cu", "CÃO": "cão",
-        // Família Ç
         "ÇA": "sá", "ÇO": "sô", "ÇU": "su", "ÇÃO": "ção",
-        // Família D
         "DA": "dá", "DE": "dê", "DI": "di", "DO": "dô", "DU": "du", "DÃO": "dão",
-        // Família F
         "FA": "fá", "FE": "fê", "FI": "fi", "FO": "fô", "FU": "fu", "FÃO": "fão",
-        // Família G
         "GA": "gá", "GUE": "guê", "GUI": "gui", "GO": "gô", "GU": "gu", "GÃO": "gão", "GE": "jê", "GI": "ji",
-        // Família H - H é mudo
         "HA": "á", "HE": "ê", "HI": "i", "HO": "ô", "HU": "u", "HÃO": "ão",
-        // Família J
         "JA": "já", "JE": "jê", "JI": "ji", "JO": "jô", "JU": "ju", "JÃO": "jão",
-        // Família K - Corrigida: KE = "quê" (como queijo), KI = "qui" (como quiabo)
         "KA": "cá", "KE": "quê", "KI": "qui", "KO": "cô", "KU": "cu", "KÃO": "cão",
-        // Família L
         "LA": "lá", "LE": "lê", "LI": "li", "LO": "lô", "LU": "lu", "LÃO": "lão",
-        // Família M
         "MA": "má", "ME": "mê", "MI": "mi", "MO": "mô", "MU": "mu", "MÃO": "mão",
-        // Família N
         "NA": "ná", "NE": "nê", "NI": "ni", "NO": "nô", "NU": "nu", "NÃO": "não",
-        // Família P
         "PA": "pá", "PE": "pê", "PI": "pi", "PO": "pô", "PU": "pu", "PÃO": "pão",
-        // Família Q
         "QUA": "quá", "QUE": "quê", "QUI": "qui", "QUO": "quô", "QUÃO": "quão",
-        // Família R
         "RA": "rá", "RE": "rê", "RI": "ri", "RO": "rô", "RU": "ru", "RÃO": "rão",
-        // Família S
         "SA": "sá", "SE": "sê", "SI": "si", "SO": "sô", "SU": "su", "SÃO": "são",
-        // Família T
         "TA": "tá", "TE": "tê", "TI": "ti", "TO": "tô", "TU": "tu", "TÃO": "tão",
-        // Família V
         "VA": "vá", "VE": "vê", "VI": "vi", "VO": "vô", "VU": "vu", "VÃO": "vão",
-        // Família W
         "WA": "uá", "WE": "uê", "WI": "ui", "WO": "uô", "WU": "u", "WÃO": "uão",
-        // Família X
         "XA": "chá", "XE": "chê", "XI": "chi", "XO": "chô", "XU": "chu", "XÃO": "chão",
-        // Família Y
         "YA": "iá", "YE": "iê", "YI": "ii", "YO": "iô", "YU": "iu", "YÃO": "ião",
-        // Família Z
         "ZA": "zá", "ZE": "zê", "ZI": "zi", "ZO": "zô", "ZU": "zu", "ZÃO": "zão"
     };
     
-    // Função para obter a pronúncia correta
     function obterPronunciaCorreta(silaba) {
         const upperSilaba = silaba.toUpperCase();
-        if (pronunciaMap[upperSilaba]) {
-            return pronunciaMap[upperSilaba];
-        }
-        return silaba.toLowerCase();
+        return pronunciaMap[upperSilaba] || silaba.toLowerCase();
     }
     
-    // Função principal de fala
-    let speechSynthesisActive = false;
-    
     function falarSilaba(silaba, callback) {
-        if (!window.speechSynthesis) {
-            if (callback) callback();
-            return;
-        }
-        
+        if (!window.speechSynthesis) { if (callback) callback(); return; }
         window.speechSynthesis.cancel();
-        
         const pronuncia = obterPronunciaCorreta(silaba);
-        
         const utterance = new SpeechSynthesisUtterance(pronuncia);
         utterance.lang = 'pt-BR';
         utterance.rate = 0.85;
         utterance.pitch = 1.0;
-        
-        const voices = window.speechSynthesis.getVoices();
-        const ptBrVoice = voices.find(v => v.lang === 'pt-BR' && 
-            (v.name.includes('Google') || v.name.includes('Microsoft') || 
-             v.name.includes('Maria') || v.name.includes('Natural') || 
-             v.name.includes('Samantha') || v.name.includes('Luciana')));
-        if (ptBrVoice) utterance.voice = ptBrVoice;
-        
-        if (callback) {
-            utterance.onend = () => setTimeout(callback, 150);
-        }
-        
-        window.speechSynthesis.speak(utterance);
-    }
-    
-    function falarParabensESilaba(silaba, callback) {
-        if (!window.speechSynthesis) {
-            if (callback) callback();
-            return;
-        }
-        
-        window.speechSynthesis.cancel();
-        
-        const pronunciaSilaba = obterPronunciaCorreta(silaba);
-        const textoCompleto = `Muito bem! ${pronunciaSilaba}`;
-        
-        const utterance = new SpeechSynthesisUtterance(textoCompleto);
-        utterance.lang = 'pt-BR';
-        utterance.rate = 0.85;
-        utterance.pitch = 1.0;
-        
-        const voices = window.speechSynthesis.getVoices();
-        const ptBrVoice = voices.find(v => v.lang === 'pt-BR' && 
-            (v.name.includes('Google') || v.name.includes('Microsoft') || 
-             v.name.includes('Maria') || v.name.includes('Natural')));
-        if (ptBrVoice) utterance.voice = ptBrVoice;
-        
-        if (callback) {
-            utterance.onend = () => setTimeout(callback, 150);
-        }
-        
+        if (callback) utterance.onend = () => setTimeout(callback, 150);
         window.speechSynthesis.speak(utterance);
     }
     
     function falarMensagem(msg, callback) {
-        if (!window.speechSynthesis) {
-            if (callback) callback();
-            return;
-        }
-        
+        if (!window.speechSynthesis) { if (callback) callback(); return; }
         window.speechSynthesis.cancel();
-        
         const utterance = new SpeechSynthesisUtterance(msg);
         utterance.lang = 'pt-BR';
         utterance.rate = 0.85;
-        utterance.pitch = 1.0;
-        
-        const voices = window.speechSynthesis.getVoices();
-        const ptBrVoice = voices.find(v => v.lang === 'pt-BR' && 
-            (v.name.includes('Google') || v.name.includes('Microsoft') || 
-             v.name.includes('Maria') || v.name.includes('Natural')));
-        if (ptBrVoice) utterance.voice = ptBrVoice;
-        
-        if (callback) {
-            utterance.onend = () => setTimeout(callback, 150);
-        }
-        
+        if (callback) utterance.onend = () => setTimeout(callback, 150);
         window.speechSynthesis.speak(utterance);
     }
     
-    // Função para repetir a sílaba alvo (corrigida para funcionar corretamente)
+    function falarParabensESilaba(silaba, callback) {
+        if (!window.speechSynthesis) { if (callback) callback(); return; }
+        window.speechSynthesis.cancel();
+        const pronuncia = obterPronunciaCorreta(silaba);
+        const utterance = new SpeechSynthesisUtterance(`Muito bem! ${pronuncia}`);
+        utterance.lang = 'pt-BR';
+        utterance.rate = 0.85;
+        if (callback) utterance.onend = () => setTimeout(callback, 150);
+        window.speechSynthesis.speak(utterance);
+    }
+    
     function repetirSilabaAlvo() {
         const silabaAtual = document.getElementById("silabaAlvo").innerText;
         if (silabaAtual && silabaAtual !== "---" && jogoAtivo && !aguardandoProxima) {
-            // Feedback visual
             const elemento = document.getElementById("silabaAlvo");
             elemento.style.transform = "scale(1.1)";
-            setTimeout(() => {
-                elemento.style.transform = "scale(1)";
-            }, 200);
-            
-            // Fala a sílaba
+            setTimeout(() => elemento.style.transform = "scale(1)", 200);
             falarSilaba(silabaAtual);
         }
     }
     
-    // Divisão em 3 etapas
     const etapas = [
-        familiasCompletas.slice(0, 7),   // B, C, Ç, D, F, G, H
-        familiasCompletas.slice(7, 14),  // J, K, L, M, N, P, Q
-        familiasCompletas.slice(14, 22)  // R, S, T, V, W, X, Y, Z
+        familiasCompletas.slice(0, 7),
+        familiasCompletas.slice(7, 14),
+        familiasCompletas.slice(14, 22)
     ];
     
-    let faseAtual = 1;
-    let pontuacaoTotal = 0;
-    let acertosNaEtapa = 0;
-    let filaSilabas = [];
-    let indiceSilabaAtual = 0;
-    let familiaCorrente = "B";
-    
-    let jogoAtivo = true;
-    let aguardandoProxima = false;
-    let peixesNaTela = 5;
-    let speechPending = false;
-    
+    let faseAtual = 1, pontuacaoTotal = 0, acertosNaEtapa = 0, filaSilabas = [], indiceSilabaAtual = 0, familiaCorrente = "B";
+    let jogoAtivo = true, aguardandoProxima = false, speechPending = false;
+    let peixesNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
     let audioEnabled = false;
+    
     const bgAudio = document.getElementById("bg-audio");
     const sfxPescado = document.getElementById("sfx-pescado");
     const sfxErro = document.getElementById("sfx-erro");
     const btnAudio = document.getElementById("btn-audio");
     const aquario = document.getElementById("aquario");
     const modalVitoria = document.getElementById("modal-vitoria");
-    
+    const modalNavegacao = document.getElementById("modal-navegacao");
     const emojisPeixe = ["🐟", "🐠", "🐡", "🐋", "🦈", "🐙", "🐬", "🐳"];
     
     function toggleFullscreen() {
@@ -595,11 +735,8 @@
     function toggleAudio() {
         audioEnabled = !audioEnabled;
         btnAudio.innerText = audioEnabled ? "🔊" : "🔇";
-        if (audioEnabled) {
-            bgAudio.play().catch(e => console.log("autoplay bloqueado"));
-        } else {
-            bgAudio.pause();
-        }
+        if (audioEnabled) bgAudio.play().catch(e => console.log("autoplay bloqueado"));
+        else bgAudio.pause();
     }
     
     function atualizarUI() {
@@ -608,25 +745,20 @@
         document.getElementById("acertosFase").innerHTML = acertosNaEtapa;
         document.getElementById("totalEtapa").innerHTML = filaSilabas.length;
         document.getElementById("familiaAtual").innerHTML = familiaCorrente;
-        
-        const hintDiv = document.getElementById("progressHint");
         let familiaObj = familiasCompletas.find(f => f.letra === familiaCorrente);
-        if (familiaObj) {
-            hintDiv.innerHTML = `🐟 ${familiaCorrente} → ${familiaObj.silabas.join(" · ")}`;
-        }
+        if (familiaObj) document.getElementById("progressHint").innerHTML = `🐟 ${familiaCorrente} → ${familiaObj.silabas.join(" · ")}`;
     }
     
-    function criarEfeitoBolhas(quantidade = 35) {
-        for(let i = 0; i < quantidade; i++) {
+    function criarEfeitoBolhas(quantidade = 30) {
+        const qtd = window.innerWidth < 768 ? 25 : quantidade;
+        for(let i = 0; i < qtd; i++) {
             setTimeout(() => {
                 const bolha = document.createElement("div");
                 bolha.className = "bolha";
-                const tam = Math.random() * 45 + 12 + "px";
-                bolha.style.width = tam;
-                bolha.style.height = tam;
+                const tam = Math.random() * (window.innerWidth < 768 ? 30 : 45) + 10 + "px";
+                bolha.style.width = tam; bolha.style.height = tam;
                 bolha.style.left = Math.random() * 100 + "vw";
                 bolha.style.animationDuration = Math.random() * 2.5 + 2 + "s";
-                bolha.style.opacity = Math.random() * 0.6 + 0.2;
                 document.body.appendChild(bolha);
                 setTimeout(() => bolha.remove(), 4500);
             }, i * 30);
@@ -637,8 +769,8 @@
         const star = document.createElement("div");
         star.className = "star-point";
         star.innerText = "⭐";
-        star.style.left = x + "px";
-        star.style.top = y + "px";
+        star.style.left = (x - 20) + "px";
+        star.style.top = (y - 20) + "px";
         document.body.appendChild(star);
         setTimeout(() => star.remove(), 700);
     }
@@ -653,62 +785,41 @@
     }
     
     function construirFilaEtapa(etapaIndex) {
-        const familiasEtapa = etapas[etapaIndex];
         let silabasOrdenadas = [];
-        for (let fam of familiasEtapa) {
-            silabasOrdenadas.push(...fam.silabas);
-        }
+        for (let fam of etapas[etapaIndex]) silabasOrdenadas.push(...fam.silabas);
         return silabasOrdenadas;
     }
     
     function iniciarEtapa() {
-        if (faseAtual > 3) {
-            finalizarJogoCompleto();
-            return;
-        }
-        
+        if (faseAtual > 3) { finalizarJogoCompleto(); return; }
         filaSilabas = construirFilaEtapa(faseAtual - 1);
-        if (filaSilabas.length === 0) {
-            concluirEtapa();
-            return;
-        }
+        if (filaSilabas.length === 0) { concluirEtapa(); return; }
         indiceSilabaAtual = 0;
         acertosNaEtapa = 0;
         const primeiraSilaba = filaSilabas[0];
         const fam = familiasCompletas.find(f => f.silabas.includes(primeiraSilaba));
         familiaCorrente = fam ? fam.letra : "?";
-        
         atualizarUI();
-        juegoAtivo = true;
+        jogoAtivo = true;
         aguardandoProxima = false;
         carregarProximaSilaba();
     }
     
     function atualizarFamiliaCorrente(silabaAlvo) {
         const encontrada = familiasCompletas.find(f => f.silabas.includes(silabaAlvo));
-        if (encontrada) {
-            familiaCorrente = encontrada.letra;
-        }
+        if (encontrada) familiaCorrente = encontrada.letra;
         document.getElementById("familiaAtual").innerHTML = familiaCorrente;
-        const hintDiv = document.getElementById("progressHint");
-        if (encontrada) {
-            hintDiv.innerHTML = `🐟 ${familiaCorrente} → ${encontrada.silabas.join(" · ")}`;
-        }
+        let familiaObj = familiasCompletas.find(f => f.letra === familiaCorrente);
+        if (familiaObj) document.getElementById("progressHint").innerHTML = `🐟 ${familiaCorrente} → ${familiaObj.silabas.join(" · ")}`;
     }
     
     function carregarProximaSilaba() {
-        if (indiceSilabaAtual >= filaSilabas.length) {
-            concluirEtapa();
-            return;
-        }
-        
+        if (indiceSilabaAtual >= filaSilabas.length) { concluirEtapa(); return; }
         const silabaCerta = filaSilabas[indiceSilabaAtual];
         document.getElementById("silabaAlvo").innerText = silabaCerta;
         atualizarFamiliaCorrente(silabaCerta);
         atualizarUI();
-        
         aquario.innerHTML = "";
-        
         let opcoes = [silabaCerta];
         let todasSilabasDaEtapa = [...filaSilabas];
         let distratores = todasSilabasDaEtapa.filter(s => s !== silabaCerta);
@@ -721,13 +832,10 @@
             distratores.sort(() => 0.5 - Math.random());
             opcoes.push(...distratores.slice(0, peixesNaTela - 1));
         }
-        
         let finalOpcoes = [...new Set(opcoes)].slice(0, peixesNaTela);
         while(finalOpcoes.length < peixesNaTela) finalOpcoes.push("ZÃO");
         finalOpcoes.sort(() => Math.random() - 0.5);
-        
         finalOpcoes.forEach(sil => criarPeixe(sil, silabaCerta));
-        
         setTimeout(() => {
             if (jogoAtivo && !aguardandoProxima && !speechPending) {
                 speechPending = true;
@@ -740,25 +848,25 @@
         const peixe = document.createElement("div");
         peixe.className = "peixinho";
         peixe.style.top = Math.floor(Math.random() * 65 + 15) + "%";
-        
         const direita = Math.random() > 0.5;
-        const duracao = (Math.random() * 6) + 7;
+        const duracao = (Math.random() * 5) + 6;
         peixe.style.animation = direita ? `nadar-direita ${duracao}s linear infinite` : `nadar-esquerda ${duracao}s linear infinite`;
-        
         const emoji = emojisPeixe[Math.floor(Math.random() * emojisPeixe.length)];
         const flip = direita ? 'transform: scaleX(-1);' : '';
-        
-        const fontSize = silaba.length > 3 ? "26px" : "32px";
+        const fontSize = silaba.length > 3 ? "18px" : "22px";
         peixe.innerHTML = `<span class="peixe-corpo" style="${flip}">${emoji}</span><span class="silaba-peixe" style="font-size: ${fontSize};">${silaba}</span>`;
-        
-        peixe.onclick = (event) => {
-            event.stopPropagation();
+        peixe.ontouchstart = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             if (!jogoAtivo || aguardandoProxima) return;
-            if (silaba === silabaAlvo) {
-                acertou(peixe, silaba);
-            } else {
-                errou(peixe, silaba);
-            }
+            if (silaba === silabaAlvo) acertou(peixe, silaba);
+            else errou(peixe, silaba);
+        };
+        peixe.onclick = (e) => {
+            e.stopPropagation();
+            if (!jogoAtivo || aguardandoProxima) return;
+            if (silaba === silabaAlvo) acertou(peixe, silaba);
+            else errou(peixe, silaba);
         };
         aquario.appendChild(peixe);
     }
@@ -766,25 +874,17 @@
     function acertou(peixeElem, silabaClicada) {
         if (!jogoAtivo) return;
         jogoAtivo = false;
-        
-        if (audioEnabled) {
-            sfxPescado.currentTime = 0;
-            sfxPescado.play().catch(e=>{});
-        }
-        
+        if (audioEnabled) { sfxPescado.currentTime = 0; sfxPescado.play().catch(e=>{}); }
         const rect = peixeElem.getBoundingClientRect();
         peixeElem.style.animation = "none";
         peixeElem.style.left = rect.left + "px";
         peixeElem.style.top = rect.top + "px";
         peixeElem.classList.add("pescado");
-        
         pontuacaoTotal += 10;
         acertosNaEtapa++;
         atualizarUI();
-        
-        mostrarEstrela(rect.left + 45, rect.top + 40);
+        mostrarEstrela(rect.left + 30, rect.top + 30);
         mostrarFeedback(`✅ +10  ${silabaClicada}`, true);
-        
         speechPending = true;
         falarParabensESilaba(silabaClicada, () => {
             speechPending = false;
@@ -792,22 +892,16 @@
             if (indiceSilabaAtual < filaSilabas.length) {
                 jogoAtivo = true;
                 carregarProximaSilaba();
-            } else {
-                concluirEtapa();
-            }
+            } else { concluirEtapa(); }
         });
     }
     
     function errou(peixeElem, silabaErrada) {
         if (!jogoAtivo) return;
-        if (audioEnabled && sfxErro) {
-            sfxErro.currentTime = 0;
-            sfxErro.play().catch(e=>{});
-        }
+        if (audioEnabled && sfxErro) { sfxErro.currentTime = 0; sfxErro.play().catch(e=>{}); }
         mostrarFeedback(`❌ ${silabaErrada}`, false);
         peixeElem.classList.add("erro-anim");
         setTimeout(() => peixeElem.classList.remove("erro-anim"), 500);
-        
         speechPending = true;
         falarSilaba(silabaErrada, () => { speechPending = false; });
     }
@@ -817,29 +911,18 @@
         aguardandoProxima = true;
         jogoAtivo = false;
         aquario.innerHTML = "";
-        criarEfeitoBolhas(50);
-        
-        let titulo = "";
-        if (faseAtual === 1) titulo = "✨ Etapa 1 - Famílias B a H ✨";
-        else if (faseAtual === 2) titulo = "🌟 Etapa 2 - Famílias J a Q 🌟";
-        else titulo = "🏅 Etapa 3 - Famílias R a Z 🏅";
-        
-        document.getElementById("vitoria-icone").innerHTML = "🎣🏆";
+        criarEfeitoBolhas(40);
+        let titulo = faseAtual === 1 ? "✨ Etapa 1 - Famílias B a H ✨" : (faseAtual === 2 ? "🌟 Etapa 2 - Famílias J a Q 🌟" : "🏅 Etapa 3 - Famílias R a Z 🏅");
         document.getElementById("vitoria-msg-topo").innerHTML = titulo;
         document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${filaSilabas.length}   |   Pontos: ${pontuacaoTotal}`;
-        document.getElementById("vitoria-msg-sub").innerHTML = faseAtual < 3 ? "🐠 Próxima etapa em ordem alfabética..." : "🎉 PARABÉNS! Todas as famílias do B ao Z! 🎉";
+        document.getElementById("vitoria-msg-sub").innerHTML = faseAtual < 3 ? "🐠 Próxima etapa..." : "🎉 PARABÉNS! Todas as famílias! 🎉";
         modalVitoria.style.display = "flex";
-        
-        let msg = faseAtual < 3 ? "Parabéns! Vamos para a próxima etapa das famílias silábicas!" : "Você é campeão! Aprendeu todas as famílias do B ao Z!";
+        let msg = faseAtual < 3 ? "Parabéns! Vamos para a próxima etapa!" : "Você é campeão! Aprendeu todas as famílias!";
         falarMensagem(msg, () => {
             setTimeout(() => {
                 modalVitoria.style.display = "none";
-                if (faseAtual < 3) {
-                    faseAtual++;
-                    iniciarEtapa();
-                } else {
-                    finalizarJogoCompleto();
-                }
+                if (faseAtual < 3) { faseAtual++; iniciarEtapa(); }
+                else { finalizarJogoCompleto(); }
             }, 1800);
         });
     }
@@ -847,50 +930,57 @@
     function finalizarJogoCompleto() {
         jogoAtivo = false;
         aquario.innerHTML = "";
-        criarEfeitoBolhas(70);
-        document.getElementById("vitoria-icone").innerHTML = "🎓📖🐟";
+        criarEfeitoBolhas(50);
         document.getElementById("vitoria-msg-topo").innerHTML = "🏅 MESTRE DAS SÍLABAS 🏅";
-        document.getElementById("vitoria-msg-sub").innerHTML = "Ordem alfabética: B, C, Ç, D... Z! Pronúncia perfeita!";
+        document.getElementById("vitoria-msg-sub").innerHTML = "Ordem alfabética: B, C, Ç, D... Z!";
         document.getElementById("scoreFinalModal").innerHTML = `🌟 Pontuação final: ${pontuacaoTotal} 🌟`;
         modalVitoria.style.display = "flex";
-        falarMensagem("Parabéns! Você completou o alfabeto silábico com pronúncia correta!");
+        falarMensagem("Parabéns! Você completou o alfabeto silábico!");
     }
     
-    // Configurar os cliques para repetir a sílaba alvo
-    const btnRepetir = document.getElementById("btnRepetirSilaba");
-    const silabaSpan = document.getElementById("silabaAlvo");
+    function voltarParaAlfabeto() {
+        modalNavegacao.style.display = "flex";
+        falarMensagem("Voltar para o jogo do alfabeto?");
+    }
     
-    btnRepetir.addEventListener("click", function(e) {
-        e.stopPropagation();
-        repetirSilabaAlvo();
+    function fecharModalVolta() {
+        modalNavegacao.style.display = "none";
+    }
+    
+    function confirmarVolta() {
+        modalNavegacao.style.display = "none";
+        criarEfeitoBolhas(30);
+        falarMensagem("Voltando ao alfabeto!");
+        setTimeout(() => { window.location.href = "pesca_de_letrinhas.html"; }, 500);
+    }
+    
+    document.getElementById("btnRepetirSilaba").addEventListener("click", repetirSilabaAlvo);
+    document.getElementById("silabaAlvo").addEventListener("click", (e) => { e.stopPropagation(); repetirSilabaAlvo(); });
+    document.getElementById("btnVoltarAlfabeto").addEventListener("click", voltarParaAlfabeto);
+    document.getElementById("btnCancelarVolta").addEventListener("click", fecharModalVolta);
+    document.getElementById("btnConfirmarVolta").addEventListener("click", confirmarVolta);
+    
+    window.addEventListener('resize', () => {
+        if (window.innerWidth < 768) peixesNaTela = 3;
+        else if (window.innerWidth < 1024) peixesNaTela = 4;
+        else peixesNaTela = 5;
     });
     
-    silabaSpan.addEventListener("click", function(e) {
-        e.stopPropagation();
-        repetirSilabaAlvo();
-    });
-    
-    // Bolhas contínuas durante o jogo
     setInterval(() => {
-        if (jogoAtivo && !aguardandoProxima && Math.random() > 0.75) {
+        if (jogoAtivo && !aguardandoProxima && Math.random() > 0.8) {
             const bolha = document.createElement("div");
             bolha.className = "bolha";
-            bolha.style.width = Math.random() * 35 + 8 + "px";
-            bolha.style.height = bolha.style.width;
+            const tam = Math.random() * (window.innerWidth < 768 ? 25 : 35) + 8 + "px";
+            bolha.style.width = tam; bolha.style.height = tam;
             bolha.style.left = Math.random() * 100 + "vw";
-            bolha.style.animationDuration = Math.random() * 3 + 2.5 + "s";
+            bolha.style.animationDuration = Math.random() * 3 + 2 + "s";
             document.body.appendChild(bolha);
             setTimeout(() => bolha.remove(), 5000);
         }
-    }, 1100);
+    }, 1200);
     
-    // Inicialização
     window.onload = () => {
-        if (window.speechSynthesis) {
-            window.speechSynthesis.getVoices();
-        }
-        faseAtual = 1;
-        pontuacaoTotal = 0;
+        if (window.speechSynthesis) window.speechSynthesis.getVoices();
         iniciarEtapa();
     };
 </script>
