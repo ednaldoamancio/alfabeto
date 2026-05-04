@@ -12,7 +12,13 @@
             --text-light: #ffffff;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            user-select: none; 
+            -webkit-tap-highlight-color: transparent;
+        }
 
         body {
             font-family: 'Segoe UI', 'Comic Neue', 'Comic Sans MS', Tahoma, sans-serif;
@@ -21,10 +27,38 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             position: fixed;
+            cursor: none;
+        }
+
+        /* Cursor personalizado - ANZOL */
+        .custom-cursor {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.05s ease;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+        }
+        
+        .custom-cursor::before {
+            content: "🎣";
+            font-size: 35px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        @media (hover: none) and (pointer: coarse) {
+            .custom-cursor {
+                display: none;
+            }
+            body {
+                cursor: auto;
+            }
         }
 
         #bg-video {
@@ -74,6 +108,10 @@
             transition: transform 0.2s;
         }
         
+        .icon-btn:hover {
+            transform: scale(1.05);
+        }
+        
         @media (min-width: 768px) {
             .icon-btn {
                 width: 50px;
@@ -99,19 +137,27 @@
 
         .game-info {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             background: rgba(0, 0, 0, 0.7);
-            padding: 8px 20px;
-            border-radius: 40px;
+            padding: 6px 15px;
+            border-radius: 30px;
             border: 2px solid var(--primary);
             font-weight: bold;
-            font-size: 14px;
+            font-size: 11px;
             backdrop-filter: blur(4px);
             flex-wrap: wrap;
             justify-content: center;
         }
         
         @media (min-width: 768px) {
+            .game-info {
+                gap: 20px;
+                padding: 10px 25px;
+                font-size: 18px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
             .game-info {
                 gap: 30px;
                 padding: 10px 30px;
@@ -120,23 +166,31 @@
         }
 
         .instrucao { 
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 900;
             margin-top: 8px;
             background: rgba(0,0,0,0.6);
-            padding: 6px 16px;
+            padding: 6px 14px;
             border-radius: 30px;
             backdrop-filter: blur(4px);
             display: flex;
             align-items: baseline;
-            gap: 8px;
+            gap: 6px;
             cursor: pointer;
         }
         
         @media (min-width: 768px) {
             .instrucao {
-                font-size: 28px;
+                font-size: 24px;
                 margin-top: 15px;
+                padding: 8px 20px;
+                gap: 10px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .instrucao {
+                font-size: 28px;
                 padding: 8px 24px;
                 gap: 12px;
             }
@@ -144,17 +198,24 @@
         
         #letraAlvo {
             color: var(--secondary);
-            font-size: 32px;
+            font-size: 28px;
             font-weight: bold;
             background: #000000aa;
-            padding: 0 12px;
-            border-radius: 40px;
+            padding: 0 10px;
+            border-radius: 30px;
             letter-spacing: 2px;
             text-shadow: 0 0 5px #ff9800;
             cursor: pointer;
         }
         
         @media (min-width: 768px) {
+            #letraAlvo {
+                font-size: 42px;
+                padding: 0 16px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
             #letraAlvo {
                 font-size: 52px;
                 padding: 0 18px;
@@ -169,7 +230,7 @@
             height: 100%;
             z-index: 5;
             overflow: hidden;
-            pointer-events: none;
+            pointer-events: auto;
         }
 
         .peixinho {
@@ -218,7 +279,7 @@
         }
         
         .letra-peixe {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: bold;
             color: #fff9c4;
             position: absolute;
@@ -229,7 +290,7 @@
         
         @media (min-width: 768px) {
             .letra-peixe {
-                font-size: 32px;
+                font-size: 30px;
             }
         }
         
@@ -319,7 +380,7 @@
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
         
         .score-panel { 
-            font-size: 18px; 
+            font-size: 16px; 
             background: #1e2a3a; 
             padding: 8px 20px; 
             border-radius: 40px; 
@@ -329,7 +390,7 @@
         
         @media (min-width: 768px) {
             .score-panel { 
-                font-size: 28px; 
+                font-size: 24px; 
                 padding: 12px 28px; 
                 border-radius: 60px; 
                 margin-top: 20px;
@@ -353,9 +414,9 @@
             transform: translateX(-50%);
             background: #2e7d32dd;
             backdrop-filter: blur(8px);
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 40px;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             z-index: 200;
             animation: fadeUp 0.8s ease-out forwards;
@@ -366,8 +427,8 @@
         @media (min-width: 768px) {
             .feedback-correto {
                 bottom: 20%;
-                padding: 14px 28px;
-                font-size: 32px;
+                padding: 12px 24px;
+                font-size: 28px;
             }
         }
         
@@ -397,6 +458,7 @@
             100% { transform: scale(1.2) translateY(-70px); opacity: 0; }
         }
         
+        /* Botão APRENDER SÍLABAS - VISÍVEL */
         .btn-silabas {
             position: absolute;
             bottom: 15px;
@@ -404,7 +466,7 @@
             background: linear-gradient(135deg, #ff8c00, #ff5722);
             border: none;
             border-radius: 40px;
-            padding: 8px 16px;
+            padding: 10px 18px;
             font-size: 14px;
             font-weight: bold;
             color: white;
@@ -412,11 +474,12 @@
             z-index: 200;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             transition: all 0.3s ease;
             font-family: inherit;
             backdrop-filter: blur(4px);
+            animation: pulse-glow 2s infinite;
         }
         
         @media (min-width: 768px) {
@@ -441,6 +504,12 @@
             .btn-silabas span {
                 font-size: 28px;
             }
+        }
+        
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.5); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 140, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 140, 0, 0); }
         }
         
         .nav-buttons {
@@ -494,12 +563,12 @@
         
         .dica-som {
             position: absolute;
-            bottom: 15px;
-            left: 15px;
+            bottom: 10px;
+            left: 10px;
             background: rgba(0,0,0,0.5);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 9px;
             color: #aaa;
             pointer-events: none;
         }
@@ -510,6 +579,7 @@
                 left: 20px;
                 padding: 5px 12px;
                 font-size: 12px;
+                border-radius: 20px;
             }
         }
     </style>
@@ -535,6 +605,7 @@
         <div class="game-info">
             <div>📚 Etapa: <span id="faseText">1</span>/2</div>
             <div>🏆 Letras: <span id="pontosText">0</span>/26</div>
+            <div>⭐ Pontos: <span id="scoreText">0</span></div>
         </div>
         <p class="instrucao" id="btnRepetirLetra">
             🐠 Pesque a letra: <span id="letraAlvo">?</span> 🔊
@@ -569,6 +640,9 @@
 
 <script>
     let audioEnabled = false;
+    let speechSynthesisReady = false;
+    let currentUtterance = null;
+    
     const bgAudio = document.getElementById("bg-audio");
     const sfxPescado = document.getElementById("sfx-pescado");
     const sfxErro = document.getElementById("sfx-erro");
@@ -584,9 +658,7 @@
     let peixesNaTela = 4;
     let jogoAtivo = true;
     let aguardandoProxima = false;
-    let speechPending = false;
     
-    // Ajuste responsivo do número de peixes
     if (window.innerWidth < 768) {
         peixesNaTela = 3;
     } else if (window.innerWidth < 1024) {
@@ -597,6 +669,7 @@
     
     const emojisPeixe = ["🐟", "🐠", "🐡", "🐋", "🦈", "🐙", "🐬", "🐳"];
 
+    // Dicionário de pronúncia das letras
     function obterPronunciaLetra(letra) {
         const upper = letra.toUpperCase();
         const pronunciaMap = {
@@ -609,23 +682,54 @@
         return pronunciaMap[upper] || letra.toLowerCase();
     }
 
+    // Função de fala melhorada
     function falarLetra(letra, callback) {
         if (!window.speechSynthesis) {
             if (callback) callback();
             return;
         }
-        window.speechSynthesis.cancel();
+        
+        // Cancela qualquer fala anterior
+        if (currentUtterance) {
+            window.speechSynthesis.cancel();
+        }
         
         const pronuncia = obterPronunciaLetra(letra);
-        const utterance = new SpeechSynthesisUtterance(pronuncia);
-        utterance.lang = 'pt-BR';
-        utterance.rate = 0.85;
-        utterance.pitch = 1.0;
         
-        if (callback) {
-            utterance.onend = () => setTimeout(callback, 150);
+        // Aguarda as vozes carregarem
+        const trySpeak = () => {
+            const utterance = new SpeechSynthesisUtterance(pronuncia);
+            utterance.lang = 'pt-BR';
+            utterance.rate = 0.85;
+            utterance.pitch = 1.0;
+            
+            // Tenta usar uma voz brasileira
+            const voices = window.speechSynthesis.getVoices();
+            const ptBrVoice = voices.find(v => v.lang === 'pt-BR' && 
+                (v.name.includes('Google') || v.name.includes('Microsoft') || 
+                 v.name.includes('Maria') || v.name.includes('Natural')));
+            if (ptBrVoice) utterance.voice = ptBrVoice;
+            
+            currentUtterance = utterance;
+            
+            if (callback) {
+                utterance.onend = () => {
+                    currentUtterance = null;
+                    setTimeout(callback, 150);
+                };
+            } else {
+                utterance.onend = () => { currentUtterance = null; };
+            }
+            
+            window.speechSynthesis.speak(utterance);
+        };
+        
+        // Verifica se as vozes já estão carregadas
+        if (window.speechSynthesis.getVoices().length > 0) {
+            trySpeak();
+        } else {
+            window.speechSynthesis.onvoiceschanged = trySpeak;
         }
-        window.speechSynthesis.speak(utterance);
     }
     
     function falarMensagem(msg, callback) {
@@ -633,16 +737,33 @@
             if (callback) callback();
             return;
         }
-        window.speechSynthesis.cancel();
+        
+        if (currentUtterance) {
+            window.speechSynthesis.cancel();
+        }
         
         const utterance = new SpeechSynthesisUtterance(msg);
         utterance.lang = 'pt-BR';
         utterance.rate = 0.85;
         utterance.pitch = 1.0;
         
+        const voices = window.speechSynthesis.getVoices();
+        const ptBrVoice = voices.find(v => v.lang === 'pt-BR' && 
+            (v.name.includes('Google') || v.name.includes('Microsoft') || 
+             v.name.includes('Maria') || v.name.includes('Natural')));
+        if (ptBrVoice) utterance.voice = ptBrVoice;
+        
+        currentUtterance = utterance;
+        
         if (callback) {
-            utterance.onend = () => setTimeout(callback, 150);
+            utterance.onend = () => {
+                currentUtterance = null;
+                setTimeout(callback, 150);
+            };
+        } else {
+            utterance.onend = () => { currentUtterance = null; };
         }
+        
         window.speechSynthesis.speak(utterance);
     }
     
@@ -651,7 +772,10 @@
             if (callback) callback();
             return;
         }
-        window.speechSynthesis.cancel();
+        
+        if (currentUtterance) {
+            window.speechSynthesis.cancel();
+        }
         
         const pronuncia = obterPronunciaLetra(letra);
         const textoCompleto = `Muito bem! ${pronuncia}`;
@@ -660,9 +784,23 @@
         utterance.rate = 0.85;
         utterance.pitch = 1.0;
         
+        const voices = window.speechSynthesis.getVoices();
+        const ptBrVoice = voices.find(v => v.lang === 'pt-BR' && 
+            (v.name.includes('Google') || v.name.includes('Microsoft') || 
+             v.name.includes('Maria') || v.name.includes('Natural')));
+        if (ptBrVoice) utterance.voice = ptBrVoice;
+        
+        currentUtterance = utterance;
+        
         if (callback) {
-            utterance.onend = () => setTimeout(callback, 150);
+            utterance.onend = () => {
+                currentUtterance = null;
+                setTimeout(callback, 150);
+            };
+        } else {
+            utterance.onend = () => { currentUtterance = null; };
         }
+        
         window.speechSynthesis.speak(utterance);
     }
 
@@ -740,6 +878,7 @@
         document.getElementById("letraAlvo").innerText = letraCerta;
         document.getElementById("faseText").innerHTML = faseAtual;
         document.getElementById("pontosText").innerHTML = indiceLetraAtual;
+        document.getElementById("scoreText").innerHTML = pontuacaoTotal;
         aquario.innerHTML = "";
 
         let letrasRodada = [letraCerta];
@@ -749,7 +888,7 @@
         }
 
         letrasRodada.sort(() => Math.random() - 0.5).forEach(letra => criarPeixe(letra, letraCerta));
-        setTimeout(() => falarMensagem("Pesque a letra " + letraCerta), 400);
+        setTimeout(() => falarMensagem("Pesque a letra " + letraCerta), 500);
     }
 
     function criarPeixe(letra, letraCerta) {
@@ -766,7 +905,8 @@
 
         peixe.innerHTML = `<span class="peixe-corpo" style="${flip}">${emoji}</span><span class="letra-peixe">${letra}</span>`;
         
-        peixe.ontouchstart = (e) => {
+        // Suporte para touch e mouse
+        const handleClick = (e) => {
             e.preventDefault();
             e.stopPropagation();
             if (!jogoAtivo || aguardandoProxima) return;
@@ -777,15 +917,9 @@
             }
         };
         
-        peixe.onclick = (e) => {
-            e.stopPropagation();
-            if (!jogoAtivo || aguardandoProxima) return;
-            if (letra === letraCerta) {
-                validarAcerto(peixe, letra);
-            } else {
-                errou(peixe, letra);
-            }
-        };
+        peixe.addEventListener('click', handleClick);
+        peixe.addEventListener('touchstart', handleClick, { passive: false });
+        
         aquario.appendChild(peixe);
     }
 
@@ -808,12 +942,13 @@
         pontuacaoTotal += 10;
         indiceLetraAtual++;
         
+        document.getElementById("scoreText").innerHTML = pontuacaoTotal;
+        document.getElementById("pontosText").innerHTML = indiceLetraAtual;
+        
         mostrarEstrela(rect.left + 30, rect.top + 30);
         mostrarFeedback(`✅ +10  ${letraClicada}`, true);
         
-        speechPending = true;
         falarParabensELetra(letraClicada, () => {
-            speechPending = false;
             if (indiceLetraAtual === 13 && faseAtual === 1) {
                 concluirEtapa();
             } else if (indiceLetraAtual >= alfabetoCompleto.length) {
@@ -885,6 +1020,7 @@
         }, 500);
     }
     
+    // Configurar eventos
     document.getElementById("btnMudarSilabas").addEventListener("click", convidarParaSilabas);
     document.getElementById("btnCancelarNavegacao").addEventListener("click", fecharModalNavegacao);
     document.getElementById("btnConfirmarNavegacao").addEventListener("click", irParaSilabas);
@@ -895,6 +1031,27 @@
         repetirLetraAlvo();
     });
     
+    // Cursor personalizado (apenas para desktop com mouse)
+    const cursor = document.createElement('div');
+    cursor.className = 'custom-cursor';
+    document.body.appendChild(cursor);
+    
+    document.addEventListener('mousemove', (e) => {
+        if (window.innerWidth > 768) {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        }
+    });
+    
+    document.addEventListener('mouseleave', () => {
+        cursor.style.display = 'none';
+    });
+    
+    document.addEventListener('mouseenter', () => {
+        cursor.style.display = 'block';
+    });
+    
+    // Bolhas contínuas
     setInterval(() => {
         if (jogoAtivo && !aguardandoProxima && Math.random() > 0.8) {
             const bolha = document.createElement("div");
@@ -919,7 +1076,9 @@
         }
     });
     
+    // Inicialização
     window.onload = () => {
+        // Pré-carrega vozes
         if (window.speechSynthesis) {
             window.speechSynthesis.getVoices();
         }
