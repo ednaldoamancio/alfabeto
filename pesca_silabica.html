@@ -881,4 +881,261 @@
     }
     
     function atualizarUI() {
-        document
+        document.getElementById("faseText").innerHTML = faseAtual;
+        document.getElementById("pontosText").innerHTML = pontuacaoTotal;
+        document.getElementById("acertosFase").innerHTML = acertosNaEtapa;
+        document.getElementById("totalEtapa").innerHTML = filaSilabas.length;
+        document.getElementById("familiaAtual").innerHTML = familiaCorrente;
+        let familiaObj = familiasCompletas.find(f => f.letra === familiaCorrente);
+        if (familiaObj) document.getElementById("progressHint").innerHTML = `🐟 ${familiaCorrente} → ${familiaObj.silabas.join(" · ")}`;
+    }
+    
+    function criarEfeitoBolhas(quantidade = 30) {
+        const qtd = window.innerWidth < 768 ? 25 : quantidade;
+        for(let i = 0; i < qtd; i++) {
+            setTimeout(() => {
+                const bolha = document.createElement("div");
+                bolha.className = "bolha";
+                const tam = Math.random() * (window.innerWidth < 768 ? 30 : 45) + 10 + "px";
+                bolha.style.width = tam; bolha.style.height = tam;
+                bolha.style.left = Math.random() * 100 + "vw";
+                bolha.style.animationDuration = Math.random() * 2.5 + 2 + "s";
+                document.body.appendChild(bolha);
+                setTimeout(() => bolha.remove(), 4500);
+            }, i * 30);
+        }
+    }
+    
+    function mostrarEstrela(x, y) {
+        const star = document.createElement("div");
+        star.className = "star-point";
+        star.innerText = "⭐";
+        star.style.left = (x - 20) + "px";
+        star.style.top = (y - 20) + "px";
+        document.body.appendChild(star);
+        setTimeout(() => star.remove(), 700);
+    }
+    
+    function mostrarFeedback(texto, isAcerto) {
+        const div = document.createElement("div");
+        div.className = "feedback-correto";
+        div.style.background = isAcerto ? "#2e7d32dd" : "#c62828dd";
+        div.innerText = texto;
+        document.body.appendChild(div);
+        setTimeout(() => div.remove(), 850);
+    }
+    
+    function construirFilaEtapa(etapaIndex) {
+        let silabasOrdenadas = [];
+        for (let fam of etapas[etapaIndex]) silabasOrdenadas.push(...fam.silabas);
+        return silabasOrdenadas;
+    }
+    
+    function iniciarEtapa() {
+        if (faseAtual > 3) { finalizarJogoCompleto(); return; }
+        filaSilabas = construirFilaEtapa(faseAtual - 1);
+        if (filaSilabas.length === 0) { concluirEtapa(); return; }
+        indiceSilabaAtual = 0;
+        acertosNaEtapa = 0;
+        const primeiraSilaba = filaSilabas[0];
+        const fam = familiasCompletas.find(f => f.silabas.includes(primeiraSilaba));
+        familiaCorrente = fam ? fam.letra : "?";
+        atualizarUI();
+        jogoAtivo = true;
+        aguardandoProxima = false;
+        carregarProximaSilaba();
+    }
+    
+    function atualizarFamiliaCorrente(silabaAlvo) {
+        const encontrada = familiasCompletas.find(f => f.silabas.includes(silabaAlvo));
+        if (encontrada) familiaCorrente = encontrada.letra;
+        document.getElementById("familiaAtual").innerHTML = familiaCorrente;
+        let familiaObj = familiasCompletas.find(f => f.letra === familiaCorrente);
+        if (familiaObj) document.getElementById("progressHint").innerHTML = `🐟 ${familiaCorrente} → ${familiaObj.silabas.join(" · ")}`;
+    }
+    
+    function carregarProximaSilaba() {
+        if (indiceSilabaAtual >= filaSilabas.length) { concluirEtapa(); return; }
+        const silabaCerta = filaSilabas[indiceSilabaAtual];
+        document.getElementById("silabaAlvo").innerText = silabaCerta;
+        atualizarFamiliaCorrente(silabaCerta);
+        atualizarUI();
+        aquario.innerHTML = "";
+        let opcoes = [silabaCerta];
+        let todasSilabasDaEtapa = [...filaSilabas];
+        let distratores = todasSilabasDaEtapa.filter(s => s !== silabaCerta);
+        if (distratores.length < peixesNaTela - 1) {
+            const todas = familiasCompletas.flatMap(f => f.silabas);
+            let extras = todas.filter(s => !opcoes.includes(s) && s !== silabaCerta);
+            extras = extras.slice(0, peixesNaTela);
+            opcoes.push(...extras);
+        } else {
+            distratores.sort(() => 0.5 - Math.random());
+            opcoes.push(...distratores.slice(0, peixesNaTela - 1));
+        }
+        let finalOpcoes = [...new Set(opcoes)].slice(0, peixesNaTela);
+        while(finalOpcoes.length < peixesNaTela) finalOpcoes.push("ZÃO");
+        finalOpcoes.sort(() => Math.random() - 0.5);
+        finalOpcoes.forEach(sil => criarPeixe(sil, silabaCerta));
+        setTimeout(() => {
+            if (jogoAtivo && !aguardandoProxima && !speechPending) {
+                speechPending = true;
+                falarSilaba(silabaCerta, () => { speechPending = false; });
+            }
+        }, 400);
+    }
+    
+    function criarPeixe(silaba, silabaAlvo) {
+        const peixe = document.createElement("div");
+        peixe.className = "peixinho";
+        peixe.style.top = Math.floor(Math.random() * 65 + 15) + "%";
+        const direita = Math.random() > 0.5;
+        const duracao = (Math.random() * 5) + 6;
+        peixe.style.animation = direita ? `nadar-direita ${duracao}s linear infinite` : `nadar-esquerda ${duracao}s linear infinite`;
+        const emoji = emojisPeixe[Math.floor(Math.random() * emojisPeixe.length)];
+        const flip = direita ? 'transform: scaleX(-1);' : '';
+        const fontSize = silaba.length > 3 ? "16px" : "20px";
+        peixe.innerHTML = `<span class="peixe-corpo" style="${flip}">${emoji}</span><span class="silaba-peixe" style="font-size: ${fontSize};">${silaba}</span>`;
+        
+        const handleClick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!jogoAtivo || aguardandoProxima) return;
+            if (silaba === silabaAlvo) acertou(peixe, silaba);
+            else errou(peixe, silaba);
+        };
+        
+        peixe.addEventListener('click', handleClick);
+        peixe.addEventListener('touchstart', handleClick, { passive: false });
+        aquario.appendChild(peixe);
+    }
+    
+    function acertou(peixeElem, silabaClicada) {
+        if (!jogoAtivo) return;
+        jogoAtivo = false;
+        if (audioEnabled) { sfxPescado.currentTime = 0; sfxPescado.play().catch(e=>{}); }
+        const rect = peixeElem.getBoundingClientRect();
+        peixeElem.style.animation = "none";
+        peixeElem.style.left = rect.left + "px";
+        peixeElem.style.top = rect.top + "px";
+        peixeElem.classList.add("pescado");
+        pontuacaoTotal += 10;
+        acertosNaEtapa++;
+        atualizarUI();
+        mostrarEstrela(rect.left + 30, rect.top + 30);
+        mostrarFeedback(`✅ +10  ${silabaClicada}`, true);
+        falarParabensESilaba(silabaClicada, () => {
+            indiceSilabaAtual++;
+            if (indiceSilabaAtual < filaSilabas.length) {
+                jogoAtivo = true;
+                carregarProximaSilaba();
+            } else { concluirEtapa(); }
+        });
+    }
+    
+    function errou(peixeElem, silabaErrada) {
+        if (!jogoAtivo) return;
+        if (audioEnabled && sfxErro) { sfxErro.currentTime = 0; sfxErro.play().catch(e=>{}); }
+        mostrarFeedback(`❌ ${silabaErrada}`, false);
+        peixeElem.classList.add("erro-anim");
+        setTimeout(() => peixeElem.classList.remove("erro-anim"), 500);
+        falarSilaba(silabaErrada);
+    }
+    
+    function concluirEtapa() {
+        if (aguardandoProxima) return;
+        aguardandoProxima = true;
+        jogoAtivo = false;
+        aquario.innerHTML = "";
+        criarEfeitoBolhas(40);
+        let titulo = faseAtual === 1 ? "✨ Etapa 1 - Famílias B a H ✨" : (faseAtual === 2 ? "🌟 Etapa 2 - Famílias J a Q 🌟" : "🏅 Etapa 3 - Famílias R a Z 🏅");
+        document.getElementById("vitoria-msg-topo").innerHTML = titulo;
+        document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${filaSilabas.length}   |   Pontos: ${pontuacaoTotal}`;
+        document.getElementById("vitoria-msg-sub").innerHTML = faseAtual < 3 ? "🐠 Próxima etapa..." : "🎉 PARABÉNS! Todas as famílias! 🎉";
+        modalVitoria.style.display = "flex";
+        let msg = faseAtual < 3 ? "Parabéns! Vamos para a próxima etapa!" : "Você é campeão! Aprendeu todas as famílias!";
+        falarMensagem(msg, () => {
+            setTimeout(() => {
+                modalVitoria.style.display = "none";
+                if (faseAtual < 3) { faseAtual++; iniciarEtapa(); }
+                else { finalizarJogoCompleto(); }
+            }, 1800);
+        });
+    }
+    
+    function finalizarJogoCompleto() {
+        jogoAtivo = false;
+        aquario.innerHTML = "";
+        criarEfeitoBolhas(50);
+        document.getElementById("vitoria-msg-topo").innerHTML = "🏅 MESTRE DAS SÍLABAS 🏅";
+        document.getElementById("vitoria-msg-sub").innerHTML = "Ordem alfabética: B, C, Ç, D... Z!";
+        document.getElementById("scoreFinalModal").innerHTML = `🌟 Pontuação final: ${pontuacaoTotal} 🌟`;
+        modalVitoria.style.display = "flex";
+        falarMensagem("Parabéns! Você completou o alfabeto silábico!");
+        setTimeout(() => modalVitoria.style.display = "none", 5000);
+    }
+    
+    function voltarParaAlfabeto() {
+        if (aguardandoProxima) return;
+        modalNavegacao.style.display = "flex";
+        falarMensagem("Voltar para o jogo do alfabeto?");
+    }
+    
+    function fecharModalVolta() {
+        modalNavegacao.style.display = "none";
+    }
+    
+    function confirmarVolta() {
+        modalNavegacao.style.display = "none";
+        criarEfeitoBolhas(30);
+        falarMensagem("Voltando ao alfabeto!");
+        setTimeout(() => { window.location.href = "pesca_de_letrinhas.html"; }, 500);
+    }
+    
+    document.getElementById("btnRepetirSilaba").addEventListener("click", repetirSilabaAlvo);
+    document.getElementById("silabaAlvo").addEventListener("click", (e) => { e.stopPropagation(); repetirSilabaAlvo(); });
+    document.getElementById("btnVoltarAlfabeto").addEventListener("click", voltarParaAlfabeto);
+    document.getElementById("btnCancelarVolta").addEventListener("click", fecharModalVolta);
+    document.getElementById("btnConfirmarVolta").addEventListener("click", confirmarVolta);
+    
+    // Cursor personalizado
+    const cursor = document.createElement('div');
+    cursor.className = 'custom-cursor';
+    document.body.appendChild(cursor);
+    
+    document.addEventListener('mousemove', (e) => {
+        if (window.innerWidth > 768) {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        }
+    });
+    
+    document.addEventListener('mouseleave', () => { cursor.style.display = 'none'; });
+    document.addEventListener('mouseenter', () => { cursor.style.display = 'block'; });
+    
+    window.addEventListener('resize', () => {
+        if (window.innerWidth < 768) peixesNaTela = 3;
+        else if (window.innerWidth < 1024) peixesNaTela = 4;
+        else peixesNaTela = 5;
+    });
+    
+    setInterval(() => {
+        if (jogoAtivo && !aguardandoProxima && Math.random() > 0.8) {
+            const bolha = document.createElement("div");
+            bolha.className = "bolha";
+            const tam = Math.random() * (window.innerWidth < 768 ? 25 : 35) + 8 + "px";
+            bolha.style.width = tam; bolha.style.height = tam;
+            bolha.style.left = Math.random() * 100 + "vw";
+            bolha.style.animationDuration = Math.random() * 3 + 2 + "s";
+            document.body.appendChild(bolha);
+            setTimeout(() => bolha.remove(), 5000);
+        }
+    }, 1200);
+    
+    window.onload = () => {
+        if (window.speechSynthesis) window.speechSynthesis.getVoices();
+        iniciarEtapa();
+    };
+</script>
+</body>
+</html>
