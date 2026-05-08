@@ -161,6 +161,21 @@
                 font-size: 22px;
             }
         }
+        
+        .timer {
+            background: #000000aa;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        @media (min-width: 768px) {
+            .timer {
+                padding: 6px 16px;
+            }
+        }
 
         .instrucao { 
             font-size: 16px;
@@ -204,6 +219,11 @@
             text-shadow: 0 0 5px #ff9800;
             cursor: pointer;
             display: inline-block;
+            transition: transform 0.15s ease;
+        }
+        
+        #silabaAlvo.pulsando {
+            transform: scale(1.1);
         }
         
         @media (min-width: 768px) {
@@ -252,7 +272,7 @@
             width: 70px;
             height: 70px;
             pointer-events: auto;
-            transition: filter 0.1s;
+            transition: transform 0.1s;
         }
         
         @media (min-width: 768px) {
@@ -404,6 +424,18 @@
                 padding: 12px 28px; 
                 border-radius: 60px; 
                 margin-top: 20px;
+            }
+        }
+        
+        .tempo-record {
+            font-size: 14px;
+            margin-top: 10px;
+            color: #ffca28;
+        }
+        
+        @media (min-width: 768px) {
+            .tempo-record {
+                font-size: 18px;
             }
         }
 
@@ -639,6 +671,7 @@
             <div>🏆 Pontos: <span id="pontosText">0</span></div>
             <div>🎯 Progresso: <span id="acertosFase">0</span>/<span id="totalEtapa">0</span></div>
             <div>🔤 Família: <span id="familiaAtual">B</span></div>
+            <div class="timer">⏱️ <span id="timerDisplay">00:00</span></div>
         </div>
         <div class="instrucao" id="btnRepetirSilaba">
             🐠 Pesque a sílaba: <span id="silabaAlvo">---</span> <span class="speaker-icon">🔊</span>
@@ -658,6 +691,7 @@
     <div class="icone-vitoria">🎣✨</div>
     <div class="vitoria-texto" id="vitoria-msg-topo">Parabéns!</div>
     <div class="score-panel" id="scoreFinalModal">Pontuação: 0</div>
+    <div class="tempo-record" id="tempoEtapa"></div>
     <div class="vitoria-texto" id="vitoria-msg-sub" style="font-size: 2.5vh; color: #fff;">Preparando próximo nível...</div>
 </div>
 
@@ -698,7 +732,13 @@
         { letra: "Z", silabas: ["ZA", "ZE", "ZI", "ZO", "ZU", "ZÃO"] }
     ];
     
-    // ========== DICIONÁRIO DE PRONÚNCIAS ==========
+    // Lista ampliada de animais aquáticos para diferenciar das letras
+    const emojisPeixe = [
+        "🐟", "🐠", "🐡", "🐋", "🦈", "🐙", "🐬", "🐳", 
+        "🦀", "🦑", "🐚", "🐠", "🐟", "🐡", "🐋", "🦭",
+        "🐠", "🐟", "🐡", "🐙", "🐳", "🦞", "🐬", "🪼"
+    ];
+    
     const pronunciaMap = {
         "BA": "bá", "BE": "bê", "BI": "bi", "BO": "bô", "BU": "bu", "BÃO": "bão",
         "CA": "cá", "CE": "sê", "CI": "si", "CO": "cô", "CU": "cu", "CÃO": "cão",
@@ -737,6 +777,11 @@
     let familiaCorrente = "B";
     let peixesNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
     
+    // Tempos por etapa
+    let temposEtapas = [0, 0, 0];
+    let tempoInicioEtapa = null;
+    let intervaloRelogio = null;
+    
     const bgAudio = document.getElementById("bg-audio");
     const sfxPescado = document.getElementById("sfx-pescado");
     const sfxErro = document.getElementById("sfx-erro");
@@ -744,7 +789,42 @@
     const aquario = document.getElementById("aquario");
     const modalVitoria = document.getElementById("modal-vitoria");
     const modalNavegacao = document.getElementById("modal-navegacao");
-    const emojisPeixe = ["🐟", "🐠", "🐡", "🐋", "🦈", "🐙", "🐬", "🐳"];
+    
+    // ========== CRONÔMETRO ==========
+    function formatarTempo(segundos) {
+        const mins = Math.floor(segundos / 60);
+        const secs = segundos % 60;
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+    
+    function iniciarCronometro() {
+        if (intervaloRelogio) clearInterval(intervaloRelogio);
+        tempoInicioEtapa = Date.now();
+        document.getElementById("timerDisplay").innerText = "00:00";
+        intervaloRelogio = setInterval(() => {
+            if (tempoInicioEtapa && jogoAtivo && !aguardandoProxima) {
+                const segundos = Math.floor((Date.now() - tempoInicioEtapa) / 1000);
+                document.getElementById("timerDisplay").innerText = formatarTempo(segundos);
+            }
+        }, 1000);
+    }
+    
+    function pararCronometro() {
+        if (intervaloRelogio) {
+            clearInterval(intervaloRelogio);
+            intervaloRelogio = null;
+        }
+        if (tempoInicioEtapa) {
+            return Math.floor((Date.now() - tempoInicioEtapa) / 1000);
+        }
+        return 0;
+    }
+    
+    function resetarCronometro() {
+        if (intervaloRelogio) clearInterval(intervaloRelogio);
+        tempoInicioEtapa = null;
+        document.getElementById("timerDisplay").innerText = "00:00";
+    }
     
     const etapas = [
         familiasCompletas.slice(0, 7),
@@ -757,7 +837,7 @@
         return pronunciaMap[upperSilaba] || silaba.toLowerCase();
     }
     
-    // ========== SISTEMA DE FILA DE FALA OTIMIZADO PARA MOBILE ==========
+    // ========== SISTEMA DE FILA DE FALA ==========
     function processSpeechQueue() {
         if (speechQueue.length === 0) {
             isSpeaking = false;
@@ -829,7 +909,7 @@
         falarComFila(`Muito bem! ${pronuncia}`, callback);
     }
     
-    // ========== DESBLOQUEIO DA API DE VOZ NO MOBILE ==========
+    // ========== DESBLOQUEIO DA API DE VOZ ==========
     let vozDesbloqueada = false;
     const desbloquearVoz = () => {
         if (!vozDesbloqueada && window.speechSynthesis) {
@@ -840,7 +920,6 @@
             document.removeEventListener('touchstart', desbloquearVoz);
             document.removeEventListener('click', desbloquearVoz);
             document.removeEventListener('keydown', desbloquearVoz);
-            console.log("Voz desbloqueada para mobile");
         }
     };
     
@@ -852,13 +931,12 @@
         const silabaAtual = document.getElementById("silabaAlvo").innerText;
         if (silabaAtual && silabaAtual !== "---" && jogoAtivo && !aguardandoProxima) {
             const elemento = document.getElementById("silabaAlvo");
-            elemento.style.transform = "scale(1.1)";
-            setTimeout(() => elemento.style.transform = "scale(1)", 200);
+            elemento.classList.add("pulsando");
+            setTimeout(() => elemento.classList.remove("pulsando"), 200);
             falarSilaba(silabaAtual);
         }
     }
     
-    // ========== EVENTO DE TECLADO PARA ACESSIBILIDADE ==========
     document.addEventListener('keydown', (e) => {
         if (e.code === 'Space' || e.code === 'Enter') {
             e.preventDefault();
@@ -944,6 +1022,8 @@
         atualizarUI();
         jogoAtivo = true;
         aguardandoProxima = false;
+        resetarCronometro();
+        iniciarCronometro();
         carregarProximaSilaba();
     }
     
@@ -991,7 +1071,7 @@
         peixe.className = "peixinho";
         peixe.style.top = Math.floor(Math.random() * 65 + 15) + "%";
         const direita = Math.random() > 0.5;
-        const duracao = (Math.random() * 5) + 6;
+        const duracao = (Math.random() * 6) + 5;
         peixe.style.animation = direita ? `nadar-direita ${duracao}s linear infinite` : `nadar-esquerda ${duracao}s linear infinite`;
         const emoji = emojisPeixe[Math.floor(Math.random() * emojisPeixe.length)];
         const flip = direita ? 'transform: scaleX(-1);' : '';
@@ -1048,21 +1128,46 @@
     
     function concluirEtapa() {
         if (aguardandoProxima) return;
+        
+        const tempoEtapa = pararCronometro();
+        temposEtapas[faseAtual - 1] = tempoEtapa;
+        
         aguardandoProxima = true;
         jogoAtivo = false;
         aquario.innerHTML = "";
         criarEfeitoBolhas(40);
-        let titulo = faseAtual === 1 ? "✨ Etapa 1 - Famílias B a H ✨" : (faseAtual === 2 ? "🌟 Etapa 2 - Famílias J a Q 🌟" : "🏅 Etapa 3 - Famílias R a Z 🏅");
+        
+        let titulo = "";
+        if (faseAtual === 1) titulo = "✨ Etapa 1 - Famílias B a H ✨";
+        else if (faseAtual === 2) titulo = "🌟 Etapa 2 - Famílias J a Q 🌟";
+        else titulo = "🏅 Etapa 3 - Famílias R a Z 🏅";
+        
         document.getElementById("vitoria-msg-topo").innerHTML = titulo;
         document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${filaSilabas.length}   |   Pontos: ${pontuacaoTotal}`;
+        
+        // Mostra o tempo da etapa atual
+        document.getElementById("tempoEtapa").innerHTML = `⏱️ Tempo desta etapa: ${formatarTempo(tempoEtapa)}`;
+        
+        if (faseAtual === 3) {
+            // Mostra todos os tempos ao final
+            let msgTempos = `⏱️ Etapa 1: ${formatarTempo(temposEtapas[0])} | Etapa 2: ${formatarTempo(temposEtapas[1])} | Etapa 3: ${formatarTempo(temposEtapas[2])}`;
+            document.getElementById("tempoEtapa").innerHTML = msgTempos;
+        }
+        
         document.getElementById("vitoria-msg-sub").innerHTML = faseAtual < 3 ? "🐠 Próxima etapa..." : "🎉 PARABÉNS! Todas as famílias! 🎉";
         modalVitoria.style.display = "flex";
+        
         let msg = faseAtual < 3 ? "Parabéns! Vamos para a próxima etapa!" : "Você é campeão! Aprendeu todas as famílias!";
         falarMensagem(msg, () => {
             setTimeout(() => {
                 modalVitoria.style.display = "none";
-                if (faseAtual < 3) { faseAtual++; iniciarEtapa(); }
-                else { finalizarJogoCompleto(); }
+                if (faseAtual < 3) { 
+                    faseAtual++; 
+                    iniciarEtapa();
+                }
+                else { 
+                    finalizarJogoCompleto(); 
+                }
             }, 1800);
         });
     }
@@ -1074,6 +1179,10 @@
         document.getElementById("vitoria-msg-topo").innerHTML = "🏅 MESTRE DAS SÍLABAS 🏅";
         document.getElementById("vitoria-msg-sub").innerHTML = "Ordem alfabética: B, C, Ç, D... Z!";
         document.getElementById("scoreFinalModal").innerHTML = `🌟 Pontuação final: ${pontuacaoTotal} 🌟`;
+        
+        let tempoTotal = temposEtapas[0] + temposEtapas[1] + temposEtapas[2];
+        document.getElementById("tempoEtapa").innerHTML = `⏱️ Tempo total: ${formatarTempo(tempoTotal)}`;
+        
         modalVitoria.style.display = "flex";
         falarMensagem("Parabéns! Você completou o alfabeto silábico!");
         setTimeout(() => modalVitoria.style.display = "none", 5000);
@@ -1096,7 +1205,7 @@
         setTimeout(() => { window.location.href = "pesca_de_letrinhas.html"; }, 500);
     }
     
-    // ========== CONTROLE DE TOQUE OTIMIZADO PARA MOBILE ==========
+    // ========== EVENTOS ==========
     const acionarAudioSilaba = (e) => {
         if (e.type === 'touchstart' && e.cancelable) {
             e.preventDefault();
