@@ -62,6 +62,7 @@
             }
         }
 
+        /* Fundo mais escuro */
         #bg-video {
             position: absolute;
             top: 0;
@@ -70,7 +71,21 @@
             height: 100%;
             object-fit: cover;
             z-index: 0;
-            opacity: 0.75;
+            opacity: 0.35;
+            filter: brightness(0.7) contrast(1.2);
+        }
+
+        /* Camada escura adicional para garantir fundo escuro */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0,10,25,0.6), rgba(0,0,15,0.85));
+            z-index: 0;
+            pointer-events: none;
         }
 
         #game-wrapper {
@@ -94,7 +109,7 @@
         }
         
         .icon-btn {
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
             border: 2px solid var(--secondary);
             color: white;
             width: 40px;
@@ -135,7 +150,7 @@
         .game-info {
             display: flex;
             gap: 10px;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             padding: 6px 15px;
             border-radius: 30px;
             border: 2px solid var(--primary);
@@ -175,7 +190,7 @@
             font-size: 16px;
             font-weight: 900;
             margin-top: 8px;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.7);
             padding: 6px 14px;
             border-radius: 30px;
             backdrop-filter: blur(4px);
@@ -207,7 +222,7 @@
             color: var(--secondary);
             font-size: 28px;
             font-weight: bold;
-            background: #000000aa;
+            background: #000000cc;
             padding: 0 10px;
             border-radius: 30px;
             letter-spacing: 2px;
@@ -221,18 +236,6 @@
             transform: scale(1.25);
             text-shadow: 0 0 18px #ffca28, 0 0 6px #ff9800;
         }
-        
-        .speaker-icon {
-            font-size: 14px;
-            opacity: 0.7;
-            cursor: pointer;
-        }
-        
-        @media (min-width: 768px) {
-            .speaker-icon {
-                font-size: 22px;
-            }
-        }
 
         .oceano {
             position: absolute;
@@ -245,6 +248,7 @@
             pointer-events: auto;
         }
 
+        /* PEIXES MAIS CLAROS E VIBRANTES */
         .peixinho {
             position: absolute;
             cursor: pointer;
@@ -255,6 +259,7 @@
             height: 70px;
             pointer-events: auto;
             transition: filter 0.1s;
+            filter: brightness(1.1) saturate(1.2);
         }
         
         @media (min-width: 768px) {
@@ -275,7 +280,7 @@
             font-size: 50px;
             position: absolute;
             z-index: 1;
-            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
+            filter: drop-shadow(3px 5px 8px rgba(0,0,0,0.5));
         }
         
         @media (min-width: 768px) {
@@ -290,25 +295,32 @@
             }
         }
         
+        /* SÍLABAS MAIS CLARAS E LEGÍVEIS */
         .silaba-peixe {
             font-size: 18px;
             font-weight: bold;
-            color: #fff9c4;
+            color: #FFFDE7;
+            background: rgba(0,0,0,0.5);
+            padding: 2px 6px;
+            border-radius: 20px;
             position: absolute;
             z-index: 2;
-            text-shadow: 2px 2px 0 #0a2f5a;
+            text-shadow: 1px 1px 0 #0a2f5a;
             font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
         }
         
         @media (min-width: 768px) {
             .silaba-peixe {
                 font-size: 26px;
+                padding: 3px 8px;
             }
         }
         
         @media (min-width: 1024px) {
             .silaba-peixe {
                 font-size: 30px;
+                padding: 4px 10px;
             }
         }
 
@@ -343,10 +355,11 @@
             }
         }
 
+        /* BOLHAS MAIS VISÍVEIS COM FUNDO ESCURO */
         .bolha {
             position: absolute;
             bottom: -50px;
-            background: radial-gradient(circle, rgba(255,255,255,0.6), rgba(100,200,255,0.2));
+            background: radial-gradient(circle, rgba(180,220,255,0.7), rgba(100,160,255,0.3));
             border-radius: 50%;
             pointer-events: none;
             z-index: 15;
@@ -360,7 +373,7 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,20,45,0.96);
+            background: rgba(0,10,25,0.98);
             backdrop-filter: blur(14px);
             z-index: 1000;
             flex-direction: column;
@@ -474,13 +487,14 @@
             position: absolute;
             bottom: 10px;
             right: 10px;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.7);
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 9px;
             backdrop-filter: blur(5px);
             font-weight: bold;
             pointer-events: none;
+            color: #ffd54f;
         }
         
         @media (min-width: 768px) {
@@ -585,11 +599,11 @@
             position: absolute;
             bottom: 10px;
             left: 10px;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             padding: 3px 8px;
             border-radius: 15px;
             font-size: 9px;
-            color: #aaa;
+            color: #ccc;
             pointer-events: none;
         }
     </style>
@@ -599,10 +613,6 @@
 <video autoplay loop muted playsinline id="bg-video">
     <source src="video_mar.mp4" type="video/mp4">
 </video>
-
-<audio id="bg-audio" src="som_fundo_do_mar.mp3" loop></audio>
-<audio id="sfx-pescado" src="pescado.ogg"></audio>
-<audio id="sfx-erro" src="erro.mp3"></audio>
 
 <div id="game-wrapper">
     <div class="top-bar">
@@ -677,8 +687,8 @@
         { letra: "Z", silabas: ["ZA", "ZE", "ZI", "ZO", "ZU", "ZÃO"] }
     ];
     
-    // Lista ampliada de animais aquáticos
-    const emojisPeixe = ["🐟", "🐠", "🐡", "🐋", "🦈", "🐙", "🐬", "🐳", "🦀", "🦑", "🐚", "🦭", "🪼"];
+    // Lista ampliada de animais aquáticos (mais coloridos)
+    const emojisPeixe = ["🐟", "🐠", "🐡", "🐋", "🦈", "🐙", "🐬", "🐳", "🦀", "🦑", "🐚", "🦭", "🪼", "🐠", "🐟", "🐡"];
     
     const pronunciaMap = {
         "BA": "bá", "BE": "bê", "BI": "bi", "BO": "bô", "BU": "bu", "BÃO": "bão",
@@ -717,7 +727,6 @@
     let familiaCorrente = "B";
     let peixesNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
     
-    // Tempos por etapa
     let temposEtapas = [0, 0, 0];
     let tempoInicioEtapa = null;
     let intervaloRelogio = null;
@@ -730,7 +739,6 @@
     const modalVitoria = document.getElementById("modal-vitoria");
     const modalNavegacao = document.getElementById("modal-navegacao");
     
-    // ========== FUNÇÃO DE FALA (MESMA DO JOGO DE LETRAS) ==========
     function falar(texto, callback) {
         if (!window.speechSynthesis) { if (callback) callback(); return; }
         if (currentUtterance) window.speechSynthesis.cancel();
@@ -768,7 +776,6 @@
         falar(`Muito bem! ${pronuncia}`, callback);
     }
     
-    // ========== CRONÔMETRO ==========
     function formatarTempo(segundos) {
         const mins = Math.floor(segundos / 60);
         const secs = segundos % 60;
@@ -804,17 +811,13 @@
         document.getElementById("timerDisplay").innerText = "00:00";
     }
     
-    // ========== CORREÇÃO: FUNÇÃO PARA REPETIR A SÍLABA ALVO ==========
     function repetirSilabaAlvo() {
         const elSilaba = document.getElementById("silabaAlvo");
         const silabaAtual = elSilaba.innerText;
         if (!silabaAtual || silabaAtual === "---") return;
 
-        // Efeito visual de pulso (como nas letras)
         elSilaba.classList.add("pulsando");
         setTimeout(() => elSilaba.classList.remove("pulsando"), 300);
-
-        // Fala a sílaba
         falarSilaba(silabaAtual);
     }
     
@@ -1082,7 +1085,6 @@
         setTimeout(() => { window.location.href = "pesca_de_letrinhas.html"; }, 500);
     }
     
-    // ========== CORREÇÃO: EVENTOS DE CLIQUE (IGUAL AO JOGO DE LETRAS) ==========
     document.getElementById("btnRepetirSilaba").addEventListener("click", (e) => {
         if (e.target.id !== "silabaAlvo") repetirSilabaAlvo();
     });
@@ -1101,7 +1103,6 @@
     document.getElementById("btnCancelarVolta").addEventListener("click", fecharModalVolta);
     document.getElementById("btnConfirmarVolta").addEventListener("click", confirmarVolta);
     
-    // Desbloqueio de voz para mobile
     let vozDesbloqueada = false;
     const desbloquearVoz = () => {
         if (!vozDesbloqueada && window.speechSynthesis) {
@@ -1116,7 +1117,6 @@
     document.addEventListener('touchstart', desbloquearVoz, { once: true });
     document.addEventListener('click', desbloquearVoz, { once: true });
     
-    // Cursor personalizado (desktop)
     if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
         const cursor = document.createElement('div');
         cursor.className = 'custom-cursor';
