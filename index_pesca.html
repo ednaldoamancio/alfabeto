@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#0a2a3a">
-    <title>Central da Pesca - EdHumanas</title>
+    <title>EdHumanas - Jogos Educativos</title>
     
     <style>
         * {
@@ -16,12 +15,13 @@
         body {
             font-family: 'Segoe UI', 'Comic Neue', 'Comic Sans MS', Tahoma, sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #0a1a2a 0%, #0a2a3a 50%, #0a1a2a 100%);
+            background: linear-gradient(135deg, #0a0f2a 0%, #0a1a3a 50%, #0a0f2a 100%);
             color: white;
             overflow-x: hidden;
             position: relative;
         }
 
+        /* Vídeo de fundo */
         #bg-video {
             position: fixed;
             top: 0;
@@ -30,10 +30,10 @@
             height: 100%;
             object-fit: cover;
             z-index: -2;
-            opacity: 0.5;
-            filter: brightness(0.7) saturate(1.2);
+            opacity: 0.4;
         }
 
+        /* Overlay escuro */
         body::before {
             content: "";
             position: fixed;
@@ -41,7 +41,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, rgba(0,30,50,0.6), rgba(0,10,25,0.85));
+            background: radial-gradient(circle at center, rgba(0,20,50,0.5), rgba(0,0,20,0.85));
             z-index: -1;
         }
 
@@ -56,74 +56,59 @@
             align-items: center;
         }
 
+        /* Cabeçalho */
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
             animation: fadeInDown 0.8s ease;
         }
 
-        .back-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(0,0,0,0.6);
-            border: 2px solid #ffd700;
-            border-radius: 40px;
-            padding: 8px 16px;
-            font-size: 14px;
-            cursor: pointer;
-            color: white;
-            backdrop-filter: blur(4px);
-            transition: all 0.3s;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .back-btn:hover {
-            transform: scale(1.05);
-            background: rgba(0,0,0,0.8);
-        }
-
         .header h1 {
-            font-size: 2rem;
-            background: linear-gradient(135deg, #00acc1, #4dd0e1, #80deea);
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #ffd700, #ff8c00, #ff6f00);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 0 20px rgba(0,172,193,0.3);
+            text-shadow: 0 0 20px rgba(255,140,0,0.3);
             margin-bottom: 10px;
         }
 
         .header p {
-            font-size: 0.95rem;
+            font-size: 1.1rem;
             color: #aaddff;
+            letter-spacing: 1px;
         }
 
         @media (min-width: 768px) {
-            .header h1 { font-size: 2.8rem; }
-            .header p { font-size: 1.1rem; }
+            .header h1 {
+                font-size: 3.5rem;
+            }
+            .header p {
+                font-size: 1.3rem;
+            }
         }
 
+        /* Grade de jogos */
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 25px;
             width: 100%;
             max-width: 1000px;
-            margin: 20px auto;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease;
         }
 
+        /* Cards dos jogos */
         .game-card {
-            background: rgba(10, 30, 45, 0.85);
+            background: rgba(10, 25, 45, 0.85);
             backdrop-filter: blur(10px);
             border-radius: 30px;
             padding: 25px 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 2px solid rgba(0, 172, 193, 0.4);
+            border: 2px solid rgba(255, 215, 0, 0.3);
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             position: relative;
             overflow: hidden;
@@ -136,57 +121,129 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(0,172,193,0.08), transparent);
+            background: radial-gradient(circle, rgba(255,215,0,0.1), transparent);
             transform: rotate(45deg);
             transition: all 0.5s ease;
             opacity: 0;
         }
 
         .game-card:hover {
-            transform: translateY(-8px);
-            border-color: #ffd700;
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(255, 215, 0, 0.8);
             box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
 
-        .game-card:hover::before { opacity: 1; }
-        .game-card:active { transform: translateY(-2px) scale(0.98); }
+        .game-card:hover::before {
+            opacity: 1;
+            top: -30%;
+            left: -30%;
+        }
 
-        .game-icon { font-size: 4rem; margin-bottom: 15px; display: inline-block; }
-        .game-card h2 { font-size: 1.4rem; margin-bottom: 10px; color: #ffd966; }
-        .game-card p { font-size: 0.85rem; color: #bbddff; line-height: 1.4; }
+        .game-card:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+
+        /* Ícones dos jogos */
+        .game-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .game-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #ffd966;
+        }
+
+        .game-card p {
+            font-size: 0.9rem;
+            color: #bbddff;
+            line-height: 1.4;
+        }
 
         .game-badge {
             display: inline-block;
             margin-top: 15px;
-            padding: 5px 12px;
-            background: rgba(0,172,193,0.3);
+            padding: 5px 15px;
+            background: rgba(255,140,0,0.3);
             border-radius: 20px;
-            font-size: 0.7rem;
-            color: #80deea;
-            border: 1px solid rgba(0,172,193,0.5);
+            font-size: 0.75rem;
+            color: #ffb347;
+            border: 1px solid rgba(255,140,0,0.5);
         }
 
         @media (min-width: 768px) {
-            .game-icon { font-size: 5rem; }
-            .game-card h2 { font-size: 1.6rem; }
-            .game-card p { font-size: 0.95rem; }
-            .game-badge { font-size: 0.75rem; }
+            .game-icon {
+                font-size: 5rem;
+            }
+            .game-card h2 {
+                font-size: 1.8rem;
+            }
+            .game-card p {
+                font-size: 1rem;
+            }
         }
 
-        .game-card.alfabeto { border-color: #ffd700; }
-        .game-card.silabas { border-color: #4caf50; }
-        .game-card.complexas { border-color: #ff8c00; }
+        /* Card especial - Sílabas Complexas */
+        .game-card.special {
+            background: linear-gradient(135deg, rgba(30, 60, 90, 0.9), rgba(20, 40, 70, 0.9));
+            border: 2px solid #ff8c00;
+            box-shadow: 0 0 20px rgba(255,140,0,0.3);
+        }
 
+        .game-card.special .game-icon {
+            animation: float 3s ease-in-out infinite, glow 2s ease-in-out infinite;
+        }
+
+        .game-card.special .game-badge {
+            background: rgba(255,140,0,0.5);
+            color: #ffcc80;
+        }
+
+        /* Animações */
         @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
+        @keyframes glow {
+            0%, 100% {
+                text-shadow: 0 0 5px #ff8c00;
+            }
+            50% {
+                text-shadow: 0 0 20px #ff8c00, 0 0 10px #ffaa00;
+            }
+        }
+
+        /* Botão de áudio */
         .audio-btn {
             position: fixed;
             bottom: 20px;
@@ -198,29 +255,40 @@
             height: 50px;
             font-size: 24px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             backdrop-filter: blur(4px);
             transition: all 0.3s;
             z-index: 100;
             color: white;
         }
 
-        .audio-btn:hover { transform: scale(1.05); background: rgba(0,0,0,0.8); }
+        .audio-btn:hover {
+            transform: scale(1.05);
+            background: rgba(0,0,0,0.8);
+        }
 
+        /* Rodapé */
         .footer {
-            margin-top: 40px;
+            margin-top: 50px;
             text-align: center;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: #6688aa;
         }
 
         @media (min-width: 768px) {
-            .footer { margin-top: 50px; }
+            .footer {
+                margin-top: 60px;
+                font-size: 0.9rem;
+            }
         }
 
+        /* Bolhas decorativas */
         .bubble {
             position: fixed;
             bottom: -50px;
-            background: radial-gradient(circle, rgba(100,200,255,0.25), rgba(50,100,150,0.08));
+            background: radial-gradient(circle, rgba(100,200,255,0.3), rgba(50,100,150,0.1));
             border-radius: 50%;
             pointer-events: none;
             z-index: 0;
@@ -228,74 +296,55 @@
         }
 
         @keyframes rise {
-            to { transform: translateY(-120vh); opacity: 0; }
-        }
-
-        .info-box {
-            background: rgba(0,0,0,0.5);
-            border-radius: 20px;
-            padding: 15px 25px;
-            margin: 20px 0;
-            text-align: center;
-            border: 1px solid rgba(255,215,0,0.3);
-        }
-
-        .info-box p {
-            font-size: 0.85rem;
-            color: #ccddff;
+            to {
+                transform: translateY(-120vh);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
 
 <video autoplay loop muted playsinline id="bg-video">
-    <source src="fundo-do-mar.mp4" type="video/mp4">
+    <source src="video_mar.mp4" type="video/mp4">
 </video>
 
 <audio id="bg-audio" src="som_fundo_do_mar.mp3" loop></audio>
 
 <div class="container">
-    <button class="back-btn" onclick="navegar('index.html')">
-        <span>⬅️</span> Voltar ao Menu Principal
-    </button>
-
     <div class="header">
-        <h1>🎣 Central da Pesca Educacional 🎣</h1>
-        <p>Escolha seu desafio e pesque conhecimento!</p>
+        <h1>🐠 EdHumanas 🐠</h1>
+        <p>Jogos Educativos • Aprenda brincando</p>
     </div>
 
     <div class="games-grid">
         <!-- Jogo 1: Alfabeto -->
-        <div class="game-card alfabeto" onclick="navegar('pesca_de_letrinhas.html')">
+        <div class="game-card" onclick="navegar('pesca_de_letrinhas.html')">
             <div class="game-icon">🔤🐟</div>
             <h2>Pesca das Letrinhas</h2>
             <p>Aprenda o alfabeto pescando as letras! Cada letra tem sua pronúncia e você avança de fase.</p>
-            <div class="game-badge">⭐ 26 letras • 2 fases • Cronômetro</div>
+            <div class="game-badge">⭐ 26 letras • 2 fases</div>
         </div>
 
-        <!-- Jogo 2: Famílias Silábicas -->
-        <div class="game-card silabas" onclick="navegar('pesca_silabica.html')">
+        <!-- Jogo 2: Sílabas Simples -->
+        <div class="game-card" onclick="navegar('pesca_silabica.html')">
             <div class="game-icon">📖🐠</div>
             <h2>Famílias Silábicas</h2>
             <p>Pesque sílabas como BA, BE, BI, BO, BU! Aprenda as famílias do B ao Z.</p>
-            <div class="game-badge">⭐ 22 famílias • 3 etapas • +30 criaturas</div>
+            <div class="game-badge">⭐ 22 famílias • 3 etapas</div>
         </div>
 
-        <!-- Jogo 3: Sílabas Complexas -->
-        <div class="game-card complexas" onclick="navegar('pesca_complexa.html')">
+        <!-- Jogo 3: Sílabas Complexas (DESTAQUE) -->
+        <div class="game-card special" onclick="navegar('pesca_complexa.html')">
             <div class="game-icon">🔱🐢✨</div>
             <h2>Pesca de Letras Complexas</h2>
-            <p>Sílabas complexas: AL, EL, IL, OL, UL | BRA, BRE, BRI... | CHA, CHE, CHI... e muito mais!</p>
+            <p>Sílabas complexas: AL, EL, IL, OL, UL | BRA, BRE, BRI... | CHA, CHE, CHI... | NHA, NHE, NHI... e muito mais!</p>
             <div class="game-badge">🏆 25 categorias • +150 sílabas • Tesouros submarinos</div>
         </div>
     </div>
 
-    <div class="info-box">
-        <p>💡 Dica: Em todos os jogos, clique na letra ou sílaba alvo para ouvir a pronúncia! 🎣</p>
-    </div>
-
     <div class="footer">
-        <p>🌊 Pesque o conhecimento • Divirta-se aprendendo no mundo subaquático! 🌊</p>
+        <p>🌊 Clique no peixe para pescar • Clique na letra/sílaba para ouvir a pronúncia • Divirta-se aprendendo! 🌊</p>
     </div>
 </div>
 
@@ -317,31 +366,40 @@
     }
 
     function navegar(url) {
+        // Pequeno efeito sonoro (opcional)
+        if (audioEnabled) {
+            const beep = new Audio();
+            // Não vamos carregar áudio real para não atrasar
+        }
         window.location.href = url;
     }
 
+    // Criar bolhas decorativas
     function criarBolhas() {
-        for(let i = 0; i < 20; i++) {
+        for(let i = 0; i < 30; i++) {
             setTimeout(() => {
                 const bolha = document.createElement("div");
                 bolha.className = "bubble";
-                const tamanho = Math.random() * 30 + 6;
+                const tamanho = Math.random() * 40 + 10;
                 bolha.style.width = tamanho + "px";
                 bolha.style.height = tamanho + "px";
                 bolha.style.left = Math.random() * 100 + "%";
-                bolha.style.animationDuration = Math.random() * 5 + 3 + "s";
+                bolha.style.animationDuration = Math.random() * 5 + 4 + "s";
                 bolha.style.animationDelay = Math.random() * 5 + "s";
                 document.body.appendChild(bolha);
                 setTimeout(() => bolha.remove(), 10000);
-            }, i * 150);
+            }, i * 200);
         }
     }
 
+    // Desbloquear áudio no mobile
     let vozDesbloqueada = false;
     const desbloquearAudio = () => {
         if (!vozDesbloqueada) {
             vozDesbloqueada = true;
-            if (audioEnabled) bgAudio.play().catch(e=>{});
+            if (audioEnabled) {
+                bgAudio.play().catch(e=>{});
+            }
             document.removeEventListener('touchstart', desbloquearAudio);
             document.removeEventListener('click', desbloquearAudio);
         }
@@ -349,6 +407,7 @@
     document.addEventListener('touchstart', desbloquearAudio, { once: true });
     document.addEventListener('click', desbloquearAudio, { once: true });
 
+    // Inicializar
     window.onload = () => {
         criarBolhas();
         setInterval(criarBolhas, 8000);
