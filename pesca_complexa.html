@@ -244,6 +244,7 @@
             pointer-events: auto;
             transition: transform 0.15s ease, text-shadow 0.15s ease;
             border: 1px solid var(--primary);
+            font-family: monospace;
         }
         
         #silabaAlvo.pulsando {
@@ -681,57 +682,53 @@
         "🧜‍♀️", "🧜‍♂️", "🐠", "🐟", "🦑", "🐢", "🐋", "🦀", "🐡", "🐬"
     ];
     
-    // ========== CORREÇÃO DAS PRONÚNCIAS ==========
-    // Agora sem acentos agudos indevidos: "OL" = "ou", "EL" = "éu", "UL" = "uu", etc.
-    const pronunciaComplexa = {
-        // Série AL-EL-IL-OL-UL
-        "AL": "au", "EL": "éu", "IL": "iu", "OL": "ou", "UL": "uu",
+    // ========== PRONÚNCIA CORRIGIDA (MÉTODO FÔNICO) ==========
+    // Mapeamento explícito para garantir que o robô leia do jeito certo para alfabetização
+    const pronunciaCorrigida = {
+        // Série AL-EL-IL-OL-UL (Som de A + L, E + L, etc.)
+        "AL": "a com éle", "EL": "é com éle", "IL": "i com éle", "OL": "ó com éle", "UL": "u com éle",
         
-        // Série AM-EM-IM-OM-UM
-        "AM": "ã", "EM": "ẽ", "IM": "ĩ", "OM": "õ", "UM": "ũ",
+        // Série AM-EM-IM-OM-UM (Som nasal didático)
+        "AM": "a com som de m", "EM": "e com som de m", "IM": "i com som de m", "OM": "o com som de m", "UM": "u com som de m",
         
         // Série AN-EN-IN-ON-UN
-        "AN": "ã", "EN": "ẽ", "IN": "ĩ", "ON": "õ", "UN": "ũ",
+        "AN": "a com som de n", "EN": "e com som de n", "IN": "i com som de n", "ON": "o com som de n", "UN": "u com som de n",
         
-        // Série AR-ER-IR-OR-UR
-        "AR": "ar", "ER": "er", "IR": "ir", "OR": "or", "UR": "ur",
+        // Série AR-ER-IR-OR-UR (Som vibrante)
+        "AR": "a com erre", "ER": "e com erre", "IR": "i com erre", "OR": "o com erre", "UR": "u com erre",
         
         // Série AS-ES-IS-OS-US
-        "AS": "as", "ES": "es", "IS": "is", "OS": "os", "US": "us",
+        "AS": "a com esse", "ES": "e com esse", "IS": "i com esse", "OS": "o com esse", "US": "u com esse",
         
-        // Encontros consonantais com L
-        "BLA": "bla", "BLE": "ble", "BLI": "bli", "BLO": "blo", "BLU": "blu",
-        "BRA": "bra", "BRE": "bre", "BRI": "bri", "BRO": "bro", "BRU": "bru",
-        "CLA": "cla", "CLE": "cle", "CLI": "cli", "CLO": "clo", "CLU": "clu",
-        "CRA": "cra", "CRE": "cre", "CRI": "cri", "CRO": "cro", "CRU": "cru",
-        "DRA": "dra", "DRE": "dre", "DRI": "dri", "DRO": "dro", "DRU": "dru",
-        "FLA": "fla", "FLE": "fle", "FLI": "fli", "FLO": "flo", "FLU": "flu",
-        "FRA": "fra", "FRE": "fre", "FRI": "fri", "FRO": "fro", "FRU": "fru",
-        "GLA": "gla", "GLE": "gle", "GLI": "gli", "GLO": "glo", "GLU": "glu",
-        "GRA": "gra", "GRE": "gre", "GRI": "gri", "GRO": "gro", "GRU": "gru",
-        "PLA": "pla", "PLE": "ple", "PLI": "pli", "PLO": "plo", "PLU": "plu",
-        "PRA": "pra", "PRE": "pre", "PRI": "pri", "PRO": "pro", "PRU": "pru",
+        // Encontros consonantais com L (B, C, D, F, G, P, T, V)
+        "BLA": "b com le a", "BLE": "b com le e", "BLI": "b com le i", "BLO": "b com le o", "BLU": "b com le u",
+        "BRA": "b com re a", "BRE": "b com re e", "BRI": "b com re i", "BRO": "b com re o", "BRU": "b com re u",
+        "CLA": "c com le a", "CLE": "c com le e", "CLI": "c com le i", "CLO": "c com le o", "CLU": "c com le u",
+        "CRA": "c com re a", "CRE": "c com re e", "CRI": "c com re i", "CRO": "c com re o", "CRU": "c com re u",
+        "DRA": "d com re a", "DRE": "d com re e", "DRI": "d com re i", "DRO": "d com re o", "DRU": "d com re u",
+        "FLA": "f com le a", "FLE": "f com le e", "FLI": "f com le i", "FLO": "f com le o", "FLU": "f com le u",
+        "FRA": "f com re a", "FRE": "f com re e", "FRI": "f com re i", "FRO": "f com re o", "FRU": "f com re u",
+        "GLA": "g com le a", "GLE": "g com le e", "GLI": "g com le i", "GLO": "g com le o", "GLU": "g com le u",
+        "GRA": "g com re a", "GRE": "g com re e", "GRI": "g com re i", "GRO": "g com re o", "GRU": "g com re u",
+        "PLA": "p com le a", "PLE": "p com le e", "PLI": "p com le i", "PLO": "p com le o", "PLU": "p com le u",
+        "PRA": "p com re a", "PRE": "p com re e", "PRI": "p com re i", "PRO": "p com re o", "PRU": "p com re u",
+        "TLA": "t com le a", "TLE": "t com le e", "TLI": "t com le i", "TLO": "t com le o", "TLU": "t com le u",
+        "TRA": "t com re a", "TRE": "t com re e", "TRI": "t com re i", "TRO": "t com re o", "TRU": "t com re u",
+        "VLA": "v com le a", "VLE": "v com le e", "VLI": "v com le i", "VLO": "v com le o", "VLU": "v com le u",
+        "VRA": "v com re a", "VRE": "v com re e", "VRI": "v com re i", "VRO": "v com re o", "VRU": "v com re u",
         
-        // Consoantes duplas
-        "RRA": "rrá", "RRE": "rré", "RRI": "rri", "RRO": "rró", "RRU": "rru",
-        "SSA": "ssá", "SSE": "ssé", "SSI": "ssi", "SSO": "ssó", "SSU": "ssu",
+        // Consoantes duplas (R e S fortes)
+        "RRA": "erre a", "RRE": "erre e", "RRI": "erre i", "RRO": "erre o", "RRU": "erre u",
+        "SSA": "esse a", "SSE": "esse e", "SSI": "esse i", "SSO": "esse o", "SSU": "esse u",
         
-        // Encontros com T
-        "TLA": "tla", "TLE": "tle", "TLI": "tli", "TLO": "tlo", "TLU": "tlu",
-        "TRA": "tra", "TRE": "tre", "TRI": "tri", "TRO": "tro", "TRU": "tru",
+        // Dígrafos com NH (Som do N com iode)
+        "NHA": "n com i a", "NHE": "n com i e", "NHI": "n com i i", "NHO": "n com i o", "NHU": "n com i u",
         
-        // Encontros com V
-        "VLA": "vla", "VLE": "vle", "VLI": "vli", "VLO": "vlo", "VLU": "vlu",
-        "VRA": "vra", "VRE": "vre", "VRI": "vri", "VRO": "vro", "VRU": "vru",
+        // Dígrafos com LH (Som do L com iode)
+        "LHA": "l com i a", "LHE": "l com i e", "LHI": "l com i i", "LHO": "l com i o", "LHU": "l com i u",
         
-        // Dígrafos com NH
-        "NHA": "nha", "NHE": "nhe", "NHI": "nhi", "NHO": "nho", "NHU": "nhu",
-        
-        // Dígrafos com LH
-        "LHA": "lhá", "LHE": "lhé", "LHI": "lhi", "LHO": "lhó", "LHU": "lhu",
-        
-        // Dígrafos com CH
-        "CHA": "cha", "CHE": "che", "CHI": "chi", "CHO": "cho", "CHU": "chu"
+        // Dígrafos com CH (Som de X, não TCHE)
+        "CHA": "x a", "CHE": "x e", "CHI": "x i", "CHO": "x o", "CHU": "x u"
     };
     
     let audioEnabled = false;
@@ -758,32 +755,55 @@
     const modalVitoria = document.getElementById("modal-vitoria");
     const modalNavegacao = document.getElementById("modal-navegacao");
     
-    // ========== FUNÇÕES DE FALA ==========
+    // ========== FUNÇÃO DE FALA CORRIGIDA ==========
     function falar(texto, callback) {
-        if (!window.speechSynthesis) { if (callback) callback(); return; }
-        if (currentUtterance) window.speechSynthesis.cancel();
+        if (!window.speechSynthesis) { 
+            if (callback) callback(); 
+            return; 
+        }
+        // Cancela qualquer fala anterior para não acumular
+        if (currentUtterance) {
+            window.speechSynthesis.cancel();
+        }
 
         const utterance = new SpeechSynthesisUtterance(texto);
         utterance.lang  = 'pt-BR';
-        utterance.rate  = 0.8;
+        utterance.rate  = 0.85; // Um pouco mais lento para entender melhor
         utterance.pitch = 1.0;
 
+        // Tenta pegar uma voz feminina e natural em português
         const voices = window.speechSynthesis.getVoices();
-        const ptBrVoice = voices.find(v => v.lang === 'pt-BR' &&
-            (v.name.includes('Google') || v.name.includes('Microsoft') ||
-             v.name.includes('Maria')  || v.name.includes('Natural')));
-        if (ptBrVoice) utterance.voice = ptBrVoice;
+        // Força a atualização das vozes em alguns navegadores
+        if (voices.length === 0) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                const newVoices = window.speechSynthesis.getVoices();
+                const ptBrVoice = newVoices.find(v => v.lang === 'pt-BR' && 
+                    (v.name.includes('Google') || v.name.includes('Microsoft') || v.name.includes('Maria') || v.name.includes('Natural')));
+                if (ptBrVoice) utterance.voice = ptBrVoice;
+                window.speechSynthesis.speak(utterance);
+            };
+        } else {
+            const ptBrVoice = voices.find(v => v.lang === 'pt-BR' &&
+                (v.name.includes('Google') || v.name.includes('Microsoft') || v.name.includes('Maria') || v.name.includes('Natural')));
+            if (ptBrVoice) utterance.voice = ptBrVoice;
+        }
 
         currentUtterance = utterance;
         utterance.onend = () => {
             currentUtterance = null;
             if (callback) setTimeout(callback, 150);
         };
+        utterance.onerror = () => {
+            currentUtterance = null;
+            if (callback) callback();
+        };
         window.speechSynthesis.speak(utterance);
     }
 
+    // Função específica para falar a sílaba usando o dicionário corrigido
     function falarSilaba(silaba, callback) {
-        const pronuncia = pronunciaComplexa[silaba.toUpperCase()] || silaba.toLowerCase();
+        // Busca a pronúncia didática no mapa. Se não existir, lê a sílaba normalmente.
+        const pronuncia = pronunciaCorrigida[silaba.toUpperCase()] || silaba.toLowerCase();
         falar(pronuncia, callback);
     }
 
@@ -926,7 +946,10 @@
         opcoes.forEach(sil => criarCriatura(sil, silabaCerta));
         
         setTimeout(() => {
-            if (jogoAtivo && !aguardandoProxima) falarSilaba(silabaCerta);
+            if (jogoAtivo && !aguardandoProxima) {
+                // Fala a sílaba correta usando a pronúncia didática
+                falarSilaba(silabaCerta);
+            }
         }, 500);
     }
     
@@ -988,14 +1011,17 @@
         
         mostrarFeedback(silabaClicada, true, x || rect.left + 30, y || rect.top + 30);
         
-        falar(`Muito bem! ${pronunciaComplexa[silabaClicada.toUpperCase()] || silabaClicada.toLowerCase()}`, () => {
-            indiceSilabaAtual++;
-            if (indiceSilabaAtual < filaSilabas.length) {
-                jogoAtivo = true;
-                carregarProximaSilaba();
-            } else { 
-                concluirEtapa(); 
-            }
+        // Ao acertar, repete o som correto da sílaba para fixar o aprendizado
+        falar(`Muito bem!`, () => {
+            falarSilaba(silabaClicada, () => {
+                indiceSilabaAtual++;
+                if (indiceSilabaAtual < filaSilabas.length) {
+                    jogoAtivo = true;
+                    carregarProximaSilaba();
+                } else { 
+                    concluirEtapa(); 
+                }
+            });
         });
     }
     
@@ -1008,6 +1034,7 @@
         mostrarFeedback(silabaErrada, false);
         creatureElem.classList.add("erro-anim");
         setTimeout(() => creatureElem.classList.remove("erro-anim"), 400);
+        // Ao errar, fala o som da sílaba errada para a criança perceber a diferença
         falarSilaba(silabaErrada);
     }
     
@@ -1039,7 +1066,8 @@
         document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${filaSilabas.length} | Pontos: ${pontuacaoTotal}`;
         document.getElementById("tempoEtapa").innerHTML = `⏱️ Tempo: ${formatarTempo(tempoEtapa)}`;
         
-        let msg = faseAtual < categorias.length ? "🐢 Nova categoria de sílabas chegou!" : "🏆 VOCÊ DOMINOU AS SÍLABAS COMPLEXAS! 🏆";
+        // MENSAGEM CORRIGIDA: Removido "Tartaruga" e qualquer animal para soar mais profissional/didático
+        let msg = faseAtual < categorias.length ? "Nova categoria de sílabas chegou!" : "🏆 VOCÊ DOMINOU AS SÍLABAS COMPLEXAS! 🏆";
         document.getElementById("vitoria-msg-sub").innerHTML = msg;
         modalVitoria.style.display = "flex";
         
@@ -1114,7 +1142,8 @@
     let vozDesbloqueada = false;
     const desbloquearVoz = () => {
         if (!vozDesbloqueada && window.speechSynthesis) {
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance(""));
+            // Fala uma frase neutra para ativar o sistema de áudio no celular
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Jogo pronto"));
             vozDesbloqueada = true;
         }
     };
