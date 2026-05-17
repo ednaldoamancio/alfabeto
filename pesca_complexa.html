@@ -6,27 +6,18 @@
     <title>Sílabas Complexas - Tesouros do Mar Profundo | EdHumanas</title>
     
     <style>
-        :root {
-            --primary: #00acc1;
-            --secondary: #ffd54f;
-            --accent: #ff7043;
-            --gold: #ffb74d;
-            --text-light: #ffffff;
-            --deep-blue: #0d1b2a;
-        }
-
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
-            user-select: none; 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
             font-family: 'Segoe UI', 'Comic Neue', 'Comic Sans MS', Tahoma, sans-serif;
             background: #000;
-            color: var(--text-light);
+            color: #ffffff;
             width: 100vw;
             height: 100vh;
             overflow: hidden;
@@ -41,10 +32,8 @@
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
-            transition: transform 0.05s ease;
             filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
         }
-        
         .custom-cursor::before {
             content: "🔱";
             font-size: 40px;
@@ -53,14 +42,9 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
-        
         @media (hover: none) and (pointer: coarse) {
-            .custom-cursor {
-                display: none;
-            }
-            body {
-                cursor: auto;
-            }
+            .custom-cursor { display: none; }
+            body { cursor: auto; }
         }
 
         #bg-video {
@@ -98,14 +82,12 @@
             z-index: 1;
             overflow: hidden;
         }
-        
         .light-particle {
             position: absolute;
             background: radial-gradient(circle, rgba(255,255,200,0.6), transparent);
             border-radius: 50%;
             animation: floatLight 8s ease-in-out infinite;
         }
-        
         @keyframes floatLight {
             0% { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; }
             20% { opacity: 0.8; }
@@ -133,34 +115,21 @@
             gap: 10px;
             pointer-events: auto;
         }
-        
         .icon-btn {
             background: rgba(0, 0, 0, 0.7);
-            border: 2px solid var(--gold);
+            border: 2px solid #ffd54f;
             color: white;
             width: 40px;
             height: 40px;
             border-radius: 50%;
             cursor: pointer;
             font-size: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             backdrop-filter: blur(4px);
             transition: transform 0.2s;
         }
-        
         @media (min-width: 768px) {
-            .icon-btn {
-                width: 50px;
-                height: 50px;
-                font-size: 24px;
-            }
-            .top-bar {
-                top: 20px;
-                left: 20px;
-                gap: 15px;
-            }
+            .icon-btn { width: 50px; height: 50px; font-size: 24px; }
+            .top-bar { top: 20px; left: 20px; gap: 15px; }
         }
 
         .game-info-container {
@@ -179,34 +148,25 @@
             background: rgba(0, 10, 25, 0.85);
             padding: 6px 15px;
             border-radius: 40px;
-            border: 2px solid var(--primary);
+            border: 2px solid #00acc1;
             font-weight: bold;
             font-size: 11px;
             backdrop-filter: blur(4px);
             flex-wrap: wrap;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
-        
         @media (min-width: 768px) {
-            .game-info {
-                gap: 20px;
-                padding: 10px 25px;
-                font-size: 18px;
-            }
+            .game-info { gap: 20px; padding: 10px 25px; font-size: 18px; }
         }
-        
         .timer {
             background: #000000aa;
             padding: 4px 12px;
             border-radius: 30px;
             font-family: 'Courier New', monospace;
-            font-weight: bold;
-            letter-spacing: 2px;
             color: #00ffcc;
         }
 
-        .instrucao { 
+        .instrucao {
             font-size: 16px;
             font-weight: 900;
             margin-top: 8px;
@@ -219,20 +179,13 @@
             gap: 6px;
             cursor: pointer;
             pointer-events: auto;
-            border: 1px solid var(--gold);
+            border: 1px solid #ffd54f;
         }
-        
         @media (min-width: 768px) {
-            .instrucao {
-                font-size: 24px;
-                margin-top: 15px;
-                padding: 8px 20px;
-                gap: 10px;
-            }
+            .instrucao { font-size: 24px; margin-top: 15px; padding: 8px 20px; gap: 10px; }
         }
-        
         #silabaAlvo {
-            color: var(--gold);
+            color: #ffd54f;
             font-size: 28px;
             font-weight: bold;
             background: linear-gradient(135deg, #1a2a3a, #0a1a2a);
@@ -242,15 +195,13 @@
             text-shadow: 0 0 8px #ff9800;
             cursor: pointer;
             pointer-events: auto;
-            transition: transform 0.15s ease, text-shadow 0.15s ease;
-            border: 1px solid var(--primary);
-            font-family: monospace;
+            transition: transform 0.15s ease;
+            border: 1px solid #00acc1;
         }
-        
         #silabaAlvo.pulsando {
             transform: scale(1.25);
-            text-shadow: 0 0 20px #ffca28, 0 0 10px #ff9800;
-            border-color: var(--gold);
+            text-shadow: 0 0 20px #ffca28;
+            border-color: #ffd54f;
         }
 
         .oceano {
@@ -273,16 +224,11 @@
             width: 100px;
             height: 100px;
             pointer-events: auto;
-            transition: filter 0.1s, transform 0.05s;
             filter: brightness(1.1) saturate(1.1);
             z-index: 50;
-            -webkit-tap-highlight-color: transparent;
+            transition: transform 0.05s;
         }
-        
-        .creature:active {
-            transform: scale(0.95);
-        }
-        
+        .creature:active { transform: scale(0.95); }
         .creature::after {
             content: "";
             position: absolute;
@@ -290,33 +236,17 @@
             left: -20px;
             right: -20px;
             bottom: -20px;
-            background: transparent;
             border-radius: 50%;
             pointer-events: auto;
         }
-        
-        @media (min-width: 768px) {
-            .creature {
-                width: 120px;
-                height: 120px;
-            }
-        }
-        
+        @media (min-width: 768px) { .creature { width: 120px; height: 120px; } }
         .creature-icon {
             font-size: 65px;
             position: absolute;
-            z-index: 1;
             filter: drop-shadow(3px 6px 10px rgba(0,0,0,0.5));
             pointer-events: none;
-            transition: all 0.2s;
         }
-        
-        @media (min-width: 768px) {
-            .creature-icon {
-                font-size: 85px;
-            }
-        }
-        
+        @media (min-width: 768px) { .creature-icon { font-size: 85px; } }
         .silaba-creature {
             font-size: 18px;
             font-weight: bold;
@@ -325,36 +255,27 @@
             padding: 5px 10px;
             border-radius: 30px;
             position: absolute;
-            z-index: 2;
             text-shadow: 1px 1px 0 #0a2f5a;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 1.5px;
-            pointer-events: none;
+            font-family: monospace;
             white-space: nowrap;
             backdrop-filter: blur(2px);
             border: 1px solid rgba(255,215,0,0.5);
+            pointer-events: none;
         }
-        
         @media (min-width: 768px) {
-            .silaba-creature {
-                font-size: 26px;
-                padding: 6px 14px;
-            }
+            .silaba-creature { font-size: 26px; padding: 6px 14px; }
         }
 
         .pescado {
-            animation: subir-vertical 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+            animation: subir-vertical 0.8s cubic-bezier(0.4,0,0.2,1) forwards !important;
             pointer-events: none !important;
             z-index: 300;
             filter: brightness(1.5) !important;
         }
-
         @keyframes subir-vertical {
-            0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
-            50% { transform: translateY(-50vh) scale(1.2) rotate(10deg); opacity: 0.8; }
-            100% { transform: translateY(-120vh) scale(0.3) rotate(20deg); opacity: 0; }
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-120vh) scale(0.3); opacity: 0; }
         }
-
         @keyframes nadar-direita {
             0% { left: -120px; }
             100% { left: 100%; }
@@ -363,16 +284,9 @@
             0% { left: 100%; }
             100% { left: -120px; }
         }
-        
         @media (min-width: 768px) {
-            @keyframes nadar-direita {
-                0% { left: -150px; }
-                100% { left: 100%; }
-            }
-            @keyframes nadar-esquerda {
-                0% { left: 100%; }
-                100% { left: -150px; }
-            }
+            @keyframes nadar-direita { 0% { left: -150px; } 100% { left: 100%; } }
+            @keyframes nadar-esquerda { 0% { left: 100%; } 100% { left: -150px; } }
         }
 
         .treasure-effect {
@@ -382,26 +296,21 @@
             z-index: 200;
             animation: treasureFloat 0.8s ease-out forwards;
         }
-        
         @keyframes treasureFloat {
             0% { transform: scale(0.2) translateY(0) rotate(0deg); opacity: 1; }
             100% { transform: scale(1.5) translateY(-100px) rotate(360deg); opacity: 0; }
         }
-
         .bolha {
             position: absolute;
             bottom: -50px;
             background: radial-gradient(circle, rgba(100,200,255,0.5), rgba(50,100,200,0.2));
             border-radius: 50%;
             pointer-events: none;
-            z-index: 15;
             animation: subir-bolha linear forwards;
         }
-        
         @keyframes subir-bolha {
             to { transform: translateY(-120vh) translateX(60px); opacity: 0; }
         }
-        
         .shockwave {
             position: absolute;
             width: 30px;
@@ -409,10 +318,8 @@
             border-radius: 50%;
             background: radial-gradient(circle, rgba(255,215,0,0.8), transparent);
             pointer-events: none;
-            z-index: 150;
             animation: expandWave 0.5s ease-out forwards;
         }
-        
         @keyframes expandWave {
             0% { transform: scale(0.5); opacity: 0.8; }
             100% { transform: scale(8); opacity: 0; }
@@ -431,44 +338,22 @@
             text-align: center;
             padding: 20px;
         }
-        
-        .vitoria-texto {
-            font-size: 4vh;
-            color: var(--gold);
-            font-weight: bold;
-            margin: 15px 0;
+        .vitoria-texto { font-size: 4vh; color: #ffd54f; margin: 15px 0; }
+        .icone-vitoria { font-size: 12vh; animation: float 2s infinite; }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .score-panel {
+            font-size: 16px;
+            background: linear-gradient(135deg,#1e2a3a,#0a1520);
+            padding: 8px 20px;
+            border-radius: 60px;
+            border: 1px solid #ffd54f;
         }
-        
-        .icone-vitoria { font-size: 12vh; margin-bottom: 15px; animation: float 2s infinite; }
-        
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
-        
-        .score-panel { 
-            font-size: 16px; 
-            background: linear-gradient(135deg, #1e2a3a, #0a1520);
-            padding: 8px 20px; 
-            border-radius: 60px; 
-            margin-top: 15px; 
-            border: 1px solid var(--gold);
-        }
-        
-        .tempo-record {
-            font-size: 14px;
-            margin-top: 10px;
-            color: var(--accent);
-        }
-
+        .tempo-record { font-size: 14px; margin-top: 10px; color: #ff7043; }
         .erro-anim {
             animation: tremer 0.3s ease;
             filter: grayscale(0.5) brightness(0.6);
         }
-        
-        @keyframes tremer {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-8px) rotate(-3deg); }
-            75% { transform: translateX(8px) rotate(3deg); }
-        }
-        
+        @keyframes tremer { 0%,100%{ transform:translateX(0); } 25%{ transform:translateX(-8px); } 75%{ transform:translateX(8px); } }
         .feedback-correto {
             position: fixed;
             bottom: 25%;
@@ -484,16 +369,14 @@
             animation: fadeUp 0.9s ease-out forwards;
             pointer-events: none;
             white-space: nowrap;
-            border: 2px solid var(--gold);
+            border: 2px solid #ffd54f;
         }
-        
         @keyframes fadeUp {
             0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
             20% { opacity: 1; transform: translateX(-50%) translateY(0); }
-            80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            80% { opacity: 1; }
             100% { opacity: 0; transform: translateX(-50%) translateY(-50px); }
         }
-
         .progresso-categoria {
             position: absolute;
             bottom: 10px;
@@ -503,21 +386,12 @@
             border-radius: 25px;
             font-size: 10px;
             backdrop-filter: blur(5px);
-            font-weight: bold;
+            color: #ffd54f;
             pointer-events: none;
-            color: var(--gold);
-            text-align: right;
         }
-        
         @media (min-width: 768px) {
-            .progresso-categoria {
-                bottom: 20px;
-                right: 20px;
-                padding: 10px 18px;
-                font-size: 14px;
-            }
+            .progresso-categoria { bottom: 20px; right: 20px; padding: 10px 18px; font-size: 14px; }
         }
-        
         .btn-voltar {
             position: absolute;
             bottom: 15px;
@@ -531,27 +405,14 @@
             color: white;
             cursor: pointer;
             z-index: 200;
-            display: flex;
-            align-items: center;
-            gap: 8px;
             backdrop-filter: blur(4px);
             pointer-events: auto;
             transition: all 0.3s;
         }
-        
         @media (min-width: 768px) {
-            .btn-voltar {
-                bottom: 30px;
-                left: 30px;
-                padding: 14px 28px;
-                font-size: 18px;
-            }
+            .btn-voltar { bottom: 30px; left: 30px; padding: 14px 28px; font-size: 18px; }
         }
-        
-        .btn-voltar:active {
-            transform: scale(0.95);
-        }
-        
+        .btn-voltar:active { transform: scale(0.95); }
         .dica-som {
             position: absolute;
             bottom: 10px;
@@ -563,28 +424,17 @@
             color: #aaa;
             pointer-events: none;
         }
-        
-        .nav-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
+        .nav-buttons { display: flex; gap: 15px; margin-top: 20px; }
         .nav-btn {
             background: linear-gradient(135deg, #00acc1, #006064);
-            border: 2px solid var(--gold);
+            border: 2px solid #ffd54f;
             padding: 12px 24px;
             font-size: 18px;
-            font-weight: bold;
             border-radius: 40px;
             cursor: pointer;
             color: white;
         }
-        
-        .nav-btn.cancelar {
-            background: linear-gradient(135deg, #555, #333);
-            border-color: #888;
-        }
+        .nav-btn.cancelar { background: linear-gradient(135deg, #555, #333); border-color: #888; }
     </style>
 </head>
 <body>
@@ -597,21 +447,21 @@
 
 <audio id="bg-audio" src="som_fundo_do_mar.mp3" loop></audio>
 <audio id="sfx-pescado" src="pescado.ogg"></audio>
-<audio id="sfx-erro" src="erro.mp3"></audio>
+<audio id="sfx-erro" src="erro.ogg"></audio>
 
 <div id="game-wrapper">
     <div class="top-bar">
-        <button class="icon-btn" onclick="window.location.href='index.html'">⬅️</button>
+        <button class="icon-btn" onclick="window.location.href='index_pesca.html'">⬅️</button>
         <button id="btn-audio" class="icon-btn" onclick="toggleAudio()">🔇</button>
         <button class="icon-btn" onclick="toggleFullscreen()">⛶</button>
     </div>
 
     <div class="game-info-container">
         <div class="game-info">
-            <div>🏺 Etapa: <span id="faseText">1</span>/25</div>
+            <div>🏺 Etapa: <span id="faseText">1</span>/<span id="totalFases"></span></div>
             <div>✨ Pontos: <span id="pontosText">0</span></div>
             <div>🐚 Progresso: <span id="acertosFase">0</span>/<span id="totalEtapa">0</span></div>
-            <div>📖 Categoria: <span id="categoriaAtual">Sílabas</span></div>
+            <div>📖 Categoria: <span id="categoriaAtual">-</span></div>
             <div class="timer">⏱️ <span id="timerDisplay">00:00</span></div>
         </div>
         <p class="instrucao" id="btnRepetirSilaba">
@@ -624,8 +474,7 @@
     <button class="btn-voltar" id="btnVoltar">
         <span>🏝️</span> Voltar ao Menu
     </button>
-    
-    <div class="dica-som">💡 Clique na sílaba para ouvir | Pesque os tesouros!</div>
+    <div class="dica-som">💡 Clique na sílaba para ouvir o áudio | Pesque os tesouros!</div>
 </div>
 
 <div id="modal-vitoria">
@@ -633,12 +482,12 @@
     <div class="vitoria-texto" id="vitoria-msg-topo">Parabéns, Mestre do Mar!</div>
     <div class="score-panel" id="scoreFinalModal">Pontuação: 0</div>
     <div class="tempo-record" id="tempoEtapa"></div>
-    <div class="vitoria-texto" id="vitoria-msg-sub" style="font-size: 2.5vh; color: #88ccff;">Descobrindo novos tesouros...</div>
+    <div class="vitoria-texto" id="vitoria-msg-sub" style="font-size: 2.5vh;">Descobrindo novos tesouros...</div>
 </div>
 
 <div id="modal-navegacao">
     <div class="icone-vitoria">🐢➡️🏝️</div>
-    <div class="vitoria-texto" style="font-size: 3.5vh;">Voltar para o menu principal?</div>
+    <div class="vitoria-texto">Voltar para o menu principal?</div>
     <div class="nav-buttons">
         <button class="nav-btn cancelar" id="btnCancelarVolta">❌ Continuar</button>
         <button class="nav-btn confirmar" id="btnConfirmarVolta">🏝️ Voltar ao Menu</button>
@@ -646,135 +495,149 @@
 </div>
 
 <script>
-    // ========== SÍLABAS COMPLEXAS ORGANIZADAS POR CATEGORIA ==========
+    // ========== CATEGORIAS EM ORDEM ALFABÉTICA (com áudio MP3) ==========
     const categorias = [
-        { nome: "🌊 AL - EL - IL - OL - UL", silabas: ["AL", "EL", "IL", "OL", "UL"] },
-        { nome: "🐚 AM - EM - IM - OM - UM", silabas: ["AM", "EM", "IM", "OM", "UM"] },
-        { nome: "🪸 AN - EN - IN - ON - UN", silabas: ["AN", "EN", "IN", "ON", "UN"] },
-        { nome: "⭐ AR - ER - IR - OR - UR", silabas: ["AR", "ER", "IR", "OR", "UR"] },
-        { nome: "🌀 AS - ES - IS - OS - US", silabas: ["AS", "ES", "IS", "OS", "US"] },
-        { nome: "🐙 BLA - BLE - BLI - BLO - BLU", silabas: ["BLA", "BLE", "BLI", "BLO", "BLU"] },
-        { nome: "🦑 BRA - BRE - BRI - BRO - BRU", silabas: ["BRA", "BRE", "BRI", "BRO", "BRU"] },
-        { nome: "🐠 CLA - CLE - CLI - CLO - CLU", silabas: ["CLA", "CLE", "CLI", "CLO", "CLU"] },
-        { nome: "🐡 CRA - CRE - CRI - CRO - CRU", silabas: ["CRA", "CRE", "CRI", "CRO", "CRU"] },
-        { nome: "🐋 DRA - DRE - DRI - DRO - DRU", silabas: ["DRA", "DRE", "DRI", "DRO", "DRU"] },
-        { nome: "🦈 FLA - FLE - FLI - FLO - FLU", silabas: ["FLA", "FLE", "FLI", "FLO", "FLU"] },
-        { nome: "🐬 FRA - FRE - FRI - FRO - FRU", silabas: ["FRA", "FRE", "FRI", "FRO", "FRU"] },
-        { nome: "🐳 GLA - GLE - GLI - GLO - GLU", silabas: ["GLA", "GLE", "GLI", "GLO", "GLU"] },
-        { nome: "🦀 GRA - GRE - GRI - GRO - GRU", silabas: ["GRA", "GRE", "GRI", "GRO", "GRU"] },
-        { nome: "🪼 PLA - PLE - PLI - PLO - PLU", silabas: ["PLA", "PLE", "PLI", "PLO", "PLU"] },
-        { nome: "🐙 PRA - PRE - PRI - PRO - PRU", silabas: ["PRA", "PRE", "PRI", "PRO", "PRU"] },
-        { nome: "🦑 RRA - RRE - RRI - RRO - RRU", silabas: ["RRA", "RRE", "RRI", "RRO", "RRU"] },
-        { nome: "🐠 SSA - SSE - SSI - SSO - SSU", silabas: ["SSA", "SSE", "SSI", "SSO", "SSU"] },
-        { nome: "🐡 TLA - TLE - TLI - TLO - TLU", silabas: ["TLA", "TLE", "TLI", "TLO", "TLU"] },
-        { nome: "🦭 TRA - TRE - TRI - TRO - TRU", silabas: ["TRA", "TRE", "TRI", "TRO", "TRU"] },
-        { nome: "🐢 VLA - VLE - VLI - VLO - VLU", silabas: ["VLA", "VLE", "VLI", "VLO", "VLU"] },
-        { nome: "🐚 VRA - VRE - VRI - VRO - VRU", silabas: ["VRA", "VRE", "VRI", "VRO", "VRU"] },
-        { nome: "🌟 NHA - NHE - NHI - NHO - NHU", silabas: ["NHA", "NHE", "NHI", "NHO", "NHU"] },
-        { nome: "⭐ LHA - LHE - LHI - LHO - LHU", silabas: ["LHA", "LHE", "LHI", "LHO", "LHU"] },
-        { nome: "🏆 CHA - CHE - CHI - CHO - CHU", silabas: ["CHA", "CHE", "CHI", "CHO", "CHU"] }
+        { nome: "🌊 AL - EL - IL - OL - UL", silabas: [
+            { texto: "AL", audio: "al.mp3" }, { texto: "EL", audio: "el.mp3" },
+            { texto: "IL", audio: "il.mp3" }, { texto: "OL", audio: "ol.mp3" },
+            { texto: "UL", audio: "ul.mp3" }
+        ] },
+        { nome: "🐚 AM - EM - IM - OM - UM", silabas: [
+            { texto: "AM", audio: "am.mp3" }, { texto: "EM", audio: "em.mp3" },
+            { texto: "IM", audio: "im.mp3" }, { texto: "OM", audio: "om.mp3" },
+            { texto: "UM", audio: "um.mp3" }
+        ] },
+        { nome: "🪸 AN - EN - IN - ON - UN", silabas: [
+            { texto: "AN", audio: "an.mp3" }, { texto: "EN", audio: "en.mp3" },
+            { texto: "IN", audio: "in.mp3" }, { texto: "ON", audio: "on.mp3" },
+            { texto: "UN", audio: "un.mp3" }
+        ] },
+        { nome: "⭐ AR - ER - IR - OR - UR", silabas: [
+            { texto: "AR", audio: "ar.mp3" }, { texto: "ER", audio: "er.mp3" },
+            { texto: "IR", audio: "ir.mp3" }, { texto: "OR", audio: "or.mp3" },
+            { texto: "UR", audio: "ur.mp3" }
+        ] },
+        { nome: "🌀 AS - ES - IS - OS - US", silabas: [
+            { texto: "AS", audio: "as.mp3" }, { texto: "ES", audio: "es.mp3" },
+            { texto: "IS", audio: "is.mp3" }, { texto: "OS", audio: "os.mp3" },
+            { texto: "US", audio: "us.mp3" }
+        ] },
+        { nome: "✨ AZ - EZ - IZ - OZ - UZ", silabas: [
+            { texto: "AZ", audio: "az.mp3" }, { texto: "EZ", audio: "ez.mp3" },
+            { texto: "IZ", audio: "iz.mp3" }, { texto: "OZ", audio: "oz.mp3" },
+            { texto: "UZ", audio: "uz.mp3" }
+        ] },
+        { nome: "🐙 BLA - BLE - BLI - BLO - BLU - BLÃO", silabas: [
+            { texto: "BLA", audio: "bla.mp3" }, { texto: "BLE", audio: "ble.mp3" },
+            { texto: "BLI", audio: "bli.mp3" }, { texto: "BLO", audio: "blo.mp3" },
+            { texto: "BLU", audio: "blu.mp3" }, { texto: "BLÃO", audio: "blao.mp3" }
+        ] },
+        { nome: "🦑 BRA - BRE - BRI - BRO - BRU - BRÃO", silabas: [
+            { texto: "BRA", audio: "bra.mp3" }, { texto: "BRE", audio: "bre.mp3" },
+            { texto: "BRI", audio: "bri.mp3" }, { texto: "BRO", audio: "bro.mp3" },
+            { texto: "BRU", audio: "bru.mp3" }, { texto: "BRÃO", audio: "brao.mp3" }
+        ] },
+        { nome: "🐠 CHA - CHE - CHI - CHO - CHU - CHÃO", silabas: [
+            { texto: "CHA", audio: "cha.mp3" }, { texto: "CHE", audio: "che.mp3" },
+            { texto: "CHI", audio: "chi.mp3" }, { texto: "CHO", audio: "cho.mp3" },
+            { texto: "CHU", audio: "chu.mp3" }, { texto: "CHÃO", audio: "chao.mp3" }
+        ] },
+        { nome: "🐡 CLA - CLE - CLI - CLO - CLU - CLÃO", silabas: [
+            { texto: "CLA", audio: "cla.mp3" }, { texto: "CLE", audio: "cle.mp3" },
+            { texto: "CLI", audio: "cli.mp3" }, { texto: "CLO", audio: "clo.mp3" },
+            { texto: "CLU", audio: "clu.mp3" }, { texto: "CLÃO", audio: "clao.mp3" }
+        ] },
+        { nome: "🐋 CRA - CRE - CRI - CRO - CRU - CRÃO", silabas: [
+            { texto: "CRA", audio: "cra.mp3" }, { texto: "CRE", audio: "cre.mp3" },
+            { texto: "CRI", audio: "cri.mp3" }, { texto: "CRO", audio: "cro.mp3" },
+            { texto: "CRU", audio: "cru.mp3" }, { texto: "CRÃO", audio: "crao.mp3" }
+        ] },
+        { nome: "🦈 DRA - DRE - DRI - DRO - DRU - DRÃO", silabas: [
+            { texto: "DRA", audio: "dra.mp3" }, { texto: "DRE", audio: "dre.mp3" },
+            { texto: "DRI", audio: "dri.mp3" }, { texto: "DRO", audio: "dro.mp3" },
+            { texto: "DRU", audio: "dru.mp3" }, { texto: "DRÃO", audio: "drao.mp3" }
+        ] },
+        { nome: "🐬 FLA - FLE - FLI - FLO - FLU - FLÃO", silabas: [
+            { texto: "FLA", audio: "fla.mp3" }, { texto: "FLE", audio: "fle.mp3" },
+            { texto: "FLI", audio: "fli.mp3" }, { texto: "FLO", audio: "flo.mp3" },
+            { texto: "FLU", audio: "flu.mp3" }, { texto: "FLÃO", audio: "flao.mp3" }
+        ] },
+        { nome: "🐳 FRA - FRE - FRI - FRO - FRU - FRÃO", silabas: [
+            { texto: "FRA", audio: "fra.mp3" }, { texto: "FRE", audio: "fre.mp3" },
+            { texto: "FRI", audio: "fri.mp3" }, { texto: "FRO", audio: "fro.mp3" },
+            { texto: "FRU", audio: "fru.mp3" }, { texto: "FRÃO", audio: "frao.mp3" }
+        ] },
+        { nome: "🦀 GLA - GLE - GLI - GLO - GLU - GLÃO", silabas: [
+            { texto: "GLA", audio: "gla.mp3" }, { texto: "GLE", audio: "gle.mp3" },
+            { texto: "GLI", audio: "gli.mp3" }, { texto: "GLO", audio: "glo.mp3" },
+            { texto: "GLU", audio: "glu.mp3" }, { texto: "GLÃO", audio: "glao.mp3" }
+        ] },
+        { nome: "🪼 GRA - GRE - GRI - GRO - GRU - GRÃO", silabas: [
+            { texto: "GRA", audio: "gra.mp3" }, { texto: "GRE", audio: "gre.mp3" },
+            { texto: "GRI", audio: "gri.mp3" }, { texto: "GRO", audio: "gro.mp3" },
+            { texto: "GRU", audio: "gru.mp3" }, { texto: "GRÃO", audio: "grao.mp3" }
+        ] },
+        { nome: "🐙 LHA - LHE - LHI - LHO - LHU - LHÃO", silabas: [
+            { texto: "LHA", audio: "lha.mp3" }, { texto: "LHE", audio: "lhe.mp3" },
+            { texto: "LHI", audio: "lhi.mp3" }, { texto: "LHO", audio: "lho.mp3" },
+            { texto: "LHU", audio: "lhu.mp3" }, { texto: "LHÃO", audio: "lhao.mp3" }
+        ] },
+        { nome: "🐡 NHA - NHE - NHI - NHO - NHU - NHÃO", silabas: [
+            { texto: "NHA", audio: "nha.mp3" }, { texto: "NHE", audio: "nhe.mp3" },
+            { texto: "NHI", audio: "nhi.mp3" }, { texto: "NHO", audio: "nho.mp3" },
+            { texto: "NHU", audio: "nhu.mp3" }, { texto: "NHÃO", audio: "nhao.mp3" }
+        ] },
+        { nome: "🦑 PLA - PLE - PLI - PLO - PLU - PLÃO", silabas: [
+            { texto: "PLA", audio: "pla.mp3" }, { texto: "PLE", audio: "ple.mp3" },
+            { texto: "PLI", audio: "pli.mp3" }, { texto: "PLO", audio: "plo.mp3" },
+            { texto: "PLU", audio: "plu.mp3" }, { texto: "PLÃO", audio: "plao.mp3" }
+        ] },
+        { nome: "🐠 PRA - PRE - PRI - PRO - PRU - PRÃO", silabas: [
+            { texto: "PRA", audio: "pra.mp3" }, { texto: "PRE", audio: "pre.mp3" },
+            { texto: "PRI", audio: "pri.mp3" }, { texto: "PRO", audio: "pro.mp3" },
+            { texto: "PRU", audio: "pru.mp3" }, { texto: "PRÃO", audio: "prao.mp3" }
+        ] },
+        { nome: "🐋 TLA - TLE - TLI - TLO - TLU - TLÃO", silabas: [
+            { texto: "TLA", audio: "tla.mp3" }, { texto: "TLE", audio: "tle.mp3" },
+            { texto: "TLI", audio: "tli.mp3" }, { texto: "TLO", audio: "tlo.mp3" },
+            { texto: "TLU", audio: "tlu.mp3" }, { texto: "TLÃO", audio: "tlao.mp3" }
+        ] },
+        { nome: "🐢 TRA - TRE - TRI - TRO - TRU - TRÃO", silabas: [
+            { texto: "TRA", audio: "tra.mp3" }, { texto: "TRE", audio: "tre.mp3" },
+            { texto: "TRI", audio: "tri.mp3" }, { texto: "TRO", audio: "tro.mp3" },
+            { texto: "TRU", audio: "tru.mp3" }, { texto: "TRÃO", audio: "trao.mp3" }
+        ] },
+        { nome: "🐚 VLA - VLE - VLI - VLO - VLU - VLÃO", silabas: [
+            { texto: "VLA", audio: "vla.mp3" }, { texto: "VLE", audio: "vle.mp3" },
+            { texto: "VLI", audio: "vli.mp3" }, { texto: "VLO", audio: "vlo.mp3" },
+            { texto: "VLU", audio: "vlu.mp3" }, { texto: "VLÃO", audio: "vlao.mp3" }
+        ] },
+        { nome: "🪸 VRA - VRE - VRI - VRO - VRU - VRÃO", silabas: [
+            { texto: "VRA", audio: "vra.mp3" }, { texto: "VRE", audio: "vre.mp3" },
+            { texto: "VRI", audio: "vri.mp3" }, { texto: "VRO", audio: "vro.mp3" },
+            { texto: "VRU", audio: "vru.mp3" }, { texto: "VRÃO", audio: "vrao.mp3" }
+        ] }
     ];
-    
-    // Criaturas marinhas variadas
+
+    // Criaturas marinhas (mais de 30)
     const criaturas = [
-        "🐟", "🐠", "🐡", "🐋", "🦈", "🐙", "🐬", "🐳", "🦀", "🦑", 
-        "🐚", "🦭", "🪼", "🐢", "🐠", "🐟", "🐡", "🐙", "🦞", "🪸",
-        "🧜‍♀️", "🧜‍♂️", "🐠", "🐟", "🦑", "🐢", "🐋", "🦀", "🐡", "🐬"
+        "🐟","🐠","🐡","🐋","🦈","🐙","🐬","🐳","🦀","🦑",
+        "🐚","🦭","🪼","🐢","🐠","🐟","🦞","🪸","🧜‍♀️","🧜‍♂️"
     ];
-    
-    // ========== PRONÚNCIA NATURAL CORRIGIDA (SEM ACENTOS AGUDOS INDEVIDOS) ==========
-    // Todas as sílabas agora são lidas como em palavras reais do português
-    const pronunciaNatural = {
-        // AL, EL, IL, OL, UL - som como em "alto", "ele", "filho", "olho", "ulva"
-        "AL": "au", "EL": "eu", "IL": "iu", "OL": "ou", "UL": "uu",
-        
-        // AM, EM, IM, OM, UM - som nasal como em "ambulância", "embora", "ímpar", "ombro", "umbigo"
-        "AM": "am", "EM": "em", "IM": "im", "OM": "om", "UM": "um",
-        
-        // AN, EN, IN, ON, UN - som nasal como em "anta", "ente", "índio", "onde", "untar"
-        "AN": "an", "EN": "en", "IN": "in", "ON": "on", "UN": "un",
-        
-        // AR, ER, IR, OR, UR - som como em "arca", "ermo", "irmão", "ortopedia", "urso"
-        "AR": "ar", "ER": "er", "IR": "ir", "OR": "or", "UR": "ur",
-        
-        // AS, ES, IS, OS, US - som plural como em "asas", "meses", "lista", "mostarda", "musgo"
-        "AS": "as", "ES": "es", "IS": "is", "OS": "os", "US": "us",
-        
-        // BLA, BLE, BLI, BLO, BLU - como em "blá-blá-blá", "blefe", "blitz", "bloco", "blusa"
-        "BLA": "bla", "BLE": "ble", "BLI": "bli", "BLO": "blo", "BLU": "blu",
-        
-        // BRA, BRE, BRI, BRO, BRU - como em "bravo", "breve", "briga", "broto", "bruxa"
-        "BRA": "bra", "BRE": "bre", "BRI": "bri", "BRO": "bro", "BRU": "bru",
-        
-        // CLA, CLE, CLI, CLO, CLU - como em "claro", "cleptomaníaco", "clima", "cloro", "club"
-        "CLA": "cla", "CLE": "cle", "CLI": "cli", "CLO": "clo", "CLU": "clu",
-        
-        // CRA, CRE, CRI, CRO, CRU - como em "cravo", "creme", "crise", "cromo", "cru"
-        "CRA": "cra", "CRE": "cre", "CRI": "cri", "CRO": "cro", "CRU": "cru",
-        
-        // DRA, DRE, DRI, DRO, DRU - como em "dragão", "dreno", "drible", "dromedário", "drusa"
-        "DRA": "dra", "DRE": "dre", "DRI": "dri", "DRO": "dro", "DRU": "dru",
-        
-        // FLA, FLE, FLI, FLO, FLU - como em "flamengo", "flecha", "flipar", "floco", "fluvial"
-        "FLA": "fla", "FLE": "fle", "FLI": "fli", "FLO": "flo", "FLU": "flu",
-        
-        // FRA, FRE, FRI, FRO, FRU - como em "frango", "freguês", "frio", "fronha", "fruta"
-        "FRA": "fra", "FRE": "fre", "FRI": "fri", "FRO": "fro", "FRU": "fru",
-        
-        // GLA, GLE, GLI, GLO, GLU - como em "glacê", "gleba", "glifo", "globo", "glúten"
-        "GLA": "gla", "GLE": "gle", "GLI": "gli", "GLO": "glo", "GLU": "glu",
-        
-        // GRA, GRE, GRI, GRO, GRU - como em "grama", "greve", "gripe", "grosso", "grude"
-        "GRA": "gra", "GRE": "gre", "GRI": "gri", "GRO": "gro", "GRU": "gru",
-        
-        // PLA, PLE, PLI, PLO, PLU - como em "placa", "plebe", "plim", "ploc", "pluma"
-        "PLA": "pla", "PLE": "ple", "PLI": "pli", "PLO": "plo", "PLU": "plu",
-        
-        // PRA, PRE, PRI, PRO, PRU - como em "prato", "preço", "príncipe", "prosa", "prumo"
-        "PRA": "pra", "PRE": "pre", "PRI": "pri", "PRO": "pro", "PRU": "pru",
-        
-        // RRA, RRE, RRI, RRO, RRU - som forte do R como em "carro", "ferro", "birra", "morro", "burro"
-        // Agora lê como "ra", "re", "ri", "ro", "ru" com som de R forte
-        "RRA": "rra", "RRE": "rre", "RRI": "rri", "RRO": "rro", "RRU": "rru",
-        
-        // SSA, SSE, SSI, SSO, SSU - som do S entre vogais como em "passa", "posse", "assim", "assou", "assusto"
-        "SSA": "ssa", "SSE": "sse", "SSI": "ssi", "SSO": "sso", "SSU": "ssu",
-        
-        // TLA, TLE, TLI, TLO, TLU - como em "atlântico", "atleta", "atlas" (aproximação)
-        "TLA": "tla", "TLE": "tle", "TLI": "tli", "TLO": "tlo", "TLU": "tlu",
-        
-        // TRA, TRE, TRI, TRO, TRU - como em "trator", "trem", "trinta", "trovão", "truta"
-        "TRA": "tra", "TRE": "tre", "TRI": "tri", "TRO": "tro", "TRU": "tru",
-        
-        // VLA, VLE, VLI, VLO, VLU - como em "vla" (raro), "vle" (raro)
-        "VLA": "vla", "VLE": "vle", "VLI": "vli", "VLO": "vlo", "VLU": "vlu",
-        
-        // VRA, VRE, VRI, VRO, VRU - como em "vrau", "vrei", "vri", "vro", "vru"
-        "VRA": "vra", "VRE": "vre", "VRI": "vri", "VRO": "vro", "VRU": "vru",
-        
-        // NHA, NHE, NHI, NHO, NHU - som do NH como em "nha", "nhenhenhém", "nhique", "nhô", "nhum"
-        "NHA": "nha", "NHE": "nhe", "NHI": "nhi", "NHO": "nho", "NHU": "nhu",
-        
-        // LHA, LHE, LHI, LHO, LHU - som do LH como em "lha", "lhe", "lhi", "lho", "lhu"
-        "LHA": "lha", "LHE": "lhe", "LHI": "lhi", "LHO": "lho", "LHU": "lhu",
-        
-        // CHA, CHE, CHI, CHO, CHU - som do CH como em "chá", "chá" para CHE (aproximação), "chi", "chô", "chú"
-        "CHA": "cha", "CHE": "che", "CHI": "chi", "CHO": "cho", "CHU": "chu"
-    };
-    
+
     let audioEnabled = false;
-    let currentUtterance = null;
+    let currentAudio = null;
     let jogoAtivo = true;
     let aguardandoProxima = false;
-    let faseAtual = 1;
+    let faseAtual = 0;
     let pontuacaoTotal = 0;
     let acertosNaEtapa = 0;
-    let filaSilabas = [];
+    let silabasAtuais = [];      // array de {texto, audio}
     let indiceSilabaAtual = 0;
-    let categoriaCorrente = categorias[0];
+    let categoriaCorrente = null;
     let criaturasNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
     
-    let temposEtapas = Array(25).fill(0);
+    let temposEtapas = [];
     let tempoInicioEtapa = null;
     let intervaloRelogio = null;
     
@@ -785,115 +648,71 @@
     const aquario = document.getElementById("aquario");
     const modalVitoria = document.getElementById("modal-vitoria");
     const modalNavegacao = document.getElementById("modal-navegacao");
-    
-    // ========== FUNÇÃO DE FALA CORRIGIDA (SOM NATURAL SEM ACENTOS AGUDOS) ==========
-    function falar(texto, callback) {
-        if (!window.speechSynthesis) { 
-            if (callback) callback(); 
-            return; 
-        }
-        if (currentUtterance) {
-            window.speechSynthesis.cancel();
-        }
 
-        const utterance = new SpeechSynthesisUtterance(texto);
-        utterance.lang = 'pt-BR';
-        utterance.rate = 0.85;
-        utterance.pitch = 1.0;
-
-        // Forçar atualização das vozes em alguns navegadores
-        const speak = () => {
-            const voices = window.speechSynthesis.getVoices();
-            const ptBrVoice = voices.find(v => v.lang === 'pt-BR' && 
-                (v.name.includes('Google') || v.name.includes('Microsoft') || v.name.includes('Maria') || v.name.includes('Natural')));
-            if (ptBrVoice) utterance.voice = ptBrVoice;
-            
-            currentUtterance = utterance;
-            utterance.onend = () => {
-                currentUtterance = null;
-                if (callback) setTimeout(callback, 150);
-            };
-            utterance.onerror = () => {
-                currentUtterance = null;
-                if (callback) callback();
-            };
-            window.speechSynthesis.speak(utterance);
+    // ========== FUNÇÕES DE ÁUDIO (MP3) ==========
+    function tocarAudioMP3(arquivo, callback) {
+        if (!arquivo) return;
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+        }
+        const audio = new Audio(arquivo);
+        currentAudio = audio;
+        audio.play().catch(e => console.log("Erro ao tocar áudio:", arquivo, e));
+        audio.onended = () => {
+            currentAudio = null;
+            if (callback) callback();
         };
-        
-        if (window.speechSynthesis.getVoices().length === 0) {
-            window.speechSynthesis.onvoiceschanged = speak;
+        audio.onerror = () => {
+            currentAudio = null;
+            if (callback) callback();
+        };
+    }
+
+    function tocarSilaba(silabaObj, callback) {
+        if (silabaObj && silabaObj.audio) {
+            tocarAudioMP3(silabaObj.audio, callback);
         } else {
-            speak();
+            console.warn("Áudio não encontrado para", silabaObj);
+            if (callback) callback();
         }
     }
 
-    // Função para falar a sílaba com pronúncia natural
-    function falarSilaba(silaba, callback) {
-        const pronuncia = pronunciaNatural[silaba.toUpperCase()];
-        if (pronuncia) {
-            falar(pronuncia, callback);
-        } else {
-            // Fallback: lê a sílaba em minúsculas
-            falar(silaba.toLowerCase(), callback);
+    function repetirSilabaAlvo() {
+        const el = document.getElementById("silabaAlvo");
+        const silabaTexto = el.innerText;
+        if (!silabaTexto || silabaTexto === "---") return;
+        const silabaObj = silabasAtuais.find(s => s.texto === silabaTexto);
+        if (silabaObj) {
+            el.classList.add("pulsando");
+            setTimeout(() => el.classList.remove("pulsando"), 300);
+            tocarSilaba(silabaObj);
         }
     }
 
-    function falarMensagem(msg, callback) {
-        falar(msg, callback);
-    }
-    
     // ========== CRONÔMETRO ==========
-    function formatarTempo(segundos) {
-        const mins = Math.floor(segundos / 60);
-        const secs = segundos % 60;
-        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    function formatarTempo(seg) {
+        const m = Math.floor(seg / 60);
+        const s = seg % 60;
+        return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
     }
-    
     function iniciarCronometro() {
         if (intervaloRelogio) clearInterval(intervaloRelogio);
         tempoInicioEtapa = Date.now();
         document.getElementById("timerDisplay").innerText = "00:00";
         intervaloRelogio = setInterval(() => {
             if (tempoInicioEtapa && jogoAtivo && !aguardandoProxima) {
-                const segundos = Math.floor((Date.now() - tempoInicioEtapa) / 1000);
-                document.getElementById("timerDisplay").innerText = formatarTempo(segundos);
+                const seg = Math.floor((Date.now() - tempoInicioEtapa) / 1000);
+                document.getElementById("timerDisplay").innerText = formatarTempo(seg);
             }
         }, 1000);
     }
-    
     function pararCronometro() {
         if (intervaloRelogio) clearInterval(intervaloRelogio);
         if (tempoInicioEtapa) return Math.floor((Date.now() - tempoInicioEtapa) / 1000);
         return 0;
     }
-    
-    function repetirSilabaAlvo() {
-        const elSilaba = document.getElementById("silabaAlvo");
-        const silabaAtual = elSilaba.innerText;
-        if (!silabaAtual || silabaAtual === "---") return;
-        elSilaba.classList.add("pulsando");
-        setTimeout(() => elSilaba.classList.remove("pulsando"), 300);
-        falarSilaba(silabaAtual);
-    }
-    
-    // ========== PARTÍCULAS DE LUZ ==========
-    function criarParticulasLuz() {
-        const container = document.getElementById("lightParticles");
-        for(let i = 0; i < 40; i++) {
-            setTimeout(() => {
-                const particle = document.createElement("div");
-                particle.className = "light-particle";
-                particle.style.width = Math.random() * 8 + 3 + "px";
-                particle.style.height = particle.style.width;
-                particle.style.left = Math.random() * 100 + "%";
-                particle.style.animationDelay = Math.random() * 10 + "s";
-                particle.style.animationDuration = Math.random() * 6 + 6 + "s";
-                container.appendChild(particle);
-                setTimeout(() => particle.remove(), 12000);
-            }, i * 300);
-        }
-    }
-    
+
     // ========== EFEITOS VISUAIS ==========
     function criarOndaChoque(x, y) {
         const wave = document.createElement("div");
@@ -903,39 +722,31 @@
         document.body.appendChild(wave);
         setTimeout(() => wave.remove(), 500);
     }
-    
     function criarTesouro(x, y) {
-        const treasures = ["💎", "👑", "💰", "🗿", "⚓", "🔱", "🐚", "⭐", "🏆", "✨"];
-        const treasure = treasures[Math.floor(Math.random() * treasures.length)];
+        const treasures = ["💎","👑","💰","🗿","⚓","🔱","🐚","⭐","🏆","✨"];
+        const t = treasures[Math.floor(Math.random() * treasures.length)];
         const elem = document.createElement("div");
         elem.className = "treasure-effect";
-        elem.innerText = treasure;
+        elem.innerText = t;
         elem.style.left = (x - 25) + "px";
         elem.style.top = (y - 25) + "px";
         document.body.appendChild(elem);
         setTimeout(() => elem.remove(), 800);
     }
-    
-    function criarEfeitoBolhas(quantidade = 30) {
-        for(let i = 0; i < quantidade; i++) {
+    function criarEfeitoBolhas(qtd = 30) {
+        for(let i=0; i<qtd; i++) {
             setTimeout(() => {
-                const bolha = document.createElement("div");
-                bolha.className = "bolha";
+                const b = document.createElement("div");
+                b.className = "bolha";
                 const tam = Math.random() * 25 + 10 + "px";
-                bolha.style.width = tam; bolha.style.height = tam;
-                bolha.style.left = Math.random() * 100 + "vw";
-                bolha.style.animationDuration = Math.random() * 3 + 2.5 + "s";
-                document.body.appendChild(bolha);
-                setTimeout(() => bolha.remove(), 5500);
+                b.style.width = tam; b.style.height = tam;
+                b.style.left = Math.random() * 100 + "vw";
+                b.style.animationDuration = Math.random() * 3 + 2.5 + "s";
+                document.body.appendChild(b);
+                setTimeout(() => b.remove(), 5500);
             }, i * 50);
         }
     }
-    
-    function mostrarTesouroFeedback(x, y) {
-        criarTesouro(x, y);
-        criarOndaChoque(x, y);
-    }
-    
     function mostrarFeedback(texto, isAcerto, x, y) {
         const div = document.createElement("div");
         div.className = "feedback-correto";
@@ -944,133 +755,115 @@
         div.innerText = isAcerto ? `🎣✨ +15 ⭐ ${texto} ✨` : `❌ ${texto}`;
         document.body.appendChild(div);
         setTimeout(() => div.remove(), 850);
-        if(isAcerto && x) mostrarTesouroFeedback(x, y);
+        if(isAcerto && x) {
+            criarTesouro(x, y);
+            criarOndaChoque(x, y);
+        }
     }
-    
+
     // ========== LÓGICA DO JOGO ==========
     function atualizarUI() {
-        document.getElementById("faseText").innerHTML = faseAtual;
+        document.getElementById("faseText").innerHTML = faseAtual + 1;
+        document.getElementById("totalFases").innerHTML = categorias.length;
         document.getElementById("pontosText").innerHTML = pontuacaoTotal;
         document.getElementById("acertosFase").innerHTML = acertosNaEtapa;
-        document.getElementById("totalEtapa").innerHTML = filaSilabas.length;
+        document.getElementById("totalEtapa").innerHTML = silabasAtuais.length;
         document.getElementById("categoriaAtual").innerHTML = categoriaCorrente.nome;
-        
-        let progressMsg = `🏆 ${categoriaCorrente.nome.substring(0, 20)} | ${acertosNaEtapa}/${filaSilabas.length}`;
-        document.getElementById("progressHint").innerHTML = progressMsg;
+        document.getElementById("progressHint").innerHTML = `🏆 ${categoriaCorrente.nome.substring(0,22)} | ${acertosNaEtapa}/${silabasAtuais.length}`;
     }
-    
+
     function carregarProximaSilaba() {
-        if (indiceSilabaAtual >= filaSilabas.length) { concluirEtapa(); return; }
-        const silabaCerta = filaSilabas[indiceSilabaAtual];
-        document.getElementById("silabaAlvo").innerText = silabaCerta;
+        if (indiceSilabaAtual >= silabasAtuais.length) { concluirEtapa(); return; }
+        const silabaCerta = silabasAtuais[indiceSilabaAtual];
+        document.getElementById("silabaAlvo").innerText = silabaCerta.texto;
         atualizarUI();
         aquario.innerHTML = "";
         
         let opcoes = [silabaCerta];
-        let todasSilabas = [...filaSilabas];
-        let distratores = todasSilabas.filter(s => s !== silabaCerta);
-        distratores.sort(() => 0.5 - Math.random());
-        opcoes.push(...distratores.slice(0, criaturasNaTela - 1));
-        
-        while(opcoes.length < criaturasNaTela) opcoes.push("CHA");
+        let outras = silabasAtuais.filter(s => s.texto !== silabaCerta.texto);
+        outras.sort(() => 0.5 - Math.random());
+        opcoes.push(...outras.slice(0, criaturasNaTela - 1));
+        while(opcoes.length < criaturasNaTela) opcoes.push({ texto: "CHA", audio: "cha.mp3" });
         opcoes.sort(() => Math.random() - 0.5);
         opcoes.forEach(sil => criarCriatura(sil, silabaCerta));
         
         setTimeout(() => {
-            if (jogoAtivo && !aguardandoProxima) {
-                falarSilaba(silabaCerta);
-            }
+            if (jogoAtivo && !aguardandoProxima) tocarSilaba(silabaCerta);
         }, 500);
     }
-    
-    function criarCriatura(silaba, silabaAlvo) {
+
+    function criarCriatura(silabaObj, alvoObj) {
         const creature = document.createElement("div");
         creature.className = "creature";
-        
         const posTop = Math.random() * 70 + 10;
         creature.style.top = posTop + "%";
-        
         const direita = Math.random() > 0.5;
-        const duracao = (Math.random() * 5) + 4.5;
+        const duracao = Math.random() * 5 + 4.5;
         creature.style.animation = direita ? `nadar-direita ${duracao}s linear infinite` : `nadar-esquerda ${duracao}s linear infinite`;
-        
         const emoji = criaturas[Math.floor(Math.random() * criaturas.length)];
         const flip = direita ? 'transform: scaleX(-1);' : '';
-        const fontSize = silaba.length > 3 ? "15px" : "18px";
-        
         creature.innerHTML = `<span class="creature-icon" style="${flip}">${emoji}</span>
-                              <span class="silaba-creature" style="font-size: ${fontSize};">${silaba}</span>`;
-        
+                              <span class="silaba-creature">${silabaObj.texto}</span>`;
         const handleClick = (e) => {
             e.preventDefault();
             e.stopPropagation();
             if (!jogoAtivo || aguardandoProxima) return;
-            
             const rect = creature.getBoundingClientRect();
-            if (silaba === silabaAlvo) {
-                acertou(creature, silaba, rect.left + 30, rect.top + 30);
+            if (silabaObj.texto === alvoObj.texto) {
+                acertou(creature, silabaObj, rect.left + 30, rect.top + 30);
             } else {
-                errou(creature, silaba);
+                errou(creature, silabaObj);
             }
         };
-        
         creature.addEventListener('click', handleClick);
         creature.addEventListener('touchstart', handleClick, { passive: false });
-        
         aquario.appendChild(creature);
     }
-    
-    function acertou(creatureElem, silabaClicada, x, y) {
+
+    function acertou(elem, silabaObj, x, y) {
         if (!jogoAtivo) return;
         jogoAtivo = false;
-        
-        if (audioEnabled) { 
-            sfxPescado.currentTime = 0; 
-            sfxPescado.play().catch(e=>{}); 
+        if (audioEnabled) {
+            sfxPescado.currentTime = 0;
+            sfxPescado.play().catch(e=>{});
         }
-        
-        const rect = creatureElem.getBoundingClientRect();
-        creatureElem.style.animation = "none";
-        creatureElem.style.left = rect.left + "px";
-        creatureElem.style.top = rect.top + "px";
-        creatureElem.classList.add("pescado");
-        
+        const rect = elem.getBoundingClientRect();
+        elem.style.animation = "none";
+        elem.style.left = rect.left + "px";
+        elem.style.top = rect.top + "px";
+        elem.classList.add("pescado");
         pontuacaoTotal += 15;
         acertosNaEtapa++;
         atualizarUI();
+        mostrarFeedback(silabaObj.texto, true, x, y);
         
-        mostrarFeedback(silabaClicada, true, x || rect.left + 30, y || rect.top + 30);
-        
-        falar("Muito bem!", () => {
-            falarSilaba(silabaClicada, () => {
-                indiceSilabaAtual++;
-                if (indiceSilabaAtual < filaSilabas.length) {
-                    jogoAtivo = true;
-                    carregarProximaSilaba();
-                } else { 
-                    concluirEtapa(); 
-                }
-            });
+        tocarSilaba(silabaObj, () => {
+            indiceSilabaAtual++;
+            if (indiceSilabaAtual < silabasAtuais.length) {
+                jogoAtivo = true;
+                carregarProximaSilaba();
+            } else {
+                concluirEtapa();
+            }
         });
     }
-    
-    function errou(creatureElem, silabaErrada) {
+
+    function errou(elem, silabaObj) {
         if (!jogoAtivo) return;
-        if (audioEnabled && sfxErro) { 
-            sfxErro.currentTime = 0; 
-            sfxErro.play().catch(e=>{}); 
+        if (audioEnabled && sfxErro) {
+            sfxErro.currentTime = 0;
+            sfxErro.play().catch(e=>{});
         }
-        mostrarFeedback(silabaErrada, false);
-        creatureElem.classList.add("erro-anim");
-        setTimeout(() => creatureElem.classList.remove("erro-anim"), 400);
-        falarSilaba(silabaErrada);
+        mostrarFeedback(silabaObj.texto, false);
+        elem.classList.add("erro-anim");
+        setTimeout(() => elem.classList.remove("erro-anim"), 400);
+        tocarSilaba(silabaObj);
     }
-    
+
     function iniciarEtapa() {
-        if (faseAtual > categorias.length) { finalizarJogoCompleto(); return; }
-        categoriaCorrente = categorias[faseAtual - 1];
-        filaSilabas = [...categoriaCorrente.silabas];
-        if (filaSilabas.length === 0) { concluirEtapa(); return; }
+        if (faseAtual >= categorias.length) { finalizarJogoCompleto(); return; }
+        categoriaCorrente = categorias[faseAtual];
+        silabasAtuais = [...categoriaCorrente.silabas];
         indiceSilabaAtual = 0;
         acertosNaEtapa = 0;
         atualizarUI();
@@ -1079,80 +872,69 @@
         iniciarCronometro();
         carregarProximaSilaba();
     }
-    
+
     function concluirEtapa() {
         if (aguardandoProxima) return;
-        const tempoEtapa = pararCronometro();
-        temposEtapas[faseAtual - 1] = tempoEtapa;
-        
+        const tempo = pararCronometro();
+        temposEtapas[faseAtual] = tempo;
         aguardandoProxima = true;
         jogoAtivo = false;
         aquario.innerHTML = "";
         criarEfeitoBolhas(50);
         
         document.getElementById("vitoria-msg-topo").innerHTML = `✨ ${categoriaCorrente.nome} ✨`;
-        document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${filaSilabas.length} | Pontos: ${pontuacaoTotal}`;
-        document.getElementById("tempoEtapa").innerHTML = `⏱️ Tempo: ${formatarTempo(tempoEtapa)}`;
-        
-        let msg = faseAtual < categorias.length ? "Nova categoria de sílabas chegou!" : "🏆 VOCÊ DOMINOU AS SÍLABAS COMPLEXAS! 🏆";
+        document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length} | Pontos: ${pontuacaoTotal}`;
+        document.getElementById("tempoEtapa").innerHTML = `⏱️ Tempo: ${formatarTempo(tempo)}`;
+        let msg = (faseAtual+1 < categorias.length) ? "🐢 Nova categoria!" : "🏆 DOMINOU AS SÍLABAS COMPLEXAS! 🏆";
         document.getElementById("vitoria-msg-sub").innerHTML = msg;
         modalVitoria.style.display = "flex";
         
-        falarMensagem(msg, () => {
-            setTimeout(() => {
-                modalVitoria.style.display = "none";
-                if (faseAtual < categorias.length) { 
-                    faseAtual++; 
-                    iniciarEtapa();
-                } else { 
-                    finalizarJogoCompleto(); 
-                }
-            }, 2000);
-        });
+        // Não usa voz sintetizada, apenas exibe
+        setTimeout(() => {
+            modalVitoria.style.display = "none";
+            if (faseAtual+1 < categorias.length) {
+                faseAtual++;
+                iniciarEtapa();
+            } else {
+                finalizarJogoCompleto();
+            }
+        }, 2000);
     }
-    
+
     function finalizarJogoCompleto() {
         jogoAtivo = false;
         aquario.innerHTML = "";
         criarEfeitoBolhas(70);
-        
-        let tempoTotal = temposEtapas.reduce((a,b) => a + b, 0);
+        let total = temposEtapas.reduce((a,b)=>a+b,0);
         document.getElementById("vitoria-msg-topo").innerHTML = "🏆 MESTRE DAS SÍLABAS COMPLEXAS 🏆";
         document.getElementById("vitoria-msg-sub").innerHTML = "🐢 Todas as categorias concluídas! 🐠";
         document.getElementById("scoreFinalModal").innerHTML = `🌟 Pontuação final: ${pontuacaoTotal} 🌟`;
-        document.getElementById("tempoEtapa").innerHTML = `⏱️ Tempo total: ${formatarTempo(tempoTotal)}`;
+        document.getElementById("tempoEtapa").innerHTML = `⏱️ Tempo total: ${formatarTempo(total)}`;
         modalVitoria.style.display = "flex";
-        falarMensagem("Parabéns! Você dominou todas as sílabas complexas do mar profundo!");
         setTimeout(() => modalVitoria.style.display = "none", 6000);
     }
-    
+
     // ========== NAVEGAÇÃO ==========
     function toggleFullscreen() {
         if (!document.fullscreenElement) document.documentElement.requestFullscreen();
         else document.exitFullscreen();
     }
-    
     function toggleAudio() {
         audioEnabled = !audioEnabled;
         btnAudio.innerText = audioEnabled ? "🔊" : "🔇";
         if (audioEnabled) bgAudio.play().catch(e=>{});
         else bgAudio.pause();
     }
-    
     function voltarMenu() {
         if (aguardandoProxima) return;
         modalNavegacao.style.display = "flex";
-        falarMensagem("Voltar ao menu principal?");
     }
-    
     document.getElementById("btnVoltar").addEventListener("click", voltarMenu);
     document.getElementById("btnCancelarVolta").addEventListener("click", () => modalNavegacao.style.display = "none");
     document.getElementById("btnConfirmarVolta").addEventListener("click", () => {
         modalNavegacao.style.display = "none";
-        falarMensagem("Voltando ao menu!");
-        setTimeout(() => window.location.href = "index.html", 500);
+        window.location.href = "index_pesca.html";
     });
-    
     document.getElementById("btnRepetirSilaba").addEventListener("click", (e) => {
         if (e.target.id !== "silabaAlvo") repetirSilabaAlvo();
     });
@@ -1164,18 +946,25 @@
         e.stopPropagation();
         repetirSilabaAlvo();
     }, { passive: true });
-    
-    // Inicialização
-    let vozDesbloqueada = false;
-    const desbloquearVoz = () => {
-        if (!vozDesbloqueada && window.speechSynthesis) {
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Jogo pronto"));
-            vozDesbloqueada = true;
+
+    // ========== INICIALIZAÇÃO ==========
+    function criarParticulasLuz() {
+        const container = document.getElementById("lightParticles");
+        for(let i=0; i<40; i++) {
+            setTimeout(() => {
+                const p = document.createElement("div");
+                p.className = "light-particle";
+                p.style.width = Math.random() * 8 + 3 + "px";
+                p.style.height = p.style.width;
+                p.style.left = Math.random() * 100 + "%";
+                p.style.animationDelay = Math.random() * 10 + "s";
+                p.style.animationDuration = Math.random() * 6 + 6 + "s";
+                container.appendChild(p);
+                setTimeout(() => p.remove(), 12000);
+            }, i * 300);
         }
-    };
-    document.addEventListener('touchstart', desbloquearVoz, { once: true });
-    document.addEventListener('click', desbloquearVoz, { once: true });
-    
+    }
+
     if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
         const cursor = document.createElement('div');
         cursor.className = 'custom-cursor';
@@ -1184,29 +973,31 @@
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
         });
-        document.addEventListener('mouseleave', () => { cursor.style.display = 'none'; });
-        document.addEventListener('mouseenter', () => { cursor.style.display = 'block'; });
+        document.addEventListener('mouseleave', () => cursor.style.display = 'none');
+        document.addEventListener('mouseenter', () => cursor.style.display = 'block');
     }
-    
+
     window.addEventListener('resize', () => {
         criaturasNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
     });
-    
+
     setInterval(() => {
         if (jogoAtivo && !aguardandoProxima && Math.random() > 0.85) {
-            const bolha = document.createElement("div");
-            bolha.className = "bolha";
-            const tam = Math.random() * 20 + 8 + "px";
-            bolha.style.width = tam; bolha.style.height = tam;
-            bolha.style.left = Math.random() * 100 + "vw";
-            bolha.style.animationDuration = Math.random() * 3 + 2 + "s";
-            document.body.appendChild(bolha);
-            setTimeout(() => bolha.remove(), 5000);
+            const b = document.createElement("div");
+            b.className = "bolha";
+            const t = Math.random() * 20 + 8;
+            b.style.width = t + "px"; b.style.height = t + "px";
+            b.style.left = Math.random() * 100 + "%";
+            b.style.animationDuration = Math.random() * 3 + 2 + "s";
+            document.body.appendChild(b);
+            setTimeout(() => b.remove(), 5000);
         }
     }, 1000);
-    
+
     window.onload = () => {
         criarParticulasLuz();
+        faseAtual = 0;
+        temposEtapas = new Array(categorias.length).fill(0);
         iniciarEtapa();
     };
 </script>
