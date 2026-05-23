@@ -437,7 +437,7 @@
         }
         .nav-btn.cancelar { background: linear-gradient(135deg, #555, #333); border-color: #888; }
 
-        /* ---------- NOVOS ESTILOS PARA FOGOS E CELEBRAÇÃO FINAL ---------- */
+        /* ---------- NOVOS ESTILOS PARA FOGOS, PALMAS E CELEBRAÇÃO FINAL ---------- */
         #fireworks-canvas {
             position: fixed;
             top: 0;
@@ -518,6 +518,12 @@
             25% { transform: rotate(10deg); }
             75% { transform: rotate(-10deg); }
         }
+
+        /* Animação para os emojis de palmas subindo */
+        @keyframes subirPalma {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-120vh) rotate(20deg); opacity: 0; }
+        }
     </style>
 </head>
 <body>
@@ -531,8 +537,8 @@
 <audio id="bg-audio" src="som_fundo_do_mar.mp3" loop></audio>
 <audio id="sfx-pescado" src="pescado.ogg"></audio>
 <audio id="sfx-erro" src="erro.ogg"></audio>
-<!-- Áudio de celebração: palmas e fogos (opcionais) -->
-<audio id="sfx-applause" src="palmas.mp3" preload="auto"></audio>
+<!-- Áudio de celebração: aplauso (arquivo renomeado para aplause.mp3) e fogos -->
+<audio id="sfx-applause" src="aplause.mp3" preload="auto"></audio>
 <audio id="sfx-fireworks" src="fogos.mp3" preload="auto"></audio>
 
 <div id="game-wrapper">
@@ -682,6 +688,26 @@
     
     function concluirEtapa(){ if(aguardandoProxima) return; const tempo=pararCronometro(); temposEtapas[faseAtual]=tempo; aguardandoProxima=true; jogoAtivo=false; aquario.innerHTML=""; criarEfeitoBolhas(50); document.getElementById("vitoria-msg-topo").innerHTML=`✨ ${categoriaCorrente.nome} ✨`; document.getElementById("scoreFinalModal").innerHTML=`✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length} | Pontos: ${pontuacaoTotal}`; document.getElementById("tempoEtapa").innerHTML=`⏱️ Tempo: ${formatarTempo(tempo)}`; let msg=(faseAtual+1<categorias.length)?"🐢 Nova categoria!":"🏆 DOMINOU AS SÍLABAS COMPLEXAS! 🏆"; document.getElementById("vitoria-msg-sub").innerHTML=msg; modalVitoria.style.display="flex"; setTimeout(()=>{ modalVitoria.style.display="none"; if(faseAtual+1<categorias.length){ faseAtual++; iniciarEtapa(); } else { finalizarJogoCompleto(); } },2000); }
     
+    // ========== PALMAS VISUAIS ==========
+    function criarPalmasVisuais() {
+        for (let i = 0; i < 30; i++) {
+            setTimeout(() => {
+                const palma = document.createElement("div");
+                palma.innerText = "👏";
+                palma.style.position = "fixed";
+                palma.style.fontSize = (Math.random() * 30 + 20) + "px";
+                palma.style.left = Math.random() * 100 + "%";
+                palma.style.bottom = "-50px";
+                palma.style.pointerEvents = "none";
+                palma.style.zIndex = "2100";
+                palma.style.opacity = "0.9";
+                palma.style.animation = `subirPalma ${Math.random() * 1.5 + 1.5}s ease-out forwards`;
+                document.body.appendChild(palma);
+                setTimeout(() => palma.remove(), 3000);
+            }, i * 80);
+        }
+    }
+
     // ========== FOGOS + PALMAS (CELEBRAÇÃO FINAL) ==========
     function iniciarFogosEPalmas() {
         // Mostrar canvas de fogos
@@ -732,13 +758,23 @@
         for(let i=0;i<12;i++) setTimeout(()=>{ createFirework(Math.random()*width, Math.random()*height*0.5); if(i===0) animateFireworks(); }, i*180);
         animateFireworks();
         
-        // Tocar palmas e fogos (áudio)
+        // Tocar palmas e fogos (áudio) - usando o arquivo correto aplause.mp3
         if(audioEnabled){
             try{
-                if(sfxApplause) { sfxApplause.currentTime=0; sfxApplause.play().catch(e=>console.log); }
-                if(sfxFireworksAudio){ sfxFireworksAudio.currentTime=0; sfxFireworksAudio.play().catch(e=>console.log); }
+                if(sfxApplause) { 
+                    sfxApplause.currentTime = 0; 
+                    sfxApplause.play().catch(e => console.log("Áudio de aplauso bloqueado:", e));
+                }
+                if(sfxFireworksAudio){ 
+                    sfxFireworksAudio.currentTime = 0; 
+                    sfxFireworksAudio.play().catch(e => console.log); 
+                }
             }catch(e){}
         }
+        
+        // Efeito visual de palmas
+        criarPalmasVisuais();
+        
         // Vibração (se suportado e se for dispositivo)
         if(navigator.vibrate) navigator.vibrate([500,300,500]);
     }
