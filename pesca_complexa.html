@@ -25,6 +25,7 @@
             touch-action: manipulation;
         }
 
+        /* Cursor personalizado (tridente) - só aparece em desktop com mouse */
         .custom-cursor {
             position: fixed;
             width: 45px;
@@ -33,6 +34,7 @@
             z-index: 9999;
             transform: translate(-50%, -50%);
             filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+            transition: transform 0.05s;
         }
         .custom-cursor::before {
             content: "🔱";
@@ -42,6 +44,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
+        /* Esconde o cursor personalizado em dispositivos touch */
         @media (hover: none) and (pointer: coarse) {
             .custom-cursor { display: none; }
             body { cursor: auto; }
@@ -433,7 +436,7 @@
         }
         .nav-btn.cancelar { background: linear-gradient(135deg, #555, #333); border-color: #888; }
         
-        /* Modal categorias */
+        /* Grid categorias */
         .grid-categorias {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -570,7 +573,7 @@
 <canvas id="fireworks-canvas"></canvas>
 
 <script>
-    // ========== TODAS AS CATEGORIAS (24 famílias) ==========
+    // ========== TODAS AS CATEGORIAS ==========
     const categorias = [
         { nome: "🌊 AL - EL - IL - OL - UL", silabas: [{ texto: "AL", audio: "al.mp3" },{ texto: "EL", audio: "el.mp3" },{ texto: "IL", audio: "il.mp3" },{ texto: "OL", audio: "ol.mp3" },{ texto: "UL", audio: "ul.mp3" }] },
         { nome: "🐚 AM - EM - IM - OM - UM", silabas: [{ texto: "AM", audio: "am.mp3" },{ texto: "EM", audio: "em.mp3" },{ texto: "IM", audio: "im.mp3" },{ texto: "OM", audio: "om.mp3" },{ texto: "UM", audio: "um.mp3" }] },
@@ -640,6 +643,32 @@
     function fecharSeletor(){ modalCategorias.style.display="none"; }
     function preencherGridCategorias(){ const grid=document.getElementById("listaCategorias"); grid.innerHTML=""; categorias.forEach((cat,idx)=>{ const btn=document.createElement("button"); btn.className="cat-botao"; btn.innerText=cat.nome; btn.onclick=()=>{ resetarJogoParaCategoria(idx); fecharSeletor(); }; grid.appendChild(btn); }); }
     
+    // ========== CURSOR PERSONALIZADO (TRIDENTE) ==========
+    function initCustomCursor() {
+        // Verifica se o dispositivo suporta mouse (hover e ponteiro fino)
+        const isMouse = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        if (isMouse) {
+            const cursorDiv = document.createElement('div');
+            cursorDiv.className = 'custom-cursor';
+            document.body.appendChild(cursorDiv);
+            
+            document.addEventListener('mousemove', (e) => {
+                cursorDiv.style.left = e.clientX + 'px';
+                cursorDiv.style.top = e.clientY + 'px';
+                cursorDiv.style.display = 'block';
+            });
+            document.addEventListener('mouseleave', () => {
+                cursorDiv.style.display = 'none';
+            });
+            document.addEventListener('mouseenter', () => {
+                cursorDiv.style.display = 'block';
+            });
+            // Esconde cursor padrão
+            document.body.style.cursor = 'none';
+            // Restaura cursor padrão ao sair da janela (já tratado)
+        }
+    }
+    
     // ========== NAVEGAÇÃO ==========
     function toggleFullscreen(){ if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
     function toggleAudio(){ audioEnabled=!audioEnabled; document.getElementById("btn-audio").innerHTML=audioEnabled?"🔊 Som Ligado":"🔇 Som Desligado"; if(audioEnabled) bgAudio.play().catch(e=>{}); else bgAudio.pause(); }
@@ -660,7 +689,12 @@
     window.addEventListener('resize',()=>{ criaturasNaTela=window.innerWidth<768?3:(window.innerWidth<1024?4:5); });
     setInterval(()=>{ if(jogoAtivo&&!aguardandoProxima&&Math.random()>0.85){ const b=document.createElement("div"); b.className="bolha"; const t=Math.random()*20+8; b.style.width=t+"px"; b.style.height=t+"px"; b.style.left=Math.random()*100+"%"; b.style.animationDuration=Math.random()*3+2+"s"; document.body.appendChild(b); setTimeout(()=>b.remove(),5000); } },1000);
     
-    window.onload=()=>{ criarParticulasLuz(); preencherGridCategorias(); resetarJogoParaCategoria(0); };
+    window.onload=()=>{ 
+        criarParticulasLuz(); 
+        preencherGridCategorias(); 
+        resetarJogoParaCategoria(0);
+        initCustomCursor(); // Ativa o cursor tridente no PC
+    };
 </script>
 </body>
 </html>
