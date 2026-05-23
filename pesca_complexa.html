@@ -126,6 +126,9 @@
             font-size: 20px;
             backdrop-filter: blur(4px);
             transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         @media (min-width: 768px) {
             .icon-btn { width: 50px; height: 50px; font-size: 24px; }
@@ -325,8 +328,8 @@
             100% { transform: scale(8); opacity: 0; }
         }
 
-        /* Modais originais */
-        #modal-vitoria, #modal-navegacao {
+        /* Modais */
+        #modal-vitoria, #modal-navegacao, #modal-categorias {
             display: none;
             position: fixed;
             inset: 0;
@@ -349,7 +352,6 @@
             border-radius: 60px;
             border: 1px solid #ffd54f;
         }
-        .tempo-record { font-size: 14px; margin-top: 10px; color: #ff7043; }
         .erro-anim {
             animation: tremer 0.3s ease;
             filter: grayscale(0.5) brightness(0.6);
@@ -436,8 +438,33 @@
             color: white;
         }
         .nav-btn.cancelar { background: linear-gradient(135deg, #555, #333); border-color: #888; }
-
-        /* ---------- NOVOS ESTILOS PARA FOGOS E CELEBRAÇÃO FINAL ---------- */
+        
+        /* Modal categorias */
+        .grid-categorias {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 15px;
+            margin-top: 20px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 30px;
+        }
+        .cat-botao {
+            background: linear-gradient(135deg, #1e3c4c, #0a2a38);
+            border: 2px solid #ffd966;
+            border-radius: 50px;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #ffecb3;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .cat-botao:active { transform: scale(0.96); background: #2a5f6e; }
+        
+        /* Fogos canvas */
         #fireworks-canvas {
             position: fixed;
             top: 0;
@@ -470,54 +497,11 @@
             from { transform: translate(-50%, -50%) scale(0.2); opacity: 0; }
             to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
-        .celebration-modal h2 {
-            font-size: 2.8rem;
-            color: #ffd966;
-            text-shadow: 0 0 12px #ff9900;
-            margin-bottom: 15px;
-        }
-        .celebration-modal .pontos-final {
-            font-size: 1.8rem;
-            background: #000000aa;
-            padding: 8px 20px;
-            border-radius: 50px;
-            display: inline-block;
-            margin: 15px 0;
-        }
-        .celebration-modal .botoes-celebrate {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 25px;
-            flex-wrap: wrap;
-        }
-        .btn-celebrate {
-            background: linear-gradient(135deg, #ffb347, #ff7e05);
-            border: none;
-            padding: 12px 28px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            color: white;
-            transition: 0.2s;
-            box-shadow: 0 5px 0 #a34100;
-        }
-        .btn-celebrate:active { transform: translateY(2px); box-shadow: 0 2px 0 #a34100; }
-        .btn-celebrate.outras {
-            background: linear-gradient(135deg, #3b8b40, #1e6b2f);
-            box-shadow: 0 5px 0 #0e4a1a;
-        }
-        .palmas-emoji {
-            font-size: 3rem;
-            letter-spacing: 8px;
-            animation: shake 0.3s infinite;
-        }
-        @keyframes shake {
-            0%,100% { transform: rotate(0deg); }
-            25% { transform: rotate(10deg); }
-            75% { transform: rotate(-10deg); }
-        }
+        .celebration-modal h2 { font-size: 2rem; color: #ffd966; margin-bottom: 15px; }
+        .pontos-final { font-size: 1.5rem; background: #000000aa; padding: 8px 20px; border-radius: 50px; display: inline-block; margin: 15px 0; }
+        .botoes-celebrate { display: flex; gap: 20px; justify-content: center; margin-top: 25px; flex-wrap: wrap; }
+        .btn-celebrate { background: linear-gradient(135deg, #ffb347, #ff7e05); border: none; padding: 12px 28px; font-size: 1.1rem; font-weight: bold; border-radius: 50px; cursor: pointer; color: white; }
+        .btn-celebrate.outras { background: linear-gradient(135deg, #3b8b40, #1e6b2f); }
     </style>
 </head>
 <body>
@@ -531,23 +515,22 @@
 <audio id="bg-audio" src="som_fundo_do_mar.mp3" loop></audio>
 <audio id="sfx-pescado" src="pescado.ogg"></audio>
 <audio id="sfx-erro" src="erro.ogg"></audio>
-<!-- Áudio de celebração: palmas e fogos (opcionais) -->
 <audio id="sfx-applause" src="palmas.mp3" preload="auto"></audio>
 <audio id="sfx-fireworks" src="fogos.mp3" preload="auto"></audio>
 
 <div id="game-wrapper">
     <div class="top-bar">
-        <button class="icon-btn" onclick="window.location.href='index_pesca.html'">⬅️</button>
+        <button class="icon-btn" id="btnMenuPrincipal">🏠</button>
+        <button id="btnEscolherCategoria" class="icon-btn">📚</button>
         <button id="btn-audio" class="icon-btn" onclick="toggleAudio()">🔇</button>
         <button class="icon-btn" onclick="toggleFullscreen()">⛶</button>
     </div>
 
     <div class="game-info-container">
         <div class="game-info">
-            <div>🏺 Etapa: <span id="faseText">1</span>/<span id="totalFases"></span></div>
+            <div>🏺 Família: <span id="categoriaAtual">-</span></div>
             <div>✨ Pontos: <span id="pontosText">0</span></div>
             <div>🐚 Progresso: <span id="acertosFase">0</span>/<span id="totalEtapa">0</span></div>
-            <div>📖 Categoria: <span id="categoriaAtual">-</span></div>
             <div class="timer">⏱️ <span id="timerDisplay">00:00</span></div>
         </div>
         <p class="instrucao" id="btnRepetirSilaba">
@@ -560,15 +543,23 @@
     <button class="btn-voltar" id="btnVoltar">
         <span>🏝️</span> Voltar ao Menu
     </button>
-    <div class="dica-som">💡 Clique na sílaba para ouvir o áudio | Pesque os tesouros!</div>
+    <div class="dica-som">💡 Clique na sílaba para ouvir | Escolha qualquer família!</div>
+</div>
+
+<!-- Modal de categorias (modo livre) -->
+<div id="modal-categorias">
+    <div class="icone-vitoria">🐟📚🐠</div>
+    <div class="vitoria-texto">Escolha uma família silábica</div>
+    <div class="grid-categorias" id="listaCategorias"></div>
+    <button class="nav-btn cancelar" id="btnFecharCategorias" style="margin-top:20px;">Fechar</button>
 </div>
 
 <div id="modal-vitoria">
     <div class="icone-vitoria">🏆🗿🏆</div>
-    <div class="vitoria-texto" id="vitoria-msg-topo">Parabéns, Mestre do Mar!</div>
+    <div class="vitoria-texto" id="vitoria-msg-topo">Parabéns!</div>
     <div class="score-panel" id="scoreFinalModal">Pontuação: 0</div>
     <div class="tempo-record" id="tempoEtapa"></div>
-    <div class="vitoria-texto" id="vitoria-msg-sub" style="font-size: 2.5vh;">Descobrindo novos tesouros...</div>
+    <div class="vitoria-texto" id="vitoria-msg-sub">Continue explorando!</div>
 </div>
 
 <div id="modal-navegacao">
@@ -580,13 +571,12 @@
     </div>
 </div>
 
-<!-- Canvas para fogos de artifício -->
 <canvas id="fireworks-canvas"></canvas>
 
 <script>
-    // ========== CATEGORIAS (igual original) ==========
+    // ========== TODAS AS CATEGORIAS (igual original) ==========
     const categorias = [
-        { nome: "🌊 AL - EL - IL - OL - UL", silabas: [{ texto: "AL", audio: "al.mp3" }, { texto: "EL", audio: "el.mp3" },{ texto: "IL", audio: "il.mp3" },{ texto: "OL", audio: "ol.mp3" },{ texto: "UL", audio: "ul.mp3" }] },
+        { nome: "🌊 AL - EL - IL - OL - UL", silabas: [{ texto: "AL", audio: "al.mp3" },{ texto: "EL", audio: "el.mp3" },{ texto: "IL", audio: "il.mp3" },{ texto: "OL", audio: "ol.mp3" },{ texto: "UL", audio: "ul.mp3" }] },
         { nome: "🐚 AM - EM - IM - OM - UM", silabas: [{ texto: "AM", audio: "am.mp3" },{ texto: "EM", audio: "em.mp3" },{ texto: "IM", audio: "im.mp3" },{ texto: "OM", audio: "om.mp3" },{ texto: "UM", audio: "um.mp3" }] },
         { nome: "🪸 AN - EN - IN - ON - UN", silabas: [{ texto: "AN", audio: "an.mp3" },{ texto: "EN", audio: "en.mp3" },{ texto: "IN", audio: "in.mp3" },{ texto: "ON", audio: "on.mp3" },{ texto: "UN", audio: "un.mp3" }] },
         { nome: "⭐ AR - ER - IR - OR - UR", silabas: [{ texto: "AR", audio: "ar.mp3" },{ texto: "ER", audio: "er.mp3" },{ texto: "IR", audio: "ir.mp3" },{ texto: "OR", audio: "or.mp3" },{ texto: "UR", audio: "ur.mp3" }] },
@@ -613,202 +603,70 @@
     ];
 
     const criaturas = ["🐟","🐠","🐡","🐋","🦈","🐙","🐬","🐳","🦀","🦑","🐚","🦭","🪼","🐢","🦞","🪸","🧜‍♀️","🧜‍♂️"];
-
-    let audioEnabled = false;
-    let currentAudio = null;
-    let jogoAtivo = true;
-    let aguardandoProxima = false;
-    let faseAtual = 0;
-    let pontuacaoTotal = 0;
-    let acertosNaEtapa = 0;
-    let silabasAtuais = [];
-    let indiceSilabaAtual = 0;
-    let categoriaCorrente = null;
+    let audioEnabled = false, currentAudio = null, jogoAtivo = true, aguardandoProxima = false;
+    let faseAtual = 0, pontuacaoTotal = 0, acertosNaEtapa = 0, silabasAtuais = [], indiceSilabaAtual = 0;
+    let categoriaCorrente = null, tempoInicioEtapa = null, intervaloRelogio = null, temposEtapas = [];
     let criaturasNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
-    let temposEtapas = [];
-    let tempoInicioEtapa = null;
-    let intervaloRelogio = null;
-    let fireworksAnimation = null;
     
     // Elementos
-    const bgAudio = document.getElementById("bg-audio");
-    const sfxPescado = document.getElementById("sfx-pescado");
-    const sfxErro = document.getElementById("sfx-erro");
-    const sfxApplause = document.getElementById("sfx-applause");
-    const sfxFireworksAudio = document.getElementById("sfx-fireworks");
-    const btnAudio = document.getElementById("btn-audio");
-    const aquario = document.getElementById("aquario");
-    const modalVitoria = document.getElementById("modal-vitoria");
-    const modalNavegacao = document.getElementById("modal-navegacao");
+    const bgAudio = document.getElementById("bg-audio"), sfxPescado = document.getElementById("sfx-pescado"), sfxErro = document.getElementById("sfx-erro");
+    const sfxApplause = document.getElementById("sfx-applause"), sfxFireworksAudio = document.getElementById("sfx-fireworks");
+    const aquario = document.getElementById("aquario"), modalVitoria = document.getElementById("modal-vitoria"), modalNavegacao = document.getElementById("modal-navegacao");
+    const modalCategorias = document.getElementById("modal-categorias"), btnEscolherCategoria = document.getElementById("btnEscolherCategoria");
     const fireworksCanvas = document.getElementById("fireworks-canvas");
 
-    // ========== FUNÇÕES ÁUDIO ==========
-    function tocarAudioMP3(arquivo, callback) {
-        if (!arquivo) return;
-        if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
-        const audio = new Audio(arquivo);
-        currentAudio = audio;
-        audio.play().catch(e => console.log("Erro áudio:", arquivo));
-        audio.onended = () => { currentAudio = null; if(callback) callback(); };
-        audio.onerror = () => { currentAudio = null; if(callback) callback(); };
-    }
+    // Funções auxiliares (áudio, cronômetro, efeitos)
+    function tocarAudioMP3(arquivo, callback) { if (!arquivo) return; if(currentAudio) currentAudio.pause(); const a = new Audio(arquivo); currentAudio = a; a.play().catch(e=>console.log); a.onended = ()=>{ currentAudio=null; if(callback)callback(); }; }
     function tocarSilaba(silabaObj, callback) { if(silabaObj?.audio) tocarAudioMP3(silabaObj.audio, callback); else if(callback) callback(); }
-    function repetirSilabaAlvo() { /* igual original */ 
-        const el = document.getElementById("silabaAlvo");
-        const silabaTexto = el.innerText;
-        if (!silabaTexto || silabaTexto === "---") return;
-        const silabaObj = silabasAtuais.find(s => s.texto === silabaTexto);
-        if (silabaObj) { el.classList.add("pulsando"); setTimeout(() => el.classList.remove("pulsando"), 300); tocarSilaba(silabaObj); }
-    }
-    function formatarTempo(seg) { const m = Math.floor(seg/60), s = seg%60; return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; }
-    function iniciarCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); tempoInicioEtapa = Date.now(); document.getElementById("timerDisplay").innerText = "00:00"; intervaloRelogio = setInterval(() => { if(tempoInicioEtapa && jogoAtivo && !aguardandoProxima) { const seg = Math.floor((Date.now()-tempoInicioEtapa)/1000); document.getElementById("timerDisplay").innerText = formatarTempo(seg); } }, 1000); }
-    function pararCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); if(tempoInicioEtapa) return Math.floor((Date.now()-tempoInicioEtapa)/1000); return 0; }
-    function criarOndaChoque(x,y){ const w=document.createElement("div"); w.className="shockwave"; w.style.left=(x-15)+"px"; w.style.top=(y-15)+"px"; document.body.appendChild(w); setTimeout(()=>w.remove(),500); }
+    function repetirSilabaAlvo() { const t=document.getElementById("silabaAlvo").innerText; const s=silabasAtuais.find(x=>x.texto===t); if(s){ document.getElementById("silabaAlvo").classList.add("pulsando"); setTimeout(()=>document.getElementById("silabaAlvo").classList.remove("pulsando"),300); tocarSilaba(s); } }
+    function formatarTempo(seg) { return `${Math.floor(seg/60).toString().padStart(2,'0')}:${(seg%60).toString().padStart(2,'0')}`; }
+    function iniciarCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); tempoInicioEtapa=Date.now(); intervaloRelogio=setInterval(()=>{ if(tempoInicioEtapa&&jogoAtivo&&!aguardandoProxima) document.getElementById("timerDisplay").innerText=formatarTempo(Math.floor((Date.now()-tempoInicioEtapa)/1000)); },1000); }
+    function pararCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); return tempoInicioEtapa?Math.floor((Date.now()-tempoInicioEtapa)/1000):0; }
     function criarTesouro(x,y){ const t=["💎","👑","💰","🗿","⚓","🔱","🐚","⭐","🏆","✨"][Math.floor(Math.random()*10)]; const e=document.createElement("div"); e.className="treasure-effect"; e.innerText=t; e.style.left=(x-25)+"px"; e.style.top=(y-25)+"px"; document.body.appendChild(e); setTimeout(()=>e.remove(),800); }
-    function criarEfeitoBolhas(qtd=30){ for(let i=0;i<qtd;i++){ setTimeout(()=>{ const b=document.createElement("div"); b.className="bolha"; const tam=Math.random()*25+10+"px"; b.style.width=tam; b.style.height=tam; b.style.left=Math.random()*100+"vw"; b.style.animationDuration=Math.random()*3+2.5+"s"; document.body.appendChild(b); setTimeout(()=>b.remove(),5500); }, i*50); } }
-    function mostrarFeedback(texto, isAcerto, x, y){ const div=document.createElement("div"); div.className="feedback-correto"; div.style.background=isAcerto?"#2e7d32ee":"#c62828ee"; div.innerText=isAcerto?`🎣✨ +15 ⭐ ${texto} ✨`:`❌ ${texto}`; document.body.appendChild(div); setTimeout(()=>div.remove(),850); if(isAcerto && x){ criarTesouro(x,y); criarOndaChoque(x,y); } }
+    function criarOndaChoque(x,y){ const w=document.createElement("div"); w.className="shockwave"; w.style.left=(x-15)+"px"; w.style.top=(y-15)+"px"; document.body.appendChild(w); setTimeout(()=>w.remove(),500); }
+    function mostrarFeedback(texto, acerto, x, y){ const d=document.createElement("div"); d.className="feedback-correto"; d.style.background=acerto?"#2e7d32ee":"#c62828ee"; d.innerText=acerto?`🎣✨ +15 ⭐ ${texto} ✨`:`❌ ${texto}`; document.body.appendChild(d); setTimeout(()=>d.remove(),850); if(acerto&&x){ criarTesouro(x,y); criarOndaChoque(x,y); } }
     
-    function atualizarUI(){ document.getElementById("faseText").innerHTML=faseAtual+1; document.getElementById("totalFases").innerHTML=categorias.length; document.getElementById("pontosText").innerHTML=pontuacaoTotal; document.getElementById("acertosFase").innerHTML=acertosNaEtapa; document.getElementById("totalEtapa").innerHTML=silabasAtuais.length; document.getElementById("categoriaAtual").innerHTML=categoriaCorrente.nome; document.getElementById("progressHint").innerHTML=`🏆 ${categoriaCorrente.nome.substring(0,22)} | ${acertosNaEtapa}/${silabasAtuais.length}`; }
+    function atualizarUI(){ document.getElementById("categoriaAtual").innerHTML=categoriaCorrente?.nome||"-"; document.getElementById("pontosText").innerHTML=pontuacaoTotal; document.getElementById("acertosFase").innerHTML=acertosNaEtapa; document.getElementById("totalEtapa").innerHTML=silabasAtuais.length; document.getElementById("progressHint").innerHTML=`🏆 ${categoriaCorrente?.nome?.substring(0,22)} | ${acertosNaEtapa}/${silabasAtuais.length}`; }
     
-    function carregarProximaSilaba(){ if(indiceSilabaAtual>=silabasAtuais.length){ concluirEtapa(); return; } const silabaCerta=silabasAtuais[indiceSilabaAtual]; document.getElementById("silabaAlvo").innerText=silabaCerta.texto; atualizarUI(); aquario.innerHTML=""; let opcoes=[silabaCerta]; let outras=silabasAtuais.filter(s=>s.texto!==silabaCerta.texto); outras.sort(()=>0.5-Math.random()); opcoes.push(...outras.slice(0,criaturasNaTela-1)); while(opcoes.length<criaturasNaTela) opcoes.push({texto:"CHA",audio:"cha.mp3"}); opcoes.sort(()=>Math.random()-0.5); opcoes.forEach(sil=>criarCriatura(sil,silabaCerta)); setTimeout(()=>{ if(jogoAtivo&&!aguardandoProxima) tocarSilaba(silabaCerta); },500); }
+    function carregarProximaSilaba(){ if(indiceSilabaAtual>=silabasAtuais.length){ concluirEtapa(); return; } const certa=silabasAtuais[indiceSilabaAtual]; document.getElementById("silabaAlvo").innerText=certa.texto; atualizarUI(); aquario.innerHTML=""; let opcoes=[certa]; let outras=silabasAtuais.filter(s=>s.texto!==certa.texto); outras.sort(()=>0.5-Math.random()); opcoes.push(...outras.slice(0,criaturasNaTela-1)); while(opcoes.length<criaturasNaTela) opcoes.push({texto:"CHA",audio:"cha.mp3"}); opcoes.sort(()=>Math.random()-0.5); opcoes.forEach(sil=>criarCriatura(sil,certa)); setTimeout(()=>{ if(jogoAtivo&&!aguardandoProxima) tocarSilaba(certa); },500); }
     
-    function criarCriatura(silabaObj, alvoObj){ const creature=document.createElement("div"); creature.className="creature"; const posTop=Math.random()*70+10; creature.style.top=posTop+"%"; const direita=Math.random()>0.5; const duracao=Math.random()*5+4.5; creature.style.animation=direita?`nadar-direita ${duracao}s linear infinite`:`nadar-esquerda ${duracao}s linear infinite`; const emoji=criaturas[Math.floor(Math.random()*criaturas.length)]; const flip=direita?'transform: scaleX(-1);':''; creature.innerHTML=`<span class="creature-icon" style="${flip}">${emoji}</span><span class="silaba-creature">${silabaObj.texto}</span>`; const handleClick=(e)=>{ e.preventDefault(); if(!jogoAtivo||aguardandoProxima) return; const rect=creature.getBoundingClientRect(); if(silabaObj.texto===alvoObj.texto) acertou(creature, silabaObj, rect.left+30, rect.top+30); else errou(creature, silabaObj); }; creature.addEventListener('click',handleClick); creature.addEventListener('touchstart',handleClick,{passive:false}); aquario.appendChild(creature); }
+    function criarCriatura(silaba, alvo){ const c=document.createElement("div"); c.className="creature"; c.style.top=Math.random()*70+10+"%"; const dir=Math.random()>0.5; const dur=Math.random()*5+4.5; c.style.animation=dir?`nadar-direita ${dur}s linear infinite`:`nadar-esquerda ${dur}s linear infinite`; const emoji=criaturas[Math.floor(Math.random()*criaturas.length)]; const flip=dir?'transform: scaleX(-1);':''; c.innerHTML=`<span class="creature-icon" style="${flip}">${emoji}</span><span class="silaba-creature">${silaba.texto}</span>`; c.onclick=(e)=>{ e.preventDefault(); if(!jogoAtivo||aguardandoProxima) return; const rect=c.getBoundingClientRect(); if(silaba.texto===alvo.texto) acertou(c,silaba,rect.left+30,rect.top+30); else errou(c,silaba); }; aquario.appendChild(c); }
     
-    function acertou(elem, silabaObj, x, y){ if(!jogoAtivo) return; jogoAtivo=false; if(audioEnabled){ sfxPescado.currentTime=0; sfxPescado.play().catch(e=>{}); } const rect=elem.getBoundingClientRect(); elem.style.animation="none"; elem.style.left=rect.left+"px"; elem.style.top=rect.top+"px"; elem.classList.add("pescado"); pontuacaoTotal+=15; acertosNaEtapa++; atualizarUI(); mostrarFeedback(silabaObj.texto,true,x,y); tocarSilaba(silabaObj,()=>{ indiceSilabaAtual++; if(indiceSilabaAtual<silabasAtuais.length){ jogoAtivo=true; carregarProximaSilaba(); } else { concluirEtapa(); } }); }
+    function acertou(elem, silabaObj, x, y){ if(!jogoAtivo) return; jogoAtivo=false; if(audioEnabled) sfxPescado.play().catch(e=>{}); const rect=elem.getBoundingClientRect(); elem.style.animation="none"; elem.style.left=rect.left+"px"; elem.style.top=rect.top+"px"; elem.classList.add("pescado"); pontuacaoTotal+=15; acertosNaEtapa++; atualizarUI(); mostrarFeedback(silabaObj.texto,true,x,y); tocarSilaba(silabaObj,()=>{ indiceSilabaAtual++; if(indiceSilabaAtual<silabasAtuais.length){ jogoAtivo=true; carregarProximaSilaba(); } else concluirEtapa(); }); }
     
-    function errou(elem, silabaObj){ if(!jogoAtivo) return; if(audioEnabled && sfxErro){ sfxErro.currentTime=0; sfxErro.play().catch(e=>{}); } mostrarFeedback(silabaObj.texto,false); elem.classList.add("erro-anim"); setTimeout(()=>elem.classList.remove("erro-anim"),400); tocarSilaba(silabaObj); }
+    function errou(elem, silabaObj){ if(!jogoAtivo) return; if(audioEnabled) sfxErro.play().catch(e=>{}); mostrarFeedback(silabaObj.texto,false); elem.classList.add("erro-anim"); setTimeout(()=>elem.classList.remove("erro-anim"),400); tocarSilaba(silabaObj); }
     
-    function iniciarEtapa(){ if(faseAtual>=categorias.length){ finalizarJogoCompleto(); return; } categoriaCorrente=categorias[faseAtual]; silabasAtuais=[...categoriaCorrente.silabas]; indiceSilabaAtual=0; acertosNaEtapa=0; atualizarUI(); jogoAtivo=true; aguardandoProxima=false; iniciarCronometro(); carregarProximaSilaba(); }
+    function resetarJogoParaCategoria(indice){ if(intervaloRelogio) clearInterval(intervaloRelogio); jogoAtivo=false; aguardandoProxima=false; pontuacaoTotal=0; faseAtual=indice; categoriaCorrente=categorias[indice]; silabasAtuais=[...categoriaCorrente.silabas]; indiceSilabaAtual=0; acertosNaEtapa=0; atualizarUI(); aquario.innerHTML=""; jogoAtivo=true; iniciarCronometro(); carregarProximaSilaba(); }
     
-    function concluirEtapa(){ if(aguardandoProxima) return; const tempo=pararCronometro(); temposEtapas[faseAtual]=tempo; aguardandoProxima=true; jogoAtivo=false; aquario.innerHTML=""; criarEfeitoBolhas(50); document.getElementById("vitoria-msg-topo").innerHTML=`✨ ${categoriaCorrente.nome} ✨`; document.getElementById("scoreFinalModal").innerHTML=`✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length} | Pontos: ${pontuacaoTotal}`; document.getElementById("tempoEtapa").innerHTML=`⏱️ Tempo: ${formatarTempo(tempo)}`; let msg=(faseAtual+1<categorias.length)?"🐢 Nova categoria!":"🏆 DOMINOU AS SÍLABAS COMPLEXAS! 🏆"; document.getElementById("vitoria-msg-sub").innerHTML=msg; modalVitoria.style.display="flex"; setTimeout(()=>{ modalVitoria.style.display="none"; if(faseAtual+1<categorias.length){ faseAtual++; iniciarEtapa(); } else { finalizarJogoCompleto(); } },2000); }
+    function concluirEtapa(){ if(aguardandoProxima) return; pararCronometro(); aguardandoProxima=true; jogoAtivo=false; aquario.innerHTML=""; modalVitoria.style.display="flex"; document.getElementById("vitoria-msg-topo").innerHTML=`✨ ${categoriaCorrente.nome} ✨`; document.getElementById("scoreFinalModal").innerHTML=`✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length} | Pontos: ${pontuacaoTotal}`; document.getElementById("tempoEtapa").innerHTML=""; document.getElementById("vitoria-msg-sub").innerHTML="🎉 Parabéns! Escolha outra família no botão 📚"; setTimeout(()=>{ modalVitoria.style.display="none"; aguardandoProxima=false; },1800); }
     
-    // ========== FOGOS + PALMAS (CELEBRAÇÃO FINAL) ==========
-    function iniciarFogosEPalmas() {
-        // Mostrar canvas de fogos
-        fireworksCanvas.style.display = "block";
-        const ctx = fireworksCanvas.getContext("2d");
-        let width = window.innerWidth, height = window.innerHeight;
-        fireworksCanvas.width = width;
-        fireworksCanvas.height = height;
-        
-        let particles = [];
-        function createFirework(x, y) {
-            const count = 40 + Math.floor(Math.random() * 30);
-            for (let i = 0; i < count; i++) {
-                const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 6 + 3;
-                const vx = Math.cos(angle) * speed;
-                const vy = Math.sin(angle) * speed;
-                const color = `hsl(${Math.random() * 360}, 100%, 60%)`;
-                particles.push({ x, y, vx, vy, life: 1, color, size: Math.random() * 4 + 2 });
-            }
-        }
-        function animateFireworks() {
-            if (!fireworksCanvas || fireworksCanvas.style.display !== "block") return;
-            ctx.clearRect(0, 0, width, height);
-            let allDead = true;
-            for (let i = 0; i < particles.length; i++) {
-                const p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                p.vy += 0.15;
-                p.life -= 0.02;
-                if (p.life <= 0) { particles.splice(i,1); i--; continue; }
-                allDead = false;
-                ctx.globalAlpha = p.life;
-                ctx.fillStyle = p.color;
-                ctx.fillRect(p.x, p.y, p.size, p.size);
-            }
-            // Gerar novos fogos aleatoriamente enquanto a celebração estiver ativa
-            if (Math.random() < 0.07) {
-                const randX = Math.random() * width;
-                const randY = Math.random() * height * 0.6;
-                createFirework(randX, randY);
-            }
-            if (!allDead) requestAnimationFrame(animateFireworks);
-            else { fireworksCanvas.style.display = "none"; ctx.clearRect(0,0,width,height); }
-        }
-        // Dispara vários fogos iniciais
-        for(let i=0;i<12;i++) setTimeout(()=>{ createFirework(Math.random()*width, Math.random()*height*0.5); if(i===0) animateFireworks(); }, i*180);
-        animateFireworks();
-        
-        // Tocar palmas e fogos (áudio)
-        if(audioEnabled){
-            try{
-                if(sfxApplause) { sfxApplause.currentTime=0; sfxApplause.play().catch(e=>console.log); }
-                if(sfxFireworksAudio){ sfxFireworksAudio.currentTime=0; sfxFireworksAudio.play().catch(e=>console.log); }
-            }catch(e){}
-        }
-        // Vibração (se suportado e se for dispositivo)
-        if(navigator.vibrate) navigator.vibrate([500,300,500]);
-    }
+    // ========== SELEÇÃO DE CATEGORIAS (MODO LIVRE) ==========
+    function abrirSeletorCategorias(){ modalCategorias.style.display="flex"; }
+    function fecharSeletor(){ modalCategorias.style.display="none"; }
+    function preencherGridCategorias(){ const grid=document.getElementById("listaCategorias"); grid.innerHTML=""; categorias.forEach((cat,idx)=>{ const btn=document.createElement("button"); btn.className="cat-botao"; btn.innerText=cat.nome; btn.onclick=()=>{ resetarJogoParaCategoria(idx); fecharSeletor(); }; grid.appendChild(btn); }); }
     
-    function mostrarCelebracaoFinal() {
-        jogoAtivo = false;
-        aguardandoProxima = true;
-        aquario.innerHTML = "";
-        if(intervaloRelogio) clearInterval(intervaloRelogio);
-        // Remove qualquer modal anterior
-        modalVitoria.style.display = "none";
-        // Iniciar fogos e palmas
-        iniciarFogosEPalmas();
-        
-        // Criar modal customizado
-        const modalDiv = document.createElement("div");
-        modalDiv.className = "celebration-modal";
-        const totalTempo = temposEtapas.reduce((a,b)=>a+b,0);
-        modalDiv.innerHTML = `
-            <div class="palmas-emoji">👏🎉👏🎉👏</div>
-            <h2>🌟 PARABÉNS, GRANDE MESTRE! 🌟</h2>
-            <div style="font-size:1.3rem;">Você completou TODAS as categorias de sílabas complexas!</div>
-            <div class="pontos-final">🏆 Pontuação Final: ${pontuacaoTotal} 🏆</div>
-            <div style="margin:10px 0; background:#00000066; border-radius:30px; padding:8px;">⏱️ Tempo total: ${formatarTempo(totalTempo)}</div>
-            <div style="font-size:1.2rem; color:#ffd966;">🐠 Você é um verdadeiro Tesoureiro do Mar Profundo! 🐙</div>
-            <div class="botoes-celebrate">
-                <button id="btn-jogar-novamente" class="btn-celebrate">🐟 Jogar Novamente</button>
-                <button id="btn-outras-modalidades" class="btn-celebrate outras">🏝️ Outras Modalidades</button>
-            </div>
-        `;
-        document.body.appendChild(modalDiv);
-        
-        // Botões
-        const btnNovamente = document.getElementById("btn-jogar-novamente");
-        const btnOutras = document.getElementById("btn-outras-modalidades");
-        btnNovamente.addEventListener("click", () => {
-            modalDiv.remove();
-            fireworksCanvas.style.display = "none";
-            location.reload();
-        });
-        btnOutras.addEventListener("click", () => {
-            modalDiv.remove();
-            fireworksCanvas.style.display = "none";
-            window.location.href = "index_pesca.html"; // ou outra página com modalidades
-        });
-    }
-    
-    function finalizarJogoCompleto() {
-        // Chama a celebração completa (fogos + palmas + opção de continuar)
-        mostrarCelebracaoFinal();
-    }
+    // ========== FOGOS E CELEBRAÇÃO (caso complete todas - mantido para compatibilidade, mas com seletor não precisa) ==========
+    function iniciarFogosEPalmas(){ fireworksCanvas.style.display="block"; const ctx=fireworksCanvas.getContext("2d"); let w=window.innerWidth, h=window.innerHeight; fireworksCanvas.width=w; fireworksCanvas.height=h; let particles=[]; function createFirework(x,y){ for(let i=0;i<40;i++){ const angle=Math.random()*Math.PI*2; const speed=Math.random()*6+3; particles.push({x,y, vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed, life:1, color:`hsl(${Math.random()*360},100%,60%)`, size:Math.random()*4+2}); } } function animate(){ if(fireworksCanvas.style.display!=="block") return; ctx.clearRect(0,0,w,h); let alive=false; for(let i=0;i<particles.length;i++){ const p=particles[i]; p.x+=p.vx; p.y+=p.vy; p.vy+=0.15; p.life-=0.02; if(p.life<=0){ particles.splice(i,1); i--; continue; } alive=true; ctx.globalAlpha=p.life; ctx.fillStyle=p.color; ctx.fillRect(p.x,p.y,p.size,p.size); } if(Math.random()<0.07) createFirework(Math.random()*w, Math.random()*h*0.6); if(alive) requestAnimationFrame(animate); else fireworksCanvas.style.display="none"; } for(let i=0;i<8;i++) setTimeout(()=>createFirework(Math.random()*w, Math.random()*h*0.5), i*150); animate(); if(audioEnabled){ sfxApplause?.play().catch(e=>{}); sfxFireworksAudio?.play().catch(e=>{}); } if(navigator.vibrate) navigator.vibrate(500); }
     
     // ========== NAVEGAÇÃO ==========
     function toggleFullscreen(){ if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
-    function toggleAudio(){ audioEnabled=!audioEnabled; btnAudio.innerText=audioEnabled?"🔊":"🔇"; if(audioEnabled) bgAudio.play().catch(e=>{}); else bgAudio.pause(); }
-    function voltarMenu(){ if(aguardandoProxima) return; modalNavegacao.style.display="flex"; }
-    document.getElementById("btnVoltar")?.addEventListener("click", voltarMenu);
+    function toggleAudio(){ audioEnabled=!audioEnabled; document.getElementById("btn-audio").innerText=audioEnabled?"🔊":"🔇"; if(audioEnabled) bgAudio.play().catch(e=>{}); else bgAudio.pause(); }
+    function voltarMenu(){ modalNavegacao.style.display="flex"; }
+    document.getElementById("btnVoltar")?.addEventListener("click",voltarMenu);
     document.getElementById("btnCancelarVolta")?.addEventListener("click",()=>modalNavegacao.style.display="none");
     document.getElementById("btnConfirmarVolta")?.addEventListener("click",()=>{ modalNavegacao.style.display="none"; window.location.href="index_pesca.html"; });
-    document.getElementById("btnRepetirSilaba")?.addEventListener("click",(e)=>{ if(e.target.id!=="silabaAlvo") repetirSilabaAlvo(); });
+    document.getElementById("btnRepetirSilaba")?.addEventListener("click",()=>repetirSilabaAlvo());
     document.getElementById("silabaAlvo")?.addEventListener("click",(e)=>{ e.stopPropagation(); repetirSilabaAlvo(); });
-    document.getElementById("silabaAlvo")?.addEventListener("touchstart",(e)=>{ e.stopPropagation(); repetirSilabaAlvo(); }, {passive:true});
+    btnEscolherCategoria?.addEventListener("click",abrirSeletorCategorias);
+    document.getElementById("btnFecharCategorias")?.addEventListener("click",fecharSeletor);
+    document.getElementById("btnMenuPrincipal")?.addEventListener("click",()=>{ window.location.href="index_pesca.html"; });
     
-    function criarParticulasLuz(){ const container=document.getElementById("lightParticles"); for(let i=0;i<40;i++){ setTimeout(()=>{ const p=document.createElement("div"); p.className="light-particle"; p.style.width=Math.random()*8+3+"px"; p.style.height=p.style.width; p.style.left=Math.random()*100+"%"; p.style.animationDelay=Math.random()*10+"s"; p.style.animationDuration=Math.random()*6+6+"s"; container.appendChild(p); setTimeout(()=>p.remove(),12000); }, i*300); } }
+    function criarParticulasLuz(){ const c=document.getElementById("lightParticles"); for(let i=0;i<40;i++){ setTimeout(()=>{ const p=document.createElement("div"); p.className="light-particle"; p.style.width=Math.random()*8+3+"px"; p.style.height=p.style.width; p.style.left=Math.random()*100+"%"; p.style.animationDelay=Math.random()*10+"s"; p.style.animationDuration=Math.random()*6+6+"s"; c.appendChild(p); setTimeout(()=>p.remove(),12000); }, i*300); } }
     
-    if(window.matchMedia('(hover: hover) and (pointer: fine)').matches){ const cursor=document.createElement('div'); cursor.className='custom-cursor'; document.body.appendChild(cursor); document.addEventListener('mousemove',(e)=>{ cursor.style.left=e.clientX+'px'; cursor.style.top=e.clientY+'px'; }); document.addEventListener('mouseleave',()=>cursor.style.display='none'); document.addEventListener('mouseenter',()=>cursor.style.display='block'); }
     window.addEventListener('resize',()=>{ criaturasNaTela=window.innerWidth<768?3:(window.innerWidth<1024?4:5); });
     setInterval(()=>{ if(jogoAtivo&&!aguardandoProxima&&Math.random()>0.85){ const b=document.createElement("div"); b.className="bolha"; const t=Math.random()*20+8; b.style.width=t+"px"; b.style.height=t+"px"; b.style.left=Math.random()*100+"%"; b.style.animationDuration=Math.random()*3+2+"s"; document.body.appendChild(b); setTimeout(()=>b.remove(),5000); } },1000);
     
-    window.onload=()=>{ criarParticulasLuz(); faseAtual=0; temposEtapas=new Array(categorias.length).fill(0); iniciarEtapa(); };
+    window.onload=()=>{ criarParticulasLuz(); preencherGridCategorias(); resetarJogoParaCategoria(0); };
 </script>
 </body>
 </html>
