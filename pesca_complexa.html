@@ -114,24 +114,28 @@
             display: flex;
             gap: 10px;
             pointer-events: auto;
+            flex-wrap: wrap;
+            max-width: calc(100% - 20px);
         }
         .icon-btn {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             border: 2px solid #ffd54f;
             color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            padding: 8px 12px;
+            border-radius: 40px;
             cursor: pointer;
-            font-size: 20px;
+            font-size: 16px;
             backdrop-filter: blur(4px);
             transition: transform 0.2s;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
+            gap: 6px;
+            font-weight: bold;
+            white-space: nowrap;
         }
+        .icon-btn:active { transform: scale(0.95); }
         @media (min-width: 768px) {
-            .icon-btn { width: 50px; height: 50px; font-size: 24px; }
+            .icon-btn { padding: 10px 18px; font-size: 18px; }
             .top-bar { top: 20px; left: 20px; gap: 15px; }
         }
 
@@ -232,16 +236,6 @@
             transition: transform 0.05s;
         }
         .creature:active { transform: scale(0.95); }
-        .creature::after {
-            content: "";
-            position: absolute;
-            top: -20px;
-            left: -20px;
-            right: -20px;
-            bottom: -20px;
-            border-radius: 50%;
-            pointer-events: auto;
-        }
         @media (min-width: 768px) { .creature { width: 120px; height: 120px; } }
         .creature-icon {
             font-size: 65px;
@@ -442,14 +436,16 @@
         /* Modal categorias */
         .grid-categorias {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 12px;
             max-height: 60vh;
             overflow-y: auto;
             padding: 15px;
             margin-top: 20px;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             border-radius: 30px;
+            width: 90vw;
+            max-width: 800px;
         }
         .cat-botao {
             background: linear-gradient(135deg, #1e3c4c, #0a2a38);
@@ -463,6 +459,7 @@
             transition: 0.2s;
         }
         .cat-botao:active { transform: scale(0.96); background: #2a5f6e; }
+        .cat-botao:hover { background: #2a5f6e; transform: scale(1.02); }
         
         /* Fogos canvas */
         #fireworks-canvas {
@@ -520,10 +517,10 @@
 
 <div id="game-wrapper">
     <div class="top-bar">
-        <button class="icon-btn" id="btnMenuPrincipal">🏠</button>
-        <button id="btnEscolherCategoria" class="icon-btn">📚</button>
-        <button id="btn-audio" class="icon-btn" onclick="toggleAudio()">🔇</button>
-        <button class="icon-btn" onclick="toggleFullscreen()">⛶</button>
+        <button id="btnMenuPrincipal" class="icon-btn">🏠 Menu</button>
+        <button id="btnEscolherCategoria" class="icon-btn">📚 Famílias</button>
+        <button id="btn-audio" class="icon-btn">🔇 Som</button>
+        <button id="btnFullscreen" class="icon-btn">⛶ Tela</button>
     </div>
 
     <div class="game-info-container">
@@ -558,7 +555,6 @@
     <div class="icone-vitoria">🏆🗿🏆</div>
     <div class="vitoria-texto" id="vitoria-msg-topo">Parabéns!</div>
     <div class="score-panel" id="scoreFinalModal">Pontuação: 0</div>
-    <div class="tempo-record" id="tempoEtapa"></div>
     <div class="vitoria-texto" id="vitoria-msg-sub">Continue explorando!</div>
 </div>
 
@@ -574,7 +570,7 @@
 <canvas id="fireworks-canvas"></canvas>
 
 <script>
-    // ========== TODAS AS CATEGORIAS (igual original) ==========
+    // ========== TODAS AS CATEGORIAS (24 famílias) ==========
     const categorias = [
         { nome: "🌊 AL - EL - IL - OL - UL", silabas: [{ texto: "AL", audio: "al.mp3" },{ texto: "EL", audio: "el.mp3" },{ texto: "IL", audio: "il.mp3" },{ texto: "OL", audio: "ol.mp3" },{ texto: "UL", audio: "ul.mp3" }] },
         { nome: "🐚 AM - EM - IM - OM - UM", silabas: [{ texto: "AM", audio: "am.mp3" },{ texto: "EM", audio: "em.mp3" },{ texto: "IM", audio: "im.mp3" },{ texto: "OM", audio: "om.mp3" },{ texto: "UM", audio: "um.mp3" }] },
@@ -605,17 +601,16 @@
     const criaturas = ["🐟","🐠","🐡","🐋","🦈","🐙","🐬","🐳","🦀","🦑","🐚","🦭","🪼","🐢","🦞","🪸","🧜‍♀️","🧜‍♂️"];
     let audioEnabled = false, currentAudio = null, jogoAtivo = true, aguardandoProxima = false;
     let faseAtual = 0, pontuacaoTotal = 0, acertosNaEtapa = 0, silabasAtuais = [], indiceSilabaAtual = 0;
-    let categoriaCorrente = null, tempoInicioEtapa = null, intervaloRelogio = null, temposEtapas = [];
+    let categoriaCorrente = null, tempoInicioEtapa = null, intervaloRelogio = null;
     let criaturasNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
     
     // Elementos
     const bgAudio = document.getElementById("bg-audio"), sfxPescado = document.getElementById("sfx-pescado"), sfxErro = document.getElementById("sfx-erro");
-    const sfxApplause = document.getElementById("sfx-applause"), sfxFireworksAudio = document.getElementById("sfx-fireworks");
     const aquario = document.getElementById("aquario"), modalVitoria = document.getElementById("modal-vitoria"), modalNavegacao = document.getElementById("modal-navegacao");
     const modalCategorias = document.getElementById("modal-categorias"), btnEscolherCategoria = document.getElementById("btnEscolherCategoria");
     const fireworksCanvas = document.getElementById("fireworks-canvas");
 
-    // Funções auxiliares (áudio, cronômetro, efeitos)
+    // Funções auxiliares
     function tocarAudioMP3(arquivo, callback) { if (!arquivo) return; if(currentAudio) currentAudio.pause(); const a = new Audio(arquivo); currentAudio = a; a.play().catch(e=>console.log); a.onended = ()=>{ currentAudio=null; if(callback)callback(); }; }
     function tocarSilaba(silabaObj, callback) { if(silabaObj?.audio) tocarAudioMP3(silabaObj.audio, callback); else if(callback) callback(); }
     function repetirSilabaAlvo() { const t=document.getElementById("silabaAlvo").innerText; const s=silabasAtuais.find(x=>x.texto===t); if(s){ document.getElementById("silabaAlvo").classList.add("pulsando"); setTimeout(()=>document.getElementById("silabaAlvo").classList.remove("pulsando"),300); tocarSilaba(s); } }
@@ -638,20 +633,18 @@
     
     function resetarJogoParaCategoria(indice){ if(intervaloRelogio) clearInterval(intervaloRelogio); jogoAtivo=false; aguardandoProxima=false; pontuacaoTotal=0; faseAtual=indice; categoriaCorrente=categorias[indice]; silabasAtuais=[...categoriaCorrente.silabas]; indiceSilabaAtual=0; acertosNaEtapa=0; atualizarUI(); aquario.innerHTML=""; jogoAtivo=true; iniciarCronometro(); carregarProximaSilaba(); }
     
-    function concluirEtapa(){ if(aguardandoProxima) return; pararCronometro(); aguardandoProxima=true; jogoAtivo=false; aquario.innerHTML=""; modalVitoria.style.display="flex"; document.getElementById("vitoria-msg-topo").innerHTML=`✨ ${categoriaCorrente.nome} ✨`; document.getElementById("scoreFinalModal").innerHTML=`✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length} | Pontos: ${pontuacaoTotal}`; document.getElementById("tempoEtapa").innerHTML=""; document.getElementById("vitoria-msg-sub").innerHTML="🎉 Parabéns! Escolha outra família no botão 📚"; setTimeout(()=>{ modalVitoria.style.display="none"; aguardandoProxima=false; },1800); }
+    function concluirEtapa(){ if(aguardandoProxima) return; pararCronometro(); aguardandoProxima=true; jogoAtivo=false; aquario.innerHTML=""; modalVitoria.style.display="flex"; document.getElementById("vitoria-msg-topo").innerHTML=`✨ ${categoriaCorrente.nome} ✨`; document.getElementById("scoreFinalModal").innerHTML=`✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length} | Pontos: ${pontuacaoTotal}`; document.getElementById("vitoria-msg-sub").innerHTML="🎉 Parabéns! Escolha outra família no botão Famílias 📚"; setTimeout(()=>{ modalVitoria.style.display="none"; aguardandoProxima=false; },2000); }
     
-    // ========== SELEÇÃO DE CATEGORIAS (MODO LIVRE) ==========
+    // ========== SELEÇÃO DE CATEGORIAS ==========
     function abrirSeletorCategorias(){ modalCategorias.style.display="flex"; }
     function fecharSeletor(){ modalCategorias.style.display="none"; }
     function preencherGridCategorias(){ const grid=document.getElementById("listaCategorias"); grid.innerHTML=""; categorias.forEach((cat,idx)=>{ const btn=document.createElement("button"); btn.className="cat-botao"; btn.innerText=cat.nome; btn.onclick=()=>{ resetarJogoParaCategoria(idx); fecharSeletor(); }; grid.appendChild(btn); }); }
     
-    // ========== FOGOS E CELEBRAÇÃO (caso complete todas - mantido para compatibilidade, mas com seletor não precisa) ==========
-    function iniciarFogosEPalmas(){ fireworksCanvas.style.display="block"; const ctx=fireworksCanvas.getContext("2d"); let w=window.innerWidth, h=window.innerHeight; fireworksCanvas.width=w; fireworksCanvas.height=h; let particles=[]; function createFirework(x,y){ for(let i=0;i<40;i++){ const angle=Math.random()*Math.PI*2; const speed=Math.random()*6+3; particles.push({x,y, vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed, life:1, color:`hsl(${Math.random()*360},100%,60%)`, size:Math.random()*4+2}); } } function animate(){ if(fireworksCanvas.style.display!=="block") return; ctx.clearRect(0,0,w,h); let alive=false; for(let i=0;i<particles.length;i++){ const p=particles[i]; p.x+=p.vx; p.y+=p.vy; p.vy+=0.15; p.life-=0.02; if(p.life<=0){ particles.splice(i,1); i--; continue; } alive=true; ctx.globalAlpha=p.life; ctx.fillStyle=p.color; ctx.fillRect(p.x,p.y,p.size,p.size); } if(Math.random()<0.07) createFirework(Math.random()*w, Math.random()*h*0.6); if(alive) requestAnimationFrame(animate); else fireworksCanvas.style.display="none"; } for(let i=0;i<8;i++) setTimeout(()=>createFirework(Math.random()*w, Math.random()*h*0.5), i*150); animate(); if(audioEnabled){ sfxApplause?.play().catch(e=>{}); sfxFireworksAudio?.play().catch(e=>{}); } if(navigator.vibrate) navigator.vibrate(500); }
-    
     // ========== NAVEGAÇÃO ==========
     function toggleFullscreen(){ if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
-    function toggleAudio(){ audioEnabled=!audioEnabled; document.getElementById("btn-audio").innerText=audioEnabled?"🔊":"🔇"; if(audioEnabled) bgAudio.play().catch(e=>{}); else bgAudio.pause(); }
+    function toggleAudio(){ audioEnabled=!audioEnabled; document.getElementById("btn-audio").innerHTML=audioEnabled?"🔊 Som Ligado":"🔇 Som Desligado"; if(audioEnabled) bgAudio.play().catch(e=>{}); else bgAudio.pause(); }
     function voltarMenu(){ modalNavegacao.style.display="flex"; }
+    
     document.getElementById("btnVoltar")?.addEventListener("click",voltarMenu);
     document.getElementById("btnCancelarVolta")?.addEventListener("click",()=>modalNavegacao.style.display="none");
     document.getElementById("btnConfirmarVolta")?.addEventListener("click",()=>{ modalNavegacao.style.display="none"; window.location.href="index_pesca.html"; });
@@ -660,6 +653,7 @@
     btnEscolherCategoria?.addEventListener("click",abrirSeletorCategorias);
     document.getElementById("btnFecharCategorias")?.addEventListener("click",fecharSeletor);
     document.getElementById("btnMenuPrincipal")?.addEventListener("click",()=>{ window.location.href="index_pesca.html"; });
+    document.getElementById("btnFullscreen")?.addEventListener("click",toggleFullscreen);
     
     function criarParticulasLuz(){ const c=document.getElementById("lightParticles"); for(let i=0;i<40;i++){ setTimeout(()=>{ const p=document.createElement("div"); p.className="light-particle"; p.style.width=Math.random()*8+3+"px"; p.style.height=p.style.width; p.style.left=Math.random()*100+"%"; p.style.animationDelay=Math.random()*10+"s"; p.style.animationDuration=Math.random()*6+6+"s"; c.appendChild(p); setTimeout(()=>p.remove(),12000); }, i*300); } }
     
