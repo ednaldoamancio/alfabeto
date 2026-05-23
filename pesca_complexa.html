@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Sílabas Complexas - Tesouros do Mar Profundo | Escolha sua pescaria</title>
+    <title>Sílabas Complexas - Tesouros do Mar Profundo | Escolha seu modo</title>
     
     <style>
         * {
@@ -25,7 +25,29 @@
             touch-action: manipulation;
         }
 
-        /* Vídeo e fundo (mesmo original) */
+        /* Cursor tridente (restaurado) */
+        .custom-cursor {
+            position: fixed;
+            width: 45px;
+            height: 45px;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+        }
+        .custom-cursor::before {
+            content: "🔱";
+            font-size: 40px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        @media (hover: none) and (pointer: coarse) {
+            .custom-cursor { display: none; }
+            body { cursor: auto; }
+        }
+
         #bg-video {
             position: absolute;
             top: 0;
@@ -51,7 +73,6 @@
             pointer-events: none;
         }
 
-        /* Partículas de luz */
         .light-particles {
             position: fixed;
             top: 0;
@@ -74,7 +95,7 @@
             100% { transform: translateY(-20vh) translateX(100px) scale(1.5); opacity: 0; }
         }
 
-        /* ========== TELA DE ÍNDICE (ESCOLHA DE CATEGORIAS) ========== */
+        /* ========== TELA DE ÍNDICE COM MODOS ========== */
         .index-container {
             position: absolute;
             top: 0;
@@ -104,6 +125,29 @@
         .index-header p {
             font-size: 1rem;
             color: #bbdef5;
+        }
+        .modos-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .btn-modo {
+            background: linear-gradient(145deg, #0a2f4a, #02101f);
+            border: 2px solid #ffd54f;
+            border-radius: 60px;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffd966;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            backdrop-filter: blur(4px);
+        }
+        .btn-modo:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px #ffd54f;
         }
         .categorias-grid {
             display: grid;
@@ -164,7 +208,7 @@
             color: #02101f;
         }
 
-        /* ========== ESTILOS DO JOGO (mantidos do original) ========== */
+        /* ========== ESTILOS DO JOGO ========== */
         #game-wrapper {
             position: absolute;
             top: 0;
@@ -175,7 +219,7 @@
             display: flex;
             flex-direction: column;
             pointer-events: none;
-            visibility: hidden; /* escondido até escolher categoria */
+            visibility: hidden;
         }
         .top-bar {
             position: absolute;
@@ -444,12 +488,6 @@
             pointer-events: auto;
             transition: all 0.3s;
         }
-        .btn-voltar-index-jogo {
-            background: #ffaa33;
-            color: #02101f;
-            border: none;
-            margin-right: 10px;
-        }
         .nav-buttons { display: flex; gap: 15px; margin-top: 20px; }
         .nav-btn {
             background: linear-gradient(135deg, #00acc1, #006064);
@@ -460,7 +498,7 @@
             cursor: pointer;
             color: white;
         }
-        /* Fogos e celebração */
+        /* Fogos e celebração final (modo sequência) */
         #fireworks-canvas {
             position: fixed;
             top: 0;
@@ -502,7 +540,6 @@
             border-radius: 50px;
             cursor: pointer;
             color: white;
-            transition: 0.2s;
             margin: 5px;
         }
         .palmas-emoji {
@@ -535,17 +572,21 @@
 <audio id="sfx-applause" src="aplause.mp3" preload="auto"></audio>
 <audio id="sfx-fireworks" src="fogos.mp3" preload="auto"></audio>
 
-<!-- TELA DE ÍNDICE (ESCOLHA DE CATEGORIA) -->
+<!-- TELA DE ÍNDICE (ESCOLHA DE MODO E CATEGORIAS) -->
 <div id="index-screen" class="index-container">
     <div class="index-header">
         <h1>🐠 Tesouros do Mar Profundo 🐙</h1>
-        <p>Escolha uma família silábica para começar a pescar!</p>
+        <p>Escolha como quer pescar as sílabas complexas!</p>
     </div>
-    <div class="categorias-grid" id="categorias-grid"></div>
+    <div class="modos-container">
+        <div class="btn-modo" id="btn-modo-sequencia">🌊 Modo Sequência (todas as famílias)</div>
+        <div class="btn-modo" id="btn-modo-livre">🎣 Modo Livre (escolha uma família)</div>
+    </div>
+    <div id="categorias-grid" class="categorias-grid" style="display: none;"></div>
     <button class="btn-voltar-index" onclick="window.location.href='index_pesca.html'">🏝️ Voltar ao Menu Principal</button>
 </div>
 
-<!-- Estrutura do jogo (inicialmente invisível) -->
+<!-- Estrutura do jogo -->
 <div id="game-wrapper">
     <div class="top-bar">
         <button class="icon-btn" id="btnVoltarIndexGame">🏠 Índice</button>
@@ -576,20 +617,20 @@
     <div class="vitoria-texto" id="vitoria-msg-topo">Parabéns!</div>
     <div class="score-panel" id="scoreFinalModal">Pontuação: 0</div>
     <div class="tempo-record" id="tempoEtapa"></div>
-    <div class="vitoria-texto" id="vitoria-msg-sub" style="font-size: 2.5vh;">Você completou a família!</div>
+    <div class="vitoria-texto" id="vitoria-msg-sub" style="font-size: 2.5vh;"></div>
 </div>
 <div id="modal-navegacao">
     <div class="icone-vitoria">🐢➡️🏝️</div>
-    <div class="vitoria-texto">Voltar para o índice de famílias?</div>
+    <div class="vitoria-texto">Voltar para o índice?</div>
     <div class="nav-buttons">
         <button class="nav-btn cancelar" id="btnCancelarVolta">❌ Continuar Jogando</button>
-        <button class="nav-btn confirmar" id="btnConfirmarVolta">🏠 Escolher outra família</button>
+        <button class="nav-btn confirmar" id="btnConfirmarVolta">🏠 Escolher outro modo</button>
     </div>
 </div>
 <canvas id="fireworks-canvas"></canvas>
 
 <script>
-    // ========== CATEGORIAS (mesmas do original) ==========
+    // ========== CATEGORIAS ==========
     const categorias = [
         { nome: "🌊 AL - EL - IL - OL - UL", silabas: [{ texto: "AL", audio: "al.mp3" }, { texto: "EL", audio: "el.mp3" },{ texto: "IL", audio: "il.mp3" },{ texto: "OL", audio: "ol.mp3" },{ texto: "UL", audio: "ul.mp3" }] },
         { nome: "🐚 AM - EM - IM - OM - UM", silabas: [{ texto: "AM", audio: "am.mp3" },{ texto: "EM", audio: "em.mp3" },{ texto: "IM", audio: "im.mp3" },{ texto: "OM", audio: "om.mp3" },{ texto: "UM", audio: "um.mp3" }] },
@@ -619,7 +660,7 @@
 
     const criaturas = ["🐟","🐠","🐡","🐋","🦈","🐙","🐬","🐳","🦀","🦑","🐚","🦭","🪼","🐢","🦞","🪸","🧜‍♀️","🧜‍♂️"];
 
-    // Variáveis globais do jogo
+    // Variáveis globais
     let audioEnabled = false;
     let currentAudio = null;
     let jogoAtivo = true;
@@ -633,6 +674,12 @@
     let tempoInicioEtapa = null;
     let intervaloRelogio = null;
     
+    // Modo sequência: controla a fase atual e acúmulo de pontos
+    let modoSequenciaAtivo = false;
+    let faseSequenciaAtual = 0;
+    let pontuacaoTotalSequencia = 0;
+    let temposEtapas = [];
+
     // Elementos DOM
     const bgAudio = document.getElementById("bg-audio");
     const sfxPescado = document.getElementById("sfx-pescado");
@@ -646,8 +693,9 @@
     const fireworksCanvas = document.getElementById("fireworks-canvas");
     const gameWrapper = document.getElementById("game-wrapper");
     const indexScreen = document.getElementById("index-screen");
+    const categoriasGrid = document.getElementById("categorias-grid");
 
-    // ========== FUNÇÕES AUXILIARES (som, tempo, efeitos) ==========
+    // ========== FUNÇÕES AUXILIARES ==========
     function tocarAudioMP3(arquivo, callback) {
         if (!arquivo) return;
         if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
@@ -673,14 +721,14 @@
     function criarEfeitoBolhas(qtd=30){ for(let i=0;i<qtd;i++){ setTimeout(()=>{ const b=document.createElement("div"); b.className="bolha"; const tam=Math.random()*25+10+"px"; b.style.width=tam; b.style.height=tam; b.style.left=Math.random()*100+"vw"; b.style.animationDuration=Math.random()*3+2.5+"s"; document.body.appendChild(b); setTimeout(()=>b.remove(),5500); }, i*50); } }
     function mostrarFeedback(texto, isAcerto, x, y){ const div=document.createElement("div"); div.className="feedback-correto"; div.style.background=isAcerto?"#2e7d32ee":"#c62828ee"; div.innerText=isAcerto?`🎣✨ +15 ⭐ ${texto} ✨`:`❌ ${texto}`; document.body.appendChild(div); setTimeout(()=>div.remove(),850); if(isAcerto && x){ criarTesouro(x,y); criarOndaChoque(x,y); } }
     function atualizarUI(){ 
-        document.getElementById("pontosText").innerHTML=pontuacaoTotal; 
+        document.getElementById("pontosText").innerHTML = modoSequenciaAtivo ? pontuacaoTotalSequencia : pontuacaoTotal; 
         document.getElementById("acertosFase").innerHTML=acertosNaEtapa; 
         document.getElementById("totalEtapa").innerHTML=silabasAtuais.length; 
-        document.getElementById("categoriaAtual").innerHTML=categoriaCorrente.nome; 
+        document.getElementById("categoriaAtual").innerHTML=categoriaCorrente.nome.substring(0,30); 
         document.getElementById("progressHint").innerHTML=`🏆 ${categoriaCorrente.nome.substring(0,22)} | ${acertosNaEtapa}/${silabasAtuais.length}`; 
     }
     
-    // ========== LÓGICA DO JOGO (adaptada para categoria única) ==========
+    // ========== LÓGICA DO JOGO (genérica) ==========
     function carregarProximaSilaba(){ 
         if(indiceSilabaAtual >= silabasAtuais.length){ concluirCategoria(); return; } 
         const silabaCerta = silabasAtuais[indiceSilabaAtual]; 
@@ -703,7 +751,8 @@
         const posTop = Math.random()*70+10; 
         creature.style.top = posTop+"%"; 
         const direita = Math.random()>0.5; 
-        const duracao = Math.random()*5+4.5; 
+        // Velocidades diferentes: entre 4s e 9s (variabilidade)
+        const duracao = Math.random() * 5 + 4; // entre 4 e 9 segundos
         creature.style.animation = direita ? `nadar-direita ${duracao}s linear infinite` : `nadar-esquerda ${duracao}s linear infinite`; 
         const emoji = criaturas[Math.floor(Math.random()*criaturas.length)]; 
         const flip = direita ? 'transform: scaleX(-1);' : ''; 
@@ -729,7 +778,11 @@
         elem.style.left = rect.left+"px"; 
         elem.style.top = rect.top+"px"; 
         elem.classList.add("pescado"); 
-        pontuacaoTotal += 15; 
+        if(modoSequenciaAtivo) {
+            pontuacaoTotalSequencia += 15;
+        } else {
+            pontuacaoTotal += 15;
+        }
         acertosNaEtapa++; 
         atualizarUI(); 
         mostrarFeedback(silabaObj.texto, true, x, y); 
@@ -753,25 +806,7 @@
         tocarSilaba(silabaObj); 
     }
     
-    function iniciarJogoComCategoria(categoriaIndex) {
-        // Esconde índice e mostra o jogo
-        indexScreen.style.display = "none";
-        gameWrapper.style.visibility = "visible";
-        
-        // Reseta estado
-        jogoAtivo = true;
-        aguardandoProxima = false;
-        pontuacaoTotal = 0;
-        acertosNaEtapa = 0;
-        categoriaCorrente = categorias[categoriaIndex];
-        silabasAtuais = [...categoriaCorrente.silabas];
-        indiceSilabaAtual = 0;
-        
-        atualizarUI();
-        iniciarCronometro();
-        carregarProximaSilaba();
-    }
-    
+    // ========== FINALIZAÇÃO DE CATEGORIA ==========
     function concluirCategoria() {
         if(aguardandoProxima) return;
         const tempo = pararCronometro();
@@ -780,26 +815,192 @@
         aquario.innerHTML = "";
         criarEfeitoBolhas(50);
         
-        // Exibir modal de vitória da categoria
+        const pontosAtuais = modoSequenciaAtivo ? pontuacaoTotalSequencia : pontuacaoTotal;
+        const msgFinal = modoSequenciaAtivo ? 
+            `✅ Categoria ${faseSequenciaAtual+1}/${categorias.length} concluída!` : 
+            `🎉 Família completada!`;
+        
         document.getElementById("vitoria-msg-topo").innerHTML = `✨ ${categoriaCorrente.nome} ✨`;
-        document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length} | Pontos: ${pontuacaoTotal}`;
+        document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length} | Pontos: ${pontosAtuais}`;
         document.getElementById("tempoEtapa").innerHTML = `⏱️ Tempo: ${formatarTempo(tempo)}`;
-        document.getElementById("vitoria-msg-sub").innerHTML = "🐠 Família completada! Deseja pescar outra?";
+        document.getElementById("vitoria-msg-sub").innerHTML = msgFinal;
         modalVitoria.style.display = "flex";
         
         setTimeout(() => {
             modalVitoria.style.display = "none";
-            // Oferece voltar ao índice para escolher outra família
-            mostrarModalNavegacao();
+            if(modoSequenciaAtivo) {
+                // Avança para a próxima categoria ou finaliza sequência
+                if(faseSequenciaAtual + 1 < categorias.length) {
+                    faseSequenciaAtual++;
+                    iniciarCategoriaSequencia(faseSequenciaAtual);
+                } else {
+                    finalizarSequenciaCompleta();
+                }
+            } else {
+                // Modo livre: oferece voltar ao índice
+                mostrarModalNavegacao();
+            }
         }, 2000);
     }
     
-    function mostrarModalNavegacao() {
-        modalNavegacao.style.display = "flex";
+    function iniciarCategoriaSequencia(indice) {
+        categoriaCorrente = categorias[indice];
+        silabasAtuais = [...categoriaCorrente.silabas];
+        indiceSilabaAtual = 0;
+        acertosNaEtapa = 0;
+        jogoAtivo = true;
+        aguardandoProxima = false;
+        atualizarUI();
+        iniciarCronometro();
+        carregarProximaSilaba();
+    }
+    
+    function finalizarSequenciaCompleta() {
+        // Modo sequência completo: celebrar com fogos e palmas
+        jogoAtivo = false;
+        aguardandoProxima = true;
+        aquario.innerHTML = "";
+        if(intervaloRelogio) clearInterval(intervaloRelogio);
+        // Mostrar celebração
+        iniciarFogosEPalmas();
+        const totalTempo = temposEtapas.reduce((a,b)=>a+b,0);
+        const modalDiv = document.createElement("div");
+        modalDiv.className = "celebration-modal";
+        modalDiv.innerHTML = `
+            <div class="palmas-emoji">👏🎉👏🎉👏</div>
+            <h2>🌟 PARABÉNS, GRANDE MESTRE! 🌟</h2>
+            <div style="font-size:1.3rem;">Você completou TODAS as famílias silábicas!</div>
+            <div class="pontos-final">🏆 Pontuação Final: ${pontuacaoTotalSequencia} 🏆</div>
+            <div style="margin:10px 0; background:#00000066; border-radius:30px; padding:8px;">⏱️ Tempo total: ${formatarTempo(totalTempo)}</div>
+            <div style="font-size:1.2rem; color:#ffd966;">🐠 Você é um verdadeiro Tesoureiro do Mar Profundo! 🐙</div>
+            <div class="botoes-celebrate">
+                <button id="btn-jogar-novamente" class="btn-celebrate">🐟 Jogar Novamente</button>
+                <button id="btn-outras-modalidades" class="btn-celebrate outras">🏝️ Outras Modalidades</button>
+            </div>
+        `;
+        document.body.appendChild(modalDiv);
+        document.getElementById("btn-jogar-novamente")?.addEventListener("click", () => {
+            modalDiv.remove();
+            location.reload();
+        });
+        document.getElementById("btn-outras-modalidades")?.addEventListener("click", () => {
+            modalDiv.remove();
+            window.location.href = "index_pesca.html";
+        });
+    }
+    
+    // ========== CELEBRAÇÃO (FOGOS E PALMAS) ==========
+    function criarPalmasVisuais() {
+        for (let i = 0; i < 30; i++) {
+            setTimeout(() => {
+                const palma = document.createElement("div");
+                palma.innerText = "👏";
+                palma.style.position = "fixed";
+                palma.style.fontSize = (Math.random() * 30 + 20) + "px";
+                palma.style.left = Math.random() * 100 + "%";
+                palma.style.bottom = "-50px";
+                palma.style.pointerEvents = "none";
+                palma.style.zIndex = "2100";
+                palma.style.opacity = "0.9";
+                palma.style.animation = `subirPalma ${Math.random() * 1.5 + 1.5}s ease-out forwards`;
+                document.body.appendChild(palma);
+                setTimeout(() => palma.remove(), 3000);
+            }, i * 80);
+        }
+    }
+    function iniciarFogosEPalmas() {
+        fireworksCanvas.style.display = "block";
+        const ctx = fireworksCanvas.getContext("2d");
+        let width = window.innerWidth, height = window.innerHeight;
+        fireworksCanvas.width = width;
+        fireworksCanvas.height = height;
+        let particles = [];
+        function createFirework(x, y) {
+            const count = 40 + Math.floor(Math.random() * 30);
+            for (let i = 0; i < count; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 6 + 3;
+                const vx = Math.cos(angle) * speed;
+                const vy = Math.sin(angle) * speed;
+                const color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+                particles.push({ x, y, vx, vy, life: 1, color, size: Math.random() * 4 + 2 });
+            }
+        }
+        function animateFireworks() {
+            if (!fireworksCanvas || fireworksCanvas.style.display !== "block") return;
+            ctx.clearRect(0, 0, width, height);
+            let allDead = true;
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.15;
+                p.life -= 0.02;
+                if (p.life <= 0) { particles.splice(i,1); i--; continue; }
+                allDead = false;
+                ctx.globalAlpha = p.life;
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+            }
+            if (Math.random() < 0.07) {
+                const randX = Math.random() * width;
+                const randY = Math.random() * height * 0.6;
+                createFirework(randX, randY);
+            }
+            if (!allDead) requestAnimationFrame(animateFireworks);
+            else { fireworksCanvas.style.display = "none"; ctx.clearRect(0,0,width,height); }
+        }
+        for(let i=0;i<12;i++) setTimeout(()=>{ createFirework(Math.random()*width, Math.random()*height*0.5); if(i===0) animateFireworks(); }, i*180);
+        animateFireworks();
+        if(audioEnabled){
+            try{
+                if(sfxApplause) { sfxApplause.currentTime=0; sfxApplause.play().catch(e=>console.log); }
+                if(sfxFireworksAudio){ sfxFireworksAudio.currentTime=0; sfxFireworksAudio.play().catch(e=>console.log); }
+            }catch(e){}
+        }
+        criarPalmasVisuais();
+        if(navigator.vibrate) navigator.vibrate([500,300,500]);
+    }
+    
+    // ========== INICIAR JOGO (Modo Livre ou Sequência) ==========
+    function iniciarModoLivre(categoriaIndex) {
+        modoSequenciaAtivo = false;
+        faseSequenciaAtual = 0;
+        pontuacaoTotal = 0;
+        pontuacaoTotalSequencia = 0;
+        categoriaCorrente = categorias[categoriaIndex];
+        silabasAtuais = [...categoriaCorrente.silabas];
+        indiceSilabaAtual = 0;
+        acertosNaEtapa = 0;
+        jogoAtivo = true;
+        aguardandoProxima = false;
+        atualizarUI();
+        iniciarCronometro();
+        carregarProximaSilaba();
+        // Esconde índice e mostra jogo
+        indexScreen.style.display = "none";
+        gameWrapper.style.visibility = "visible";
+    }
+    
+    function iniciarModoSequencia() {
+        modoSequenciaAtivo = true;
+        faseSequenciaAtual = 0;
+        pontuacaoTotalSequencia = 0;
+        temposEtapas = new Array(categorias.length).fill(0);
+        categoriaCorrente = categorias[0];
+        silabasAtuais = [...categoriaCorrente.silabas];
+        indiceSilabaAtual = 0;
+        acertosNaEtapa = 0;
+        jogoAtivo = true;
+        aguardandoProxima = false;
+        atualizarUI();
+        iniciarCronometro();
+        carregarProximaSilaba();
+        indexScreen.style.display = "none";
+        gameWrapper.style.visibility = "visible";
     }
     
     function voltarAoIndice() {
-        // Para o jogo e volta para tela de índice
         if(intervaloRelogio) clearInterval(intervaloRelogio);
         jogoAtivo = false;
         aguardandoProxima = false;
@@ -808,18 +1009,18 @@
         indexScreen.style.display = "flex";
         modalNavegacao.style.display = "none";
         modalVitoria.style.display = "none";
-        // reseta áudio se necessário
         if(currentAudio) { currentAudio.pause(); currentAudio = null; }
+        // Restaura exibição do grid conforme modo (inicialmente escondido)
+        categoriasGrid.style.display = "none";
     }
     
-    // ========== CELEBRAÇÃO (MANTIDA PARA CASO QUEIRA USAR NO FUTURO) ==========
-    function criarPalmasVisuais() { /* mantido do original, mas não usado agora */ }
-    function iniciarFogosEPalmas() { /* não usado nesta versão para não complicar */ }
+    function mostrarModalNavegacao() {
+        modalNavegacao.style.display = "flex";
+    }
     
-    // ========== CONFIGURAÇÃO DO ÍNDICE (GRID DE CATEGORIAS) ==========
+    // ========== CONFIGURAÇÃO DO ÍNDICE ==========
     function construirIndice() {
-        const grid = document.getElementById("categorias-grid");
-        grid.innerHTML = "";
+        categoriasGrid.innerHTML = "";
         categorias.forEach((cat, idx) => {
             const card = document.createElement("div");
             card.className = "card-categoria";
@@ -829,30 +1030,33 @@
                 <div class="card-nome">${cat.nome.substring(2)}</div>
                 <div class="card-desc">${cat.silabas.length} sílabas</div>
             `;
-            card.addEventListener("click", () => iniciarJogoComCategoria(idx));
-            grid.appendChild(card);
+            card.addEventListener("click", () => iniciarModoLivre(idx));
+            categoriasGrid.appendChild(card);
         });
     }
     
-    // ========== NAVEGAÇÃO E CONTROLES ==========
-    function toggleFullscreen(){ if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
-    function toggleAudio(){ audioEnabled=!audioEnabled; btnAudio.innerText=audioEnabled?"🔊":"🔇"; if(audioEnabled) bgAudio.play().catch(e=>{}); else bgAudio.pause(); }
-    
-    document.getElementById("btnVoltarIndexGame")?.addEventListener("click", () => {
-        if(aguardandoProxima) return;
-        mostrarModalNavegacao();
+    // ========== EVENTOS ==========
+    document.getElementById("btn-modo-sequencia")?.addEventListener("click", () => {
+        iniciarModoSequencia();
     });
-    document.getElementById("btnVoltarJogo")?.addEventListener("click", () => {
-        if(aguardandoProxima) return;
-        mostrarModalNavegacao();
+    document.getElementById("btn-modo-livre")?.addEventListener("click", () => {
+        // Mostra o grid de categorias e esconde os botões de modo? Vamos apenas mostrar o grid e manter os botões
+        categoriasGrid.style.display = "grid";
+        document.querySelector(".modos-container").style.display = "flex";
+        // Rolar até o grid
+        categoriasGrid.scrollIntoView({ behavior: "smooth" });
     });
+    document.getElementById("btnVoltarIndexGame")?.addEventListener("click", () => mostrarModalNavegacao());
+    document.getElementById("btnVoltarJogo")?.addEventListener("click", () => mostrarModalNavegacao());
     document.getElementById("btnCancelarVolta")?.addEventListener("click", () => {
         modalNavegacao.style.display = "none";
-        // Se o jogo está ativo ou concluído, permitir continuar (reinicia se concluído)
-        if(!jogoAtivo && aguardandoProxima) {
-            // reinicia a mesma categoria
+        if(!jogoAtivo && aguardandoProxima && !modoSequenciaAtivo) {
+            // Reinicia a mesma categoria no modo livre
             const idx = categorias.findIndex(c => c.nome === categoriaCorrente.nome);
-            if(idx !== -1) iniciarJogoComCategoria(idx);
+            if(idx !== -1) iniciarModoLivre(idx);
+        } else if(jogoAtivo === false && modoSequenciaAtivo && aguardandoProxima) {
+            // reinicia sequência
+            iniciarModoSequencia();
         } else {
             jogoAtivo = true;
             aguardandoProxima = false;
@@ -866,14 +1070,20 @@
     document.getElementById("silabaAlvo")?.addEventListener("click", (e) => { e.stopPropagation(); repetirSilabaAlvo(); });
     document.getElementById("silabaAlvo")?.addEventListener("touchstart", (e) => { e.stopPropagation(); repetirSilabaAlvo(); }, {passive:true});
     
-    // Inicialização: construir índice e esconder jogo
-    window.onload = () => {
-        construirIndice();
-        gameWrapper.style.visibility = "hidden";
-        indexScreen.style.display = "flex";
-        criarParticulasLuz();
-        // Garantir que áudio de fundo só toque se ativado
-    };
+    function toggleFullscreen(){ if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
+    function toggleAudio(){ audioEnabled=!audioEnabled; btnAudio.innerText=audioEnabled?"🔊":"🔇"; if(audioEnabled) bgAudio.play().catch(e=>{}); else bgAudio.pause(); }
+    window.toggleFullscreen = toggleFullscreen;
+    window.toggleAudio = toggleAudio;
+    
+    // Cursor tridente
+    if(window.matchMedia('(hover: hover) and (pointer: fine)').matches){
+        const cursor = document.createElement('div');
+        cursor.className = 'custom-cursor';
+        document.body.appendChild(cursor);
+        document.addEventListener('mousemove', (e) => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; });
+        document.addEventListener('mouseleave', () => cursor.style.display = 'none');
+        document.addEventListener('mouseenter', () => cursor.style.display = 'block');
+    }
     
     function criarParticulasLuz(){ 
         const container = document.getElementById("lightParticles"); 
@@ -892,10 +1102,28 @@
         } 
     }
     
-    // Ajuste responsivo
     window.addEventListener('resize',()=>{ criaturasNaTela = window.innerWidth<768 ? 3 : (window.innerWidth<1024 ? 4 : 5); });
-    // Bolhas aleatórias durante o jogo (opcional)
-    setInterval(()=>{ if(gameWrapper.style.visibility === "visible" && jogoAtivo && !aguardandoProxima && Math.random()>0.85){ const b=document.createElement("div"); b.className="bolha"; const t=Math.random()*20+8; b.style.width=t+"px"; b.style.height=t+"px"; b.style.left=Math.random()*100+"%"; b.style.animationDuration=Math.random()*3+2+"s"; document.body.appendChild(b); setTimeout(()=>b.remove(),5000); } },1000);
+    setInterval(()=>{ 
+        if(gameWrapper.style.visibility === "visible" && jogoAtivo && !aguardandoProxima && Math.random()>0.85){ 
+            const b=document.createElement("div"); 
+            b.className="bolha"; 
+            const t=Math.random()*20+8; 
+            b.style.width=t+"px"; 
+            b.style.height=t+"px"; 
+            b.style.left=Math.random()*100+"%"; 
+            b.style.animationDuration=Math.random()*3+2+"s"; 
+            document.body.appendChild(b); 
+            setTimeout(()=>b.remove(),5000); 
+        } 
+    },1000);
+    
+    window.onload = () => {
+        construirIndice();
+        criarParticulasLuz();
+        indexScreen.style.display = "flex";
+        gameWrapper.style.visibility = "hidden";
+        categoriasGrid.style.display = "none";
+    };
 </script>
 </body>
 </html>
