@@ -127,44 +127,11 @@
             .top-bar { top: 20px; left: 20px; gap: 15px; }
         }
 
-        .game-info-container {
-            width: 100%;
-            padding-top: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 20;
-            pointer-events: none;
-        }
-
-        .game-info {
-            display: flex;
-            gap: 10px;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 6px 15px;
-            border-radius: 30px;
-            border: 2px solid var(--primary);
-            font-weight: bold;
-            font-size: 11px;
-            backdrop-filter: blur(4px);
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        @media (min-width: 768px) {
-            .game-info { gap: 20px; padding: 10px 25px; font-size: 18px; }
-        }
-        .timer {
-            background: #000000aa;
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-        }
-
+        /* Instrução centralizada */
         .instrucao { 
             font-size: 16px;
             font-weight: 900;
-            margin-top: 8px;
+            margin-top: 15px;
             background: rgba(0,0,0,0.7);
             padding: 6px 14px;
             border-radius: 30px;
@@ -174,9 +141,28 @@
             gap: 6px;
             cursor: pointer;
             pointer-events: auto;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            z-index: 30;
         }
         @media (min-width: 768px) {
-            .instrucao { font-size: 24px; margin-top: 15px; padding: 8px 20px; gap: 10px; }
+            .instrucao {
+                font-size: 24px;
+                margin-top: 20px;
+                padding: 8px 20px;
+                gap: 10px;
+                top: 15px;
+            }
+        }
+        @media (min-width: 1024px) {
+            .instrucao {
+                font-size: 28px;
+                padding: 8px 24px;
+                gap: 12px;
+            }
         }
         #silabaAlvo {
             color: var(--secondary);
@@ -190,6 +176,7 @@
             cursor: pointer;
             pointer-events: auto;
             transition: transform 0.15s ease, text-shadow 0.15s ease;
+            font-family: inherit;
         }
         #silabaAlvo.pulsando {
             transform: scale(1.25);
@@ -288,7 +275,7 @@
         @keyframes subir-bolha { to { transform: translateY(-120vh) translateX(40px); opacity: 0; } }
 
         /* Modais */
-        #modal-vitoria, #modal-navegacao, #modal-categorias {
+        #modal-vitoria, #modal-navegacao, #modal-categorias, #modal-alfabeto {
             display: none;
             position: fixed;
             inset: 0;
@@ -341,21 +328,6 @@
         }
         @keyframes estrelaPular { 0% { transform: scale(0.2) translateY(0); opacity: 1; } 100% { transform: scale(1.2) translateY(-70px); opacity: 0; } }
 
-        .progresso-familia {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.7);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 9px;
-            backdrop-filter: blur(5px);
-            font-weight: bold;
-            pointer-events: none;
-            color: #ffd54f;
-        }
-        @media (min-width: 768px) { .progresso-familia { bottom: 20px; right: 20px; padding: 8px 16px; font-size: 14px; border-radius: 30px; } }
-
         .btn-voltar-alfabeto {
             position: absolute;
             bottom: 15px;
@@ -384,8 +356,63 @@
         .btn-voltar-alfabeto:active { transform: scale(0.95); }
         @keyframes pulse-glow-purple { 0% { box-shadow: 0 0 0 0 rgba(171, 71, 188, 0.5); } 70% { box-shadow: 0 0 0 10px rgba(171, 71, 188, 0); } 100% { box-shadow: 0 0 0 0 rgba(171, 71, 188, 0); } }
 
-        .nav-buttons { display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap; justify-content: center; }
-        @media (min-width: 768px) { .nav-buttons { gap: 30px; margin-top: 30px; } }
+        .grid-opcoes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 20px;
+            margin-top: 20px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 40px;
+            width: 90vw;
+            max-width: 800px;
+        }
+        .opcao-botao {
+            background: linear-gradient(135deg, #1e3c4c, #0a2a38);
+            border: 2px solid #ffd966;
+            border-radius: 50px;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffecb3;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .opcao-botao span.letra-exemplo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: #00000066;
+            padding: 5px 12px;
+            border-radius: 30px;
+        }
+        .opcao-botao:active { transform: scale(0.96); background: #2a5f6e; }
+        .opcao-botao:hover { background: #2a5f6e; transform: scale(1.02); }
+
+        .dica-som {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.6);
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 9px;
+            color: #ccc;
+            pointer-events: none;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
         .nav-btn {
             background: linear-gradient(135deg, var(--primary), #7b1fa2);
             border: 2px solid var(--secondary);
@@ -397,47 +424,16 @@
             color: white;
             pointer-events: auto;
         }
-        @media (min-width: 768px) { .nav-btn { padding: 15px 35px; font-size: 24px; } }
+        @media (min-width: 768px) {
+            .nav-btn { padding: 15px 35px; font-size: 24px; }
+        }
         .nav-btn.cancelar { background: linear-gradient(135deg, #555, #333); border-color: #888; }
         .nav-btn.confirmar { background: linear-gradient(135deg, #ff8c00, #ff5722); }
-
-        .grid-categorias {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 12px;
-            max-height: 60vh;
-            overflow-y: auto;
-            padding: 15px;
-            margin-top: 20px;
-            background: rgba(0,0,0,0.6);
-            border-radius: 30px;
-            width: 90vw;
-            max-width: 800px;
-        }
-        .cat-botao {
-            background: linear-gradient(135deg, #1e3c4c, #0a2a38);
-            border: 2px solid #ffd966;
-            border-radius: 50px;
-            padding: 12px;
+        
+        .modal-status {
+            margin-top: 10px;
             font-size: 1rem;
-            font-weight: bold;
-            color: #ffecb3;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .cat-botao:active { transform: scale(0.96); background: #2a5f6e; }
-        .cat-botao:hover { background: #2a5f6e; transform: scale(1.02); }
-
-        .dica-som {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            background: rgba(0,0,0,0.6);
-            padding: 3px 8px;
-            border-radius: 15px;
-            font-size: 9px;
-            color: #ccc;
-            pointer-events: none;
+            color: #ffd966;
         }
     </style>
 </head>
@@ -455,35 +451,38 @@
     <div class="top-bar">
         <button id="btnMenuPrincipal" class="icon-btn">🏠 Menu</button>
         <button id="btnEscolherFamilia" class="icon-btn">📚 Famílias</button>
+        <button id="btnEscolherAlfabeto" class="icon-btn">🔤 Alfabeto</button>
         <button id="btn-audio" class="icon-btn">🔇 Som</button>
         <button id="btnFullscreen" class="icon-btn">⛶ Tela</button>
     </div>
 
-    <div class="game-info-container">
-        <div class="game-info">
-            <div>📚 Família: <span id="familiaAtual">-</span></div>
-            <div>🏆 Pontos: <span id="pontosText">0</span></div>
-            <div>🎯 Progresso: <span id="acertosFase">0</span>/<span id="totalEtapa">0</span></div>
-            <div class="timer">⏱️ <span id="timerDisplay">00:00</span></div>
-        </div>
-        <p class="instrucao" id="btnRepetirSilaba">
-            🐠 Pesque a sílaba: <span id="silabaAlvo">---</span> 🔊
-        </p>
-    </div>
+    <!-- Instrução da sílaba alvo -->
+    <p class="instrucao" id="btnRepetirSilaba">
+        🐠 Pesque a sílaba: <span id="silabaAlvo">---</span> 🔊
+    </p>
+
     <div class="oceano" id="aquario"></div>
-    <div class="progresso-familia" id="progressHint">🌟 Escolha uma família</div>
     
     <button class="btn-voltar-alfabeto" id="btnVoltarAlfabeto">
         <span>🔤</span> Voltar ao Alfabeto
     </button>
-    <div class="dica-som">💡 Clique na sílaba para ouvi-la</div>
+    <div class="dica-som">💡 Clique na sílaba para ouvi-la | Escolha o formato do alfabeto</div>
 </div>
 
-<!-- Modal de categorias (todas as famílias) -->
+<!-- Modal para escolher a modalidade do alfabeto -->
+<div id="modal-alfabeto">
+    <div class="icone-vitoria">🔤📖</div>
+    <div class="vitoria-texto">Escolha o formato do alfabeto</div>
+    <div class="grid-opcoes" id="listaModalidades"></div>
+    <div class="modal-status" id="modalidadeAtualStatus">Modalidade atual: ---</div>
+    <button class="nav-btn cancelar" id="btnFecharAlfabeto" style="margin-top:20px;">Fechar</button>
+</div>
+
+<!-- Modal de categorias (famílias silábicas) -->
 <div id="modal-categorias">
     <div class="icone-vitoria">🐟📚🐠</div>
     <div class="vitoria-texto">Escolha uma família silábica</div>
-    <div class="grid-categorias" id="listaCategorias"></div>
+    <div class="grid-opcoes" id="listaCategorias"></div>
     <button class="nav-btn cancelar" id="btnFecharCategorias" style="margin-top:20px;">Fechar</button>
 </div>
 
@@ -505,7 +504,7 @@
 </div>
 
 <script>
-    // ========== FAMÍLIAS SILÁBICAS COMPLETAS ==========
+    // ========== FAMÍLIAS SILÁBICAS ==========
     const familiasCompletas = [
         { letra: "B", silabas: ["BA", "BE", "BI", "BO", "BU", "BÃO"] },
         { letra: "C", silabas: ["CA", "CE", "CI", "CO", "CU", "CÃO"] },
@@ -533,6 +532,7 @@
     
     const emojisPeixe = ["🐟", "🐠", "🐡", "🐋", "🦈", "🐙", "🐬", "🐳", "🦀", "🦑", "🐚", "🦭", "🪼", "🐟", "🐠", "🐡"];
     
+    // Mapeamento de pronúncia das sílabas
     const pronunciaMap = {
         "BA": "bá", "BE": "bê", "BI": "bi", "BO": "bô", "BU": "bu", "BÃO": "bão",
         "CA": "cá", "CE": "sê", "CI": "si", "CO": "cô", "CU": "cu", "CÃO": "cão",
@@ -558,21 +558,67 @@
         "ZA": "zá", "ZE": "zê", "ZI": "zi", "ZO": "zô", "ZU": "zu", "ZÃO": "zão"
     };
     
-    // Variáveis globais
+    // ========== MODALIDADES DO ALFABETO ==========
+    // Cada modalidade define uma função que recebe a letra (ex: "B") e retorna o caractere a ser exibido
+    const modalidades = {
+        "forma_maiuscula": {
+            nome: "Letra de Forma MAIÚSCULA",
+            exemplo: "A",
+            fonte: "Arial, sans-serif",
+            transformar: (letra) => letra.toUpperCase()
+        },
+        "forma_minuscula": {
+            nome: "Letra de Forma minúscula",
+            exemplo: "a",
+            fonte: "Arial, sans-serif",
+            transformar: (letra) => letra.toLowerCase()
+        },
+        "cursiva_maiuscula": {
+            nome: "Letra Cursiva MAIÚSCULA",
+            exemplo: "𝒜",
+            fonte: "'Segoe Script', 'Brush Script MT', cursive",
+            transformar: (letra) => {
+                const mapa = {
+                    'A':'𝒜','B':'ℬ','C':'𝒞','D':'𝒟','E':'ℰ','F':'ℱ','G':'𝒢','H':'ℋ','I':'ℐ','J':'𝒥',
+                    'K':'𝒦','L':'ℒ','M':'ℳ','N':'𝒩','O':'𝒪','P':'𝒫','Q':'𝒬','R':'ℛ','S':'𝒮','T':'𝒯',
+                    'U':'𝒰','V':'𝒱','W':'𝒲','X':'𝒳','Y':'𝒴','Z':'𝒵','Ç':'𝒞̧'
+                };
+                return mapa[letra.toUpperCase()] || letra.toUpperCase();
+            }
+        },
+        "cursiva_minuscula": {
+            nome: "Letra Cursiva minúscula",
+            exemplo: "𝒶",
+            fonte: "'Segoe Script', 'Brush Script MT', cursive",
+            transformar: (letra) => {
+                const mapa = {
+                    'a':'𝒶','b':'𝒷','c':'𝒸','d':'𝒹','e':'ℯ','f':'𝒻','g':'ℊ','h':'𝒽','i':'𝒾','j':'𝒿',
+                    'k':'𝓀','l':'𝓁','m':'𝓂','n':'𝓃','o':'ℴ','p':'𝓅','q':'𝓆','r':'𝓇','s':'𝓈','t':'𝓉',
+                    'u':'𝓊','v':'𝓋','w':'𝓌','x':'𝓍','y':'𝓎','z':'𝓏','ç':'𝒸̧'
+                };
+                const lower = letra.toLowerCase();
+                return mapa[lower] || lower;
+            }
+        }
+    };
+    
+    let modalidadeAtual = "forma_maiuscula"; // padrão
+    
+    // ========== VARIÁVEIS GLOBAIS ==========
     let audioEnabled = false;
     let currentUtterance = null;
     let jogoAtivo = true;
     let aguardandoProxima = false;
     let pontuacaoTotal = 0;
     let acertosNaEtapa = 0;
-    let silabasAtuais = [];       // sílabas da família atual
+    let silabasAtuais = [];
     let indiceSilabaAtual = 0;
     let familiaAtualLetra = "B";
     let peixesNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
     let tempoInicioEtapa = null;
     let intervaloRelogio = null;
     
-    // Elementos DOM
+    // ========== ELEMENTOS DOM ==========
     const bgAudio = document.getElementById("bg-audio");
     const sfxPescado = document.getElementById("sfx-pescado");
     const sfxErro = document.getElementById("sfx-erro");
@@ -581,9 +627,11 @@
     const modalVitoria = document.getElementById("modal-vitoria");
     const modalNavegacao = document.getElementById("modal-navegacao");
     const modalCategorias = document.getElementById("modal-categorias");
+    const modalAlfabeto = document.getElementById("modal-alfabeto");
     const btnEscolherFamilia = document.getElementById("btnEscolherFamilia");
+    const btnEscolherAlfabeto = document.getElementById("btnEscolherAlfabeto");
     
-    // ========== SÍNTESE DE VOZ (mesmo do original) ==========
+    // ========== FUNÇÕES DE VOZ ==========
     function falar(texto, callback) {
         if (!window.speechSynthesis) { if (callback) callback(); return; }
         if (currentUtterance) window.speechSynthesis.cancel();
@@ -619,18 +667,17 @@
         falarSilaba(silaba);
     }
     
-    // ========== CRONÔMETRO ==========
+    // ========== FUNÇÃO PARA OBTER A LETRA NO FORMATO DA MODALIDADE ==========
+    function getLetraFormatada(letra) {
+        return modalidades[modalidadeAtual].transformar(letra);
+    }
+    
+    // ========== CRONÔMETRO (não exibido, usado internamente) ==========
     function formatarTempo(seg) { return `${Math.floor(seg/60).toString().padStart(2,'0')}:${(seg%60).toString().padStart(2,'0')}`; }
     function iniciarCronometro() {
         if (intervaloRelogio) clearInterval(intervaloRelogio);
         tempoInicioEtapa = Date.now();
-        document.getElementById("timerDisplay").innerText = "00:00";
-        intervaloRelogio = setInterval(() => {
-            if (tempoInicioEtapa && jogoAtivo && !aguardandoProxima) {
-                const seg = Math.floor((Date.now() - tempoInicioEtapa) / 1000);
-                document.getElementById("timerDisplay").innerText = formatarTempo(seg);
-            }
-        }, 1000);
+        intervaloRelogio = setInterval(() => {}, 1000);
     }
     function pararCronometro() {
         if (intervaloRelogio) clearInterval(intervaloRelogio);
@@ -672,20 +719,10 @@
     }
     
     // ========== LÓGICA DO JOGO ==========
-    function atualizarUI() {
-        document.getElementById("familiaAtual").innerHTML = familiaAtualLetra;
-        document.getElementById("pontosText").innerHTML = pontuacaoTotal;
-        document.getElementById("acertosFase").innerHTML = acertosNaEtapa;
-        document.getElementById("totalEtapa").innerHTML = silabasAtuais.length;
-        let familiaObj = familiasCompletas.find(f => f.letra === familiaAtualLetra);
-        if (familiaObj) document.getElementById("progressHint").innerHTML = `🐟 ${familiaAtualLetra} → ${familiaObj.silabas.join(" · ")}`;
-    }
-    
     function carregarProximaSilaba() {
         if (indiceSilabaAtual >= silabasAtuais.length) { concluirFamilia(); return; }
         const silabaCerta = silabasAtuais[indiceSilabaAtual];
         document.getElementById("silabaAlvo").innerText = silabaCerta;
-        atualizarUI();
         aquario.innerHTML = "";
         
         let opcoes = [silabaCerta];
@@ -735,7 +772,6 @@
         elem.classList.add("pescado");
         pontuacaoTotal += 10;
         acertosNaEtapa++;
-        atualizarUI();
         mostrarEstrela(rect.left + 30, rect.top + 30);
         mostrarFeedback(`✅ +10  ${silabaClicada}`, true);
         
@@ -768,7 +804,6 @@
         silabasAtuais = [...familia.silabas];
         indiceSilabaAtual = 0;
         acertosNaEtapa = 0;
-        atualizarUI();
         aquario.innerHTML = "";
         jogoAtivo = true;
         iniciarCronometro();
@@ -784,7 +819,7 @@
         criarEfeitoBolhas(40);
         
         document.getElementById("vitoria-msg-topo").innerHTML = `✨ Família ${familiaAtualLetra} ✨`;
-        document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length}   |   Pontos: ${pontuacaoTotal}`;
+        document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length}   |   Pontuação: ${pontuacaoTotal}`;
         document.getElementById("tempoEtapa").innerHTML = `⏱️ Tempo: ${formatarTempo(tempo)}`;
         document.getElementById("vitoria-msg-sub").innerHTML = "🐠 Escolha outra família no botão Famílias!";
         modalVitoria.style.display = "flex";
@@ -793,31 +828,65 @@
             setTimeout(() => {
                 modalVitoria.style.display = "none";
                 aguardandoProxima = false;
-                // Não reinicia automaticamente, deixa o jogador escolher outra família
             }, 2000);
         });
     }
     
-    // ========== SELEÇÃO DE FAMÍLIAS (MODO LIVRE) ==========
+    // ========== SELEÇÃO DE FAMÍLIAS ==========
     function abrirSeletorFamilias() { modalCategorias.style.display = "flex"; }
-    function fecharSeletor() { modalCategorias.style.display = "none"; }
+    function fecharSeletorFamilias() { modalCategorias.style.display = "none"; }
     function preencherGridFamilias() {
         const grid = document.getElementById("listaCategorias");
         grid.innerHTML = "";
         familiasCompletas.forEach(fam => {
             const btn = document.createElement("button");
-            btn.className = "cat-botao";
-            btn.innerText = `${fam.letra} → ${fam.silabas.join(" · ")}`;
+            btn.className = "opcao-botao";
+            const letraFormatada = getLetraFormatada(fam.letra);
+            btn.innerHTML = `<span class="letra-exemplo" style="font-family: ${modalidades[modalidadeAtual].fonte};">${letraFormatada}</span> ${fam.letra} → ${fam.silabas.join(" · ")}`;
             btn.onclick = () => {
                 resetarJogoParaFamilia(fam.letra);
-                fecharSeletor();
+                fecharSeletorFamilias();
             };
-            btn.ontouchstart = (e) => { e.preventDefault(); resetarJogoParaFamilia(fam.letra); fecharSeletor(); };
+            btn.ontouchstart = (e) => { e.preventDefault(); resetarJogoParaFamilia(fam.letra); fecharSeletorFamilias(); };
             grid.appendChild(btn);
         });
     }
     
-    // ========== NAVEGAÇÃO E EVENTOS (COM TOUCH SUPORTE) ==========
+    // ========== SELEÇÃO DE MODALIDADE DO ALFABETO ==========
+    function abrirSeletorAlfabeto() { 
+        atualizarStatusModalidade();
+        modalAlfabeto.style.display = "flex"; 
+    }
+    function fecharSeletorAlfabeto() { modalAlfabeto.style.display = "none"; }
+    function atualizarStatusModalidade() {
+        document.getElementById("modalidadeAtualStatus").innerHTML = `Modalidade atual: ${modalidades[modalidadeAtual].nome}`;
+    }
+    function mudarModalidade(chave) {
+        modalidadeAtual = chave;
+        atualizarStatusModalidade();
+        // Atualiza a exibição das letras nos botões de família se o modal de famílias estiver aberto ou para a próxima vez que abrir
+        preencherGridFamilias();
+        // Se o jogo estiver ativo, podemos também atualizar a sílaba alvo? Não precisa, pois sílabas são textos fixos.
+        // Mas a navegação já estará com a nova fonte no modal de famílias.
+        falar(`Alfabeto alterado para ${modalidades[chave].nome}`);
+    }
+    function preencherGridModalidades() {
+        const grid = document.getElementById("listaModalidades");
+        grid.innerHTML = "";
+        for (const [chave, dados] of Object.entries(modalidades)) {
+            const btn = document.createElement("button");
+            btn.className = "opcao-botao";
+            btn.innerHTML = `<span class="letra-exemplo" style="font-family: ${dados.fonte};">${dados.exemplo}</span> ${dados.nome}`;
+            btn.onclick = () => {
+                mudarModalidade(chave);
+                fecharSeletorAlfabeto();
+            };
+            btn.ontouchstart = (e) => { e.preventDefault(); mudarModalidade(chave); fecharSeletorAlfabeto(); };
+            grid.appendChild(btn);
+        }
+    }
+    
+    // ========== NAVEGAÇÃO E EVENTOS ==========
     function toggleFullscreen() { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
     function toggleAudio() { audioEnabled = !audioEnabled; document.getElementById("btn-audio").innerHTML = audioEnabled ? "🔊 Som Ligado" : "🔇 Som Desligado"; if (audioEnabled) bgAudio.play().catch(e=>{}); else bgAudio.pause(); }
     function voltarParaAlfabeto() { if (aguardandoProxima) return; modalNavegacao.style.display = "flex"; }
@@ -836,7 +905,9 @@
     addBothEvents(document.getElementById("btnRepetirSilaba"), repetirSilabaAlvo);
     addBothEvents(document.getElementById("silabaAlvo"), (e) => { e.stopPropagation(); repetirSilabaAlvo(); });
     addBothEvents(btnEscolherFamilia, abrirSeletorFamilias);
-    addBothEvents(document.getElementById("btnFecharCategorias"), fecharSeletor);
+    addBothEvents(document.getElementById("btnFecharCategorias"), fecharSeletorFamilias);
+    addBothEvents(btnEscolherAlfabeto, abrirSeletorAlfabeto);
+    addBothEvents(document.getElementById("btnFecharAlfabeto"), fecharSeletorAlfabeto);
     addBothEvents(document.getElementById("btnMenuPrincipal"), () => { window.location.href = "index.html"; });
     addBothEvents(document.getElementById("btnFullscreen"), toggleFullscreen);
     addBothEvents(document.getElementById("btn-audio"), toggleAudio);
@@ -876,7 +947,9 @@
     window.onload = () => {
         if (window.speechSynthesis) window.speechSynthesis.getVoices();
         preencherGridFamilias();
-        resetarJogoParaFamilia("B"); // inicia com a família B
+        preencherGridModalidades();
+        atualizarStatusModalidade();
+        resetarJogoParaFamilia("B");
     };
 </script>
 </body>
