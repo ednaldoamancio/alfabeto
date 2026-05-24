@@ -176,7 +176,6 @@
             cursor: pointer;
             pointer-events: auto;
             transition: transform 0.15s ease, text-shadow 0.15s ease;
-            /* font-family será alterada dinamicamente */
         }
         #silabaAlvo.pulsando {
             transform: scale(1.25);
@@ -243,7 +242,6 @@
             letter-spacing: 1px;
             pointer-events: none;
             white-space: nowrap;
-            /* font-family será dinâmica */
         }
         @media (min-width: 768px) { .silaba-peixe { font-size: 28px; padding: 5px 12px; } }
 
@@ -532,7 +530,7 @@
     
     const emojisPeixe = ["🐟", "🐠", "🐡", "🐋", "🦈", "🐙", "🐬", "🐳", "🦀", "🦑", "🐚", "🦭", "🪼", "🐟", "🐠", "🐡"];
     
-    // Mapeamento de pronúncia das sílabas (inalterado)
+    // Mapeamento de pronúncia das sílabas
     const pronunciaMap = {
         "BA": "bá", "BE": "bê", "BI": "bi", "BO": "bô", "BU": "bu", "BÃO": "bão",
         "CA": "cá", "CE": "sê", "CI": "si", "CO": "cô", "CU": "cu", "CÃO": "cão",
@@ -558,31 +556,35 @@
         "ZA": "zá", "ZE": "zê", "ZI": "zi", "ZO": "zô", "ZU": "zu", "ZÃO": "zão"
     };
     
-    // ========== MODALIDADES DO ALFABETO (COM FONTE E TRANSFORMAÇÃO DE CAIXA) ==========
+    // ========== MODALIDADES DO ALFABETO (COM FONTE CURSIVA CORRIGIDA) ==========
     const modalidades = {
         "forma_maiuscula": {
             nome: "Letra de Forma MAIÚSCULA",
             exemplo: "A",
-            fonte: "Arial, sans-serif",
+            fontFamily: "'Segoe UI', 'Comic Neue', 'Comic Sans MS', sans-serif",
+            fontStyle: "normal",
             transformarTexto: (texto) => texto.toUpperCase()
         },
         "forma_minuscula": {
             nome: "Letra de Forma minúscula",
             exemplo: "a",
-            fonte: "Arial, sans-serif",
+            fontFamily: "'Segoe UI', 'Comic Neue', 'Comic Sans MS', sans-serif",
+            fontStyle: "normal",
             transformarTexto: (texto) => texto.toLowerCase()
         },
         "cursiva_maiuscula": {
             nome: "Letra Cursiva MAIÚSCULA",
             exemplo: "𝒜",
-            fonte: "'Segoe Script', 'Brush Script MT', cursive",
-            transformarTexto: (texto) => texto.toUpperCase() // mantém maiúsculo, mas com fonte cursiva
+            fontFamily: "'Dancing Script', 'Pacifico', 'Comic Sans MS', 'cursive'",
+            fontStyle: "italic",
+            transformarTexto: (texto) => texto.toUpperCase()
         },
         "cursiva_minuscula": {
             nome: "Letra Cursiva minúscula",
             exemplo: "𝒶",
-            fonte: "'Segoe Script', 'Brush Script MT', cursive",
-            transformarTexto: (texto) => texto.toLowerCase() // minúsculo com fonte cursiva
+            fontFamily: "'Dancing Script', 'Pacifico', 'Comic Sans MS', 'cursive'",
+            fontStyle: "italic",
+            transformarTexto: (texto) => texto.toLowerCase()
         }
     };
     
@@ -648,14 +650,9 @@
         if (!silaba || silaba === "---") return;
         silabaAlvoSpan.classList.add("pulsando");
         setTimeout(() => silabaAlvoSpan.classList.remove("pulsando"), 300);
-        // A sílaba exibida já está transformada, mas a pronúncia usa a original (sem transformação)
-        // Para pronúncia, usamos a sílaba original (em maiúsculas) armazenada em algum lugar.
-        // Vamos buscar a sílaba original atual.
         if (indiceSilabaAtual < silabasAtuais.length) {
-            const silabaOriginal = silabasAtuais[indiceSilabaAtual];
-            falarSilaba(silabaOriginal);
+            falarSilaba(silabasAtuais[indiceSilabaAtual]);
         } else {
-            // fallback
             falarSilaba(silaba);
         }
     }
@@ -665,14 +662,15 @@
         return modalidades[modalidadeAtual].transformarTexto(texto);
     }
     
-    // ========== APLICAR FONTE AOS ELEMENTOS ==========
-    function aplicarFonteModalidade() {
-        const fonte = modalidades[modalidadeAtual].fonte;
-        // Aplica à sílaba alvo
-        silabaAlvoSpan.style.fontFamily = fonte;
-        // Aplica a todos os peixes já existentes (caso a modalidade mude durante o jogo)
+    // ========== APLICAR FONTE E ESTILO AOS ELEMENTOS ==========
+    function aplicarEstiloModalidade() {
+        const modal = modalidades[modalidadeAtual];
+        silabaAlvoSpan.style.fontFamily = modal.fontFamily;
+        silabaAlvoSpan.style.fontStyle = modal.fontStyle;
+        // Aplica a todos os peixes existentes
         document.querySelectorAll('.silaba-peixe').forEach(el => {
-            el.style.fontFamily = fonte;
+            el.style.fontFamily = modal.fontFamily;
+            el.style.fontStyle = modal.fontStyle;
         });
     }
     
@@ -753,10 +751,13 @@
         const emoji = emojisPeixe[Math.floor(Math.random() * emojisPeixe.length)];
         const flip = direita ? 'transform: scaleX(-1);' : '';
         
-        // Texto transformado conforme modalidade
         const textoPeixe = getTextoTransformado(silabaOriginal);
+        const modal = modalidades[modalidadeAtual];
         
-        peixe.innerHTML = `<span class="peixe-corpo" style="${flip}">${emoji}</span><span class="silaba-peixe" style="font-family: ${modalidades[modalidadeAtual].fonte};">${textoPeixe}</span>`;
+        peixe.innerHTML = `<span class="peixe-corpo" style="${flip}">${emoji}</span>
+                           <span class="silaba-peixe" 
+                                 style="font-family: ${modal.fontFamily}; font-style: ${modal.fontStyle};"
+                                 data-original="${silabaOriginal}">${textoPeixe}</span>`;
         
         const handleClick = (e) => {
             e.preventDefault();
@@ -817,8 +818,7 @@
         jogoAtivo = true;
         iniciarCronometro();
         carregarProximaSilaba();
-        // Garante a fonte correta após recarregar
-        aplicarFonteModalidade();
+        aplicarEstiloModalidade();
     }
     
     function concluirFamilia() {
@@ -853,7 +853,8 @@
             const btn = document.createElement("button");
             btn.className = "opcao-botao";
             const letraFormatada = getTextoTransformado(fam.letra);
-            btn.innerHTML = `<span class="letra-exemplo" style="font-family: ${modalidades[modalidadeAtual].fonte};">${letraFormatada}</span> ${fam.letra} → ${fam.silabas.join(" · ")}`;
+            const modal = modalidades[modalidadeAtual];
+            btn.innerHTML = `<span class="letra-exemplo" style="font-family: ${modal.fontFamily}; font-style: ${modal.fontStyle};">${letraFormatada}</span> ${fam.letra} → ${fam.silabas.join(" · ")}`;
             btn.onclick = () => {
                 resetarJogoParaFamilia(fam.letra);
                 fecharSeletorFamilias();
@@ -875,47 +876,9 @@
     function mudarModalidade(chave) {
         modalidadeAtual = chave;
         atualizarStatusModalidade();
-        // Aplica a fonte e a transformação a todos os elementos visuais do jogo atual
-        aplicarFonteModalidade();
-        // Recarrega a sílaba alvo com o texto transformado
-        if (indiceSilabaAtual < silabasAtuais.length) {
-            const silabaOriginal = silabasAtuais[indiceSilabaAtual];
-            silabaAlvoSpan.innerText = getTextoTransformado(silabaOriginal);
-        }
-        // Atualiza os textos de todos os peixes existentes
-        document.querySelectorAll('.peixinho').forEach(peixe => {
-            const silabaSpan = peixe.querySelector('.silaba-peixe');
-            if (silabaSpan) {
-                const textoOriginal = silabaSpan.getAttribute('data-original');
-                if (textoOriginal) {
-                    silabaSpan.innerText = getTextoTransformado(textoOriginal);
-                } else {
-                    // fallback: tenta extrair do texto atual (pode não funcionar se já transformado)
-                    const textoAtual = silabaSpan.innerText;
-                    // Não temos o original, então preservamos
-                }
-            }
-        });
-        // Armazena o texto original nos peixes (para futuras trocas)
-        document.querySelectorAll('.peixinho').forEach(peixe => {
-            const silabaSpan = peixe.querySelector('.silaba-peixe');
-            if (silabaSpan && !silabaSpan.getAttribute('data-original')) {
-                // Tenta descobrir o original (pode ser o texto atual em maiúsculas, mas é aproximado)
-                const textoAtual = silabaSpan.innerText;
-                // Busca na lista de sílabas atuais
-                const possivelOriginal = silabasAtuais.find(s => getTextoTransformado(s) === textoAtual);
-                if (possivelOriginal) {
-                    silabaSpan.setAttribute('data-original', possivelOriginal);
-                } else {
-                    silabaSpan.setAttribute('data-original', textoAtual.toUpperCase());
-                }
-            }
-            if (silabaSpan) {
-                const original = silabaSpan.getAttribute('data-original');
-                if (original) silabaSpan.innerText = getTextoTransformado(original);
-            }
-        });
-        // Atualiza a grid de famílias (para refletir a nova fonte e transformação)
+        // Recarrega completamente a família atual para aplicar a nova transformação e fonte
+        resetarJogoParaFamilia(familiaAtualLetra);
+        // Atualiza a grid de famílias para refletir a nova fonte
         preencherGridFamilias();
         falar(`Alfabeto alterado para ${modalidades[chave].nome}`);
     }
@@ -925,7 +888,7 @@
         for (const [chave, dados] of Object.entries(modalidades)) {
             const btn = document.createElement("button");
             btn.className = "opcao-botao";
-            btn.innerHTML = `<span class="letra-exemplo" style="font-family: ${dados.fonte};">${dados.exemplo}</span> ${dados.nome}`;
+            btn.innerHTML = `<span class="letra-exemplo" style="font-family: ${dados.fontFamily}; font-style: ${dados.fontStyle};">${dados.exemplo}</span> ${dados.nome}`;
             btn.onclick = () => {
                 mudarModalidade(chave);
                 fecharSeletorAlfabeto();
@@ -999,7 +962,7 @@
         preencherGridModalidades();
         atualizarStatusModalidade();
         resetarJogoParaFamilia("B");
-        aplicarFonteModalidade();
+        aplicarEstiloModalidade();
     };
 </script>
 </body>
