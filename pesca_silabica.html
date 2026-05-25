@@ -1,10 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Famílias Silábicas - Pesca Divertida | EdHumanas</title>
-    
+
+    <!-- Google Fonts: Cursivas livres (SIL OFL) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cedarville+Cursive&family=Caveat:wght@400;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --primary: #1e88e5;
@@ -21,7 +27,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', 'Comic Neue', 'Comic Sans MS', Tahoma, sans-serif;
+            font-family: 'Comic Neue', 'Segoe UI', 'Comic Sans MS', Tahoma, sans-serif;
             background: #000;
             color: var(--text-light);
             width: 100vw;
@@ -31,14 +37,14 @@
             touch-action: manipulation;
         }
 
-        /* Cursor personalizado para desktop */
+        /* Cursor personalizado - ANZOL DE PESCAR */
         @media (hover: hover) and (pointer: fine) {
             body { cursor: none; }
         }
         .custom-cursor {
             position: fixed;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
@@ -46,8 +52,8 @@
             filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
         }
         .custom-cursor::before {
-            content: "🎣";
-            font-size: 35px;
+            content: "🪝";
+            font-size: 40px;
             position: absolute;
             top: 50%;
             left: 50%;
@@ -127,6 +133,98 @@
             .top-bar { top: 20px; left: 20px; gap: 15px; }
         }
 
+        /* =====================================================
+           BARRA DE SELEÇÃO DE MODO DE GRAFIA (compacta)
+           ===================================================== */
+        .modo-barra {
+            position: absolute;
+            top: 55px;
+            right: 10px;
+            z-index: 100;
+            display: flex;
+            gap: 6px;
+            background: rgba(0,0,0,0.75);
+            padding: 6px 10px;
+            border-radius: 30px;
+            border: 2px solid var(--primary);
+            backdrop-filter: blur(6px);
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            max-width: 85vw;
+            pointer-events: auto;
+        }
+
+        .modo-btn {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 4px 8px;
+            font-size: 16px;
+            cursor: pointer;
+            color: white;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            min-width: 36px;
+        }
+
+        .modo-btn .label-modo {
+            font-size: 7px;
+            font-family: 'Comic Neue', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.8;
+        }
+
+        .modo-btn .exemplo-letra {
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .modo-btn.maiusc-forma .exemplo-letra { font-family: 'Comic Neue', sans-serif; font-weight: 700; }
+        .modo-btn.minusc-forma .exemplo-letra { font-family: 'Comic Neue', sans-serif; font-weight: 700; text-transform: lowercase; }
+        .modo-btn.maiusc-cursiva .exemplo-letra { font-family: 'Cedarville Cursive', cursive; }
+        .modo-btn.minusc-cursiva .exemplo-letra { font-family: 'Caveat', cursive; font-weight: 700; text-transform: lowercase; }
+
+        .modo-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.08);
+        }
+
+        .modo-btn.ativo {
+            background: linear-gradient(135deg, var(--primary), #1565c0);
+            border-color: var(--secondary);
+            box-shadow: 0 0 12px rgba(30, 136, 229, 0.5);
+            transform: scale(1.1);
+        }
+
+        @media (min-width: 768px) {
+            .modo-barra {
+                top: 70px;
+                right: 20px;
+                gap: 10px;
+                padding: 10px 16px;
+                border-radius: 40px;
+            }
+            .modo-btn {
+                padding: 6px 12px;
+                font-size: 22px;
+                min-width: 50px;
+                border-radius: 16px;
+            }
+            .modo-btn .label-modo { font-size: 9px; }
+            .modo-btn .exemplo-letra { font-size: 28px; }
+        }
+
+        @media (min-width: 1024px) {
+            .modo-btn { padding: 8px 16px; min-width: 60px; }
+            .modo-btn .exemplo-letra { font-size: 34px; }
+            .modo-btn .label-modo { font-size: 10px; }
+        }
+
         /* Instrução centralizada */
         .instrucao { 
             font-size: 16px;
@@ -176,7 +274,17 @@
             cursor: pointer;
             pointer-events: auto;
             transition: transform 0.15s ease, text-shadow 0.15s ease;
+            display: inline-block;
+            min-width: 50px;
+            text-align: center;
         }
+
+        /* Estilos dinâmicos da sílaba alvo conforme modo */
+        #silabaAlvo.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; }
+        #silabaAlvo.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
+        #silabaAlvo.modo-maiusc-cursiva { font-family: 'Cedarville Cursive', cursive; }
+        #silabaAlvo.modo-minusc-cursiva { font-family: 'Caveat', cursive; text-transform: lowercase; font-weight: 700; }
+
         #silabaAlvo.pulsando {
             transform: scale(1.25);
             text-shadow: 0 0 18px #ffca28, 0 0 6px #ff9800;
@@ -243,7 +351,17 @@
             pointer-events: none;
             white-space: nowrap;
         }
-        @media (min-width: 768px) { .silaba-peixe { font-size: 28px; padding: 5px 12px; } }
+
+        /* Estilos dinâmicos das sílabas nos peixes */
+        .silaba-peixe.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; }
+        .silaba-peixe.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
+        .silaba-peixe.modo-maiusc-cursiva { font-family: 'Cedarville Cursive', cursive; font-size: 24px; }
+        .silaba-peixe.modo-minusc-cursiva { font-family: 'Caveat', cursive; text-transform: lowercase; font-weight: 700; font-size: 24px; }
+
+        @media (min-width: 768px) {
+            .silaba-peixe { font-size: 28px; padding: 5px 12px; }
+            .silaba-peixe.modo-maiusc-cursiva, .silaba-peixe.modo-minusc-cursiva { font-size: 32px; }
+        }
 
         .pescado {
             animation: subir-vertical 0.7s ease-in forwards !important;
@@ -403,7 +521,7 @@
             color: #ccc;
             pointer-events: none;
         }
-        
+
         .nav-buttons {
             display: flex;
             gap: 15px;
@@ -427,13 +545,14 @@
         }
         .nav-btn.cancelar { background: linear-gradient(135deg, #555, #333); border-color: #888; }
         .nav-btn.confirmar { background: linear-gradient(135deg, #ff8c00, #ff5722); }
-        
+
         .modal-status {
             margin-top: 10px;
             font-size: 1rem;
             color: #ffd966;
         }
     </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -454,17 +573,37 @@
         <button id="btnFullscreen" class="icon-btn">⛶ Tela</button>
     </div>
 
+    <!-- BARRA DE SELEÇÃO DE MODO DE GRAFIA -->
+    <div class="modo-barra" id="modoBarra">
+        <button class="modo-btn maiusc-forma ativo" data-modo="maiusc-forma" onclick="selecionarModo('maiusc-forma')">
+            <span class="exemplo-letra">Ba</span>
+            <span class="label-modo">Maiúscula</span>
+        </button>
+        <button class="modo-btn minusc-forma" data-modo="minusc-forma" onclick="selecionarModo('minusc-forma')">
+            <span class="exemplo-letra">ba</span>
+            <span class="label-modo">Minúscula</span>
+        </button>
+        <button class="modo-btn maiusc-cursiva" data-modo="maiusc-cursiva" onclick="selecionarModo('maiusc-cursiva')">
+            <span class="exemplo-letra">Ba</span>
+            <span class="label-modo">Cursiva</span>
+        </button>
+        <button class="modo-btn minusc-cursiva" data-modo="minusc-cursiva" onclick="selecionarModo('minusc-cursiva')">
+            <span class="exemplo-letra">ba</span>
+            <span class="label-modo">Manuscrita</span>
+        </button>
+    </div>
+
     <!-- Instrução da sílaba alvo -->
     <p class="instrucao" id="btnRepetirSilaba">
-        🐠 Pesque a sílaba: <span id="silabaAlvo">---</span> 🔊
+        🐠 Pesque a sílaba: <span id="silabaAlvo" class="modo-maiusc-forma">---</span> 🔊
     </p>
 
     <div class="oceano" id="aquario"></div>
-    
+
     <button class="btn-voltar-alfabeto" id="btnVoltarAlfabeto">
         <span>🔤</span> Voltar ao Alfabeto
     </button>
-    <div class="dica-som">💡 Clique na sílaba para ouvi-la | Escolha o formato do alfabeto</div>
+    <div class="dica-som">💡 Clique na sílaba para ouvi-la</div>
 </div>
 
 <!-- Modal para escolher a modalidade do alfabeto -->
@@ -527,9 +666,9 @@
         { letra: "Y", silabas: ["YA", "YE", "YI", "YO", "YU", "YÃO"] },
         { letra: "Z", silabas: ["ZA", "ZE", "ZI", "ZO", "ZU", "ZÃO"] }
     ];
-    
+
     const emojisPeixe = ["🐟", "🐠", "🐡", "🐋", "🦈", "🐙", "🐬", "🐳", "🦀", "🦑", "🐚", "🦭", "🪼", "🐟", "🐠", "🐡"];
-    
+
     // Mapeamento de pronúncia das sílabas
     const pronunciaMap = {
         "BA": "bá", "BE": "bê", "BI": "bi", "BO": "bô", "BU": "bu", "BÃO": "bão",
@@ -555,41 +694,57 @@
         "YA": "iá", "YE": "iê", "YI": "ii", "YO": "iô", "YU": "iu", "YÃO": "ião",
         "ZA": "zá", "ZE": "zê", "ZI": "zi", "ZO": "zô", "ZU": "zu", "ZÃO": "zão"
     };
-    
-    // ========== MODALIDADES DO ALFABETO (COM FONTE CURSIVA CORRIGIDA) ==========
-    const modalidades = {
-        "forma_maiuscula": {
-            nome: "Letra de Forma MAIÚSCULA",
-            exemplo: "A",
-            fontFamily: "'Segoe UI', 'Comic Neue', 'Comic Sans MS', sans-serif",
-            fontStyle: "normal",
-            transformarTexto: (texto) => texto.toUpperCase()
+
+    // ========== MODO DE GRAFIA ATUAL (inicia com maiúscula de forma) ==========
+    let modoGrafia = 'maiusc-forma';
+
+    const mapaModo = {
+        'maiusc-forma':   { 
+            familia: 'Comic Neue', 
+            falaPrefixo: 'maiúscula de fôrma',
+            // Consoante maiúscula + vogal minúscula
+            transformarSilaba: (silaba) => {
+                if (!silaba) return silaba;
+                // Primeira letra (consoante) maiúscula, restante minúscula
+                return silaba.charAt(0).toUpperCase() + silaba.slice(1).toLowerCase();
+            }
         },
-        "forma_minuscula": {
-            nome: "Letra de Forma minúscula",
-            exemplo: "a",
-            fontFamily: "'Segoe UI', 'Comic Neue', 'Comic Sans MS', sans-serif",
-            fontStyle: "normal",
-            transformarTexto: (texto) => texto.toLowerCase()
+        'minusc-forma':   { 
+            familia: 'Comic Neue', 
+            falaPrefixo: 'minúscula de fôrma',
+            // Tudo minúsculo
+            transformarSilaba: (silaba) => silaba.toLowerCase()
         },
-        "cursiva_maiuscula": {
-            nome: "Letra Cursiva MAIÚSCULA",
-            exemplo: "𝒜",
-            fontFamily: "'Dancing Script', 'Pacifico', 'Comic Sans MS', 'cursive'",
-            fontStyle: "italic",
-            transformarTexto: (texto) => texto.toUpperCase()
+        'maiusc-cursiva': { 
+            familia: 'Cedarville Cursive', 
+            falaPrefixo: 'maiúscula cursiva',
+            // Consoante maiúscula cursiva + vogal minúscula cursiva
+            transformarSilaba: (silaba) => {
+                if (!silaba) return silaba;
+                return silaba.charAt(0).toUpperCase() + silaba.slice(1).toLowerCase();
+            }
         },
-        "cursiva_minuscula": {
-            nome: "Letra Cursiva minúscula",
-            exemplo: "𝒶",
-            fontFamily: "'Dancing Script', 'Pacifico', 'Comic Sans MS', 'cursive'",
-            fontStyle: "italic",
-            transformarTexto: (texto) => texto.toLowerCase()
+        'minusc-cursiva': { 
+            familia: 'Caveat', 
+            falaPrefixo: 'minúscula manuscrita',
+            // Tudo minúsculo cursivo
+            transformarSilaba: (silaba) => silaba.toLowerCase()
         }
     };
-    
-    let modalidadeAtual = "forma_maiuscula";
-    
+
+    function selecionarModo(modo) {
+        modoGrafia = modo;
+        document.querySelectorAll('.modo-btn').forEach(btn => {
+            btn.classList.toggle('ativo', btn.dataset.modo === modo);
+        });
+        document.getElementById('silabaAlvo').className = 'modo-' + modo;
+        // Recarrega a família atual com a nova grafia
+        resetarJogoParaFamilia(familiaAtualLetra);
+        preencherGridFamilias();
+        const cfg = mapaModo[modo];
+        falar(`Formato alterado para ${cfg.falaPrefixo}`);
+    }
+
     // ========== VARIÁVEIS GLOBAIS ==========
     let audioEnabled = false;
     let currentUtterance = null;
@@ -603,7 +758,7 @@
     let peixesNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
     let tempoInicioEtapa = null;
     let intervaloRelogio = null;
-    
+
     // ========== ELEMENTOS DOM ==========
     const bgAudio = document.getElementById("bg-audio");
     const sfxPescado = document.getElementById("sfx-pescado");
@@ -617,7 +772,7 @@
     const btnEscolherFamilia = document.getElementById("btnEscolherFamilia");
     const btnEscolherAlfabeto = document.getElementById("btnEscolherAlfabeto");
     const silabaAlvoSpan = document.getElementById("silabaAlvo");
-    
+
     // ========== FUNÇÕES DE VOZ ==========
     function falar(texto, callback) {
         if (!window.speechSynthesis) { if (callback) callback(); return; }
@@ -634,17 +789,17 @@
         utterance.onerror = () => { currentUtterance = null; if (callback) setTimeout(callback, 150); };
         window.speechSynthesis.speak(utterance);
     }
-    
+
     function falarSilaba(silaba, callback) {
         const pronuncia = pronunciaMap[silaba.toUpperCase()] || silaba.toLowerCase();
         falar(pronuncia, callback);
     }
-    
+
     function falarParabensESilaba(silaba, callback) {
         const pronuncia = pronunciaMap[silaba.toUpperCase()] || silaba.toLowerCase();
         falar(`Muito bem! ${pronuncia}`, callback);
     }
-    
+
     function repetirSilabaAlvo() {
         const silaba = silabaAlvoSpan.innerText;
         if (!silaba || silaba === "---") return;
@@ -656,24 +811,12 @@
             falarSilaba(silaba);
         }
     }
-    
-    // ========== FUNÇÃO PARA OBTER TEXTO TRANSFORMADO ==========
+
+    // ========== FUNÇÃO PARA TRANSFORMAR SÍLABA ==========
     function getTextoTransformado(texto) {
-        return modalidades[modalidadeAtual].transformarTexto(texto);
+        return mapaModo[modoGrafia].transformarSilaba(texto);
     }
-    
-    // ========== APLICAR FONTE E ESTILO AOS ELEMENTOS ==========
-    function aplicarEstiloModalidade() {
-        const modal = modalidades[modalidadeAtual];
-        silabaAlvoSpan.style.fontFamily = modal.fontFamily;
-        silabaAlvoSpan.style.fontStyle = modal.fontStyle;
-        // Aplica a todos os peixes existentes
-        document.querySelectorAll('.silaba-peixe').forEach(el => {
-            el.style.fontFamily = modal.fontFamily;
-            el.style.fontStyle = modal.fontStyle;
-        });
-    }
-    
+
     // ========== CRONÔMETRO ==========
     function formatarTempo(seg) { return `${Math.floor(seg/60).toString().padStart(2,'0')}:${(seg%60).toString().padStart(2,'0')}`; }
     function iniciarCronometro() {
@@ -685,7 +828,7 @@
         if (intervaloRelogio) clearInterval(intervaloRelogio);
         return tempoInicioEtapa ? Math.floor((Date.now() - tempoInicioEtapa) / 1000) : 0;
     }
-    
+
     // ========== EFEITOS VISUAIS ==========
     function criarEfeitoBolhas(quantidade = 30) {
         const qtd = window.innerWidth < 768 ? 25 : quantidade;
@@ -719,15 +862,16 @@
         document.body.appendChild(div);
         setTimeout(() => div.remove(), 850);
     }
-    
+
     // ========== LÓGICA DO JOGO ==========
     function carregarProximaSilaba() {
         if (indiceSilabaAtual >= silabasAtuais.length) { concluirFamilia(); return; }
         const silabaCertaOriginal = silabasAtuais[indiceSilabaAtual];
         const silabaTransformada = getTextoTransformado(silabaCertaOriginal);
         silabaAlvoSpan.innerText = silabaTransformada;
+        silabaAlvoSpan.className = 'modo-' + modoGrafia;
         aquario.innerHTML = "";
-        
+
         let opcoes = [silabaCertaOriginal];
         let outras = silabasAtuais.filter(s => s !== silabaCertaOriginal);
         outras.sort(() => 0.5 - Math.random());
@@ -735,12 +879,12 @@
         while(opcoes.length < peixesNaTela) opcoes.push("ZÃO");
         opcoes.sort(() => Math.random() - 0.5);
         opcoes.forEach(silOriginal => criarPeixe(silOriginal, silabaCertaOriginal));
-        
+
         setTimeout(() => {
             if (jogoAtivo && !aguardandoProxima) falarSilaba(silabaCertaOriginal);
         }, 600);
     }
-    
+
     function criarPeixe(silabaOriginal, alvoOriginal) {
         const peixe = document.createElement("div");
         peixe.className = "peixinho";
@@ -750,15 +894,14 @@
         peixe.style.animation = direita ? `nadar-direita ${duracao}s linear infinite` : `nadar-esquerda ${duracao}s linear infinite`;
         const emoji = emojisPeixe[Math.floor(Math.random() * emojisPeixe.length)];
         const flip = direita ? 'transform: scaleX(-1);' : '';
-        
+
         const textoPeixe = getTextoTransformado(silabaOriginal);
-        const modal = modalidades[modalidadeAtual];
-        
+        const cfg = mapaModo[modoGrafia];
+
         peixe.innerHTML = `<span class="peixe-corpo" style="${flip}">${emoji}</span>
-                           <span class="silaba-peixe" 
-                                 style="font-family: ${modal.fontFamily}; font-style: ${modal.fontStyle};"
+                           <span class="silaba-peixe modo-${modoGrafia}" 
                                  data-original="${silabaOriginal}">${textoPeixe}</span>`;
-        
+
         const handleClick = (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -770,7 +913,7 @@
         peixe.addEventListener('touchstart', handleClick, { passive: false });
         aquario.appendChild(peixe);
     }
-    
+
     function acertou(elem, silabaOriginal) {
         if (!jogoAtivo) return;
         jogoAtivo = false;
@@ -784,7 +927,7 @@
         acertosNaEtapa++;
         mostrarEstrela(rect.left + 30, rect.top + 30);
         mostrarFeedback(`✅ +10  ${getTextoTransformado(silabaOriginal)}`, true);
-        
+
         falarParabensESilaba(silabaOriginal, () => {
             indiceSilabaAtual++;
             if (indiceSilabaAtual < silabasAtuais.length) {
@@ -793,7 +936,7 @@
             } else { concluirFamilia(); }
         });
     }
-    
+
     function errou(elem, silabaOriginal) {
         if (!jogoAtivo) return;
         if (audioEnabled && sfxErro) { sfxErro.currentTime = 0; sfxErro.play().catch(e=>{}); }
@@ -802,7 +945,7 @@
         setTimeout(() => elem.classList.remove("erro-anim"), 500);
         falarSilaba(silabaOriginal);
     }
-    
+
     function resetarJogoParaFamilia(letra) {
         if (intervaloRelogio) clearInterval(intervaloRelogio);
         jogoAtivo = false;
@@ -818,9 +961,8 @@
         jogoAtivo = true;
         iniciarCronometro();
         carregarProximaSilaba();
-        aplicarEstiloModalidade();
     }
-    
+
     function concluirFamilia() {
         if (aguardandoProxima) return;
         const tempo = pararCronometro();
@@ -828,13 +970,13 @@
         jogoAtivo = false;
         aquario.innerHTML = "";
         criarEfeitoBolhas(40);
-        
+
         document.getElementById("vitoria-msg-topo").innerHTML = `✨ Família ${familiaAtualLetra} ✨`;
         document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length}   |   Pontuação: ${pontuacaoTotal}`;
         document.getElementById("tempoEtapa").innerHTML = `⏱️ Tempo: ${formatarTempo(tempo)}`;
         document.getElementById("vitoria-msg-sub").innerHTML = "🐠 Escolha outra família no botão Famílias!";
         modalVitoria.style.display = "flex";
-        
+
         falar(`Parabéns! Você completou a família ${familiaAtualLetra}!`, () => {
             setTimeout(() => {
                 modalVitoria.style.display = "none";
@@ -842,7 +984,7 @@
             }, 2000);
         });
     }
-    
+
     // ========== SELEÇÃO DE FAMÍLIAS ==========
     function abrirSeletorFamilias() { modalCategorias.style.display = "flex"; }
     function fecharSeletorFamilias() { modalCategorias.style.display = "none"; }
@@ -852,9 +994,10 @@
         familiasCompletas.forEach(fam => {
             const btn = document.createElement("button");
             btn.className = "opcao-botao";
-            const letraFormatada = getTextoTransformado(fam.letra);
-            const modal = modalidades[modalidadeAtual];
-            btn.innerHTML = `<span class="letra-exemplo" style="font-family: ${modal.fontFamily}; font-style: ${modal.fontStyle};">${letraFormatada}</span> ${fam.letra} → ${fam.silabas.join(" · ")}`;
+            const cfg = mapaModo[modoGrafia];
+            // Exibe a primeira sílaba da família no modo atual como exemplo
+            const exemploSilaba = getTextoTransformado(fam.silabas[0]);
+            btn.innerHTML = `<span class="letra-exemplo" style="font-family: ${cfg.familia === 'Comic Neue' ? "'Comic Neue', sans-serif" : cfg.familia === 'Cedarville Cursive' ? "'Cedarville Cursive', cursive" : "'Caveat', cursive"}; font-weight: ${cfg.familia === 'Caveat' ? '700' : 'bold'}; ${modoGrafia.includes('minusc') ? 'text-transform: lowercase;' : ''}">${exemploSilaba}</span> ${fam.letra} → ${fam.silabas.map(s => getTextoTransformado(s)).join(" · ")}`;
             btn.onclick = () => {
                 resetarJogoParaFamilia(fam.letra);
                 fecharSeletorFamilias();
@@ -863,7 +1006,7 @@
             grid.appendChild(btn);
         });
     }
-    
+
     // ========== SELEÇÃO DE MODALIDADE DO ALFABETO ==========
     function abrirSeletorAlfabeto() { 
         atualizarStatusModalidade();
@@ -871,46 +1014,51 @@
     }
     function fecharSeletorAlfabeto() { modalAlfabeto.style.display = "none"; }
     function atualizarStatusModalidade() {
-        document.getElementById("modalidadeAtualStatus").innerHTML = `Modalidade atual: ${modalidades[modalidadeAtual].nome}`;
-    }
-    function mudarModalidade(chave) {
-        modalidadeAtual = chave;
-        atualizarStatusModalidade();
-        // Recarrega completamente a família atual para aplicar a nova transformação e fonte
-        resetarJogoParaFamilia(familiaAtualLetra);
-        // Atualiza a grid de famílias para refletir a nova fonte
-        preencherGridFamilias();
-        falar(`Alfabeto alterado para ${modalidades[chave].nome}`);
+        document.getElementById("modalidadeAtualStatus").innerHTML = `Modalidade atual: ${mapaModo[modoGrafia].falaPrefixo}`;
     }
     function preencherGridModalidades() {
         const grid = document.getElementById("listaModalidades");
         grid.innerHTML = "";
-        for (const [chave, dados] of Object.entries(modalidades)) {
+
+        const modos = [
+            { chave: 'maiusc-forma', nome: 'Letra de Fôrma Maiúscula', exemplo: 'Ba' },
+            { chave: 'minusc-forma', nome: 'Letra de Fôrma Minúscula', exemplo: 'ba' },
+            { chave: 'maiusc-cursiva', nome: 'Letra Cursiva Maiúscula', exemplo: 'Ba' },
+            { chave: 'minusc-cursiva', nome: 'Letra Manuscrita Minúscula', exemplo: 'ba' }
+        ];
+
+        modos.forEach(modo => {
             const btn = document.createElement("button");
             btn.className = "opcao-botao";
-            btn.innerHTML = `<span class="letra-exemplo" style="font-family: ${dados.fontFamily}; font-style: ${dados.fontStyle};">${dados.exemplo}</span> ${dados.nome}`;
+            const cfg = mapaModo[modo.chave];
+            const fontFamily = cfg.familia === 'Comic Neue' ? "'Comic Neue', sans-serif" : 
+                              cfg.familia === 'Cedarville Cursive' ? "'Cedarville Cursive', cursive" : "'Caveat', cursive";
+            const fontWeight = cfg.familia === 'Caveat' ? '700' : 'bold';
+            const textTransform = modo.chave.includes('minusc') ? 'text-transform: lowercase;' : '';
+
+            btn.innerHTML = `<span class="letra-exemplo" style="font-family: ${fontFamily}; font-weight: ${fontWeight}; ${textTransform}">${modo.exemplo}</span> ${modo.nome}`;
             btn.onclick = () => {
-                mudarModalidade(chave);
+                selecionarModo(modo.chave);
                 fecharSeletorAlfabeto();
             };
-            btn.ontouchstart = (e) => { e.preventDefault(); mudarModalidade(chave); fecharSeletorAlfabeto(); };
+            btn.ontouchstart = (e) => { e.preventDefault(); selecionarModo(modo.chave); fecharSeletorAlfabeto(); };
             grid.appendChild(btn);
-        }
+        });
     }
-    
+
     // ========== NAVEGAÇÃO E EVENTOS ==========
     function toggleFullscreen() { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
     function toggleAudio() { audioEnabled = !audioEnabled; document.getElementById("btn-audio").innerHTML = audioEnabled ? "🔊 Som Ligado" : "🔇 Som Desligado"; if (audioEnabled) bgAudio.play().catch(e=>{}); else bgAudio.pause(); }
     function voltarParaAlfabeto() { if (aguardandoProxima) return; modalNavegacao.style.display = "flex"; }
     function fecharModalVolta() { modalNavegacao.style.display = "none"; }
     function confirmarVolta() { modalNavegacao.style.display = "none"; window.location.href = "pesca_de_letrinhas.html"; }
-    
+
     function addBothEvents(element, handler) {
         if (!element) return;
         element.addEventListener('click', handler);
         element.addEventListener('touchstart', handler, { passive: false });
     }
-    
+
     addBothEvents(document.getElementById("btnVoltarAlfabeto"), voltarParaAlfabeto);
     addBothEvents(document.getElementById("btnCancelarVolta"), fecharModalVolta);
     addBothEvents(document.getElementById("btnConfirmarVolta"), confirmarVolta);
@@ -923,8 +1071,8 @@
     addBothEvents(document.getElementById("btnMenuPrincipal"), () => { window.location.href = "index.html"; });
     addBothEvents(document.getElementById("btnFullscreen"), toggleFullscreen);
     addBothEvents(document.getElementById("btn-audio"), toggleAudio);
-    
-    // ========== CURSOR PERSONALIZADO ==========
+
+    // ========== CURSOR PERSONALIZADO - ANZOL ==========
     if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
         const cursor = document.createElement('div');
         cursor.className = 'custom-cursor';
@@ -936,12 +1084,12 @@
         document.addEventListener('mouseleave', () => { cursor.style.display = 'none'; });
         document.addEventListener('mouseenter', () => { cursor.style.display = 'block'; });
     }
-    
+
     // ========== INICIALIZAÇÃO ==========
     window.addEventListener('resize', () => {
         peixesNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
     });
-    
+
     // Bolhas aleatórias
     setInterval(() => {
         if (jogoAtivo && !aguardandoProxima && Math.random() > 0.8) {
@@ -955,14 +1103,13 @@
             setTimeout(() => bolha.remove(), 5000);
         }
     }, 1200);
-    
+
     window.onload = () => {
         if (window.speechSynthesis) window.speechSynthesis.getVoices();
         preencherGridFamilias();
         preencherGridModalidades();
         atualizarStatusModalidade();
         resetarJogoParaFamilia("B");
-        aplicarEstiloModalidade();
     };
 </script>
 </body>
