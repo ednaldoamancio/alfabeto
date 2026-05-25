@@ -346,15 +346,38 @@
             backdrop-filter: blur(2px);
             border: 1px solid rgba(255,215,0,0.5);
             pointer-events: none;
+            /* Centraliza o texto dentro da criatura */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
         .silaba-creature.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; }
         .silaba-creature.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
-        .silaba-creature.modo-maiusc-cursiva { font-family: var(--cursive-school); font-size: 24px; font-weight: 400; }
-        .silaba-creature.modo-minusc-cursiva { font-family: var(--cursive-school); font-size: 24px; font-weight: 400; text-transform: lowercase; }
+        /* Tamanhos reduzidos para letras cursivas (maiúsculas e minúsculas) */
+        .silaba-creature.modo-maiusc-cursiva { 
+            font-family: var(--cursive-school); 
+            font-size: 18px; 
+            font-weight: 400; 
+        }
+        .silaba-creature.modo-minusc-cursiva { 
+            font-family: var(--cursive-school); 
+            font-size: 18px; 
+            font-weight: 400; 
+            text-transform: lowercase; 
+        }
         
         @media (min-width: 768px) {
-            .silaba-creature { font-size: 26px; padding: 6px 14px; }
-            .silaba-creature.modo-maiusc-cursiva, .silaba-creature.modo-minusc-cursiva { font-size: 32px; }
+            .silaba-creature { font-size: 20px; padding: 6px 14px; }
+            .silaba-creature.modo-maiusc-cursiva, 
+            .silaba-creature.modo-minusc-cursiva { 
+                font-size: 22px; 
+            }
+        }
+        @media (min-width: 1024px) {
+            .silaba-creature.modo-maiusc-cursiva, 
+            .silaba-creature.modo-minusc-cursiva { 
+                font-size: 24px; 
+            }
         }
 
         .pescado {
@@ -712,6 +735,7 @@
     
     function capitalizeSilaba(s) {
         if (!s) return s;
+        // Mantém a primeira letra maiúscula, o restante minúsculo
         return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
     }
     
@@ -816,7 +840,8 @@
     function criarCriatura(silaba, alvo){ 
         const c = document.createElement("div"); 
         c.className = "creature"; 
-        c.style.top = Math.random() * 70 + 10 + "%"; 
+        // Garante que a criatura não fique muito perto do topo (mínimo 15%)
+        c.style.top = Math.random() * 70 + 15 + "%"; 
         const dir = Math.random() > 0.5; 
         const dur = Math.random() * 5 + 4.5; 
         c.style.animation = dir ? `nadar-direita ${dur}s linear infinite` : `nadar-esquerda ${dur}s linear infinite`; 
