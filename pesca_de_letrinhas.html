@@ -36,11 +36,13 @@
             cursor: none;
         }
 
-        /* Cursor personalizado - ANZOL */
+        /* =====================================================
+           CURSOR PERSONALIZADO - ANZOL DE PESCAR 🎣
+           ===================================================== */
         .custom-cursor {
             position: fixed;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
@@ -49,8 +51,8 @@
         }
         
         .custom-cursor::before {
-            content: "🎣";
-            font-size: 35px;
+            content: "🪝";
+            font-size: 40px;
             position: absolute;
             top: 50%;
             left: 50%;
@@ -214,7 +216,6 @@
             .game-info-container { padding-top: 80px; }
         }
 
-        /* Instrução com letra alvo */
         .instrucao { 
             font-size: 16px;
             font-weight: 900;
@@ -264,7 +265,6 @@
             text-align: center;
         }
 
-        /* Estilos dinâmicos da letra alvo conforme modo */
         #letraAlvo.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: uppercase; }
         #letraAlvo.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
         #letraAlvo.modo-maiusc-cursiva { font-family: 'Cedarville Cursive', cursive; text-transform: uppercase; }
@@ -325,7 +325,6 @@
             text-shadow: 2px 2px 0 #0a2f5a;
         }
         
-        /* Estilos dinâmicos das letras nos peixes */
         .letra-peixe.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: uppercase; }
         .letra-peixe.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
         .letra-peixe.modo-maiusc-cursiva { font-family: 'Cedarville Cursive', cursive; text-transform: uppercase; font-size: 26px; }
@@ -574,6 +573,118 @@
         @media (min-width: 768px) {
             .dica-som { bottom: 20px; left: 20px; padding: 5px 12px; font-size: 12px; border-radius: 20px; }
         }
+
+        /* =====================================================
+           MODAL DO ALFABETO - ESCOLHER LETRA
+           ===================================================== */
+        #modal-alfabeto {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,10,30,0.95);
+            backdrop-filter: blur(16px);
+            z-index: 2000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            text-align: center;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        
+        .alfabeto-titulo {
+            font-size: 5vw;
+            color: var(--secondary);
+            font-weight: bold;
+            margin: 10px 0 5px;
+            text-shadow: 0 0 10px rgba(255,202,40,0.3);
+        }
+        
+        .alfabeto-sub {
+            font-size: 3.5vw;
+            color: #aaa;
+            margin-bottom: 15px;
+        }
+        
+        @media (min-width: 768px) {
+            .alfabeto-titulo { font-size: 32px; margin: 20px 0 10px; }
+            .alfabeto-sub { font-size: 18px; margin-bottom: 25px; }
+        }
+        
+        .alfabeto-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            width: 100%;
+            max-width: 600px;
+            padding: 0 5px;
+        }
+        
+        @media (min-width: 768px) {
+            .alfabeto-grid { gap: 12px; max-width: 700px; }
+        }
+        
+        .letra-alfabeto-btn {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, rgba(171,71,188,0.3), rgba(123,31,162,0.3));
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: white;
+            padding: 4px;
+        }
+        
+        .letra-alfabeto-btn:hover, .letra-alfabeto-btn:active {
+            background: linear-gradient(135deg, var(--primary), #7b1fa2);
+            border-color: var(--secondary);
+            transform: scale(1.08);
+            box-shadow: 0 0 15px rgba(171,71,188,0.4);
+        }
+        
+        .letra-alfabeto-btn .letra-display {
+            font-size: 7vw;
+            line-height: 1;
+            font-family: 'Comic Neue', sans-serif;
+            font-weight: 700;
+        }
+        
+        .letra-alfabeto-btn .letra-nome {
+            font-size: 2.2vw;
+            margin-top: 2px;
+            opacity: 0.8;
+            font-family: 'Comic Neue', sans-serif;
+        }
+        
+        @media (min-width: 768px) {
+            .letra-alfabeto-btn { border-radius: 20px; padding: 6px; }
+            .letra-alfabeto-btn .letra-display { font-size: 42px; }
+            .letra-alfabeto-btn .letra-nome { font-size: 12px; margin-top: 4px; }
+        }
+        
+        .alfabeto-fechar {
+            margin-top: 20px;
+            background: linear-gradient(135deg, #555, #333);
+            border: 2px solid #888;
+            padding: 10px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 40px;
+            cursor: pointer;
+            color: white;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        
+        @media (min-width: 768px) {
+            .alfabeto-fechar { padding: 12px 40px; font-size: 20px; margin-top: 30px; }
+        }
+        
+        .alfabeto-fechar:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
@@ -593,6 +704,8 @@
         <button class="icon-btn" onclick="window.location.href='index.html'">⬅️</button>
         <button id="btn-audio" class="icon-btn" onclick="toggleAudio()">🔇</button>
         <button class="icon-btn" onclick="toggleFullscreen()">⛶</button>
+        <!-- BOTÃO DO ALFABETO -->
+        <button class="icon-btn" onclick="abrirAlfabeto()" title="Escolher letra">🔤</button>
     </div>
 
     <!-- BARRA DE SELEÇÃO DE MODO DE GRAFIA -->
@@ -616,7 +729,6 @@
     </div>
 
     <div class="game-info-container">
-        <!-- Apenas instrução e letra alvo, sem barra de pontos -->
         <p class="instrucao" id="btnRepetirLetra">
             🐠 Pesque a letra: <span id="letraAlvo" class="modo-maiusc-forma">?</span> 🔊
         </p>
@@ -648,6 +760,14 @@
     </div>
 </div>
 
+<!-- MODAL DO ALFABETO PARA ESCOLHER LETRA -->
+<div id="modal-alfabeto">
+    <div class="alfabeto-titulo">🔤 Escolha uma Letra</div>
+    <div class="alfabeto-sub">Toque na letra que você quer pescar!</div>
+    <div class="alfabeto-grid" id="alfabetoGrid"></div>
+    <button class="alfabeto-fechar" onclick="fecharAlfabeto()">❌ Fechar</button>
+</div>
+
 <script>
     let audioEnabled = false;
     let currentUtterance = null;
@@ -661,28 +781,30 @@
     const modalNavegacao = document.getElementById("modal-navegacao");
     const badgeFase2     = document.getElementById("badge-fase2");
     const elLetraAlvo    = document.getElementById("letraAlvo");
+    const modalAlfabeto  = document.getElementById("modal-alfabeto");
+    const alfabetoGrid   = document.getElementById("alfabetoGrid");
 
     // ================================================================
-    // MODO DE GRAFIA ATUAL
+    // MODO DE GRAFIA ATUAL (inicia com maiúscula de forma)
     // ================================================================
-    let modoGrafia = 'maiusc-forma'; // maiusc-forma | minusc-forma | maiusc-cursiva | minusc-cursiva
+    let modoGrafia = 'maiusc-forma';
     
+    // ================================================================
+    // CORREÇÃO DE PRONÚNCIA: "fôrma" com acento circunflexo
+    // ================================================================
     const mapaModo = {
-        'maiusc-forma':   { transform: l => l.toUpperCase(), familia: 'Comic Neue', falaPrefixo: 'maiúscula de forma' },
-        'minusc-forma':   { transform: l => l.toLowerCase(), familia: 'Comic Neue', falaPrefixo: 'minúscula de forma' },
+        'maiusc-forma':   { transform: l => l.toUpperCase(), familia: 'Comic Neue', falaPrefixo: 'maiúscula de fôrma' },
+        'minusc-forma':   { transform: l => l.toLowerCase(), familia: 'Comic Neue', falaPrefixo: 'minúscula de fôrma' },
         'maiusc-cursiva': { transform: l => l.toUpperCase(), familia: 'Cedarville Cursive', falaPrefixo: 'maiúscula cursiva' },
         'minusc-cursiva': { transform: l => l.toLowerCase(), familia: 'Caveat', falaPrefixo: 'minúscula manuscrita' }
     };
 
     function selecionarModo(modo) {
         modoGrafia = modo;
-        // Atualiza botões visuais
         document.querySelectorAll('.modo-btn').forEach(btn => {
             btn.classList.toggle('ativo', btn.dataset.modo === modo);
         });
-        // Atualiza classe da letra alvo
         elLetraAlvo.className = 'modo-' + modo;
-        // Recomeça a rodada atual com a nova grafia
         iniciarRodada();
     }
 
@@ -779,6 +901,45 @@
         else bgAudio.pause();
     }
 
+    // ================================================================
+    // MODAL DO ALFABETO - ESCOLHER LETRA
+    // ================================================================
+    function abrirAlfabeto() {
+        modalAlfabeto.style.display = "flex";
+        montarGridAlfabeto();
+        falarMensagem("Escolha uma letra para pescar!");
+    }
+
+    function fecharAlfabeto() {
+        modalAlfabeto.style.display = "none";
+    }
+
+    function montarGridAlfabeto() {
+        alfabetoGrid.innerHTML = "";
+        alfabetoCompleto.forEach((letra, idx) => {
+            const btn = document.createElement("button");
+            btn.className = "letra-alfabeto-btn";
+            btn.innerHTML = `
+                <span class="letra-display">${letra}</span>
+                <span class="letra-nome">${obterPronunciaLetra(letra)}</span>
+            `;
+            btn.onclick = () => escolherLetra(idx);
+            alfabetoGrid.appendChild(btn);
+        });
+    }
+
+    function escolherLetra(indice) {
+        indiceLetraAtual = indice;
+        faseAtual = indiceLetraAtual >= 13 ? 2 : 1;
+        fecharAlfabeto();
+        jogoAtivo = true;
+        iniciarRodada();
+        
+        const letraEscolhida = alfabetoCompleto[indice];
+        const cfg = mapaModo[modoGrafia];
+        falarMensagem(`Vamos pescar a letra ${cfg.falaPrefixo} ${obterPronunciaLetra(letraEscolhida)}!`);
+    }
+
     function criarEfeitoBolhas(quantidade = 30) {
         const qtd = window.innerWidth < 768 ? 25 : quantidade;
         for (let i = 0; i < qtd; i++) {
@@ -830,7 +991,7 @@
         elLetraAlvo.className = 'modo-' + modoGrafia;
         aquario.innerHTML = "";
 
-        let letrasRodada = [letraBase]; // armazena a base para transformar depois
+        let letrasRodada = [letraBase];
         while (letrasRodada.length < peixesNaTela) {
             let aleat = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random() * 26)];
             if (!letrasRodada.includes(aleat)) letrasRodada.push(aleat);
@@ -841,6 +1002,7 @@
         });
         
         setTimeout(() => {
+            const cfg = mapaModo[modoGrafia];
             falarMensagem("Pesque a letra " + cfg.falaPrefixo + " " + obterPronunciaLetra(letraBase));
         }, 500);
     }
@@ -992,7 +1154,9 @@
         repetirLetraAlvo();
     }, { passive: true });
 
-    // Cursor personalizado (desktop)
+    // ================================================================
+    // CURSOR PERSONALIZADO - ANZOL DE PESCAR 🪝
+    // ================================================================
     const cursor = document.createElement('div');
     cursor.className = 'custom-cursor';
     document.body.appendChild(cursor);
