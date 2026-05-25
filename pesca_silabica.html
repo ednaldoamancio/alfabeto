@@ -5,17 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Famílias Silábicas - Pesca Divertida | EdHumanas</title>
 
-    <!-- Google Fonts: Cursivas livres e fonte similar ao Playwrite Brasil Guides -->
+    <!-- Google Fonts: Caveat para cursiva escolar (manuscrita, esférica e adequada à alfabetização) + Comic Neue para forma -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Playwrite US Modern é uma fonte cursiva escolar, similar ao solicitado "Playwrite Brasil Guides" -->
-    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Playwrite+US+Modern:wght@100..400&family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --primary: #1e88e5;
             --secondary: #ffb74d;
             --text-light: #ffffff;
-            --cursive-playwrite: 'Playwrite US Modern', 'Dancing Script', cursive;
+            --cursive-school: 'Caveat', 'Segoe UI', cursive;
         }
 
         * { 
@@ -100,7 +100,7 @@
             pointer-events: none;
         }
 
-        /* ===== NOVO HEADER ORGANIZADO: sem sobreposição ===== */
+        /* HEADER ORGANIZADO (sem sobreposição) */
         .game-header {
             position: relative;
             z-index: 100;
@@ -117,7 +117,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        /* Grupo esquerdo: botões principais */
         .top-bar {
             display: flex;
             flex-wrap: wrap;
@@ -125,7 +124,6 @@
             align-items: center;
         }
 
-        /* Barra de modos de grafia (direita) */
         .modo-barra {
             display: flex;
             flex-wrap: wrap;
@@ -138,7 +136,6 @@
             justify-content: center;
         }
 
-        /* Botões do topo */
         .icon-btn {
             background: rgba(0, 0, 0, 0.8);
             border: 2px solid var(--secondary);
@@ -157,7 +154,6 @@
         }
         .icon-btn:active { transform: scale(0.95); }
 
-        /* Botões de modo */
         .modo-btn {
             background: rgba(255,255,255,0.1);
             border: 2px solid transparent;
@@ -186,8 +182,10 @@
         }
         .modo-btn.maiusc-forma .exemplo-letra { font-family: 'Comic Neue', sans-serif; font-weight: 700; }
         .modo-btn.minusc-forma .exemplo-letra { font-family: 'Comic Neue', sans-serif; font-weight: 700; text-transform: lowercase; }
-        .modo-btn.maiusc-cursiva .exemplo-letra { font-family: var(--cursive-playwrite); font-weight: 500; }
-        .modo-btn.minusc-cursiva .exemplo-letra { font-family: var(--cursive-playwrite); font-weight: 500; text-transform: lowercase; }
+        /* Fonte cursiva escolar - Caveat (esférica e manuscrita) */
+        .modo-btn.maiusc-cursiva .exemplo-letra { font-family: var(--cursive-school); font-weight: 700; }
+        .modo-btn.minusc-cursiva .exemplo-letra { font-family: var(--cursive-school); font-weight: 700; text-transform: lowercase; }
+
         .modo-btn:hover {
             background: rgba(255,255,255,0.2);
             transform: scale(1.08);
@@ -199,7 +197,7 @@
             transform: scale(1.1);
         }
 
-        /* Instrução centralizada abaixo do header (sem sobreposição) */
+        /* Instrução centralizada abaixo do header */
         .instrucao-wrapper {
             position: relative;
             z-index: 30;
@@ -242,8 +240,8 @@
         /* Estilos dinâmicos da sílaba alvo conforme modo */
         #silabaAlvo.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; }
         #silabaAlvo.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
-        #silabaAlvo.modo-maiusc-cursiva { font-family: var(--cursive-playwrite); font-weight: 500; }
-        #silabaAlvo.modo-minusc-cursiva { font-family: var(--cursive-playwrite); font-weight: 500; text-transform: lowercase; }
+        #silabaAlvo.modo-maiusc-cursiva { font-family: var(--cursive-school); font-weight: 700; }
+        #silabaAlvo.modo-minusc-cursiva { font-family: var(--cursive-school); font-weight: 700; text-transform: lowercase; }
 
         #silabaAlvo.pulsando {
             transform: scale(1.2);
@@ -261,12 +259,6 @@
             pointer-events: auto;
         }
 
-        /* Ajuste para que o oceano fique abaixo do header mas preencha a tela */
-        .oceano {
-            top: 0;
-            height: 100%;
-        }
-
         .peixinho {
             position: absolute;
             cursor: pointer;
@@ -280,17 +272,6 @@
             filter: brightness(1.1) saturate(1.2);
             z-index: 50;
             -webkit-tap-highlight-color: transparent;
-        }
-        .peixinho::after {
-            content: "";
-            position: absolute;
-            top: -15px;
-            left: -15px;
-            right: -15px;
-            bottom: -15px;
-            background: transparent;
-            border-radius: 50%;
-            pointer-events: auto;
         }
         @media (min-width: 768px) {
             .peixinho { width: 110px; height: 110px; }
@@ -319,8 +300,8 @@
         }
         .silaba-peixe.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; }
         .silaba-peixe.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
-        .silaba-peixe.modo-maiusc-cursiva { font-family: var(--cursive-playwrite); font-size: 24px; font-weight: 500; }
-        .silaba-peixe.modo-minusc-cursiva { font-family: var(--cursive-playwrite); text-transform: lowercase; font-weight: 500; font-size: 24px; }
+        .silaba-peixe.modo-maiusc-cursiva { font-family: var(--cursive-school); font-size: 24px; font-weight: 700; }
+        .silaba-peixe.modo-minusc-cursiva { font-family: var(--cursive-school); text-transform: lowercase; font-weight: 700; font-size: 24px; }
 
         @media (min-width: 768px) {
             .silaba-peixe { font-size: 28px; padding: 5px 12px; }
@@ -524,7 +505,6 @@
             color: #ffd966;
         }
 
-        /* Ajuste para mobile: header flexível */
         @media (max-width: 700px) {
             .game-header {
                 flex-direction: column;
@@ -580,7 +560,7 @@
 <audio id="sfx-erro" src="erro.mp3"></audio>
 
 <div id="game-wrapper">
-    <!-- HEADER REFORMULADO: sem sobreposição, flexível -->
+    <!-- HEADER SEM SOBREPOSIÇÃO -->
     <div class="game-header">
         <div class="top-bar">
             <button id="btnMenuPrincipal" class="icon-btn">🏠 Menu</button>
@@ -590,7 +570,6 @@
             <button id="btnFullscreen" class="icon-btn">⛶ Tela</button>
         </div>
 
-        <!-- BARRA DE SELEÇÃO DE MODO DE GRAFIA -->
         <div class="modo-barra" id="modoBarra">
             <button class="modo-btn maiusc-forma ativo" data-modo="maiusc-forma" onclick="selecionarModo('maiusc-forma')">
                 <span class="exemplo-letra">Ba</span>
@@ -611,7 +590,6 @@
         </div>
     </div>
 
-    <!-- Instrução da sílaba alvo (isolada, abaixo do header, sem colisão) -->
     <div class="instrucao-wrapper">
         <p class="instrucao" id="btnRepetirSilaba">
             🐠 Pesque a sílaba: <span id="silabaAlvo" class="modo-maiusc-forma">---</span> 🔊
@@ -626,7 +604,7 @@
     <div class="dica-som">💡 Clique na sílaba para ouvi-la</div>
 </div>
 
-<!-- Modais mantidos... -->
+<!-- Modais -->
 <div id="modal-alfabeto">
     <div class="icone-vitoria">🔤📖</div>
     <div class="vitoria-texto">Escolha o formato do alfabeto</div>
@@ -660,7 +638,7 @@
 </div>
 
 <script>
-    // ========== FAMÍLIAS SILÁBICAS (Mantidas igual) ==========
+    // ========== FAMÍLIAS SILÁBICAS (Mantidas) ==========
     const familiasCompletas = [
         { letra: "B", silabas: ["BA", "BE", "BI", "BO", "BU", "BÃO"] },
         { letra: "C", silabas: ["CA", "CE", "CI", "CO", "CU", "CÃO"] },
@@ -716,8 +694,8 @@
     const mapaModo = {
         'maiusc-forma':   { familia: 'Comic Neue', falaPrefixo: 'maiúscula de fôrma', transformarSilaba: (s) => s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : s },
         'minusc-forma':   { familia: 'Comic Neue', falaPrefixo: 'minúscula de fôrma', transformarSilaba: (s) => s ? s.toLowerCase() : s },
-        'maiusc-cursiva': { familia: 'Playwrite US Modern', falaPrefixo: 'maiúscula cursiva', transformarSilaba: (s) => s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : s },
-        'minusc-cursiva': { familia: 'Playwrite US Modern', falaPrefixo: 'minúscula manuscrita', transformarSilaba: (s) => s ? s.toLowerCase() : s }
+        'maiusc-cursiva': { familia: 'Caveat', falaPrefixo: 'maiúscula cursiva', transformarSilaba: (s) => s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : s },
+        'minusc-cursiva': { familia: 'Caveat', falaPrefixo: 'minúscula manuscrita', transformarSilaba: (s) => s ? s.toLowerCase() : s }
     };
 
     function selecionarModo(modo) {
@@ -730,7 +708,7 @@
     }
     function getTextoTransformado(texto) { return mapaModo[modoGrafia].transformarSilaba(texto); }
 
-    // Variáveis globais e funções do jogo (mantidas idênticas à lógica original, apenas ajuste de fonte)
+    // Variáveis e funções do jogo (lógica idêntica à original, apenas mantida)
     let audioEnabled = false, currentUtterance = null, jogoAtivo = true, aguardandoProxima = false;
     let pontuacaoTotal = 0, acertosNaEtapa = 0, silabasAtuais = [], indiceSilabaAtual = 0, familiaAtualLetra = "B";
     let peixesNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
@@ -758,11 +736,11 @@
     function concluirFamilia(){ if(aguardandoProxima) return; let tempo=pararCronometro(); aguardandoProxima=true; jogoAtivo=false; aquario.innerHTML=""; criarEfeitoBolhas(40); document.getElementById("vitoria-msg-topo").innerHTML=`✨ Família ${familiaAtualLetra} ✨`; document.getElementById("scoreFinalModal").innerHTML=`✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length}   |   Pontuação: ${pontuacaoTotal}`; document.getElementById("tempoEtapa").innerHTML=`⏱️ Tempo: ${formatarTempo(tempo)}`; document.getElementById("vitoria-msg-sub").innerHTML="🐠 Escolha outra família no botão Famílias!"; modalVitoria.style.display="flex"; falar(`Parabéns! Você completou a família ${familiaAtualLetra}!`,()=>{ setTimeout(()=>{ modalVitoria.style.display="none"; aguardandoProxima=false; },2000); }); }
     function abrirSeletorFamilias(){ modalCategorias.style.display="flex"; preencherGridFamilias();}
     function fecharSeletorFamilias(){ modalCategorias.style.display="none";}
-    function preencherGridFamilias(){ let grid=document.getElementById("listaCategorias"); grid.innerHTML=""; familiasCompletas.forEach(fam=>{ let btn=document.createElement("button"); btn.className="opcao-botao"; let exemploSilaba=getTextoTransformado(fam.silabas[0]); btn.innerHTML=`<span class="letra-exemplo" style="font-family: ${mapaModo[modoGrafia].familia === 'Playwrite US Modern' ? "'Playwrite US Modern', cursive" : "'Comic Neue', sans-serif"}; font-weight: bold; ${modoGrafia.includes('minusc') ? 'text-transform: lowercase;' : ''}">${exemploSilaba}</span> ${fam.letra} → ${fam.silabas.map(s=>getTextoTransformado(s)).join(" · ")}`; btn.onclick=()=>{ resetarJogoParaFamilia(fam.letra); fecharSeletorFamilias();}; grid.appendChild(btn);});}
+    function preencherGridFamilias(){ let grid=document.getElementById("listaCategorias"); grid.innerHTML=""; familiasCompletas.forEach(fam=>{ let btn=document.createElement("button"); btn.className="opcao-botao"; let exemploSilaba=getTextoTransformado(fam.silabas[0]); btn.innerHTML=`<span class="letra-exemplo" style="font-family: ${mapaModo[modoGrafia].familia === 'Caveat' ? "'Caveat', cursive" : "'Comic Neue', sans-serif"}; font-weight: bold; ${modoGrafia.includes('minusc') ? 'text-transform: lowercase;' : ''}">${exemploSilaba}</span> ${fam.letra} → ${fam.silabas.map(s=>getTextoTransformado(s)).join(" · ")}`; btn.onclick=()=>{ resetarJogoParaFamilia(fam.letra); fecharSeletorFamilias();}; grid.appendChild(btn);});}
     function abrirSeletorAlfabeto(){ atualizarStatusModalidade(); modalAlfabeto.style.display="flex"; preencherGridModalidades();}
     function fecharSeletorAlfabeto(){ modalAlfabeto.style.display="none";}
     function atualizarStatusModalidade(){ document.getElementById("modalidadeAtualStatus").innerHTML=`Modalidade atual: ${mapaModo[modoGrafia].falaPrefixo}`;}
-    function preencherGridModalidades(){ let grid=document.getElementById("listaModalidades"); grid.innerHTML=""; let modos=[{chave:'maiusc-forma',nome:'Letra de Fôrma Maiúscula',exemplo:'Ba'},{chave:'minusc-forma',nome:'Letra de Fôrma Minúscula',exemplo:'ba'},{chave:'maiusc-cursiva',nome:'Letra Cursiva Maiúscula',exemplo:'Ba'},{chave:'minusc-cursiva',nome:'Letra Manuscrita Minúscula',exemplo:'ba'}]; modos.forEach(modo=>{ let btn=document.createElement("button"); btn.className="opcao-botao"; let cfg=mapaModo[modo.chave]; let fontFamily=cfg.familia==='Playwrite US Modern'?"'Playwrite US Modern', cursive":"'Comic Neue', sans-serif"; btn.innerHTML=`<span class="letra-exemplo" style="font-family: ${fontFamily}; font-weight: bold; ${modo.chave.includes('minusc')?'text-transform: lowercase;':''}">${modo.exemplo}</span> ${modo.nome}`; btn.onclick=()=>{ selecionarModo(modo.chave); fecharSeletorAlfabeto();}; grid.appendChild(btn);});}
+    function preencherGridModalidades(){ let grid=document.getElementById("listaModalidades"); grid.innerHTML=""; let modos=[{chave:'maiusc-forma',nome:'Letra de Fôrma Maiúscula',exemplo:'Ba'},{chave:'minusc-forma',nome:'Letra de Fôrma Minúscula',exemplo:'ba'},{chave:'maiusc-cursiva',nome:'Letra Cursiva Maiúscula',exemplo:'Ba'},{chave:'minusc-cursiva',nome:'Letra Manuscrita Minúscula',exemplo:'ba'}]; modos.forEach(modo=>{ let btn=document.createElement("button"); btn.className="opcao-botao"; let cfg=mapaModo[modo.chave]; let fontFamily=cfg.familia==='Caveat'?"'Caveat', cursive":"'Comic Neue', sans-serif"; btn.innerHTML=`<span class="letra-exemplo" style="font-family: ${fontFamily}; font-weight: bold; ${modo.chave.includes('minusc')?'text-transform: lowercase;':''}">${modo.exemplo}</span> ${modo.nome}`; btn.onclick=()=>{ selecionarModo(modo.chave); fecharSeletorAlfabeto();}; grid.appendChild(btn);});}
     function toggleFullscreen(){ if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
     function toggleAudio(){ audioEnabled=!audioEnabled; document.getElementById("btn-audio").innerHTML=audioEnabled?"🔊 Som Ligado":"🔇 Som Desligado"; if(audioEnabled) bgAudio.play().catch(e=>{}); else bgAudio.pause(); }
     function voltarParaAlfabeto(){ if(aguardandoProxima) return; modalNavegacao.style.display="flex"; }
