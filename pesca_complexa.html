@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Sílabas Complexas - Tesouros do Mar Profundo | EdHumanas</title>
-    
+
     <!-- Google Fonts: Playwrite BR (cursiva escolar) + Comic Neue (forma) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Playwrite+BR:wght@100..400&display=swap" rel="stylesheet">
-    
+
     <style>
         * {
             margin: 0;
@@ -176,7 +176,7 @@
             backdrop-filter: blur(4px);
             justify-content: center;
         }
-        
+
         .modo-btn {
             background: rgba(255,255,255,0.1);
             border: 2px solid transparent;
@@ -192,7 +192,7 @@
             gap: 2px;
             min-width: 36px;
         }
-        
+
         .modo-btn .label-modo {
             font-size: 7px;
             font-family: 'Comic Neue', sans-serif;
@@ -200,29 +200,29 @@
             text-transform: uppercase;
             opacity: 0.8;
         }
-        
+
         .modo-btn .exemplo-letra {
             font-size: 22px;
             line-height: 1;
         }
-        
+
         .modo-btn.maiusc-forma .exemplo-letra { font-family: 'Comic Neue', sans-serif; font-weight: 700; }
         .modo-btn.minusc-forma .exemplo-letra { font-family: 'Comic Neue', sans-serif; font-weight: 700; text-transform: lowercase; }
         .modo-btn.maiusc-cursiva .exemplo-letra { font-family: var(--cursive-school); font-weight: 400; }
         .modo-btn.minusc-cursiva .exemplo-letra { font-family: var(--cursive-school); font-weight: 400; text-transform: lowercase; }
-        
+
         .modo-btn:hover {
             background: rgba(255,255,255,0.2);
             transform: scale(1.08);
         }
-        
+
         .modo-btn.ativo {
             background: linear-gradient(135deg, var(--primary), #006064);
             border-color: var(--secondary);
             box-shadow: 0 0 12px rgba(0,172,193,0.5);
             transform: scale(1.1);
         }
-        
+
         @media (min-width: 768px) {
             .modo-barra {
                 gap: 10px;
@@ -238,7 +238,7 @@
             .modo-btn .label-modo { font-size: 9px; }
             .modo-btn .exemplo-letra { font-size: 32px; }
         }
-        
+
         @media (min-width: 1024px) {
             .modo-btn { padding: 8px 16px; min-width: 60px; }
             .modo-btn .exemplo-letra { font-size: 38px; }
@@ -311,28 +311,59 @@
             pointer-events: auto;
         }
 
+        /* ===== CRIATURA COM ÁREA DE CLIQUE AMPLIADA ===== */
         .creature {
             position: absolute;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100px;
-            height: 100px;
+            /* Área de clique aumentada: 140x140px (antes 100x100) */
+            width: 140px;
+            height: 140px;
             pointer-events: auto;
             filter: brightness(1.1) saturate(1.1);
-            z-index: 50;
+            /* Z-index aumentado para ficar ACIMA do header (z-index 100) */
+            z-index: 500;
             transition: transform 0.05s;
         }
+
+        /* Área de toque ampliada via pseudo-elemento */
+        .creature::after {
+            content: "";
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            border-radius: 50%;
+            background: transparent;
+            pointer-events: auto;
+            z-index: 1;
+        }
+
         .creature:active { transform: scale(0.95); }
-        @media (min-width: 768px) { .creature { width: 120px; height: 120px; } }
+
+        @media (min-width: 768px) { 
+            .creature { width: 160px; height: 160px; } 
+            .creature::after {
+                top: -25px;
+                left: -25px;
+                right: -25px;
+                bottom: -25px;
+            }
+        }
+
         .creature-icon {
             font-size: 65px;
             position: absolute;
             filter: drop-shadow(3px 6px 10px rgba(0,0,0,0.5));
             pointer-events: none;
+            z-index: 2;
         }
+
         @media (min-width: 768px) { .creature-icon { font-size: 85px; } }
+
         .silaba-creature {
             font-size: 18px;
             font-weight: bold;
@@ -346,14 +377,13 @@
             backdrop-filter: blur(2px);
             border: 1px solid rgba(255,215,0,0.5);
             pointer-events: none;
-            /* Centraliza o texto dentro da criatura */
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            z-index: 3;
         }
         .silaba-creature.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; }
         .silaba-creature.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
-        /* Tamanhos reduzidos para letras cursivas (maiúsculas e minúsculas) */
         .silaba-creature.modo-maiusc-cursiva { 
             font-family: var(--cursive-school); 
             font-size: 18px; 
@@ -365,7 +395,7 @@
             font-weight: 400; 
             text-transform: lowercase; 
         }
-        
+
         @media (min-width: 768px) {
             .silaba-creature { font-size: 20px; padding: 6px 14px; }
             .silaba-creature.modo-maiusc-cursiva, 
@@ -391,16 +421,16 @@
             100% { transform: translateY(-120vh) scale(0.3); opacity: 0; }
         }
         @keyframes nadar-direita {
-            0% { left: -120px; }
+            0% { left: -180px; }
             100% { left: 100%; }
         }
         @keyframes nadar-esquerda {
             0% { left: 100%; }
-            100% { left: -120px; }
+            100% { left: -180px; }
         }
         @media (min-width: 768px) {
-            @keyframes nadar-direita { 0% { left: -150px; } 100% { left: 100%; } }
-            @keyframes nadar-esquerda { 0% { left: 100%; } 100% { left: -150px; } }
+            @keyframes nadar-direita { 0% { left: -200px; } 100% { left: 100%; } }
+            @keyframes nadar-esquerda { 0% { left: 100%; } 100% { left: -200px; } }
         }
 
         .treasure-effect {
@@ -553,7 +583,7 @@
         }
         .nav-btn:active { transform: scale(0.95); }
         .nav-btn.cancelar { background: linear-gradient(135deg, #555, #333); border-color: #888; }
-        
+
         .grid-categorias {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -580,7 +610,7 @@
         }
         .cat-botao:active { transform: scale(0.96); background: #2a5f6e; }
         .cat-botao:hover { background: #2a5f6e; transform: scale(1.02); }
-        
+
         #fireworks-canvas {
             position: fixed;
             top: 0;
@@ -610,6 +640,7 @@
             .icon-btn { font-size: 11px; padding: 4px 8px; }
         }
     </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -661,9 +692,9 @@
     </div>
 
     <div class="oceano" id="aquario"></div>
-    
+
     <div class="progresso-categoria" id="progressHint">🏆 Tesouros do Mar Profundo</div>
-    
+
     <button class="btn-voltar" id="btnVoltar">
         <span>🏝️</span> Voltar ao Menu
     </button>
@@ -729,16 +760,15 @@
     let faseAtual = 0, pontuacaoTotal = 0, acertosNaEtapa = 0, silabasAtuais = [], indiceSilabaAtual = 0;
     let categoriaCorrente = null, tempoInicioEtapa = null, intervaloRelogio = null;
     let criaturasNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
-    
+
     // ========== MODO DE GRAFIA COM A CORREÇÃO: maiúsculas apenas na primeira letra ==========
     let modoGrafia = 'maiusc-forma';
-    
+
     function capitalizeSilaba(s) {
         if (!s) return s;
-        // Mantém a primeira letra maiúscula, o restante minúsculo
         return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
     }
-    
+
     const mapaModo = {
         'maiusc-forma':   { 
             transform: (s) => s ? capitalizeSilaba(s) : s, 
@@ -761,11 +791,11 @@
             falaPrefixo: 'minúscula manuscrita' 
         }
     };
-    
+
     function getTextoTransformado(texto) {
         return mapaModo[modoGrafia].transform(texto);
     }
-    
+
     function selecionarModo(modo) {
         modoGrafia = modo;
         document.querySelectorAll('.modo-btn').forEach(btn => {
@@ -780,7 +810,7 @@
             carregarProximaSilaba();
         }
     }
-    
+
     // Elementos
     const bgAudio = document.getElementById("bg-audio"), sfxPescado = document.getElementById("sfx-pescado"), sfxErro = document.getElementById("sfx-erro");
     const aquario = document.getElementById("aquario"), modalVitoria = document.getElementById("modal-vitoria"), modalNavegacao = document.getElementById("modal-navegacao");
@@ -808,11 +838,21 @@
     function criarTesouro(x,y){ const t=["💎","👑","💰","🗿","⚓","🔱","🐚","⭐","🏆","✨"][Math.floor(Math.random()*10)]; const e=document.createElement("div"); e.className="treasure-effect"; e.innerText=t; e.style.left=(x-25)+"px"; e.style.top=(y-25)+"px"; document.body.appendChild(e); setTimeout(()=>e.remove(),800); }
     function criarOndaChoque(x,y){ const w=document.createElement("div"); w.className="shockwave"; w.style.left=(x-15)+"px"; w.style.top=(y-15)+"px"; document.body.appendChild(w); setTimeout(()=>w.remove(),500); }
     function mostrarFeedback(texto, acerto, x, y){ const d=document.createElement("div"); d.className="feedback-correto"; d.style.background=acerto?"#2e7d32ee":"#c62828ee"; d.innerText=acerto?`🎣✨ +15 ⭐ ${texto} ✨`:`❌ ${texto}`; document.body.appendChild(d); setTimeout(()=>d.remove(),850); if(acerto&&x){ criarTesouro(x,y); criarOndaChoque(x,y); } }
-    
+
     function atualizarUI(){ 
         document.getElementById("progressHint").innerHTML = `🏆 ${categoriaCorrente?.nome?.substring(0,22)} | ${acertosNaEtapa}/${silabasAtuais.length}`; 
     }
-    
+
+    // ========== FUNÇÃO CORRIGIDA: spawn seguro abaixo do header ==========
+    function calcularAreaSegura() {
+        const header = document.querySelector('.game-header');
+        const instrucao = document.querySelector('.instrucao-wrapper');
+        const headerHeight = header ? header.offsetHeight : 120;
+        const instrucaoHeight = instrucao ? instrucao.offsetHeight + 30 : 80;
+        const margemSuperior = ((headerHeight + instrucaoHeight) / window.innerHeight) * 100;
+        return Math.max(margemSuperior + 5, 25); // Mínimo 25% do topo
+    }
+
     function carregarProximaSilaba(){ 
         if(indiceSilabaAtual >= silabasAtuais.length){ 
             concluirEtapa(); 
@@ -824,7 +864,7 @@
         document.getElementById("silabaAlvo").className = 'modo-' + modoGrafia;
         atualizarUI(); 
         aquario.innerHTML = ""; 
-        
+
         let opcoes = [certa]; 
         let outras = silabasAtuais.filter(s => s.texto !== certa.texto); 
         outras.sort(()=>0.5-Math.random()); 
@@ -836,12 +876,17 @@
             if(jogoAtivo && !aguardandoProxima) tocarSilaba(certa); 
         }, 500); 
     }
-    
+
+    // ========== FUNÇÃO CORRIGIDA: posicionamento seguro e área de toque ampliada ==========
     function criarCriatura(silaba, alvo){ 
         const c = document.createElement("div"); 
         c.className = "creature"; 
-        // Garante que a criatura não fique muito perto do topo (mínimo 15%)
-        c.style.top = Math.random() * 70 + 15 + "%"; 
+
+        // Calcula área segura abaixo do header
+        const minTop = calcularAreaSegura();
+        const maxTop = 85; // Máximo 85% para não sair da tela
+        c.style.top = Math.random() * (maxTop - minTop) + minTop + "%"; 
+
         const dir = Math.random() > 0.5; 
         const dur = Math.random() * 5 + 4.5; 
         c.style.animation = dir ? `nadar-direita ${dur}s linear infinite` : `nadar-esquerda ${dur}s linear infinite`; 
@@ -850,16 +895,27 @@
         const silabaTexto = getTextoTransformado(silaba.texto);
         c.innerHTML = `<span class="creature-icon" style="${flip}">${emoji}</span>
                        <span class="silaba-creature modo-${modoGrafia}">${silabaTexto}</span>`; 
-        c.onclick = (e) => { 
+
+        // Evento unificado para mouse e touch com área ampliada
+        function handleInteraction(e) { 
             e.preventDefault(); 
+            e.stopPropagation();
             if(!jogoAtivo || aguardandoProxima) return; 
             const rect = c.getBoundingClientRect(); 
-            if(silaba.texto === alvo.texto) acertou(c, silaba, rect.left+30, rect.top+30); 
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            if(silaba.texto === alvo.texto) acertou(c, silaba, centerX, centerY); 
             else errou(c, silaba); 
-        }; 
+        }
+
+        // Usa pointerdown para unificar mouse e touch (melhor suporte)
+        c.addEventListener('pointerdown', handleInteraction, { passive: false });
+        c.addEventListener('touchstart', handleInteraction, { passive: false });
+        c.addEventListener('click', handleInteraction);
+
         aquario.appendChild(c); 
     }
-    
+
     function acertou(elem, silabaObj, x, y){ 
         if(!jogoAtivo) return; 
         jogoAtivo=false; 
@@ -883,7 +939,7 @@
             } 
         }); 
     }
-    
+
     function errou(elem, silabaObj){ 
         if(!jogoAtivo) return; 
         if(audioEnabled) sfxErro.play().catch(e=>{}); 
@@ -892,7 +948,7 @@
         setTimeout(()=>elem.classList.remove("erro-anim"),400); 
         tocarSilaba(silabaObj); 
     }
-    
+
     function resetarJogoParaCategoria(indice){ 
         if(intervaloRelogio) clearInterval(intervaloRelogio); 
         jogoAtivo = false; 
@@ -909,7 +965,7 @@
         iniciarCronometro(); 
         carregarProximaSilaba(); 
     }
-    
+
     function concluirEtapa(){ 
         if(aguardandoProxima) return; 
         pararCronometro(); 
@@ -925,7 +981,7 @@
             aguardandoProxima = false; 
         }, 2000); 
     }
-    
+
     // ========== SELEÇÃO DE CATEGORIAS ==========
     function abrirSeletorCategorias(){ 
         modalCategorias.style.display = "flex"; 
@@ -946,7 +1002,7 @@
             grid.appendChild(btn); 
         }); 
     }
-    
+
     // ========== CURSOR PERSONALIZADO (TRIDENTE) ==========
     function initCustomCursor() {
         const isMouse = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -964,12 +1020,12 @@
             document.body.style.cursor = 'none';
         }
     }
-    
+
     // ========== NAVEGAÇÃO COM SUPORTE TOUCH ==========
     function toggleFullscreen(){ if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
     function toggleAudio(){ audioEnabled=!audioEnabled; document.getElementById("btn-audio").innerHTML=audioEnabled?"🔊 Som Ligado":"🔇 Som Desligado"; if(audioEnabled) bgAudio.play().catch(e=>{}); else bgAudio.pause(); }
     function voltarMenu(){ modalNavegacao.style.display="flex"; }
-    
+
     // Adiciona eventos para clique e toque
     const btnVoltarElem = document.getElementById("btnVoltar");
     const btnCancelar = document.getElementById("btnCancelarVolta");
@@ -980,13 +1036,13 @@
     const btnMenu = document.getElementById("btnMenuPrincipal");
     const btnFull = document.getElementById("btnFullscreen");
     const btnAudioElem = document.getElementById("btn-audio");
-    
+
     function addBothEvents(element, handler) {
         if (!element) return;
         element.addEventListener('click', handler);
         element.addEventListener('touchstart', handler, { passive: false });
     }
-    
+
     addBothEvents(btnVoltarElem, voltarMenu);
     addBothEvents(btnCancelar, () => modalNavegacao.style.display = "none");
     addBothEvents(btnConfirmar, () => { modalNavegacao.style.display = "none"; window.location.href = "index_pesca.html"; });
@@ -997,12 +1053,27 @@
     addBothEvents(btnMenu, () => { window.location.href = "index_pesca.html"; });
     addBothEvents(btnFull, toggleFullscreen);
     addBothEvents(btnAudioElem, toggleAudio);
-    
+
     function criarParticulasLuz(){ const c=document.getElementById("lightParticles"); for(let i=0;i<40;i++){ setTimeout(()=>{ const p=document.createElement("div"); p.className="light-particle"; p.style.width=Math.random()*8+3+"px"; p.style.height=p.style.width; p.style.left=Math.random()*100+"%"; p.style.animationDelay=Math.random()*10+"s"; p.style.animationDuration=Math.random()*6+6+"s"; c.appendChild(p); setTimeout(()=>p.remove(),12000); }, i*300); } }
-    
-    window.addEventListener('resize',()=>{ criaturasNaTela=window.innerWidth<768?3:(window.innerWidth<1024?4:5); });
-    setInterval(()=>{ if(jogoAtivo&&!aguardandoProxima&&Math.random()>0.85){ const b=document.createElement("div"); b.className="bolha"; const t=Math.random()*20+8; b.style.width=t+"px"; b.style.height=t+"px"; b.style.left=Math.random()*100+"%"; b.style.animationDuration=Math.random()*3+2+"s"; document.body.appendChild(b); setTimeout(()=>b.remove(),5000); } },1000);
-    
+
+    window.addEventListener('resize',()=>{ 
+        criaturasNaTela=window.innerWidth<768?3:(window.innerWidth<1024?4:5); 
+    });
+
+    setInterval(()=>{ 
+        if(jogoAtivo&&!aguardandoProxima&&Math.random()>0.85){ 
+            const b=document.createElement("div"); 
+            b.className="bolha"; 
+            const t=Math.random()*20+8; 
+            b.style.width=t+"px"; 
+            b.style.height=t+"px"; 
+            b.style.left=Math.random()*100+"%"; 
+            b.style.animationDuration=Math.random()*3+2+"s"; 
+            document.body.appendChild(b); 
+            setTimeout(()=>b.remove(),5000); 
+        } 
+    },1000);
+
     window.onload=()=>{ 
         criarParticulasLuz(); 
         preencherGridCategorias(); 
