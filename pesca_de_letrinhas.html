@@ -5,16 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Pesca de Letrinhas - EdHumanas</title>
     
-    <!-- Google Fonts: Cursivas livres (SIL OFL) -->
+    <!-- Google Fonts: Playwrite BR para cursiva escolar + Comic Neue para letra de forma -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cedarville+Cursive&family=Caveat:wght@400;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Playwrite+BR:wght@100..400&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --primary: #ab47bc; 
             --secondary: #ffca28; 
             --text-light: #ffffff;
+            --cursive-school: 'Playwrite BR', 'Comic Neue', cursive;
         }
 
         * { 
@@ -82,16 +83,34 @@
             flex-direction: column;
         }
 
-        .top-bar {
-            position: absolute;
-            top: 10px; left: 10px;
+        /* =====================================================
+           HEADER ORGANIZADO (sem sobreposição)
+           ===================================================== */
+        .game-header {
+            position: relative;
             z-index: 100;
             display: flex;
-            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(12px);
+            border-bottom: 2px solid rgba(255, 202, 40, 0.5);
+            pointer-events: auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
-        
+
+        .top-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
         .icon-btn {
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.8);
             border: 2px solid var(--secondary);
             color: white;
             width: 40px; height: 40px;
@@ -105,31 +124,24 @@
             transition: transform 0.2s;
         }
         
-        .icon-btn:hover { transform: scale(1.05); }
-        
+        .icon-btn:active { transform: scale(0.95); }
         @media (min-width: 768px) {
             .icon-btn { width: 50px; height: 50px; font-size: 24px; }
-            .top-bar { top: 20px; left: 20px; gap: 15px; }
         }
 
         /* =====================================================
-           BARRA DE SELEÇÃO DE MODO DE GRAFIA (compacta)
+           BARRA DE SELEÇÃO DE MODO DE GRAFIA
            ===================================================== */
         .modo-barra {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 100;
             display: flex;
-            gap: 6px;
-            background: rgba(0,0,0,0.75);
-            padding: 6px 10px;
-            border-radius: 30px;
-            border: 2px solid var(--primary);
-            backdrop-filter: blur(6px);
             flex-wrap: wrap;
-            justify-content: flex-end;
-            max-width: 85vw;
+            gap: 6px;
+            background: rgba(0,0,0,0.5);
+            padding: 6px 10px;
+            border-radius: 40px;
+            border: 1px solid var(--primary);
+            backdrop-filter: blur(4px);
+            justify-content: center;
         }
         
         .modo-btn {
@@ -153,7 +165,6 @@
             font-family: 'Comic Neue', sans-serif;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
             opacity: 0.8;
         }
         
@@ -164,8 +175,8 @@
         
         .modo-btn.maiusc-forma .exemplo-letra { font-family: 'Comic Neue', sans-serif; font-weight: 700; }
         .modo-btn.minusc-forma .exemplo-letra { font-family: 'Comic Neue', sans-serif; font-weight: 700; text-transform: lowercase; }
-        .modo-btn.maiusc-cursiva .exemplo-letra { font-family: 'Cedarville Cursive', cursive; }
-        .modo-btn.minusc-cursiva .exemplo-letra { font-family: 'Caveat', cursive; font-weight: 700; text-transform: lowercase; }
+        .modo-btn.maiusc-cursiva .exemplo-letra { font-family: var(--cursive-school); font-weight: 400; }
+        .modo-btn.minusc-cursiva .exemplo-letra { font-family: var(--cursive-school); font-weight: 400; text-transform: lowercase; }
         
         .modo-btn:hover {
             background: rgba(255,255,255,0.2);
@@ -181,10 +192,9 @@
         
         @media (min-width: 768px) {
             .modo-barra {
-                top: 20px; right: 20px;
                 gap: 10px;
-                padding: 10px 16px;
-                border-radius: 40px;
+                padding: 8px 14px;
+                border-radius: 50px;
             }
             .modo-btn {
                 padding: 6px 12px;
@@ -202,9 +212,10 @@
             .modo-btn .label-modo { font-size: 10px; }
         }
 
+        /* Container da instrução (abaixo do header) */
         .game-info-container {
             width: 100%;
-            padding-top: 60px;
+            padding-top: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -213,38 +224,38 @@
         }
         
         @media (min-width: 768px) {
-            .game-info-container { padding-top: 80px; }
+            .game-info-container { padding-top: 20px; }
         }
 
         .instrucao { 
             font-size: 16px;
             font-weight: 900;
-            margin-top: 8px;
-            background: rgba(0,0,0,0.6);
-            padding: 6px 14px;
-            border-radius: 30px;
-            backdrop-filter: blur(4px);
+            background: rgba(0,0,0,0.75);
+            padding: 8px 18px;
+            border-radius: 50px;
+            backdrop-filter: blur(8px);
             display: flex;
             align-items: baseline;
-            gap: 6px;
+            gap: 10px;
             cursor: pointer;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            border: 1px solid var(--secondary);
             pointer-events: auto;
         }
         
         @media (min-width: 768px) {
             .instrucao {
-                font-size: 24px;
-                margin-top: 15px;
-                padding: 8px 20px;
-                gap: 10px;
+                font-size: 22px;
+                padding: 8px 24px;
+                gap: 12px;
             }
         }
         
         @media (min-width: 1024px) {
             .instrucao {
                 font-size: 28px;
-                padding: 8px 24px;
-                gap: 12px;
+                padding: 10px 30px;
             }
         }
         
@@ -252,35 +263,34 @@
             color: var(--secondary);
             font-size: 28px;
             font-weight: bold;
-            background: #000000aa;
-            padding: 0 10px;
-            border-radius: 30px;
+            background: #000000cc;
+            padding: 0 12px;
+            border-radius: 40px;
             letter-spacing: 2px;
             text-shadow: 0 0 5px #ff9800;
             cursor: pointer;
-            pointer-events: auto;
             transition: transform 0.15s ease, text-shadow 0.15s ease;
             display: inline-block;
-            min-width: 40px;
+            min-width: 60px;
             text-align: center;
         }
 
-        #letraAlvo.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: uppercase; }
+        #letraAlvo.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; }
         #letraAlvo.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
-        #letraAlvo.modo-maiusc-cursiva { font-family: 'Cedarville Cursive', cursive; text-transform: uppercase; }
-        #letraAlvo.modo-minusc-cursiva { font-family: 'Caveat', cursive; text-transform: lowercase; font-weight: 700; }
+        #letraAlvo.modo-maiusc-cursiva { font-family: var(--cursive-school); font-weight: 400; }
+        #letraAlvo.modo-minusc-cursiva { font-family: var(--cursive-school); font-weight: 400; text-transform: lowercase; }
 
         #letraAlvo.pulsando {
-            transform: scale(1.25);
+            transform: scale(1.2);
             text-shadow: 0 0 18px #ffca28, 0 0 6px #ff9800;
         }
         
         @media (min-width: 768px) {
-            #letraAlvo { font-size: 42px; padding: 0 16px; min-width: 55px; }
+            #letraAlvo { font-size: 42px; padding: 0 18px; min-width: 75px; }
         }
         
         @media (min-width: 1024px) {
-            #letraAlvo { font-size: 52px; padding: 0 18px; min-width: 65px; }
+            #letraAlvo { font-size: 52px; padding: 0 22px; min-width: 85px; }
         }
 
         .oceano {
@@ -325,10 +335,10 @@
             text-shadow: 2px 2px 0 #0a2f5a;
         }
         
-        .letra-peixe.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: uppercase; }
+        .letra-peixe.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; }
         .letra-peixe.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
-        .letra-peixe.modo-maiusc-cursiva { font-family: 'Cedarville Cursive', cursive; text-transform: uppercase; font-size: 26px; }
-        .letra-peixe.modo-minusc-cursiva { font-family: 'Caveat', cursive; text-transform: lowercase; font-weight: 700; font-size: 26px; }
+        .letra-peixe.modo-maiusc-cursiva { font-family: var(--cursive-school); font-size: 26px; font-weight: 400; }
+        .letra-peixe.modo-minusc-cursiva { font-family: var(--cursive-school); text-transform: lowercase; font-weight: 400; font-size: 26px; }
         
         @media (min-width: 768px) {
             .letra-peixe { font-size: 30px; }
@@ -496,7 +506,7 @@
         }
         
         .btn-silabas {
-            position: absolute;
+            position: fixed;
             bottom: 15px; right: 15px;
             background: linear-gradient(135deg, #ff8c00, #ff5722);
             border: none;
@@ -560,7 +570,7 @@
         .nav-btn.confirmar { background: linear-gradient(135deg, #ff8c00, #ff5722); }
         
         .dica-som {
-            position: absolute;
+            position: fixed;
             bottom: 10px; left: 10px;
             background: rgba(0,0,0,0.5);
             padding: 3px 8px;
@@ -568,6 +578,7 @@
             font-size: 9px;
             color: #aaa;
             pointer-events: none;
+            z-index: 100;
         }
         
         @media (min-width: 768px) {
@@ -685,6 +696,48 @@
         }
         
         .alfabeto-fechar:active { transform: scale(0.95); }
+
+        /* Responsividade para mobile: empilhar header */
+        @media (max-width: 700px) {
+            .game-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+                padding: 10px;
+            }
+            .top-bar {
+                justify-content: center;
+            }
+            .modo-barra {
+                justify-content: center;
+            }
+            .game-info-container {
+                padding-top: 10px;
+            }
+            .instrucao {
+                font-size: 14px;
+                padding: 6px 12px;
+                white-space: nowrap;
+            }
+            #letraAlvo {
+                font-size: 22px;
+                min-width: 50px;
+                padding: 0 8px;
+            }
+        }
+        @media (max-width: 480px) {
+            .instrucao {
+                font-size: 12px;
+            }
+            #letraAlvo {
+                font-size: 18px;
+            }
+            .icon-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -700,32 +753,34 @@
 <div id="badge-fase2">🚀 FASE 2 — Peixes mais rápidos!</div>
 
 <div id="game-wrapper">
-    <div class="top-bar">
-        <button class="icon-btn" onclick="window.location.href='index.html'">⬅️</button>
-        <button id="btn-audio" class="icon-btn" onclick="toggleAudio()">🔇</button>
-        <button class="icon-btn" onclick="toggleFullscreen()">⛶</button>
-        <!-- BOTÃO DO ALFABETO -->
-        <button class="icon-btn" onclick="abrirAlfabeto()" title="Escolher letra">🔤</button>
-    </div>
+    <!-- HEADER REFORMULADO (sem sobreposição) -->
+    <div class="game-header">
+        <div class="top-bar">
+            <button class="icon-btn" onclick="window.location.href='index.html'">⬅️</button>
+            <button id="btn-audio" class="icon-btn" onclick="toggleAudio()">🔇</button>
+            <button class="icon-btn" onclick="toggleFullscreen()">⛶</button>
+            <button class="icon-btn" onclick="abrirAlfabeto()" title="Escolher letra">🔤</button>
+        </div>
 
-    <!-- BARRA DE SELEÇÃO DE MODO DE GRAFIA -->
-    <div class="modo-barra" id="modoBarra">
-        <button class="modo-btn maiusc-forma ativo" data-modo="maiusc-forma" onclick="selecionarModo('maiusc-forma')">
-            <span class="exemplo-letra">A</span>
-            <span class="label-modo">Maiúscula</span>
-        </button>
-        <button class="modo-btn minusc-forma" data-modo="minusc-forma" onclick="selecionarModo('minusc-forma')">
-            <span class="exemplo-letra">a</span>
-            <span class="label-modo">Minúscula</span>
-        </button>
-        <button class="modo-btn maiusc-cursiva" data-modo="maiusc-cursiva" onclick="selecionarModo('maiusc-cursiva')">
-            <span class="exemplo-letra">A</span>
-            <span class="label-modo">Cursiva</span>
-        </button>
-        <button class="modo-btn minusc-cursiva" data-modo="minusc-cursiva" onclick="selecionarModo('minusc-cursiva')">
-            <span class="exemplo-letra">a</span>
-            <span class="label-modo">Manuscrita</span>
-        </button>
+        <!-- BARRA DE SELEÇÃO DE MODO DE GRAFIA -->
+        <div class="modo-barra" id="modoBarra">
+            <button class="modo-btn maiusc-forma ativo" data-modo="maiusc-forma" onclick="selecionarModo('maiusc-forma')">
+                <span class="exemplo-letra">A</span>
+                <span class="label-modo">Maiúscula</span>
+            </button>
+            <button class="modo-btn minusc-forma" data-modo="minusc-forma" onclick="selecionarModo('minusc-forma')">
+                <span class="exemplo-letra">a</span>
+                <span class="label-modo">Minúscula</span>
+            </button>
+            <button class="modo-btn maiusc-cursiva" data-modo="maiusc-cursiva" onclick="selecionarModo('maiusc-cursiva')">
+                <span class="exemplo-letra">A</span>
+                <span class="label-modo">Cursiva</span>
+            </button>
+            <button class="modo-btn minusc-cursiva" data-modo="minusc-cursiva" onclick="selecionarModo('minusc-cursiva')">
+                <span class="exemplo-letra">a</span>
+                <span class="label-modo">Manuscrita</span>
+            </button>
+        </div>
     </div>
 
     <div class="game-info-container">
@@ -790,13 +845,13 @@
     let modoGrafia = 'maiusc-forma';
     
     // ================================================================
-    // CORREÇÃO DE PRONÚNCIA: "fôrma" com acento circunflexo
+    // MAPEAMENTO DOS MODOS (fala e transformação)
     // ================================================================
     const mapaModo = {
         'maiusc-forma':   { transform: l => l.toUpperCase(), familia: 'Comic Neue', falaPrefixo: 'maiúscula de fôrma' },
         'minusc-forma':   { transform: l => l.toLowerCase(), familia: 'Comic Neue', falaPrefixo: 'minúscula de fôrma' },
-        'maiusc-cursiva': { transform: l => l.toUpperCase(), familia: 'Cedarville Cursive', falaPrefixo: 'maiúscula cursiva' },
-        'minusc-cursiva': { transform: l => l.toLowerCase(), familia: 'Caveat', falaPrefixo: 'minúscula manuscrita' }
+        'maiusc-cursiva': { transform: l => l.toUpperCase(), familia: 'Playwrite BR', falaPrefixo: 'maiúscula cursiva' },
+        'minusc-cursiva': { transform: l => l.toLowerCase(), familia: 'Playwrite BR', falaPrefixo: 'minúscula manuscrita' }
     };
 
     function selecionarModo(modo) {
