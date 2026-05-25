@@ -164,29 +164,85 @@
             .icon-btn { padding: 8px 16px; font-size: 16px; }
         }
 
-        /* Info do jogo (pontos, progresso, timer) */
-        .game-stats {
+        /* ===== BARRA DE SELEÇÃO DE MODO DE GRAFIA ===== */
+        .modo-barra {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            background: rgba(0, 10, 25, 0.85);
-            padding: 6px 15px;
+            gap: 6px;
+            background: rgba(0,0,0,0.5);
+            padding: 6px 10px;
             border-radius: 40px;
-            border: 2px solid var(--primary);
-            font-weight: bold;
-            font-size: 11px;
+            border: 1px solid var(--primary);
             backdrop-filter: blur(4px);
             justify-content: center;
         }
-        @media (min-width: 768px) {
-            .game-stats { gap: 20px; padding: 10px 25px; font-size: 18px; }
+        
+        .modo-btn {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 4px 8px;
+            font-size: 18px;
+            cursor: pointer;
+            color: white;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            min-width: 36px;
         }
-        .timer {
-            background: #000000aa;
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-family: 'Courier New', monospace;
-            color: #00ffcc;
+        
+        .modo-btn .label-modo {
+            font-size: 7px;
+            font-family: 'Comic Neue', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+        
+        .modo-btn .exemplo-letra {
+            font-size: 22px;
+            line-height: 1;
+        }
+        
+        .modo-btn.maiusc-forma .exemplo-letra { font-family: 'Comic Neue', sans-serif; font-weight: 700; }
+        .modo-btn.minusc-forma .exemplo-letra { font-family: 'Comic Neue', sans-serif; font-weight: 700; text-transform: lowercase; }
+        .modo-btn.maiusc-cursiva .exemplo-letra { font-family: var(--cursive-school); font-weight: 400; }
+        .modo-btn.minusc-cursiva .exemplo-letra { font-family: var(--cursive-school); font-weight: 400; text-transform: lowercase; }
+        
+        .modo-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.08);
+        }
+        
+        .modo-btn.ativo {
+            background: linear-gradient(135deg, var(--primary), #006064);
+            border-color: var(--secondary);
+            box-shadow: 0 0 12px rgba(0,172,193,0.5);
+            transform: scale(1.1);
+        }
+        
+        @media (min-width: 768px) {
+            .modo-barra {
+                gap: 10px;
+                padding: 8px 14px;
+                border-radius: 50px;
+            }
+            .modo-btn {
+                padding: 6px 12px;
+                font-size: 26px;
+                min-width: 50px;
+                border-radius: 16px;
+            }
+            .modo-btn .label-modo { font-size: 9px; }
+            .modo-btn .exemplo-letra { font-size: 32px; }
+        }
+        
+        @media (min-width: 1024px) {
+            .modo-btn { padding: 8px 16px; min-width: 60px; }
+            .modo-btn .exemplo-letra { font-size: 38px; }
+            .modo-btn .label-modo { font-size: 10px; }
         }
 
         /* Instrução da sílaba alvo */
@@ -195,7 +251,7 @@
             z-index: 30;
             display: flex;
             justify-content: center;
-            margin: 12px 0 8px;
+            margin: 15px 0 10px;
             pointer-events: auto;
         }
         .instrucao {
@@ -236,6 +292,12 @@
             text-shadow: 0 0 20px #ffca28;
             border-color: var(--secondary);
         }
+        /* Estilos conforme modo */
+        #silabaAlvo.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; }
+        #silabaAlvo.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
+        #silabaAlvo.modo-maiusc-cursiva { font-family: var(--cursive-school); font-weight: 400; }
+        #silabaAlvo.modo-minusc-cursiva { font-family: var(--cursive-school); font-weight: 400; text-transform: lowercase; }
+
         @media (min-width: 768px) {
             #silabaAlvo { font-size: 42px; padding: 0 20px; }
         }
@@ -282,14 +344,19 @@
             border-radius: 30px;
             position: absolute;
             text-shadow: 1px 1px 0 #0a2f5a;
-            font-family: 'Comic Neue', monospace;
             white-space: nowrap;
             backdrop-filter: blur(2px);
             border: 1px solid rgba(255,215,0,0.5);
             pointer-events: none;
         }
+        .silaba-creature.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; }
+        .silaba-creature.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
+        .silaba-creature.modo-maiusc-cursiva { font-family: var(--cursive-school); font-size: 24px; font-weight: 400; }
+        .silaba-creature.modo-minusc-cursiva { font-family: var(--cursive-school); font-size: 24px; font-weight: 400; text-transform: lowercase; }
+        
         @media (min-width: 768px) {
             .silaba-creature { font-size: 26px; padding: 6px 14px; }
+            .silaba-creature.modo-maiusc-cursiva, .silaba-creature.modo-minusc-cursiva { font-size: 32px; }
         }
 
         .pescado {
@@ -517,7 +584,7 @@
             .top-bar {
                 justify-content: center;
             }
-            .game-stats {
+            .modo-barra {
                 justify-content: center;
             }
             .instrucao-wrapper {
@@ -544,14 +611,6 @@
                 font-size: 11px;
                 padding: 4px 8px;
             }
-            .game-stats {
-                font-size: 9px;
-                gap: 8px;
-                padding: 4px 10px;
-            }
-            .timer {
-                padding: 2px 8px;
-            }
         }
     </style>
 </head>
@@ -570,7 +629,7 @@
 <audio id="sfx-fireworks" src="fogos.mp3" preload="auto"></audio>
 
 <div id="game-wrapper">
-    <!-- HEADER REFORMULADO (sem sobreposição) -->
+    <!-- HEADER COM BARRA DE MODOS -->
     <div class="game-header">
         <div class="top-bar">
             <button id="btnMenuPrincipal" class="icon-btn">🏠 Menu</button>
@@ -579,11 +638,24 @@
             <button id="btnFullscreen" class="icon-btn">⛶ Tela</button>
         </div>
 
-        <div class="game-stats">
-            <div>🏺 Família: <span id="categoriaAtual">-</span></div>
-            <div>✨ Pontos: <span id="pontosText">0</span></div>
-            <div>🐚 Progresso: <span id="acertosFase">0</span>/<span id="totalEtapa">0</span></div>
-            <div class="timer">⏱️ <span id="timerDisplay">00:00</span></div>
+        <!-- BARRA DE SELEÇÃO DE MODO DE GRAFIA -->
+        <div class="modo-barra" id="modoBarra">
+            <button class="modo-btn maiusc-forma ativo" data-modo="maiusc-forma" onclick="selecionarModo('maiusc-forma')">
+                <span class="exemplo-letra">Ba</span>
+                <span class="label-modo">Maiúscula</span>
+            </button>
+            <button class="modo-btn minusc-forma" data-modo="minusc-forma" onclick="selecionarModo('minusc-forma')">
+                <span class="exemplo-letra">ba</span>
+                <span class="label-modo">Minúscula</span>
+            </button>
+            <button class="modo-btn maiusc-cursiva" data-modo="maiusc-cursiva" onclick="selecionarModo('maiusc-cursiva')">
+                <span class="exemplo-letra">Ba</span>
+                <span class="label-modo">Cursiva</span>
+            </button>
+            <button class="modo-btn minusc-cursiva" data-modo="minusc-cursiva" onclick="selecionarModo('minusc-cursiva')">
+                <span class="exemplo-letra">ba</span>
+                <span class="label-modo">Manuscrita</span>
+            </button>
         </div>
     </div>
 
@@ -603,7 +675,7 @@
     <div class="dica-som">💡 Clique na sílaba para ouvir | Escolha qualquer família!</div>
 </div>
 
-<!-- Modal de categorias (modo livre) -->
+<!-- Modais (mantidos) -->
 <div id="modal-categorias">
     <div class="icone-vitoria">🐟📚🐠</div>
     <div class="vitoria-texto">Escolha uma família silábica</div>
@@ -664,6 +736,38 @@
     let categoriaCorrente = null, tempoInicioEtapa = null, intervaloRelogio = null;
     let criaturasNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
     
+    // ========== MODO DE GRAFIA ATUAL (inicia com maiúscula de forma) ==========
+    let modoGrafia = 'maiusc-forma';
+    
+    const mapaModo = {
+        'maiusc-forma':   { transform: (s) => s ? s.toUpperCase() : s, familia: 'Comic Neue', falaPrefixo: 'maiúscula de fôrma' },
+        'minusc-forma':   { transform: (s) => s ? s.toLowerCase() : s, familia: 'Comic Neue', falaPrefixo: 'minúscula de fôrma' },
+        'maiusc-cursiva': { transform: (s) => s ? s.toUpperCase() : s, familia: 'Playwrite BR', falaPrefixo: 'maiúscula cursiva' },
+        'minusc-cursiva': { transform: (s) => s ? s.toLowerCase() : s, familia: 'Playwrite BR', falaPrefixo: 'minúscula manuscrita' }
+    };
+    
+    function getTextoTransformado(texto) {
+        return mapaModo[modoGrafia].transform(texto);
+    }
+    
+    function selecionarModo(modo) {
+        modoGrafia = modo;
+        document.querySelectorAll('.modo-btn').forEach(btn => {
+            btn.classList.toggle('ativo', btn.dataset.modo === modo);
+        });
+        // Atualiza a sílaba alvo atual e recarrega os peixes
+        if (categoriaCorrente && silabasAtuais.length > 0 && indiceSilabaAtual < silabasAtuais.length) {
+            const silabaCerta = silabasAtuais[indiceSilabaAtual];
+            document.getElementById("silabaAlvo").innerText = getTextoTransformado(silabaCerta.texto);
+            document.getElementById("silabaAlvo").className = 'modo-' + modo;
+        }
+        // Recarrega toda a fase para atualizar os textos nos peixes
+        if (jogoAtivo && !aguardandoProxima && categoriaCorrente) {
+            // Para não reiniciar a rodada, apenas recria os peixes? Melhor reiniciar a rodada atual
+            carregarProximaSilaba(); // recria os peixes com o novo estilo
+        }
+    }
+    
     // Elementos
     const bgAudio = document.getElementById("bg-audio"), sfxPescado = document.getElementById("sfx-pescado"), sfxErro = document.getElementById("sfx-erro");
     const aquario = document.getElementById("aquario"), modalVitoria = document.getElementById("modal-vitoria"), modalNavegacao = document.getElementById("modal-navegacao");
@@ -672,43 +776,141 @@
 
     // Funções auxiliares
     function tocarAudioMP3(arquivo, callback) { if (!arquivo) return; if(currentAudio) currentAudio.pause(); const a = new Audio(arquivo); currentAudio = a; a.play().catch(e=>console.log); a.onended = ()=>{ currentAudio=null; if(callback)callback(); }; }
-    function tocarSilaba(silabaObj, callback) { if(silabaObj?.audio) tocarAudioMP3(silabaObj.audio, callback); else if(callback) callback(); }
-    function repetirSilabaAlvo() { const t=document.getElementById("silabaAlvo").innerText; const s=silabasAtuais.find(x=>x.texto===t); if(s){ document.getElementById("silabaAlvo").classList.add("pulsando"); setTimeout(()=>document.getElementById("silabaAlvo").classList.remove("pulsando"),300); tocarSilaba(s); } }
+    function tocarSilaba(silabaObj, callback) { 
+        if(silabaObj?.audio) tocarAudioMP3(silabaObj.audio, callback); 
+        else if(callback) callback(); 
+    }
+    function repetirSilabaAlvo() { 
+        const t = document.getElementById("silabaAlvo").innerText; 
+        const s = silabasAtuais.find(x => getTextoTransformado(x.texto) === t); 
+        if(s){ 
+            document.getElementById("silabaAlvo").classList.add("pulsando"); 
+            setTimeout(()=>document.getElementById("silabaAlvo").classList.remove("pulsando"),300); 
+            tocarSilaba(s); 
+        } 
+    }
     function formatarTempo(seg) { return `${Math.floor(seg/60).toString().padStart(2,'0')}:${(seg%60).toString().padStart(2,'0')}`; }
-    function iniciarCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); tempoInicioEtapa=Date.now(); intervaloRelogio=setInterval(()=>{ if(tempoInicioEtapa&&jogoAtivo&&!aguardandoProxima) document.getElementById("timerDisplay").innerText=formatarTempo(Math.floor((Date.now()-tempoInicioEtapa)/1000)); },1000); }
+    function iniciarCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); tempoInicioEtapa=Date.now(); intervaloRelogio=setInterval(()=>{ if(tempoInicioEtapa&&jogoAtivo&&!aguardandoProxima) { /* não há timer visível, mas mantido para lógica */ } },1000); }
     function pararCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); return tempoInicioEtapa?Math.floor((Date.now()-tempoInicioEtapa)/1000):0; }
     function criarTesouro(x,y){ const t=["💎","👑","💰","🗿","⚓","🔱","🐚","⭐","🏆","✨"][Math.floor(Math.random()*10)]; const e=document.createElement("div"); e.className="treasure-effect"; e.innerText=t; e.style.left=(x-25)+"px"; e.style.top=(y-25)+"px"; document.body.appendChild(e); setTimeout(()=>e.remove(),800); }
     function criarOndaChoque(x,y){ const w=document.createElement("div"); w.className="shockwave"; w.style.left=(x-15)+"px"; w.style.top=(y-15)+"px"; document.body.appendChild(w); setTimeout(()=>w.remove(),500); }
     function mostrarFeedback(texto, acerto, x, y){ const d=document.createElement("div"); d.className="feedback-correto"; d.style.background=acerto?"#2e7d32ee":"#c62828ee"; d.innerText=acerto?`🎣✨ +15 ⭐ ${texto} ✨`:`❌ ${texto}`; document.body.appendChild(d); setTimeout(()=>d.remove(),850); if(acerto&&x){ criarTesouro(x,y); criarOndaChoque(x,y); } }
     
-    function atualizarUI(){ document.getElementById("categoriaAtual").innerHTML=categoriaCorrente?.nome||"-"; document.getElementById("pontosText").innerHTML=pontuacaoTotal; document.getElementById("acertosFase").innerHTML=acertosNaEtapa; document.getElementById("totalEtapa").innerHTML=silabasAtuais.length; document.getElementById("progressHint").innerHTML=`🏆 ${categoriaCorrente?.nome?.substring(0,22)} | ${acertosNaEtapa}/${silabasAtuais.length}`; }
+    function atualizarUI(){ 
+        document.getElementById("progressHint").innerHTML = `🏆 ${categoriaCorrente?.nome?.substring(0,22)} | ${acertosNaEtapa}/${silabasAtuais.length}`; 
+    }
     
-    function carregarProximaSilaba(){ if(indiceSilabaAtual>=silabasAtuais.length){ concluirEtapa(); return; } const certa=silabasAtuais[indiceSilabaAtual]; document.getElementById("silabaAlvo").innerText=certa.texto; atualizarUI(); aquario.innerHTML=""; let opcoes=[certa]; let outras=silabasAtuais.filter(s=>s.texto!==certa.texto); outras.sort(()=>0.5-Math.random()); opcoes.push(...outras.slice(0,criaturasNaTela-1)); while(opcoes.length<criaturasNaTela) opcoes.push({texto:"CHA",audio:"cha.mp3"}); opcoes.sort(()=>Math.random()-0.5); opcoes.forEach(sil=>criarCriatura(sil,certa)); setTimeout(()=>{ if(jogoAtivo&&!aguardandoProxima) tocarSilaba(certa); },500); }
+    function carregarProximaSilaba(){ 
+        if(indiceSilabaAtual >= silabasAtuais.length){ 
+            concluirEtapa(); 
+            return; 
+        } 
+        const certa = silabasAtuais[indiceSilabaAtual]; 
+        const certaTransformada = getTextoTransformado(certa.texto);
+        document.getElementById("silabaAlvo").innerText = certaTransformada;
+        document.getElementById("silabaAlvo").className = 'modo-' + modoGrafia;
+        atualizarUI(); 
+        aquario.innerHTML = ""; 
+        
+        let opcoes = [certa]; 
+        let outras = silabasAtuais.filter(s => s.texto !== certa.texto); 
+        outras.sort(()=>0.5-Math.random()); 
+        opcoes.push(...outras.slice(0, criaturasNaTela-1)); 
+        while(opcoes.length < criaturasNaTela) opcoes.push({texto:"CHA", audio:"cha.mp3"}); 
+        opcoes.sort(()=>Math.random()-0.5); 
+        opcoes.forEach(sil => criarCriatura(sil, certa)); 
+        setTimeout(()=>{ 
+            if(jogoAtivo && !aguardandoProxima) tocarSilaba(certa); 
+        }, 500); 
+    }
     
-    function criarCriatura(silaba, alvo){ const c=document.createElement("div"); c.className="creature"; c.style.top=Math.random()*70+10+"%"; const dir=Math.random()>0.5; const dur=Math.random()*5+4.5; c.style.animation=dir?`nadar-direita ${dur}s linear infinite`:`nadar-esquerda ${dur}s linear infinite`; const emoji=criaturas[Math.floor(Math.random()*criaturas.length)]; const flip=dir?'transform: scaleX(-1);':''; c.innerHTML=`<span class="creature-icon" style="${flip}">${emoji}</span><span class="silaba-creature">${silaba.texto}</span>`; c.onclick=(e)=>{ e.preventDefault(); if(!jogoAtivo||aguardandoProxima) return; const rect=c.getBoundingClientRect(); if(silaba.texto===alvo.texto) acertou(c,silaba,rect.left+30,rect.top+30); else errou(c,silaba); }; aquario.appendChild(c); }
+    function criarCriatura(silaba, alvo){ 
+        const c = document.createElement("div"); 
+        c.className = "creature"; 
+        c.style.top = Math.random() * 70 + 10 + "%"; 
+        const dir = Math.random() > 0.5; 
+        const dur = Math.random() * 5 + 4.5; 
+        c.style.animation = dir ? `nadar-direita ${dur}s linear infinite` : `nadar-esquerda ${dur}s linear infinite`; 
+        const emoji = criaturas[Math.floor(Math.random() * criaturas.length)]; 
+        const flip = dir ? 'transform: scaleX(-1);' : ''; 
+        const silabaTexto = getTextoTransformado(silaba.texto);
+        c.innerHTML = `<span class="creature-icon" style="${flip}">${emoji}</span>
+                       <span class="silaba-creature modo-${modoGrafia}">${silabaTexto}</span>`; 
+        c.onclick = (e) => { 
+            e.preventDefault(); 
+            if(!jogoAtivo || aguardandoProxima) return; 
+            const rect = c.getBoundingClientRect(); 
+            if(silaba.texto === alvo.texto) acertou(c, silaba, rect.left+30, rect.top+30); 
+            else errou(c, silaba); 
+        }; 
+        aquario.appendChild(c); 
+    }
     
-    function acertou(elem, silabaObj, x, y){ if(!jogoAtivo) return; jogoAtivo=false; if(audioEnabled) sfxPescado.play().catch(e=>{}); const rect=elem.getBoundingClientRect(); elem.style.animation="none"; elem.style.left=rect.left+"px"; elem.style.top=rect.top+"px"; elem.classList.add("pescado"); pontuacaoTotal+=15; acertosNaEtapa++; atualizarUI(); mostrarFeedback(silabaObj.texto,true,x,y); tocarSilaba(silabaObj,()=>{ indiceSilabaAtual++; if(indiceSilabaAtual<silabasAtuais.length){ jogoAtivo=true; carregarProximaSilaba(); } else concluirEtapa(); }); }
+    function acertou(elem, silabaObj, x, y){ 
+        if(!jogoAtivo) return; 
+        jogoAtivo=false; 
+        if(audioEnabled) sfxPescado.play().catch(e=>{}); 
+        const rect = elem.getBoundingClientRect(); 
+        elem.style.animation = "none"; 
+        elem.style.left = rect.left + "px"; 
+        elem.style.top = rect.top + "px"; 
+        elem.classList.add("pescado"); 
+        pontuacaoTotal += 15; 
+        acertosNaEtapa++; 
+        atualizarUI(); 
+        mostrarFeedback(getTextoTransformado(silabaObj.texto), true, x, y); 
+        tocarSilaba(silabaObj, () => { 
+            indiceSilabaAtual++; 
+            if(indiceSilabaAtual < silabasAtuais.length){ 
+                jogoAtivo = true; 
+                carregarProximaSilaba(); 
+            } else { 
+                concluirEtapa(); 
+            } 
+        }); 
+    }
     
-    function errou(elem, silabaObj){ if(!jogoAtivo) return; if(audioEnabled) sfxErro.play().catch(e=>{}); mostrarFeedback(silabaObj.texto,false); elem.classList.add("erro-anim"); setTimeout(()=>elem.classList.remove("erro-anim"),400); tocarSilaba(silabaObj); }
+    function errou(elem, silabaObj){ 
+        if(!jogoAtivo) return; 
+        if(audioEnabled) sfxErro.play().catch(e=>{}); 
+        mostrarFeedback(getTextoTransformado(silabaObj.texto), false); 
+        elem.classList.add("erro-anim"); 
+        setTimeout(()=>elem.classList.remove("erro-anim"),400); 
+        tocarSilaba(silabaObj); 
+    }
     
     function resetarJogoParaCategoria(indice){ 
         if(intervaloRelogio) clearInterval(intervaloRelogio); 
-        jogoAtivo=false; 
-        aguardandoProxima=false; 
-        pontuacaoTotal=0; 
-        faseAtual=indice; 
-        categoriaCorrente=categorias[indice]; 
-        silabasAtuais=[...categoriaCorrente.silabas]; 
-        indiceSilabaAtual=0; 
-        acertosNaEtapa=0; 
+        jogoAtivo = false; 
+        aguardandoProxima = false; 
+        pontuacaoTotal = 0; 
+        faseAtual = indice; 
+        categoriaCorrente = categorias[indice]; 
+        silabasAtuais = [...categoriaCorrente.silabas]; 
+        indiceSilabaAtual = 0; 
+        acertosNaEtapa = 0; 
         atualizarUI(); 
-        aquario.innerHTML=""; 
-        jogoAtivo=true; 
+        aquario.innerHTML = ""; 
+        jogoAtivo = true; 
         iniciarCronometro(); 
         carregarProximaSilaba(); 
     }
     
-    function concluirEtapa(){ if(aguardandoProxima) return; pararCronometro(); aguardandoProxima=true; jogoAtivo=false; aquario.innerHTML=""; modalVitoria.style.display="flex"; document.getElementById("vitoria-msg-topo").innerHTML=`✨ ${categoriaCorrente.nome} ✨`; document.getElementById("scoreFinalModal").innerHTML=`✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length} | Pontos: ${pontuacaoTotal}`; document.getElementById("vitoria-msg-sub").innerHTML="🎉 Parabéns! Escolha outra família no botão Famílias 📚"; setTimeout(()=>{ modalVitoria.style.display="none"; aguardandoProxima=false; },2000); }
+    function concluirEtapa(){ 
+        if(aguardandoProxima) return; 
+        pararCronometro(); 
+        aguardandoProxima = true; 
+        jogoAtivo = false; 
+        aquario.innerHTML = ""; 
+        modalVitoria.style.display = "flex"; 
+        document.getElementById("vitoria-msg-topo").innerHTML = `✨ ${categoriaCorrente.nome} ✨`; 
+        document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length} | Pontos: ${pontuacaoTotal}`; 
+        document.getElementById("vitoria-msg-sub").innerHTML = "🎉 Parabéns! Escolha outra família no botão Famílias 📚"; 
+        setTimeout(()=>{ 
+            modalVitoria.style.display = "none"; 
+            aguardandoProxima = false; 
+        }, 2000); 
+    }
     
     // ========== SELEÇÃO DE CATEGORIAS ==========
     function abrirSeletorCategorias(){ 
