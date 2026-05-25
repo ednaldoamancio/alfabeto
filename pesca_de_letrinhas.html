@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Pesca de Letrinhas - EdHumanas</title>
     
+    <!-- Google Fonts: Cursivas livres (SIL OFL) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cedarville+Cursive&family=Caveat:wght@400;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --primary: #ab47bc; 
@@ -21,7 +26,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', 'Comic Neue', 'Comic Sans MS', Tahoma, sans-serif;
+            font-family: 'Comic Neue', 'Segoe UI', Tahoma, sans-serif;
             background: #000;
             color: var(--text-light);
             width: 100vw;
@@ -53,20 +58,14 @@
         }
         
         @media (hover: none) and (pointer: coarse) {
-            .custom-cursor {
-                display: none;
-            }
-            body {
-                cursor: auto;
-            }
+            .custom-cursor { display: none; }
+            body { cursor: auto; }
         }
 
         #bg-video {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             object-fit: cover;
             z-index: 0;
             opacity: 0.7;
@@ -74,10 +73,8 @@
 
         #game-wrapper {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             z-index: 10;
             display: flex;
             flex-direction: column;
@@ -85,8 +82,7 @@
 
         .top-bar {
             position: absolute;
-            top: 10px;
-            left: 10px;
+            top: 10px; left: 10px;
             z-index: 100;
             display: flex;
             gap: 10px;
@@ -96,8 +92,7 @@
             background: rgba(0, 0, 0, 0.6);
             border: 2px solid var(--secondary);
             color: white;
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             border-radius: 50%;
             cursor: pointer;
             font-size: 20px;
@@ -108,66 +103,118 @@
             transition: transform 0.2s;
         }
         
-        .icon-btn:hover {
-            transform: scale(1.05);
+        .icon-btn:hover { transform: scale(1.05); }
+        
+        @media (min-width: 768px) {
+            .icon-btn { width: 50px; height: 50px; font-size: 24px; }
+            .top-bar { top: 20px; left: 20px; gap: 15px; }
+        }
+
+        /* =====================================================
+           BARRA DE SELEÇÃO DE MODO DE GRAFIA (compacta)
+           ===================================================== */
+        .modo-barra {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+            display: flex;
+            gap: 6px;
+            background: rgba(0,0,0,0.75);
+            padding: 6px 10px;
+            border-radius: 30px;
+            border: 2px solid var(--primary);
+            backdrop-filter: blur(6px);
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            max-width: 85vw;
+        }
+        
+        .modo-btn {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 4px 8px;
+            font-size: 18px;
+            cursor: pointer;
+            color: white;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            min-width: 36px;
+        }
+        
+        .modo-btn .label-modo {
+            font-size: 7px;
+            font-family: 'Comic Neue', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.8;
+        }
+        
+        .modo-btn .exemplo-letra {
+            font-size: 22px;
+            line-height: 1;
+        }
+        
+        .modo-btn.maiusc-forma .exemplo-letra { font-family: 'Comic Neue', sans-serif; font-weight: 700; }
+        .modo-btn.minusc-forma .exemplo-letra { font-family: 'Comic Neue', sans-serif; font-weight: 700; text-transform: lowercase; }
+        .modo-btn.maiusc-cursiva .exemplo-letra { font-family: 'Cedarville Cursive', cursive; }
+        .modo-btn.minusc-cursiva .exemplo-letra { font-family: 'Caveat', cursive; font-weight: 700; text-transform: lowercase; }
+        
+        .modo-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.08);
+        }
+        
+        .modo-btn.ativo {
+            background: linear-gradient(135deg, var(--primary), #7b1fa2);
+            border-color: var(--secondary);
+            box-shadow: 0 0 12px rgba(171, 71, 188, 0.5);
+            transform: scale(1.1);
         }
         
         @media (min-width: 768px) {
-            .icon-btn {
-                width: 50px;
-                height: 50px;
-                font-size: 24px;
+            .modo-barra {
+                top: 20px; right: 20px;
+                gap: 10px;
+                padding: 10px 16px;
+                border-radius: 40px;
             }
-            .top-bar {
-                top: 20px;
-                left: 20px;
-                gap: 15px;
+            .modo-btn {
+                padding: 6px 12px;
+                font-size: 26px;
+                min-width: 50px;
+                border-radius: 16px;
             }
+            .modo-btn .label-modo { font-size: 9px; }
+            .modo-btn .exemplo-letra { font-size: 32px; }
+        }
+        
+        @media (min-width: 1024px) {
+            .modo-btn { padding: 8px 16px; min-width: 60px; }
+            .modo-btn .exemplo-letra { font-size: 38px; }
+            .modo-btn .label-modo { font-size: 10px; }
         }
 
         .game-info-container {
             width: 100%;
-            padding-top: 10px;
+            padding-top: 60px;
             display: flex;
             flex-direction: column;
             align-items: center;
             z-index: 20;
             pointer-events: none;
         }
-
-        .game-info {
-            display: flex;
-            gap: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 6px 15px;
-            border-radius: 30px;
-            border: 2px solid var(--primary);
-            font-weight: bold;
-            font-size: 11px;
-            backdrop-filter: blur(4px);
-            flex-wrap: wrap;
-            justify-content: center;
-        }
         
         @media (min-width: 768px) {
-            .game-info {
-                gap: 20px;
-                padding: 10px 25px;
-                font-size: 18px;
-            }
-        }
-        
-        @media (min-width: 1024px) {
-            .game-info {
-                gap: 30px;
-                padding: 10px 30px;
-                font-size: 22px;
-            }
+            .game-info-container { padding-top: 80px; }
         }
 
-        /* =====================================================
-           INSTRUÇÃO: pointer-events ATIVADO para clicar na letra
-           ===================================================== */
+        /* Instrução com letra alvo */
         .instrucao { 
             font-size: 16px;
             font-weight: 900;
@@ -180,7 +227,7 @@
             align-items: baseline;
             gap: 6px;
             cursor: pointer;
-            pointer-events: auto;   /* garante que o clique funciona */
+            pointer-events: auto;
         }
         
         @media (min-width: 768px) {
@@ -210,36 +257,36 @@
             letter-spacing: 2px;
             text-shadow: 0 0 5px #ff9800;
             cursor: pointer;
-            pointer-events: auto;   /* garante que o clique funciona */
+            pointer-events: auto;
             transition: transform 0.15s ease, text-shadow 0.15s ease;
+            display: inline-block;
+            min-width: 40px;
+            text-align: center;
         }
 
-        /* Pulso visual ao clicar na letra */
+        /* Estilos dinâmicos da letra alvo conforme modo */
+        #letraAlvo.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: uppercase; }
+        #letraAlvo.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
+        #letraAlvo.modo-maiusc-cursiva { font-family: 'Cedarville Cursive', cursive; text-transform: uppercase; }
+        #letraAlvo.modo-minusc-cursiva { font-family: 'Caveat', cursive; text-transform: lowercase; font-weight: 700; }
+
         #letraAlvo.pulsando {
             transform: scale(1.25);
             text-shadow: 0 0 18px #ffca28, 0 0 6px #ff9800;
         }
         
         @media (min-width: 768px) {
-            #letraAlvo {
-                font-size: 42px;
-                padding: 0 16px;
-            }
+            #letraAlvo { font-size: 42px; padding: 0 16px; min-width: 55px; }
         }
         
         @media (min-width: 1024px) {
-            #letraAlvo {
-                font-size: 52px;
-                padding: 0 18px;
-            }
+            #letraAlvo { font-size: 52px; padding: 0 18px; min-width: 65px; }
         }
 
         .oceano {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             z-index: 5;
             overflow: hidden;
             pointer-events: auto;
@@ -251,25 +298,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 70px;
-            height: 70px;
+            width: 70px; height: 70px;
             pointer-events: auto;
             transition: filter 0.1s;
         }
         
-        @media (min-width: 768px) {
-            .peixinho {
-                width: 100px;
-                height: 100px;
-            }
-        }
-        
-        @media (min-width: 1024px) {
-            .peixinho {
-                width: 120px;
-                height: 120px;
-            }
-        }
+        @media (min-width: 768px) { .peixinho { width: 100px; height: 100px; } }
+        @media (min-width: 1024px) { .peixinho { width: 120px; height: 120px; } }
         
         .peixe-corpo {
             font-size: 50px;
@@ -278,17 +313,8 @@
             filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
         }
         
-        @media (min-width: 768px) {
-            .peixe-corpo {
-                font-size: 75px;
-            }
-        }
-        
-        @media (min-width: 1024px) {
-            .peixe-corpo {
-                font-size: 85px;
-            }
-        }
+        @media (min-width: 768px) { .peixe-corpo { font-size: 75px; } }
+        @media (min-width: 1024px) { .peixe-corpo { font-size: 85px; } }
         
         .letra-peixe {
             font-size: 22px;
@@ -297,19 +323,21 @@
             position: absolute;
             z-index: 2;
             text-shadow: 2px 2px 0 #0a2f5a;
-            font-family: 'Courier New', monospace;
         }
+        
+        /* Estilos dinâmicos das letras nos peixes */
+        .letra-peixe.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: uppercase; }
+        .letra-peixe.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
+        .letra-peixe.modo-maiusc-cursiva { font-family: 'Cedarville Cursive', cursive; text-transform: uppercase; font-size: 26px; }
+        .letra-peixe.modo-minusc-cursiva { font-family: 'Caveat', cursive; text-transform: lowercase; font-weight: 700; font-size: 26px; }
         
         @media (min-width: 768px) {
-            .letra-peixe {
-                font-size: 30px;
-            }
+            .letra-peixe { font-size: 30px; }
+            .letra-peixe.modo-maiusc-cursiva, .letra-peixe.modo-minusc-cursiva { font-size: 36px; }
         }
-        
         @media (min-width: 1024px) {
-            .letra-peixe {
-                font-size: 35px;
-            }
+            .letra-peixe { font-size: 35px; }
+            .letra-peixe.modo-maiusc-cursiva, .letra-peixe.modo-minusc-cursiva { font-size: 42px; }
         }
 
         .pescado {
@@ -333,14 +361,8 @@
         }
         
         @media (min-width: 768px) {
-            @keyframes nadar-direita {
-                0% { left: -150px; }
-                100% { left: 100%; }
-            }
-            @keyframes nadar-esquerda {
-                0% { left: 100%; }
-                100% { left: -150px; }
-            }
+            @keyframes nadar-direita { 0% { left: -150px; } 100% { left: 100%; } }
+            @keyframes nadar-esquerda { 0% { left: 100%; } 100% { left: -150px; } }
         }
 
         .bolha {
@@ -378,16 +400,11 @@
         }
         
         @media (min-width: 768px) {
-            .vitoria-texto {
-                font-size: 5vh;
-                margin: 20px 0;
-            }
+            .vitoria-texto { font-size: 5vh; margin: 20px 0; }
         }
         
         .icone-vitoria { font-size: 10vh; margin-bottom: 15px; animation: float 2s infinite; }
-        @media (min-width: 768px) {
-            .icone-vitoria { font-size: 15vh; margin-bottom: 20px; }
-        }
+        @media (min-width: 768px) { .icone-vitoria { font-size: 15vh; margin-bottom: 20px; } }
         
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
         
@@ -401,12 +418,7 @@
         }
         
         @media (min-width: 768px) {
-            .score-panel { 
-                font-size: 24px; 
-                padding: 12px 28px; 
-                border-radius: 60px; 
-                margin-top: 20px;
-            }
+            .score-panel { font-size: 24px; padding: 12px 28px; border-radius: 60px; margin-top: 20px; }
         }
 
         .erro-anim {
@@ -437,11 +449,7 @@
         }
         
         @media (min-width: 768px) {
-            .feedback-correto {
-                bottom: 20%;
-                padding: 12px 24px;
-                font-size: 28px;
-            }
+            .feedback-correto { bottom: 20%; padding: 12px 24px; font-size: 28px; }
         }
         
         @keyframes fadeUp {
@@ -459,23 +467,17 @@
             animation: estrelaPular 0.6s ease-out forwards;
         }
         
-        @media (min-width: 768px) {
-            .star-point {
-                font-size: 44px;
-            }
-        }
+        @media (min-width: 768px) { .star-point { font-size: 44px; } }
         
         @keyframes estrelaPular {
             0% { transform: scale(0.2) translateY(0); opacity: 1; }
             100% { transform: scale(1.2) translateY(-70px); opacity: 0; }
         }
         
-        /* Badge de FASE 2 - aviso de velocidade */
         #badge-fase2 {
             display: none;
             position: fixed;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             background: linear-gradient(135deg, #ff6f00, #e53935);
             border: 3px solid var(--secondary);
@@ -496,8 +498,7 @@
         
         .btn-silabas {
             position: absolute;
-            bottom: 15px;
-            right: 15px;
+            bottom: 15px; right: 15px;
             background: linear-gradient(135deg, #ff8c00, #ff5722);
             border: none;
             border-radius: 40px;
@@ -518,28 +519,12 @@
         }
         
         @media (min-width: 768px) {
-            .btn-silabas {
-                bottom: 30px;
-                right: 30px;
-                padding: 14px 28px;
-                font-size: 20px;
-                gap: 12px;
-            }
+            .btn-silabas { bottom: 30px; right: 30px; padding: 14px 28px; font-size: 20px; gap: 12px; }
         }
         
-        .btn-silabas:active {
-            transform: scale(0.95);
-        }
-        
-        .btn-silabas span {
-            font-size: 18px;
-        }
-        
-        @media (min-width: 768px) {
-            .btn-silabas span {
-                font-size: 28px;
-            }
-        }
+        .btn-silabas:active { transform: scale(0.95); }
+        .btn-silabas span { font-size: 18px; }
+        @media (min-width: 768px) { .btn-silabas span { font-size: 28px; } }
         
         @keyframes pulse-glow {
             0% { box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.5); }
@@ -555,12 +540,7 @@
             justify-content: center;
         }
         
-        @media (min-width: 768px) {
-            .nav-buttons {
-                gap: 30px;
-                margin-top: 30px;
-            }
-        }
+        @media (min-width: 768px) { .nav-buttons { gap: 30px; margin-top: 30px; } }
         
         .nav-btn {
             background: linear-gradient(135deg, var(--primary), #7b1fa2);
@@ -575,31 +555,14 @@
             font-family: inherit;
         }
         
-        @media (min-width: 768px) {
-            .nav-btn {
-                padding: 15px 35px;
-                font-size: 24px;
-                border-radius: 60px;
-            }
-        }
-        
-        .nav-btn:active {
-            transform: scale(0.95);
-        }
-        
-        .nav-btn.cancelar {
-            background: linear-gradient(135deg, #555, #333);
-            border-color: #888;
-        }
-        
-        .nav-btn.confirmar {
-            background: linear-gradient(135deg, #ff8c00, #ff5722);
-        }
+        @media (min-width: 768px) { .nav-btn { padding: 15px 35px; font-size: 24px; border-radius: 60px; } }
+        .nav-btn:active { transform: scale(0.95); }
+        .nav-btn.cancelar { background: linear-gradient(135deg, #555, #333); border-color: #888; }
+        .nav-btn.confirmar { background: linear-gradient(135deg, #ff8c00, #ff5722); }
         
         .dica-som {
             position: absolute;
-            bottom: 10px;
-            left: 10px;
+            bottom: 10px; left: 10px;
             background: rgba(0,0,0,0.5);
             padding: 3px 8px;
             border-radius: 15px;
@@ -609,13 +572,7 @@
         }
         
         @media (min-width: 768px) {
-            .dica-som {
-                bottom: 20px;
-                left: 20px;
-                padding: 5px 12px;
-                font-size: 12px;
-                border-radius: 20px;
-            }
+            .dica-som { bottom: 20px; left: 20px; padding: 5px 12px; font-size: 12px; border-radius: 20px; }
         }
     </style>
 </head>
@@ -638,15 +595,30 @@
         <button class="icon-btn" onclick="toggleFullscreen()">⛶</button>
     </div>
 
+    <!-- BARRA DE SELEÇÃO DE MODO DE GRAFIA -->
+    <div class="modo-barra" id="modoBarra">
+        <button class="modo-btn maiusc-forma ativo" data-modo="maiusc-forma" onclick="selecionarModo('maiusc-forma')">
+            <span class="exemplo-letra">A</span>
+            <span class="label-modo">Maiúscula</span>
+        </button>
+        <button class="modo-btn minusc-forma" data-modo="minusc-forma" onclick="selecionarModo('minusc-forma')">
+            <span class="exemplo-letra">a</span>
+            <span class="label-modo">Minúscula</span>
+        </button>
+        <button class="modo-btn maiusc-cursiva" data-modo="maiusc-cursiva" onclick="selecionarModo('maiusc-cursiva')">
+            <span class="exemplo-letra">A</span>
+            <span class="label-modo">Cursiva</span>
+        </button>
+        <button class="modo-btn minusc-cursiva" data-modo="minusc-cursiva" onclick="selecionarModo('minusc-cursiva')">
+            <span class="exemplo-letra">a</span>
+            <span class="label-modo">Manuscrita</span>
+        </button>
+    </div>
+
     <div class="game-info-container">
-        <div class="game-info">
-            <div>📚 Etapa: <span id="faseText">1</span>/2</div>
-            <div>🏆 Letras: <span id="pontosText">0</span>/26</div>
-            <div>⭐ Pontos: <span id="scoreText">0</span></div>
-        </div>
-        <!-- pointer-events: auto garantido via CSS -->
+        <!-- Apenas instrução e letra alvo, sem barra de pontos -->
         <p class="instrucao" id="btnRepetirLetra">
-            🐠 Pesque a letra: <span id="letraAlvo">?</span> 🔊
+            🐠 Pesque a letra: <span id="letraAlvo" class="modo-maiusc-forma">?</span> 🔊
         </p>
     </div>
 
@@ -688,10 +660,33 @@
     const modalVitoria   = document.getElementById("modal-vitoria");
     const modalNavegacao = document.getElementById("modal-navegacao");
     const badgeFase2     = document.getElementById("badge-fase2");
+    const elLetraAlvo    = document.getElementById("letraAlvo");
 
     // ================================================================
-    // CORREÇÃO 3: Alfabeto em ORDEM ALFABÉTICA (sem embaralhar)
+    // MODO DE GRAFIA ATUAL
     // ================================================================
+    let modoGrafia = 'maiusc-forma'; // maiusc-forma | minusc-forma | maiusc-cursiva | minusc-cursiva
+    
+    const mapaModo = {
+        'maiusc-forma':   { transform: l => l.toUpperCase(), familia: 'Comic Neue', falaPrefixo: 'maiúscula de forma' },
+        'minusc-forma':   { transform: l => l.toLowerCase(), familia: 'Comic Neue', falaPrefixo: 'minúscula de forma' },
+        'maiusc-cursiva': { transform: l => l.toUpperCase(), familia: 'Cedarville Cursive', falaPrefixo: 'maiúscula cursiva' },
+        'minusc-cursiva': { transform: l => l.toLowerCase(), familia: 'Caveat', falaPrefixo: 'minúscula manuscrita' }
+    };
+
+    function selecionarModo(modo) {
+        modoGrafia = modo;
+        // Atualiza botões visuais
+        document.querySelectorAll('.modo-btn').forEach(btn => {
+            btn.classList.toggle('ativo', btn.dataset.modo === modo);
+        });
+        // Atualiza classe da letra alvo
+        elLetraAlvo.className = 'modo-' + modo;
+        // Recomeça a rodada atual com a nova grafia
+        iniciarRodada();
+    }
+
+    // Alfabeto em ORDEM ALFABÉTICA
     const alfabetoCompleto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
     let indiceLetraAtual = 0;
@@ -701,30 +696,17 @@
     let jogoAtivo = true;
     let aguardandoProxima = false;
 
-    // ================================================================
-    // VELOCIDADE DOS PEIXES: definida por fase
-    // Fase 1: duração 7–12 s (lentos)
-    // Fase 2: duração 3.5–6 s  (quase o dobro da velocidade)
-    // ================================================================
     function obterDuracaoPeixe() {
-        if (faseAtual === 1) {
-            return (Math.random() * 5) + 7;   // 7 a 12 segundos
-        } else {
-            return (Math.random() * 2.5) + 3.5; // 3.5 a 6 segundos
-        }
+        if (faseAtual === 1) return (Math.random() * 5) + 7;
+        else return (Math.random() * 2.5) + 3.5;
     }
     
-    if (window.innerWidth < 768) {
-        peixesNaTela = 3;
-    } else if (window.innerWidth < 1024) {
-        peixesNaTela = 4;
-    } else {
-        peixesNaTela = 5;
-    }
+    if (window.innerWidth < 768) peixesNaTela = 3;
+    else if (window.innerWidth < 1024) peixesNaTela = 4;
+    else peixesNaTela = 5;
     
     const emojisPeixe = ["🐟", "🐠", "🐡", "🐋", "🦈", "🐙", "🐬", "🐳"];
 
-    // Pronúncia correta em pt-BR de cada letra
     function obterPronunciaLetra(letra) {
         const pronunciaMap = {
             "A": "á", "B": "bê", "C": "cê", "D": "dê", "E": "ê", "F": "efe",
@@ -736,7 +718,6 @@
         return pronunciaMap[letra.toUpperCase()] || letra.toLowerCase();
     }
 
-    // Fala genérica
     function falar(texto, callback) {
         if (!window.speechSynthesis) { if (callback) callback(); return; }
         if (currentUtterance) window.speechSynthesis.cancel();
@@ -746,14 +727,14 @@
         utterance.rate  = 0.85;
         utterance.pitch = 1.0;
 
-        const voices      = window.speechSynthesis.getVoices();
-        const ptBrVoice   = voices.find(v => v.lang === 'pt-BR' &&
+        const voices = window.speechSynthesis.getVoices();
+        const ptBrVoice = voices.find(v => v.lang === 'pt-BR' &&
             (v.name.includes('Google') || v.name.includes('Microsoft') ||
              v.name.includes('Maria')  || v.name.includes('Natural')));
         if (ptBrVoice) utterance.voice = ptBrVoice;
 
         currentUtterance = utterance;
-        utterance.onend  = () => {
+        utterance.onend = () => {
             currentUtterance = null;
             if (callback) setTimeout(callback, 150);
         };
@@ -761,7 +742,9 @@
     }
 
     function falarLetra(letra, callback) {
-        falar(obterPronunciaLetra(letra), callback);
+        const cfg = mapaModo[modoGrafia];
+        const pronuncia = obterPronunciaLetra(letra);
+        falar(`${cfg.falaPrefixo}: ${pronuncia}`, callback);
     }
 
     function falarMensagem(msg, callback) {
@@ -769,21 +752,17 @@
     }
 
     function falarParabensELetra(letra, callback) {
-        falar(`Muito bem! ${obterPronunciaLetra(letra)}`, callback);
+        const cfg = mapaModo[modoGrafia];
+        const pronuncia = obterPronunciaLetra(letra);
+        falar(`Muito bem! ${cfg.falaPrefixo} ${pronuncia}`, callback);
     }
 
-    // ================================================================
-    // CORREÇÃO 2: Som ao clicar na letraAlvo
-    // Funciona SEMPRE (mesmo durante animações), sem restrição de jogoAtivo
-    // ================================================================
     function repetirLetraAlvo() {
-        const elLetra = document.getElementById("letraAlvo");
-        const letraAtual = elLetra.innerText;
-        if (!letraAtual || letraAtual === "?") return;
+        const letraAtual = alfabetoCompleto[indiceLetraAtual];
+        if (!letraAtual) return;
 
-        // Pulso visual
-        elLetra.classList.add("pulsando");
-        setTimeout(() => elLetra.classList.remove("pulsando"), 300);
+        elLetraAlvo.classList.add("pulsando");
+        setTimeout(() => elLetraAlvo.classList.remove("pulsando"), 300);
 
         falarLetra(letraAtual);
     }
@@ -843,54 +822,62 @@
             return;
         }
 
-        const letraCerta = alfabetoCompleto[indiceLetraAtual];
-        document.getElementById("letraAlvo").innerText = letraCerta;
-        document.getElementById("faseText").innerHTML   = faseAtual;
-        document.getElementById("pontosText").innerHTML = indiceLetraAtual;
-        document.getElementById("scoreText").innerHTML  = pontuacaoTotal;
+        const letraBase = alfabetoCompleto[indiceLetraAtual];
+        const cfg = mapaModo[modoGrafia];
+        const letraCerta = cfg.transform(letraBase);
+        
+        elLetraAlvo.innerText = letraCerta;
+        elLetraAlvo.className = 'modo-' + modoGrafia;
         aquario.innerHTML = "";
 
-        let letrasRodada = [letraCerta];
+        let letrasRodada = [letraBase]; // armazena a base para transformar depois
         while (letrasRodada.length < peixesNaTela) {
             let aleat = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random() * 26)];
             if (!letrasRodada.includes(aleat)) letrasRodada.push(aleat);
         }
 
-        letrasRodada.sort(() => Math.random() - 0.5).forEach(letra => criarPeixe(letra, letraCerta));
-        setTimeout(() => falarMensagem("Pesque a letra " + obterPronunciaLetra(letraCerta)), 500);
+        letrasRodada.sort(() => Math.random() - 0.5).forEach(letraBase => {
+            criarPeixe(cfg.transform(letraBase), letraCerta, letraBase === alfabetoCompleto[indiceLetraAtual]);
+        });
+        
+        setTimeout(() => {
+            falarMensagem("Pesque a letra " + cfg.falaPrefixo + " " + obterPronunciaLetra(letraBase));
+        }, 500);
     }
 
-    // ================================================================
-    // CORREÇÃO 1: criarPeixe usa obterDuracaoPeixe() — velocidade por fase
-    // ================================================================
-    function criarPeixe(letra, letraCerta) {
+    function criarPeixe(letraDisplay, letraCertaDisplay, isCerta) {
         const peixe = document.createElement("div");
         peixe.className = "peixinho";
         peixe.style.top = Math.floor(Math.random() * 65 + 15) + "%";
 
-        const dir      = Math.random() > 0.5;
-        const duracao  = obterDuracaoPeixe();   // ← velocidade dinâmica!
+        const dir = Math.random() > 0.5;
+        const duracao = obterDuracaoPeixe();
         peixe.style.animation = dir
             ? `nadar-direita ${duracao}s linear infinite`
             : `nadar-esquerda ${duracao}s linear infinite`;
 
         const emoji = emojisPeixe[Math.floor(Math.random() * emojisPeixe.length)];
-        const flip  = dir ? 'transform: scaleX(-1);' : '';
+        const flip = dir ? 'transform: scaleX(-1);' : '';
 
-        peixe.innerHTML = `<span class="peixe-corpo" style="${flip}">${emoji}</span><span class="letra-peixe">${letra}</span>`;
+        const spanLetra = document.createElement("span");
+        spanLetra.className = "letra-peixe modo-" + modoGrafia;
+        spanLetra.innerText = letraDisplay;
+
+        peixe.innerHTML = `<span class="peixe-corpo" style="${flip}">${emoji}</span>`;
+        peixe.appendChild(spanLetra);
         
         const handleClick = (e) => {
             e.preventDefault();
             e.stopPropagation();
             if (!jogoAtivo || aguardandoProxima) return;
-            if (letra === letraCerta) {
-                validarAcerto(peixe, letra);
+            if (isCerta) {
+                validarAcerto(peixe, letraDisplay);
             } else {
-                errou(peixe, letra);
+                errou(peixe, letraDisplay);
             }
         };
         
-        peixe.addEventListener('click',      handleClick);
+        peixe.addEventListener('click', handleClick);
         peixe.addEventListener('touchstart', handleClick, { passive: false });
         
         aquario.appendChild(peixe);
@@ -915,13 +902,10 @@
         pontuacaoTotal += 10;
         indiceLetraAtual++;
         
-        document.getElementById("scoreText").innerHTML  = pontuacaoTotal;
-        document.getElementById("pontosText").innerHTML = indiceLetraAtual;
-        
         mostrarEstrela(rect.left + 30, rect.top + 30);
         mostrarFeedback(`✅ +10  ${letraClicada}`, true);
         
-        falarParabensELetra(letraClicada, () => {
+        falarParabensELetra(alfabetoCompleto[indiceLetraAtual - 1], () => {
             if (indiceLetraAtual === 13 && faseAtual === 1) {
                 concluirEtapa();
             } else if (indiceLetraAtual >= alfabetoCompleto.length) {
@@ -936,14 +920,12 @@
     function concluirEtapa() {
         faseAtual = 2;
         criarEfeitoBolhas(40);
-
-        // Mostra badge de velocidade aumentada por 2.5 s
         badgeFase2.style.display = "block";
         setTimeout(() => { badgeFase2.style.display = "none"; }, 2500);
 
-        document.getElementById("vitoria-msg-topo").innerText     = "Etapa 1 Concluída!";
-        document.getElementById("scoreFinalModal").innerHTML       = `✅ Letras: ${indiceLetraAtual}   |   Pontos: ${pontuacaoTotal}`;
-        document.getElementById("vitoria-msg-sub").innerHTML       = "🚀 Fase 2: peixes mais rápidos!";
+        document.getElementById("vitoria-msg-topo").innerText = "Etapa 1 Concluída!";
+        document.getElementById("scoreFinalModal").innerHTML = `✅ Letras: ${indiceLetraAtual}   |   Pontos: ${pontuacaoTotal}`;
+        document.getElementById("vitoria-msg-sub").innerHTML = "🚀 Fase 2: peixes mais rápidos!";
         modalVitoria.style.display = "flex";
         
         falarMensagem("Parabéns! Você venceu a primeira etapa! Atenção: os peixes vão nadar mais rápido agora!", () => {
@@ -958,8 +940,8 @@
     function finalizarJogoGeral() {
         criarEfeitoBolhas(50);
         document.getElementById("vitoria-msg-topo").innerText = "Alfabeto Completo!";
-        document.getElementById("vitoria-msg-sub").innerHTML  = "Você é um mestre da pescaria!";
-        document.getElementById("scoreFinalModal").innerHTML  = `🌟 Pontuação final: ${pontuacaoTotal} 🌟`;
+        document.getElementById("vitoria-msg-sub").innerHTML = "Você é um mestre da pescaria!";
+        document.getElementById("scoreFinalModal").innerHTML = `🌟 Pontuação final: ${pontuacaoTotal} 🌟`;
         modalVitoria.style.display = "flex";
         falarMensagem("Incrível! Você pescou todo o alfabeto! Parabéns!");
         
@@ -972,7 +954,7 @@
             sfxErro.play().catch(() => {});
         }
         mostrarFeedback(`❌ ${letraErrada}`, false);
-        falarLetra(letraErrada);
+        falarLetra(letraErrada.toUpperCase());
         peixeElem.classList.add("erro-anim");
         setTimeout(() => peixeElem.classList.remove("erro-anim"), 500);
     }
@@ -993,16 +975,11 @@
     }
     
     // Eventos
-    document.getElementById("btnMudarSilabas").addEventListener("click",       convidarParaSilabas);
-    document.getElementById("btnCancelarNavegacao").addEventListener("click",   fecharModalNavegacao);
-    document.getElementById("btnConfirmarNavegacao").addEventListener("click",  irParaSilabas);
+    document.getElementById("btnMudarSilabas").addEventListener("click", convidarParaSilabas);
+    document.getElementById("btnCancelarNavegacao").addEventListener("click", fecharModalNavegacao);
+    document.getElementById("btnConfirmarNavegacao").addEventListener("click", irParaSilabas);
     
-    // ================================================================
-    // CORREÇÃO 2 (cont.): Clique na instrução E diretamente na letraAlvo
-    // Ambos disparam repetirLetraAlvo() de forma independente
-    // ================================================================
     document.getElementById("btnRepetirLetra").addEventListener("click", (e) => {
-        // Evita duplo disparo quando o clique vem do próprio letraAlvo
         if (e.target.id !== "letraAlvo") repetirLetraAlvo();
     });
 
@@ -1045,9 +1022,9 @@
     }, 1200);
     
     window.addEventListener('resize', () => {
-        if (window.innerWidth < 768)       peixesNaTela = 3;
+        if (window.innerWidth < 768) peixesNaTela = 3;
         else if (window.innerWidth < 1024) peixesNaTela = 4;
-        else                               peixesNaTela = 5;
+        else peixesNaTela = 5;
     });
     
     window.onload = () => {
