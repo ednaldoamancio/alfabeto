@@ -380,7 +380,7 @@
             background: radial-gradient(circle, rgba(255,255,255,0.6), rgba(100,200,255,0.2));
             border-radius: 50%;
             pointer-events: none;
-            z-index: 50;
+            z-index: 15;
             animation: subir-bolha linear forwards;
         }
         @keyframes subir-bolha {
@@ -995,8 +995,8 @@
         falarMensagem(`Vamos pescar a letra ${cfg.falaPrefixo} ${obterPronunciaLetra(letraEscolhida)}!`);
     }
 
-    function criarEfeitoBolhas(quantidade = 30) {
-        const qtd = window.innerWidth < 768 ? 25 : quantidade;
+    function criarEfeitoBolhas(quantidade = 100) {
+        const qtd = window.innerWidth < 768 ? 50 : quantidade;
         for (let i = 0; i < qtd; i++) {
             setTimeout(() => {
                 const bolha = document.createElement("div");
