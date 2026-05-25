@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Sílabas Complexas - Tesouros do Mar Profundo | EdHumanas</title>
     
+    <!-- Google Fonts: Playwrite BR (cursiva escolar) + Comic Neue (forma) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Playwrite+BR:wght@100..400&display=swap" rel="stylesheet">
+    
     <style>
-        /* (mesmo CSS anterior, mantido) */
         * {
             margin: 0;
             padding: 0;
@@ -15,8 +19,14 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        :root {
+            --cursive-school: 'Playwrite BR', 'Comic Neue', cursive;
+            --primary: #00acc1;
+            --secondary: #ffd54f;
+        }
+
         body {
-            font-family: 'Segoe UI', 'Comic Neue', 'Comic Sans MS', Tahoma, sans-serif;
+            font-family: 'Comic Neue', 'Segoe UI', 'Comic Sans MS', Tahoma, sans-serif;
             background: #000;
             color: #ffffff;
             width: 100vw;
@@ -26,6 +36,7 @@
             touch-action: manipulation;
         }
 
+        /* Cursor personalizado - Tridente */
         .custom-cursor {
             position: fixed;
             width: 45px;
@@ -108,25 +119,38 @@
             pointer-events: none;
         }
 
-        .top-bar {
-            position: absolute;
-            top: 10px;
-            left: 10px;
+        /* ===== HEADER ORGANIZADO (sem sobreposição) ===== */
+        .game-header {
+            position: relative;
             z-index: 100;
             display: flex;
-            gap: 10px;
-            pointer-events: auto;
             flex-wrap: wrap;
-            max-width: calc(100% - 20px);
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(12px);
+            border-bottom: 2px solid var(--secondary);
+            pointer-events: auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
+
+        .top-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
         .icon-btn {
             background: rgba(0, 0, 0, 0.8);
-            border: 2px solid #ffd54f;
+            border: 2px solid var(--secondary);
             color: white;
-            padding: 8px 12px;
+            padding: 6px 12px;
             border-radius: 40px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             backdrop-filter: blur(4px);
             transition: transform 0.2s;
             display: inline-flex;
@@ -137,35 +161,25 @@
         }
         .icon-btn:active { transform: scale(0.95); }
         @media (min-width: 768px) {
-            .icon-btn { padding: 10px 18px; font-size: 18px; }
-            .top-bar { top: 20px; left: 20px; gap: 15px; }
+            .icon-btn { padding: 8px 16px; font-size: 16px; }
         }
 
-        .game-info-container {
-            width: 100%;
-            padding-top: 10px;
+        /* Info do jogo (pontos, progresso, timer) */
+        .game-stats {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 20;
-            pointer-events: none;
-        }
-
-        .game-info {
-            display: flex;
+            flex-wrap: wrap;
             gap: 10px;
             background: rgba(0, 10, 25, 0.85);
             padding: 6px 15px;
             border-radius: 40px;
-            border: 2px solid #00acc1;
+            border: 2px solid var(--primary);
             font-weight: bold;
             font-size: 11px;
             backdrop-filter: blur(4px);
-            flex-wrap: wrap;
             justify-content: center;
         }
         @media (min-width: 768px) {
-            .game-info { gap: 20px; padding: 10px 25px; font-size: 18px; }
+            .game-stats { gap: 20px; padding: 10px 25px; font-size: 18px; }
         }
         .timer {
             background: #000000aa;
@@ -175,26 +189,36 @@
             color: #00ffcc;
         }
 
+        /* Instrução da sílaba alvo */
+        .instrucao-wrapper {
+            position: relative;
+            z-index: 30;
+            display: flex;
+            justify-content: center;
+            margin: 12px 0 8px;
+            pointer-events: auto;
+        }
         .instrucao {
             font-size: 16px;
             font-weight: 900;
-            margin-top: 8px;
             background: rgba(0,0,0,0.75);
-            padding: 6px 14px;
-            border-radius: 40px;
-            backdrop-filter: blur(4px);
+            padding: 8px 18px;
+            border-radius: 50px;
+            backdrop-filter: blur(8px);
             display: flex;
             align-items: baseline;
-            gap: 6px;
+            gap: 10px;
             cursor: pointer;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            border: 1px solid var(--secondary);
             pointer-events: auto;
-            border: 1px solid #ffd54f;
         }
         @media (min-width: 768px) {
-            .instrucao { font-size: 24px; margin-top: 15px; padding: 8px 20px; gap: 10px; }
+            .instrucao { font-size: 24px; padding: 8px 24px; gap: 12px; }
         }
         #silabaAlvo {
-            color: #ffd54f;
+            color: var(--secondary);
             font-size: 28px;
             font-weight: bold;
             background: linear-gradient(135deg, #1a2a3a, #0a1a2a);
@@ -203,14 +227,17 @@
             letter-spacing: 2px;
             text-shadow: 0 0 8px #ff9800;
             cursor: pointer;
-            pointer-events: auto;
             transition: transform 0.15s ease;
-            border: 1px solid #00acc1;
+            border: 1px solid var(--primary);
+            font-family: 'Comic Neue', monospace;
         }
         #silabaAlvo.pulsando {
             transform: scale(1.25);
             text-shadow: 0 0 20px #ffca28;
-            border-color: #ffd54f;
+            border-color: var(--secondary);
+        }
+        @media (min-width: 768px) {
+            #silabaAlvo { font-size: 42px; padding: 0 20px; }
         }
 
         .oceano {
@@ -255,7 +282,7 @@
             border-radius: 30px;
             position: absolute;
             text-shadow: 1px 1px 0 #0a2f5a;
-            font-family: monospace;
+            font-family: 'Comic Neue', monospace;
             white-space: nowrap;
             backdrop-filter: blur(2px);
             border: 1px solid rgba(255,215,0,0.5);
@@ -338,7 +365,7 @@
             text-align: center;
             padding: 20px;
         }
-        .vitoria-texto { font-size: 4vh; color: #ffd54f; margin: 15px 0; }
+        .vitoria-texto { font-size: 4vh; color: var(--secondary); margin: 15px 0; font-weight: bold; }
         .icone-vitoria { font-size: 12vh; animation: float 2s infinite; }
         @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         .score-panel {
@@ -346,7 +373,7 @@
             background: linear-gradient(135deg,#1e2a3a,#0a1520);
             padding: 8px 20px;
             border-radius: 60px;
-            border: 1px solid #ffd54f;
+            border: 1px solid var(--secondary);
         }
         .erro-anim {
             animation: tremer 0.3s ease;
@@ -368,7 +395,7 @@
             animation: fadeUp 0.9s ease-out forwards;
             pointer-events: none;
             white-space: nowrap;
-            border: 2px solid #ffd54f;
+            border: 2px solid var(--secondary);
         }
         @keyframes fadeUp {
             0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
@@ -377,7 +404,7 @@
             100% { opacity: 0; transform: translateX(-50%) translateY(-50px); }
         }
         .progresso-categoria {
-            position: absolute;
+            position: fixed;
             bottom: 10px;
             right: 10px;
             background: rgba(0,0,0,0.7);
@@ -385,14 +412,15 @@
             border-radius: 25px;
             font-size: 10px;
             backdrop-filter: blur(5px);
-            color: #ffd54f;
+            color: var(--secondary);
             pointer-events: none;
+            z-index: 100;
         }
         @media (min-width: 768px) {
             .progresso-categoria { bottom: 20px; right: 20px; padding: 10px 18px; font-size: 14px; }
         }
         .btn-voltar {
-            position: absolute;
+            position: fixed;
             bottom: 15px;
             left: 15px;
             background: linear-gradient(135deg, #00acc1, #006064);
@@ -413,7 +441,7 @@
         }
         .btn-voltar:active { transform: scale(0.95); }
         .dica-som {
-            position: absolute;
+            position: fixed;
             bottom: 10px;
             left: 10px;
             background: rgba(0,0,0,0.5);
@@ -422,17 +450,20 @@
             font-size: 9px;
             color: #aaa;
             pointer-events: none;
+            z-index: 100;
         }
-        .nav-buttons { display: flex; gap: 15px; margin-top: 20px; }
+        .nav-buttons { display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap; justify-content: center; }
         .nav-btn {
             background: linear-gradient(135deg, #00acc1, #006064);
-            border: 2px solid #ffd54f;
+            border: 2px solid var(--secondary);
             padding: 12px 24px;
             font-size: 18px;
             border-radius: 40px;
             cursor: pointer;
             color: white;
+            transition: transform 0.2s;
         }
+        .nav-btn:active { transform: scale(0.95); }
         .nav-btn.cancelar { background: linear-gradient(135deg, #555, #333); border-color: #888; }
         
         /* Grid categorias */
@@ -474,6 +505,54 @@
             z-index: 2000;
             display: none;
         }
+
+        /* Responsividade extra */
+        @media (max-width: 700px) {
+            .game-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+                padding: 10px;
+            }
+            .top-bar {
+                justify-content: center;
+            }
+            .game-stats {
+                justify-content: center;
+            }
+            .instrucao-wrapper {
+                margin: 8px 0 4px;
+            }
+            .instrucao {
+                font-size: 14px;
+                padding: 6px 12px;
+                white-space: nowrap;
+            }
+            #silabaAlvo {
+                font-size: 20px;
+                padding: 0 8px;
+            }
+        }
+        @media (max-width: 480px) {
+            .instrucao {
+                font-size: 12px;
+            }
+            #silabaAlvo {
+                font-size: 18px;
+            }
+            .icon-btn {
+                font-size: 11px;
+                padding: 4px 8px;
+            }
+            .game-stats {
+                font-size: 9px;
+                gap: 8px;
+                padding: 4px 10px;
+            }
+            .timer {
+                padding: 2px 8px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -491,25 +570,31 @@
 <audio id="sfx-fireworks" src="fogos.mp3" preload="auto"></audio>
 
 <div id="game-wrapper">
-    <div class="top-bar">
-        <button id="btnMenuPrincipal" class="icon-btn">🏠 Menu</button>
-        <button id="btnEscolherCategoria" class="icon-btn">📚 Famílias</button>
-        <button id="btn-audio" class="icon-btn">🔇 Som</button>
-        <button id="btnFullscreen" class="icon-btn">⛶ Tela</button>
-    </div>
+    <!-- HEADER REFORMULADO (sem sobreposição) -->
+    <div class="game-header">
+        <div class="top-bar">
+            <button id="btnMenuPrincipal" class="icon-btn">🏠 Menu</button>
+            <button id="btnEscolherCategoria" class="icon-btn">📚 Famílias</button>
+            <button id="btn-audio" class="icon-btn">🔇 Som</button>
+            <button id="btnFullscreen" class="icon-btn">⛶ Tela</button>
+        </div>
 
-    <div class="game-info-container">
-        <div class="game-info">
+        <div class="game-stats">
             <div>🏺 Família: <span id="categoriaAtual">-</span></div>
             <div>✨ Pontos: <span id="pontosText">0</span></div>
             <div>🐚 Progresso: <span id="acertosFase">0</span>/<span id="totalEtapa">0</span></div>
             <div class="timer">⏱️ <span id="timerDisplay">00:00</span></div>
         </div>
+    </div>
+
+    <div class="instrucao-wrapper">
         <p class="instrucao" id="btnRepetirSilaba">
             🌊 Pesque a sílaba: <span id="silabaAlvo">---</span> 🔊
         </p>
     </div>
+
     <div class="oceano" id="aquario"></div>
+    
     <div class="progresso-categoria" id="progressHint">🏆 Tesouros do Mar Profundo</div>
     
     <button class="btn-voltar" id="btnVoltar">
@@ -545,7 +630,7 @@
 <canvas id="fireworks-canvas"></canvas>
 
 <script>
-    // ========== TODAS AS CATEGORIAS ==========
+    // ========== TODAS AS CATEGORIAS (mesmas do original) ==========
     const categorias = [
         { nome: "🌊 AL - EL - IL - OL - UL", silabas: [{ texto: "AL", audio: "al.mp3" },{ texto: "EL", audio: "el.mp3" },{ texto: "IL", audio: "il.mp3" },{ texto: "OL", audio: "ol.mp3" },{ texto: "UL", audio: "ul.mp3" }] },
         { nome: "🐚 AM - EM - IM - OM - UM", silabas: [{ texto: "AM", audio: "am.mp3" },{ texto: "EM", audio: "em.mp3" },{ texto: "IM", audio: "im.mp3" },{ texto: "OM", audio: "om.mp3" },{ texto: "UM", audio: "um.mp3" }] },
@@ -627,7 +712,6 @@
     
     // ========== SELEÇÃO DE CATEGORIAS ==========
     function abrirSeletorCategorias(){ 
-        console.log("Abrindo seletor de categorias");
         modalCategorias.style.display = "flex"; 
     }
     function fecharSeletor(){ modalCategorias.style.display = "none"; }
@@ -642,7 +726,6 @@
                 resetarJogoParaCategoria(idx); 
                 fecharSeletor(); 
             }; 
-            // Suporte para toque em dispositivos móveis
             btn.ontouchstart = (e) => { e.preventDefault(); resetarJogoParaCategoria(idx); fecharSeletor(); };
             grid.appendChild(btn); 
         }); 
@@ -682,7 +765,6 @@
     const btnFull = document.getElementById("btnFullscreen");
     const btnAudioElem = document.getElementById("btn-audio");
     
-    // Função para adicionar eventos duplos (click + touchstart)
     function addBothEvents(element, handler) {
         if (!element) return;
         element.addEventListener('click', handler);
