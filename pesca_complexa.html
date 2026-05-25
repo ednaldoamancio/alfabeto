@@ -119,7 +119,7 @@
             pointer-events: none;
         }
 
-        /* ===== HEADER ORGANIZADO (sem sobreposição) ===== */
+        /* ===== HEADER ORGANIZADO ===== */
         .game-header {
             position: relative;
             z-index: 100;
@@ -164,7 +164,7 @@
             .icon-btn { padding: 8px 16px; font-size: 16px; }
         }
 
-        /* ===== BARRA DE SELEÇÃO DE MODO DE GRAFIA ===== */
+        /* Barra de seleção de modo */
         .modo-barra {
             display: flex;
             flex-wrap: wrap;
@@ -245,7 +245,7 @@
             .modo-btn .label-modo { font-size: 10px; }
         }
 
-        /* Instrução da sílaba alvo */
+        /* Instrução */
         .instrucao-wrapper {
             position: relative;
             z-index: 30;
@@ -285,14 +285,12 @@
             cursor: pointer;
             transition: transform 0.15s ease;
             border: 1px solid var(--primary);
-            font-family: 'Comic Neue', monospace;
         }
         #silabaAlvo.pulsando {
             transform: scale(1.25);
             text-shadow: 0 0 20px #ffca28;
             border-color: var(--secondary);
         }
-        /* Estilos conforme modo */
         #silabaAlvo.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; }
         #silabaAlvo.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
         #silabaAlvo.modo-maiusc-cursiva { font-family: var(--cursive-school); font-weight: 400; }
@@ -533,7 +531,6 @@
         .nav-btn:active { transform: scale(0.95); }
         .nav-btn.cancelar { background: linear-gradient(135deg, #555, #333); border-color: #888; }
         
-        /* Grid categorias */
         .grid-categorias {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -561,7 +558,6 @@
         .cat-botao:active { transform: scale(0.96); background: #2a5f6e; }
         .cat-botao:hover { background: #2a5f6e; transform: scale(1.02); }
         
-        /* Fogos canvas */
         #fireworks-canvas {
             position: fixed;
             top: 0;
@@ -573,7 +569,6 @@
             display: none;
         }
 
-        /* Responsividade extra */
         @media (max-width: 700px) {
             .game-header {
                 flex-direction: column;
@@ -581,36 +576,15 @@
                 gap: 8px;
                 padding: 10px;
             }
-            .top-bar {
-                justify-content: center;
-            }
-            .modo-barra {
-                justify-content: center;
-            }
-            .instrucao-wrapper {
-                margin: 8px 0 4px;
-            }
-            .instrucao {
-                font-size: 14px;
-                padding: 6px 12px;
-                white-space: nowrap;
-            }
-            #silabaAlvo {
-                font-size: 20px;
-                padding: 0 8px;
-            }
+            .top-bar, .modo-barra { justify-content: center; }
+            .instrucao-wrapper { margin: 8px 0 4px; }
+            .instrucao { font-size: 14px; padding: 6px 12px; white-space: nowrap; }
+            #silabaAlvo { font-size: 20px; padding: 0 8px; }
         }
         @media (max-width: 480px) {
-            .instrucao {
-                font-size: 12px;
-            }
-            #silabaAlvo {
-                font-size: 18px;
-            }
-            .icon-btn {
-                font-size: 11px;
-                padding: 4px 8px;
-            }
+            .instrucao { font-size: 12px; }
+            #silabaAlvo { font-size: 18px; }
+            .icon-btn { font-size: 11px; padding: 4px 8px; }
         }
     </style>
 </head>
@@ -629,7 +603,6 @@
 <audio id="sfx-fireworks" src="fogos.mp3" preload="auto"></audio>
 
 <div id="game-wrapper">
-    <!-- HEADER COM BARRA DE MODOS -->
     <div class="game-header">
         <div class="top-bar">
             <button id="btnMenuPrincipal" class="icon-btn">🏠 Menu</button>
@@ -638,7 +611,6 @@
             <button id="btnFullscreen" class="icon-btn">⛶ Tela</button>
         </div>
 
-        <!-- BARRA DE SELEÇÃO DE MODO DE GRAFIA -->
         <div class="modo-barra" id="modoBarra">
             <button class="modo-btn maiusc-forma ativo" data-modo="maiusc-forma" onclick="selecionarModo('maiusc-forma')">
                 <span class="exemplo-letra">Ba</span>
@@ -675,7 +647,6 @@
     <div class="dica-som">💡 Clique na sílaba para ouvir | Escolha qualquer família!</div>
 </div>
 
-<!-- Modais (mantidos) -->
 <div id="modal-categorias">
     <div class="icone-vitoria">🐟📚🐠</div>
     <div class="vitoria-texto">Escolha uma família silábica</div>
@@ -736,14 +707,35 @@
     let categoriaCorrente = null, tempoInicioEtapa = null, intervaloRelogio = null;
     let criaturasNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
     
-    // ========== MODO DE GRAFIA ATUAL (inicia com maiúscula de forma) ==========
+    // ========== MODO DE GRAFIA COM A CORREÇÃO: maiúsculas apenas na primeira letra ==========
     let modoGrafia = 'maiusc-forma';
     
+    function capitalizeSilaba(s) {
+        if (!s) return s;
+        return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+    }
+    
     const mapaModo = {
-        'maiusc-forma':   { transform: (s) => s ? s.toUpperCase() : s, familia: 'Comic Neue', falaPrefixo: 'maiúscula de fôrma' },
-        'minusc-forma':   { transform: (s) => s ? s.toLowerCase() : s, familia: 'Comic Neue', falaPrefixo: 'minúscula de fôrma' },
-        'maiusc-cursiva': { transform: (s) => s ? s.toUpperCase() : s, familia: 'Playwrite BR', falaPrefixo: 'maiúscula cursiva' },
-        'minusc-cursiva': { transform: (s) => s ? s.toLowerCase() : s, familia: 'Playwrite BR', falaPrefixo: 'minúscula manuscrita' }
+        'maiusc-forma':   { 
+            transform: (s) => s ? capitalizeSilaba(s) : s, 
+            familia: 'Comic Neue', 
+            falaPrefixo: 'maiúscula de fôrma' 
+        },
+        'minusc-forma':   { 
+            transform: (s) => s ? s.toLowerCase() : s, 
+            familia: 'Comic Neue', 
+            falaPrefixo: 'minúscula de fôrma' 
+        },
+        'maiusc-cursiva': { 
+            transform: (s) => s ? capitalizeSilaba(s) : s, 
+            familia: 'Playwrite BR', 
+            falaPrefixo: 'maiúscula cursiva' 
+        },
+        'minusc-cursiva': { 
+            transform: (s) => s ? s.toLowerCase() : s, 
+            familia: 'Playwrite BR', 
+            falaPrefixo: 'minúscula manuscrita' 
+        }
     };
     
     function getTextoTransformado(texto) {
@@ -755,16 +747,13 @@
         document.querySelectorAll('.modo-btn').forEach(btn => {
             btn.classList.toggle('ativo', btn.dataset.modo === modo);
         });
-        // Atualiza a sílaba alvo atual e recarrega os peixes
         if (categoriaCorrente && silabasAtuais.length > 0 && indiceSilabaAtual < silabasAtuais.length) {
             const silabaCerta = silabasAtuais[indiceSilabaAtual];
             document.getElementById("silabaAlvo").innerText = getTextoTransformado(silabaCerta.texto);
             document.getElementById("silabaAlvo").className = 'modo-' + modo;
         }
-        // Recarrega toda a fase para atualizar os textos nos peixes
         if (jogoAtivo && !aguardandoProxima && categoriaCorrente) {
-            // Para não reiniciar a rodada, apenas recria os peixes? Melhor reiniciar a rodada atual
-            carregarProximaSilaba(); // recria os peixes com o novo estilo
+            carregarProximaSilaba();
         }
     }
     
@@ -790,7 +779,7 @@
         } 
     }
     function formatarTempo(seg) { return `${Math.floor(seg/60).toString().padStart(2,'0')}:${(seg%60).toString().padStart(2,'0')}`; }
-    function iniciarCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); tempoInicioEtapa=Date.now(); intervaloRelogio=setInterval(()=>{ if(tempoInicioEtapa&&jogoAtivo&&!aguardandoProxima) { /* não há timer visível, mas mantido para lógica */ } },1000); }
+    function iniciarCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); tempoInicioEtapa=Date.now(); intervaloRelogio=setInterval(()=>{ if(tempoInicioEtapa&&jogoAtivo&&!aguardandoProxima) { } },1000); }
     function pararCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); return tempoInicioEtapa?Math.floor((Date.now()-tempoInicioEtapa)/1000):0; }
     function criarTesouro(x,y){ const t=["💎","👑","💰","🗿","⚓","🔱","🐚","⭐","🏆","✨"][Math.floor(Math.random()*10)]; const e=document.createElement("div"); e.className="treasure-effect"; e.innerText=t; e.style.left=(x-25)+"px"; e.style.top=(y-25)+"px"; document.body.appendChild(e); setTimeout(()=>e.remove(),800); }
     function criarOndaChoque(x,y){ const w=document.createElement("div"); w.className="shockwave"; w.style.left=(x-15)+"px"; w.style.top=(y-15)+"px"; document.body.appendChild(w); setTimeout(()=>w.remove(),500); }
@@ -956,7 +945,7 @@
     function toggleAudio(){ audioEnabled=!audioEnabled; document.getElementById("btn-audio").innerHTML=audioEnabled?"🔊 Som Ligado":"🔇 Som Desligado"; if(audioEnabled) bgAudio.play().catch(e=>{}); else bgAudio.pause(); }
     function voltarMenu(){ modalNavegacao.style.display="flex"; }
     
-    // Adiciona eventos para clique e toque em todos os botões
+    // Adiciona eventos para clique e toque
     const btnVoltarElem = document.getElementById("btnVoltar");
     const btnCancelar = document.getElementById("btnCancelarVolta");
     const btnConfirmar = document.getElementById("btnConfirmarVolta");
