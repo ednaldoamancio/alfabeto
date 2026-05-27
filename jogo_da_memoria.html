@@ -2,216 +2,698 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Parque das Letras – Jogo da Memória</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Memória Oceânica – Alfabeto Verde</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Caveat:wght@400;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #ff6f61; --secondary: #ffca28; --bg-soft: #f3e9d7; --text: #3e2723;
-            --card-bg: #fff; --card-back: linear-gradient(135deg, #42a5f5, #29b6f6);
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background: var(--bg-soft); color: var(--text);
-            min-height: 100vh; display: flex; align-items: center; justify-content: center;
-            transition: background 0.3s, color 0.3s;
-        }
-        body.dark {
-            --bg-soft: #101017; --text: #f5f5f5; --card-bg: #1e1e2d;
-            --card-back: linear-gradient(135deg, #303f9f, #1976d2);
-        }
-        .app { width: 100%; max-width: 800px; padding: 16px; text-align: center; }
-        
-        /* Folha pautada */
-        .card-container {
-            position: relative; background: var(--card-bg); border-radius: 18px; padding: 24px 16px;
-            box-shadow: 0 16px 40px rgba(0,0,0,0.15); overflow: hidden;
-            background-image: repeating-linear-gradient(to bottom, transparent 0px, transparent 28px, rgba(195, 217, 244, 0.4) 29px);
-            background-size: 100% 29px;
-        }
-        body.dark .card-container {
-            box-shadow: 0 16px 40px rgba(0,0,0,0.6);
-            background-image: repeating-linear-gradient(to bottom, transparent 0px, transparent 28px, rgba(255, 255, 255, 0.05) 29px);
-        }
-        .card-container::before {
-            content: ""; position: absolute; top: 0; bottom: 0; left: 40px; width: 2px;
-            background: rgba(255, 82, 82, 0.4);
-        }
-        
-        .header { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 2; margin-bottom: 20px;}
-        .title { font-size: clamp(20px, 5vw, 28px); font-weight: 900; color: var(--primary); }
-        .theme-toggle, .btn-back {
-            width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1);
-            background: rgba(255,255,255,0.8); cursor: pointer; font-size: 18px;
-            display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        body.dark .theme-toggle, body.dark .btn-back { background: rgba(30,30,45,0.8); border-color: rgba(255,255,255,0.1); }
-        
-        /* Grid do Jogo */
-        .game-board {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
-            max-width: 450px; margin: 0 auto; position: relative; z-index: 1; perspective: 1000px;
-        }
-        @media (max-width: 400px) { .game-board { gap: 6px; } }
-        
-        .memory-card {
-            aspect-ratio: 1 / 1.1; position: relative; cursor: pointer;
-            transform-style: preserve-3d; transition: transform 0.5s;
-        }
-        .memory-card.flip { transform: rotateY(180deg); }
-        
-        .front-face, .back-face {
-            width: 100%; height: 100%; position: absolute; border-radius: 12px;
-            backface-visibility: hidden; display: flex; align-items: center; justify-content: center;
-            font-size: clamp(32px, 8vw, 48px); font-weight: 900; box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             user-select: none;
         }
-        .front-face { background: #fff; color: var(--primary); transform: rotateY(180deg); border: 2px solid var(--primary); }
-        body.dark .front-face { background: #2a2a3e; }
-        .back-face { background: var(--card-back); color: #fff; font-size: 24px; }
-        
-        .win-msg {
-            display: none; font-size: 24px; font-weight: 800; color: var(--accent-green); margin-top: 16px;
-            animation: popIn 0.5s ease-out; position: relative; z-index: 2;
+
+        body {
+            background: linear-gradient(145deg, #0b2e1f 0%, #1a4a2e 100%);
+            font-family: 'Comic Neue', 'Segoe UI', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            color: #eef5e6;
         }
-        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        
-        .btn-restart {
-            margin-top: 20px; padding: 10px 20px; border-radius: 20px; border: none; font-size: 16px; font-weight: 800;
-            background: var(--secondary); color: #3e2723; cursor: pointer; position: relative; z-index: 2;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+
+        /* Container principal em duas colunas (grid lateral) */
+        .game-container {
+            max-width: 1400px;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        /* Área do jogo (cartas) */
+        .game-area {
+            flex: 3;
+            min-width: 280px;
+            background: rgba(15, 40, 25, 0.6);
+            backdrop-filter: blur(4px);
+            border-radius: 48px;
+            padding: 24px 20px;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,200,0.2);
+            border: 1px solid #6fbf6e;
+        }
+
+        /* Painel lateral (estatísticas + controles) */
+        .side-panel {
+            flex: 1;
+            min-width: 220px;
+            background: rgba(10, 30, 18, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 40px;
+            padding: 20px 18px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            border: 1px solid #83c783;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* cabeçalho do jogo com título e tema */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+            gap: 12px;
+        }
+        h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #c3ffb8, #8fe388);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            letter-spacing: -0.5px;
+        }
+        .btn-icon {
+            background: #2e5a3a;
+            border: none;
+            border-radius: 60px;
+            padding: 8px 14px;
+            color: #f5ffdc;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .btn-icon:active { transform: scale(0.96); }
+
+        /* info lateral */
+        .stat-card {
+            background: #0f2f1c;
+            border-radius: 28px;
+            padding: 15px;
+            text-align: center;
+            border-left: 6px solid #78d678;
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+            color: #bde5b0;
+        }
+        .stat-value {
+            font-size: 2.4rem;
+            font-weight: 800;
+            line-height: 1;
+            color: #f7ffcf;
+            margin: 8px 0;
+        }
+        .badge-min {
+            font-size: 1rem;
+            background: #1c412b;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 40px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .control-title {
+            font-weight: bold;
+            font-size: 1rem;
+            border-bottom: 2px solid #6fbf6e;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        .mode-buttons, .amount-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+        .mode-btn, .qty-btn {
+            background: #1f4632;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: #e2ffe2;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.8rem;
+        }
+        .mode-btn.active, .qty-btn.active {
+            background: #68bc6e;
+            color: #0a2a14;
+            box-shadow: 0 0 8px #b0ffa0;
+        }
+        .mode-btn:active, .qty-btn:active { transform: scale(0.96); }
+
+        /* Grid das cartas */
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            justify-items: center;
+            align-items: center;
+        }
+        @media (max-width: 550px) {
+            .game-board { gap: 8px; }
+        }
+
+        .memory-card {
+            aspect-ratio: 1 / 1.1;
+            width: 100%;
+            max-width: 110px;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border-radius: 20px;
+        }
+        .memory-card.flip { transform: rotateY(180deg); }
+
+        .front-face, .back-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            box-shadow: 0 8px 14px rgba(0,0,0,0.3);
+            background: #fef9e6;
+            border: 2px solid #6fbf6e;
+        }
+        .front-face {
+            transform: rotateY(180deg);
+            background: #fffdf0;
+            color: #1d6b2b;
+            font-size: 2.4rem;
+        }
+        .back-face {
+            background: radial-gradient(circle at 30% 20%, #3d9e5a, #1c6e3a);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffffff40" width="28px" height="28px"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 40px;
+            font-size: 2rem;
+        }
+        /* Estilos para letras de forma / cursiva */
+        .cursive-upper .front-face { font-family: 'Dancing Script', cursive; text-transform: uppercase; }
+        .cursive-lower .front-face { font-family: 'Caveat', cursive; text-transform: lowercase; }
+        .form-upper .front-face { font-family: 'Comic Neue', sans-serif; text-transform: uppercase; font-weight: 700; }
+        .form-lower .front-face { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; font-weight: 700; }
+
+        .win-message {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            background: #64b96eaa;
+            backdrop-filter: blur(10px);
+            padding: 12px;
+            border-radius: 40px;
+            display: none;
+            animation: fadeUp 0.5s;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        .restart-btn {
+            background: #ffcd7e;
+            border: none;
+            color: #2a572a;
+            font-weight: bold;
+            padding: 12px 20px;
+            border-radius: 60px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+        .restart-btn:active { transform: scale(0.97);}
+        footer { font-size: 0.7rem; text-align: center; margin-top: 15px; opacity: 0.7; }
+
+        /* Troféu e confetes */
+        .trophy-badge {
+            font-size: 2rem;
+            filter: drop-shadow(0 0 6px gold);
+            display: inline-block;
+            margin-left: 8px;
+        }
+        canvas#confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2000;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
 </head>
 <body>
-
-<div class="app">
-    <div class="card-container">
-        <div class="header">
-            <button class="btn-back" onclick="window.location.href='index.html'" aria-label="Voltar">⬅️</button>
-            <h1 class="title">Jogo da Memória</h1>
-            <button class="theme-toggle" id="themeToggle" aria-label="Alternar modo noturno">🌞</button>
+<div class="game-container">
+    <!-- Área principal do jogo -->
+    <div class="game-area">
+        <div class="game-header">
+            <h1>🌊 MEMÓRIA OCEÂNICA</h1>
+            <button class="btn-icon" id="themeAudioBtn">🔊 Sons Ativos</button>
         </div>
-        
         <div class="game-board" id="gameBoard"></div>
-        
-        <div class="win-msg" id="winMsg">🎉 Você encontrou todos os pares! 🎉</div>
-        <button class="btn-restart" onclick="iniciarJogo()">🔄 Jogar Novamente</button>
+        <div class="win-message" id="winMessage"></div>
+        <button class="restart-btn" id="restartGameBtn">🐠 NOVA PARTIDA 🐠</button>
+        <footer>🐚 encontre os pares com o menor número de toques!</footer>
+    </div>
+
+    <!-- Painel lateral com estatísticas e controles -->
+    <div class="side-panel">
+        <div class="stat-card">
+            <div class="stat-label">🎯 TOQUES USADOS</div>
+            <div class="stat-value" id="tapCounter">0</div>
+            <div class="stat-label">⚡ MÍNIMO POSSÍVEL</div>
+            <div class="stat-value" id="minTapsDisplay">0</div>
+            <div class="badge-min" id="bestHint">✨ desafio: iguale o mínimo!</div>
+        </div>
+
+        <div class="control-group">
+            <div class="control-title">✍️ ESTILO DAS LETRAS</div>
+            <div class="mode-buttons" id="styleButtons">
+                <button data-style="form-upper" class="mode-btn active">🔠 MAIÚSCULA (fôrma)</button>
+                <button data-style="form-lower" class="mode-btn">🔡 MINÚSCULA (fôrma)</button>
+                <button data-style="cursive-upper" class="mode-btn">🖌️ CURSIVA MAIÚSCULA</button>
+                <button data-style="cursive-lower" class="mode-btn">✍️ CURSIVA MINÚSCULA</button>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="control-title">🐟 QUANTIDADE DE PARES</div>
+            <div class="amount-buttons" id="qtyButtons">
+                <button data-pairs="8" class="qty-btn">16 cartas (8 pares)</button>
+                <button data-pairs="10" class="qty-btn">20 cartas (10 pares)</button>
+                <button data-pairs="12" class="qty-btn active">24 cartas (12 pares)</button>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="control-title">🔊 DICAS</div>
+            <p style="font-size: 0.8rem; opacity: 0.9;">⭐ Clique nas cartas → escute a letra<br>🎉 Toque mínimo = 2x nº de pares</p>
+        </div>
     </div>
 </div>
+<canvas id="confetti-canvas"></canvas>
 
 <script>
-    // ---------- MODO NOTURNO ----------
-    const themeToggleBtn = document.getElementById("themeToggle");
-    function setTheme(theme) {
-        if (theme === "dark") {
-            document.body.classList.add("dark"); themeToggleBtn.textContent = "🌙";
-        } else {
-            document.body.classList.remove("dark"); themeToggleBtn.textContent = "🌞";
-        }
-        localStorage.setItem("alfacel-theme", theme);
-    }
-    function initTheme() {
-        const saved = localStorage.getItem("alfacel-theme");
-        setTheme(saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
-    }
-    themeToggleBtn.addEventListener("click", () => {
-        setTheme(document.body.classList.contains("dark") ? "light" : "dark");
-    });
-    initTheme();
-
-    // ---------- LÓGICA DO JOGO DA MEMÓRIA ----------
-    const board = document.getElementById('gameBoard');
-    const winMsg = document.getElementById('winMsg');
-    
-    // Escolhemos 8 letras (16 cartas no total para formar um grid 4x4)
-    const letras = ['A', 'E', 'I', 'O', 'U', 'B', 'C', 'D'];
-    let cartas = [];
-    let cartaVirada = false;
-    let travaTabuleiro = false;
-    let primeiraCarta, segundaCarta;
-    let paresEncontrados = 0;
-
-    function iniciarJogo() {
-        board.innerHTML = ''; winMsg.style.display = 'none';
-        paresEncontrados = 0; cartaVirada = false; travaTabuleiro = false;
+    (function(){
+        // ---------- CONFIGURAÇÕES ----------
+        let currentPairs = 12;            // 8,10,12 pares
+        let currentStyle = "form-upper";  // form-upper, form-lower, cursive-upper, cursive-lower
+        let totalTaps = 0;                // contador de toques (cliques em cartas não resolvidas)
+        let minPossibleTaps = 0;
+        let gameActive = true;
+        let blockBoard = false;
+        let firstCard = null, secondCard = null;
+        let matchedPairs = 0;
+        let cardsArray = [];         // objetos { element, letterValue, pairId }
+        let letterList = [];          // letras base (A,B,C...)
+        let soundEnabled = true;
         
-        // Duplicar e embaralhar
-        cartas = [...letras, ...letras];
-        cartas.sort(() => Math.random() - 0.5);
-
-        // Criar cartas HTML
-        cartas.forEach(letra => {
-            const cardElement = document.createElement('div');
-            cardElement.classList.add('memory-card');
-            cardElement.dataset.letra = letra;
-            cardElement.innerHTML = `
-                <div class="front-face">${letra}</div>
-                <div class="back-face">?</div>
-            `;
-            cardElement.addEventListener('click', virarCarta);
-            board.appendChild(cardElement);
-        });
-    }
-
-    function virarCarta() {
-        if (travaTabuleiro) return;
-        if (this === primeiraCarta) return;
-
-        this.classList.add('flip');
-
-        if (!cartaVirada) {
-            cartaVirada = true;
-            primeiraCarta = this;
-            falar(this.dataset.letra); // Opcional: fala a letra
-            return;
+        // Elementos DOM
+        const boardEl = document.getElementById("gameBoard");
+        const tapCounterSpan = document.getElementById("tapCounter");
+        const minTapsSpan = document.getElementById("minTapsDisplay");
+        const winMsgDiv = document.getElementById("winMessage");
+        const restartBtn = document.getElementById("restartGameBtn");
+        const styleBtns = document.querySelectorAll("[data-style]");
+        const qtyBtns = document.querySelectorAll("[data-pairs]");
+        const audioToggleBtn = document.getElementById("themeAudioBtn");
+        
+        // ---------- FUNÇÕES SONORAS (Web Audio + Síntese) ----------
+        let audioCtx = null;
+        function initAudioContext() {
+            if (!audioCtx && soundEnabled) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+        function playBeep(type) {
+            if (!soundEnabled) return;
+            try {
+                initAudioContext();
+                if (!audioCtx) return;
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = "sine";
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.4);
+                if (type === "match") {
+                    osc.frequency.value = 880;
+                    osc.frequency.exponentialRampToValueAtTime(1200, now + 0.2);
+                } else if (type === "mismatch") {
+                    osc.frequency.value = 440;
+                    osc.frequency.exponentialRampToValueAtTime(220, now + 0.3);
+                } else if (type === "flip") {
+                    osc.frequency.value = 680;
+                    osc.frequency.exponentialRampToValueAtTime(520, now + 0.15);
+                } else if (type === "win") {
+                    osc.frequency.value = 660;
+                    osc.frequency.setValueAtTime(880, now+0.1);
+                    osc.frequency.setValueAtTime(1046, now+0.25);
+                    gain.gain.setValueAtTime(0.25, now);
+                }
+                osc.start();
+                osc.stop(now + 0.4);
+            } catch(e) { console.warn("audio error", e); }
         }
 
-        segundaCarta = this;
-        falar(this.dataset.letra);
-        verificarPar();
-    }
-
-    function verificarPar() {
-        let ehPar = primeiraCarta.dataset.letra === segundaCarta.dataset.letra;
-        ehPar ? desativarCartas() : desvirarCartas();
-    }
-
-    function desativarCartas() {
-        primeiraCarta.removeEventListener('click', virarCarta);
-        segundaCarta.removeEventListener('click', virarCarta);
-        paresEncontrados++;
-        resetarVariaveis();
-        if (paresEncontrados === letras.length) {
-            setTimeout(() => { winMsg.style.display = 'block'; falar("Parabéns! Você ganhou!"); }, 500);
+        // Fala a letra usando SpeechSynthesis
+        function speakLetter(letter) {
+            if (!soundEnabled) return;
+            if (!window.speechSynthesis) return;
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(letter);
+            utterance.lang = 'pt-BR';
+            utterance.rate = 0.85;
+            utterance.pitch = 1.0;
+            window.speechSynthesis.speak(utterance);
         }
-    }
 
-    function desvirarCartas() {
-        travaTabuleiro = true;
-        setTimeout(() => {
-            primeiraCarta.classList.remove('flip');
-            segundaCarta.classList.remove('flip');
-            resetarVariaveis();
-        }, 1000);
-    }
+        // Tocar fanfarra de vitória simples
+        function playVictoryFanfare() {
+            if (!soundEnabled) return;
+            try {
+                initAudioContext();
+                if (!audioCtx) return;
+                const now = audioCtx.currentTime;
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.frequency.value = freq;
+                    gain.gain.setValueAtTime(0.2, now + idx*0.12);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + idx*0.12 + 0.6);
+                    osc.start(now + idx*0.12);
+                    osc.stop(now + idx*0.12 + 0.5);
+                });
+            } catch(e) {}
+        }
 
-    function resetarVariaveis() {
-        [cartaVirada, travaTabuleiro] = [false, false];
-        [primeiraCarta, segundaCarta] = [null, null];
-    }
+        // ---------- LÓGICA DO JOGO DA MEMÓRIA ----------
+        function updateMinTaps() {
+            minPossibleTaps = currentPairs * 2;  // cada par exige 2 cliques no mínimo
+            minTapsSpan.innerText = minPossibleTaps;
+        }
 
-    // Speech API (Fala as letras ao clicar)
-    function falar(texto) {
-        if (!window.speechSynthesis) return;
-        window.speechSynthesis.cancel();
-        let u = new SpeechSynthesisUtterance(texto);
-        u.lang = 'pt-BR'; u.rate = 0.85; u.pitch = 1.1;
-        window.speechSynthesis.speak(u);
-    }
+        function updateTapCounterUI() {
+            tapCounterSpan.innerText = totalTaps;
+        }
 
-    window.addEventListener("load", iniciarJogo);
+        // reinicia completamente o jogo com as configurações atuais
+        function resetAndRestart() {
+            // limpa timeouts
+            if (window._resetTimeout) clearTimeout(window._resetTimeout);
+            blockBoard = false;
+            gameActive = true;
+            matchedPairs = 0;
+            totalTaps = 0;
+            updateTapCounterUI();
+            winMsgDiv.style.display = "none";
+            winMsgDiv.innerHTML = "";
+            if (firstCard) { 
+                // remove eventos/classes pendentes
+                if (firstCard && firstCard.classList) firstCard.classList.remove('flip');
+                if (secondCard && secondCard.classList) secondCard.classList.remove('flip');
+            }
+            firstCard = null;
+            secondCard = null;
+            // gera novo baralho
+            generateLetterSet();
+            createBoard();
+        }
+
+        function generateLetterSet() {
+            // define quantas letras diferentes (pares)
+            const totalPairs = currentPairs;
+            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+            letterList = alphabet.slice(0, totalPairs);
+            // letterList ex: para 12 pares -> A a L
+        }
+
+        // transforma letra conforme estilo selecionado
+        function getDisplayLetter(letter, style) {
+            let result = letter;
+            if (style === "form-lower") result = letter.toLowerCase();
+            else if (style === "cursive-lower") result = letter.toLowerCase();
+            else if (style === "form-upper") result = letter.toUpperCase();
+            else if (style === "cursive-upper") result = letter.toUpperCase();
+            return result;
+        }
+
+        function createBoard() {
+            boardEl.innerHTML = "";
+            // criar array com pares
+            let deck = [];
+            letterList.forEach((letter, idx) => {
+                deck.push({ pairId: idx, letter: letter });
+                deck.push({ pairId: idx, letter: letter });
+            });
+            // embaralhar
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+            cardsArray = [];
+            deck.forEach((item, pos) => {
+                const cardDiv = document.createElement("div");
+                cardDiv.classList.add("memory-card");
+                // aplica classe de estilo global no container? Melhor aplicar classe no elemento pai do board
+                cardDiv.dataset.letter = item.letter;
+                cardDiv.dataset.pairId = item.pairId;
+                const displayChar = getDisplayLetter(item.letter, currentStyle);
+                cardDiv.innerHTML = `
+                    <div class="front-face">${displayChar}</div>
+                    <div class="back-face">🐟</div>
+                `;
+                cardDiv.addEventListener("click", () => onCardClick(cardDiv));
+                boardEl.appendChild(cardDiv);
+                cardsArray.push({
+                    element: cardDiv,
+                    letter: item.letter,
+                    pairId: item.pairId,
+                    matched: false
+                });
+            });
+            // adiciona classe de estilo ao board para fontes (auxílio visual)
+            boardEl.className = `game-board ${currentStyle}`;
+        }
+
+        function onCardClick(card) {
+            if (!gameActive) return;
+            if (blockBoard) return;
+            // se a carta já está virada ou já foi combinada (matched)
+            if (card.classList.contains('flip')) return;
+            const cardData = cardsArray.find(c => c.element === card);
+            if (cardData.matched) return;
+
+            // contabiliza toque (clique válido)
+            totalTaps++;
+            updateTapCounterUI();
+            playBeep("flip");
+            speakLetter(getDisplayLetter(cardData.letter, currentStyle));
+            
+            // vira carta
+            card.classList.add('flip');
+            
+            if (firstCard === null) {
+                firstCard = card;
+                return;
+            }
+            if (secondCard === null && firstCard !== card) {
+                secondCard = card;
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            const firstData = cardsArray.find(c => c.element === firstCard);
+            const secondData = cardsArray.find(c => c.element === secondCard);
+            const isMatch = (firstData.pairId === secondData.pairId);
+            
+            if (isMatch) {
+                // acerto
+                playBeep("match");
+                firstData.matched = true;
+                secondData.matched = true;
+                matchedPairs++;
+                // remove evento de clique (opcional mas seguro)
+                firstCard.style.pointerEvents = "none";
+                secondCard.style.pointerEvents = "none";
+                clearSelection();
+                if (matchedPairs === currentPairs) {
+                    endGameVictory();
+                }
+            } else {
+                // erro
+                playBeep("mismatch");
+                blockBoard = true;
+                setTimeout(() => {
+                    firstCard.classList.remove('flip');
+                    secondCard.classList.remove('flip');
+                    clearSelection();
+                    blockBoard = false;
+                }, 700);
+            }
+        }
+        
+        function clearSelection() {
+            firstCard = null;
+            secondCard = null;
+        }
+        
+        function endGameVictory() {
+            gameActive = false;
+            blockBoard = true;
+            const perfectWin = (totalTaps === minPossibleTaps);
+            // mensagem personalizada
+            let trophyHtml = "";
+            if (perfectWin) {
+                trophyHtml = '<span class="trophy-badge">🏆✨ PERFEITO! ✨🏆</span>';
+                playVictoryFanfare();
+                // fogos + troféu maior
+                canvasConfetti({ particleCount: 180, spread: 100, origin: { y: 0.6 }, colors: ['#2ecc71', '#f1c40f', '#e67e22'] });
+                canvasConfetti({ particleCount: 100, spread: 70, origin: { y: 0.4, x: 0.3 }, startVelocity: 20 });
+                canvasConfetti({ particleCount: 100, spread: 70, origin: { y: 0.4, x: 0.7 }, startVelocity: 20 });
+                setTimeout(() => {
+                    canvasConfetti({ particleCount: 300, spread: 120, origin: { y: 0.5 }, startVelocity: 25, colors: ['#ffd966', '#ffb347', '#2ecc71'] });
+                }, 200);
+                speakLetter("Parabéns! Desempenho perfeito! Você é um mestre da memória!");
+            } else {
+                canvasConfetti({ particleCount: 120, spread: 70, origin: { y: 0.6 }, colors: ['#7fe07f', '#ffd966'] });
+                speakLetter("Muito bem! Você completou o jogo!");
+                playVictoryFanfare();
+            }
+            const msg = perfectWin ? 
+                `🎉 VITÓRIA PERFEITA! 🎉<br> Você usou ${totalTaps} toques (MÍNIMO = ${minPossibleTaps})! 🌟` : 
+                `🐠 Parabéns! Você completou em ${totalTaps} toques.<br> O mínimo possível é ${minPossibleTaps}. Tente superar! 🐟`;
+            winMsgDiv.innerHTML = `${msg} ${trophyHtml} <div style="margin-top:8px;">💪 continue treinando!</div>`;
+            winMsgDiv.style.display = "block";
+        }
+        
+        // ---------- CONFIGURAÇÕES DINÂMICAS ----------
+        function setPairs(pairs) {
+            currentPairs = pairs;
+            updateMinTaps();
+            resetAndRestart();
+        }
+        
+        function setStyle(style) {
+            currentStyle = style;
+            // atualiza classe global no board
+            boardEl.className = `game-board ${currentStyle}`;
+            // recria todas as cartas com novo estilo (atualiza texto)
+            if (cardsArray.length) {
+                // atualiza o front-face de cada carta existente
+                cardsArray.forEach(cardData => {
+                    if (!cardData.element) return;
+                    const frontDiv = cardData.element.querySelector(".front-face");
+                    if (frontDiv) {
+                        const newDisplay = getDisplayLetter(cardData.letter, currentStyle);
+                        frontDiv.innerText = newDisplay;
+                    }
+                });
+            } else {
+                resetAndRestart();
+            }
+        }
+        
+        // reiniciar completamente com estilo e quantidade atuais
+        function fullReset() {
+            resetAndRestart();
+        }
+        
+        // ativar/desativar sons
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            audioToggleBtn.innerText = soundEnabled ? "🔊 Sons Ativos" : "🔇 Sons Desligados";
+            if (soundEnabled && audioCtx && audioCtx.state === "suspended") {
+                audioCtx.resume();
+            }
+            if (!soundEnabled && audioCtx) {
+                audioCtx.suspend();
+            }
+        }
+        
+        // Inicializar eventos UI
+        function bindEvents() {
+            restartBtn.addEventListener("click", () => fullReset());
+            styleBtns.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const style = btn.dataset.style;
+                    styleBtns.forEach(b => b.classList.remove("active"));
+                    btn.classList.add("active");
+                    setStyle(style);
+                });
+            });
+            qtyBtns.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const pairs = parseInt(btn.dataset.pairs, 10);
+                    qtyBtns.forEach(b => b.classList.remove("active"));
+                    btn.classList.add("active");
+                    setPairs(pairs);
+                });
+            });
+            audioToggleBtn.addEventListener("click", () => {
+                toggleSound();
+            });
+            // pré-inicializa contexto de áudio no primeiro toque em qualquer lugar (política de navegador)
+            document.body.addEventListener("click", () => {
+                if (soundEnabled && audioCtx && audioCtx.state === "suspended") {
+                    audioCtx.resume();
+                }
+            }, { once: true });
+        }
+        
+        // início
+        function init() {
+            // padrão: 12 pares (24 cartas) / estilo maiúscula forma ativo
+            currentPairs = 12;
+            currentStyle = "form-upper";
+            updateMinTaps();
+            generateLetterSet();
+            createBoard();
+            bindEvents();
+            // marcar botão ativo inicial
+            document.querySelector("[data-pairs='12']").classList.add("active");
+            document.querySelector("[data-style='form-upper']").classList.add("active");
+            audioCtx = null;
+            soundEnabled = true;
+            audioToggleBtn.innerText = "🔊 Sons Ativos";
+        }
+        
+        init();
+    })();
 </script>
 </body>
 </html>
-
