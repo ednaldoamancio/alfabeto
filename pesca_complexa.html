@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Sílabas Complexas - Tesouros do Mar Profundo | EdHumanas</title>
 
-    <!-- Google Fonts: Playwrite BR (cursiva escolar) + Comic Neue (forma) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Playwrite+BR:wght@100..400&display=swap" rel="stylesheet">
 
     <style>
-        /* (mesmo CSS do código anterior, mantido por brevidade) */
+        /* ========== ESTILOS (mesmo do código anterior, compactado) ========== */
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
         :root { --cursive-school: 'Playwrite BR', 'Comic Neue', cursive; --primary: #00acc1; --secondary: #ffd54f; }
         body { font-family: 'Comic Neue', 'Segoe UI', sans-serif; background: #000; color: #fff; width: 100vw; height: 100vh; overflow: hidden; position: fixed; touch-action: manipulation; }
@@ -39,11 +38,10 @@
         .modo-btn.minusc-cursiva .exemplo-letra { font-family: var(--cursive-school); font-weight: 400; text-transform: lowercase; }
         .modo-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.08); }
         .modo-btn.ativo { background: linear-gradient(135deg, var(--primary), #006064); border-color: var(--secondary); box-shadow: 0 0 12px rgba(0,172,193,0.5); transform: scale(1.1); }
-        @media (min-width: 768px) { .modo-barra { gap: 10px; padding: 8px 14px; border-radius: 50px; } .modo-btn { padding: 6px 12px; font-size: 26px; min-width: 50px; border-radius: 16px; } .modo-btn .label-modo { font-size: 9px; } .modo-btn .exemplo-letra { font-size: 32px; } }
-        @media (min-width: 1024px) { .modo-btn { padding: 8px 16px; min-width: 60px; } .modo-btn .exemplo-letra { font-size: 38px; } .modo-btn .label-modo { font-size: 10px; } }
+        @media (min-width: 768px) { .modo-barra { gap: 10px; padding: 8px 14px; border-radius: 50px; } .modo-btn { padding: 6px 12px; font-size: 26px; min-width: 50px; } .modo-btn .exemplo-letra { font-size: 32px; } .modo-btn .label-modo { font-size: 9px; } }
         .instrucao-wrapper { position: relative; z-index: 30; display: flex; justify-content: center; margin: 15px 0 10px; pointer-events: auto; }
         .instrucao { font-size: 16px; font-weight: 900; background: rgba(0,0,0,0.75); padding: 8px 18px; border-radius: 50px; backdrop-filter: blur(8px); display: flex; align-items: baseline; gap: 10px; cursor: pointer; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border: 1px solid var(--secondary); pointer-events: auto; }
-        @media (min-width: 768px) { .instrucao { font-size: 24px; padding: 8px 24px; gap: 12px; } }
+        @media (min-width: 768px) { .instrucao { font-size: 24px; padding: 8px 24px; } }
         #silabaAlvo { color: var(--secondary); font-size: 28px; font-weight: bold; background: linear-gradient(135deg, #1a2a3a, #0a1a2a); padding: 0 15px; border-radius: 40px; letter-spacing: 2px; text-shadow: 0 0 8px #ff9800; cursor: pointer; transition: transform 0.15s ease; border: 1px solid var(--primary); }
         #silabaAlvo.pulsando { transform: scale(1.25); text-shadow: 0 0 20px #ffca28; border-color: var(--secondary); }
         #silabaAlvo.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; }
@@ -64,12 +62,10 @@
         .silaba-creature.modo-maiusc-cursiva { font-family: var(--cursive-school); font-size: 18px; font-weight: 400; }
         .silaba-creature.modo-minusc-cursiva { font-family: var(--cursive-school); font-size: 18px; font-weight: 400; text-transform: lowercase; }
         @media (min-width: 768px) { .silaba-creature { font-size: 20px; padding: 6px 14px; } .silaba-creature.modo-maiusc-cursiva, .silaba-creature.modo-minusc-cursiva { font-size: 22px; } }
-        @media (min-width: 1024px) { .silaba-creature.modo-maiusc-cursiva, .silaba-creature.modo-minusc-cursiva { font-size: 24px; } }
         .pescado { animation: subir-vertical 0.8s cubic-bezier(0.4,0,0.2,1) forwards !important; pointer-events: none !important; z-index: 300; filter: brightness(1.5) !important; }
         @keyframes subir-vertical { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-120vh) scale(0.3); opacity: 0; } }
         @keyframes nadar-direita { 0% { left: -180px; } 100% { left: 100%; } }
         @keyframes nadar-esquerda { 0% { left: 100%; } 100% { left: -180px; } }
-        @media (min-width: 768px) { @keyframes nadar-direita { 0% { left: -200px; } 100% { left: 100%; } } @keyframes nadar-esquerda { 0% { left: 100%; } 100% { left: -200px; } } }
         .treasure-effect { position: absolute; font-size: 40px; pointer-events: none; z-index: 200; animation: treasureFloat 0.8s ease-out forwards; }
         @keyframes treasureFloat { 0% { transform: scale(0.2) translateY(0) rotate(0deg); opacity: 1; } 100% { transform: scale(1.5) translateY(-100px) rotate(360deg); opacity: 0; } }
         .bolha { position: absolute; bottom: -50px; background: radial-gradient(circle, rgba(100,200,255,0.5), rgba(50,100,200,0.2)); border-radius: 50%; pointer-events: none; animation: subir-bolha linear forwards; }
@@ -108,9 +104,7 @@
 <video autoplay loop muted playsinline id="bg-video">
     <source src="fundo-do-mar.mp4" type="video/mp4">
 </video>
-
 <div class="light-particles" id="lightParticles"></div>
-
 <audio id="bg-audio" src="som_fundo_do_mar.mp3" loop></audio>
 <audio id="sfx-pescado" src="pescado.ogg"></audio>
 <audio id="sfx-erro" src="erro.ogg"></audio>
@@ -150,6 +144,7 @@
     <div class="vitoria-texto" id="vitoria-msg-topo">Parabéns!</div>
     <div class="score-panel" id="scoreFinalModal">Pontuação: 0</div>
     <div class="vitoria-texto" id="vitoria-msg-sub">Continue explorando!</div>
+    <button id="btnProximoManual" class="nav-btn confirmar" style="margin-top:15px;">▶ Próxima Família</button>
 </div>
 <div id="modal-navegacao">
     <div class="icone-vitoria">🐢➡️🏝️</div>
@@ -161,7 +156,7 @@
 </div>
 
 <script>
-    // ---------- CATEGORIAS COMPLETAS (MP3) ----------
+    // ========== CATEGORIAS COMPLETAS ==========
     const categorias = [
         { nome: "🌊 AL - EL - IL - OL - UL", silabas: [{ texto: "AL", audio: "al.mp3" },{ texto: "EL", audio: "el.mp3" },{ texto: "IL", audio: "il.mp3" },{ texto: "OL", audio: "ol.mp3" },{ texto: "UL", audio: "ul.mp3" }] },
         { nome: "🐚 AM - EM - IM - OM - UM", silabas: [{ texto: "AM", audio: "am.mp3" },{ texto: "EM", audio: "em.mp3" },{ texto: "IM", audio: "im.mp3" },{ texto: "OM", audio: "om.mp3" },{ texto: "UM", audio: "um.mp3" }] },
@@ -195,29 +190,24 @@
     let silabasAtuais = [], indiceSilabaAtual = 0;
     let tempoInicioEtapa = null, intervaloRelogio = null;
     let criaturasNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
-    let transicaoCategoria = false;
 
-    // ---------- ÁUDIO MP3 COM FALLBACK (garante que o callback sempre será chamado) ----------
+    // ========== ÁUDIO COM FALLBACK ==========
     function tocarAudioMP3(arquivo, callback) {
         if (!arquivo) { if(callback) callback(); return; }
         if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
         const audio = new Audio(arquivo);
         currentAudio = audio;
-        let chamouCallback = false;
-        const done = () => {
-            if (chamouCallback) return;
-            chamouCallback = true;
+        let done = false;
+        const finish = () => {
+            if (done) return;
+            done = true;
             if (currentAudio === audio) currentAudio = null;
             if (callback) callback();
         };
-        audio.play().catch(e => {
-            console.warn("Erro ao tocar áudio:", arquivo, e);
-            done();
-        });
-        audio.onended = done;
-        audio.onerror = done;
-        // Timeout de segurança (1 segundo)
-        setTimeout(done, 1000);
+        audio.play().catch(() => finish());
+        audio.onended = finish;
+        audio.onerror = finish;
+        setTimeout(finish, 1200);
     }
 
     function tocarSilaba(silabaObj, callback) {
@@ -225,28 +215,28 @@
         else if (callback) callback();
     }
 
-    // ---------- MODO DE GRAFIA ----------
+    // ========== MODO DE GRAFIA ==========
     let modoGrafia = 'maiusc-forma';
     function capitalizeSilaba(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : s; }
     const mapaModo = {
-        'maiusc-forma':   { transform: (s) => capitalizeSilaba(s), familia: 'Comic Neue' },
-        'minusc-forma':   { transform: (s) => s.toLowerCase(), familia: 'Comic Neue' },
-        'maiusc-cursiva': { transform: (s) => capitalizeSilaba(s), familia: 'Playwrite BR' },
-        'minusc-cursiva': { transform: (s) => s.toLowerCase(), familia: 'Playwrite BR' }
+        'maiusc-forma':   { transform: s => capitalizeSilaba(s) },
+        'minusc-forma':   { transform: s => s.toLowerCase() },
+        'maiusc-cursiva': { transform: s => capitalizeSilaba(s) },
+        'minusc-cursiva': { transform: s => s.toLowerCase() }
     };
     function getTextoTransformado(texto) { return mapaModo[modoGrafia].transform(texto); }
     function selecionarModo(modo) {
         modoGrafia = modo;
         document.querySelectorAll('.modo-btn').forEach(btn => btn.classList.toggle('ativo', btn.dataset.modo === modo));
         if (silabasAtuais.length && indiceSilabaAtual < silabasAtuais.length) {
-            const silaba = silabasAtuais[indiceSilabaAtual];
-            document.getElementById("silabaAlvo").innerText = getTextoTransformado(silaba.texto);
+            const sil = silabasAtuais[indiceSilabaAtual];
+            document.getElementById("silabaAlvo").innerText = getTextoTransformado(sil.texto);
             document.getElementById("silabaAlvo").className = 'modo-' + modo;
         }
         if (jogoAtivo && !aguardandoProxima) carregarProximaSilaba();
     }
 
-    // ---------- UTILITÁRIOS ----------
+    // ========== UTILITÁRIOS ==========
     function formatarTempo(seg) { return `${Math.floor(seg/60).toString().padStart(2,'0')}:${(seg%60).toString().padStart(2,'0')}`; }
     function iniciarCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); tempoInicioEtapa = Date.now(); intervaloRelogio = setInterval(()=>{}, 1000); }
     function pararCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); return tempoInicioEtapa ? Math.floor((Date.now()-tempoInicioEtapa)/1000) : 0; }
@@ -259,22 +249,23 @@
     }
     function atualizarUI(){ document.getElementById("progressHint").innerHTML = `🏆 ${categorias[indiceCategoriaAtual].nome.substring(0,22)} | ${acertosNaEtapa}/${silabasAtuais.length}`; }
     function repetirSilabaAlvo() {
-        const silabaObj = silabasAtuais[indiceSilabaAtual];
-        if (!silabaObj) return;
-        document.getElementById("silabaAlvo").classList.add("pulsando");
-        setTimeout(() => document.getElementById("silabaAlvo").classList.remove("pulsando"), 300);
-        tocarSilaba(silabaObj);
+        const sil = silabasAtuais[indiceSilabaAtual];
+        if(sil){ 
+            document.getElementById("silabaAlvo").classList.add("pulsando");
+            setTimeout(()=>document.getElementById("silabaAlvo").classList.remove("pulsando"),300);
+            tocarSilaba(sil);
+        }
     }
 
     function calcularAreaSegura() {
         const header = document.querySelector('.game-header');
         const instrucao = document.querySelector('.instrucao-wrapper');
-        const headerHeight = header ? header.offsetHeight : 120;
-        const instrucaoHeight = instrucao ? instrucao.offsetHeight + 30 : 80;
-        return Math.max(((headerHeight + instrucaoHeight) / window.innerHeight) * 100 + 5, 25);
+        const hh = header ? header.offsetHeight : 120;
+        const ih = instrucao ? instrucao.offsetHeight + 30 : 80;
+        return Math.max(((hh + ih) / window.innerHeight) * 100 + 5, 25);
     }
 
-    // ---------- JOGO ----------
+    // ========== JOGO ==========
     function carregarProximaSilaba() {
         if (indiceSilabaAtual >= silabasAtuais.length) { concluirCategoria(); return; }
         const certa = silabasAtuais[indiceSilabaAtual];
@@ -306,18 +297,18 @@
         const silTexto = getTextoTransformado(silabaObj.texto);
         c.innerHTML = `<span class="creature-icon" style="${flip}">${emoji}</span>
                        <span class="silaba-creature modo-${modoGrafia}">${silTexto}</span>`;
-        function handleInteraction(e) {
+        function handle(e) {
             e.preventDefault(); e.stopPropagation();
             if(!jogoAtivo || aguardandoProxima) return;
             const rect = c.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            if(silabaObj.texto === alvoObj.texto) acertou(c, silabaObj, centerX, centerY);
+            const cx = rect.left + rect.width/2;
+            const cy = rect.top + rect.height/2;
+            if(silabaObj.texto === alvoObj.texto) acertou(c, silabaObj, cx, cy);
             else errou(c, silabaObj);
         }
-        c.addEventListener('pointerdown', handleInteraction, { passive: false });
-        c.addEventListener('touchstart', handleInteraction, { passive: false });
-        c.addEventListener('click', handleInteraction);
+        c.addEventListener('pointerdown', handle, { passive: false });
+        c.addEventListener('touchstart', handle, { passive: false });
+        c.addEventListener('click', handle);
         aquario.appendChild(c);
     }
 
@@ -358,11 +349,10 @@
         if(intervaloRelogio) clearInterval(intervaloRelogio);
         jogoAtivo = false;
         aguardandoProxima = false;
-        transicaoCategoria = false;
         pontuacaoTotal = 0;
         indiceCategoriaAtual = indice;
-        const categoria = categorias[indiceCategoriaAtual];
-        silabasAtuais = [...categoria.silabas];
+        const cat = categorias[indiceCategoriaAtual];
+        silabasAtuais = [...cat.silabas];
         indiceSilabaAtual = 0;
         acertosNaEtapa = 0;
         atualizarUI();
@@ -373,38 +363,49 @@
     }
 
     function concluirCategoria() {
-        if (aguardandoProxima || transicaoCategoria) return;
-        transicaoCategoria = true;
+        if (aguardandoProxima) return;
         aguardandoProxima = true;
         jogoAtivo = false;
         pararCronometro();
         aquario.innerHTML = "";
         
-        modalVitoria.style.display = "flex";
+        const totalCats = categorias.length;
+        const isLast = (indiceCategoriaAtual + 1 >= totalCats);
         document.getElementById("vitoria-msg-topo").innerHTML = `✨ ${categorias[indiceCategoriaAtual].nome} ✨`;
         document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length} | Pontos: ${pontuacaoTotal}`;
+        document.getElementById("vitoria-msg-sub").innerHTML = isLast ? "🏆 PARABÉNS! Você completou TODAS as famílias! 🏆" : "🐟 Avançando para a próxima família...";
+        modalVitoria.style.display = "flex";
         
-        if (indiceCategoriaAtual + 1 < categorias.length) {
-            document.getElementById("vitoria-msg-sub").innerHTML = "🐟 Avançando para a próxima família...";
-            setTimeout(() => {
-                modalVitoria.style.display = "none";
+        // Função de avanço
+        const avancar = () => {
+            modalVitoria.style.display = "none";
+            if (!isLast) {
                 indiceCategoriaAtual++;
                 resetarJogoParaCategoria(indiceCategoriaAtual);
-                aguardandoProxima = false;
-                transicaoCategoria = false;
-            }, 2000);
+            }
+            aguardandoProxima = false;
+        };
+        
+        // Avanço automático (exceto última)
+        if (!isLast) {
+            setTimeout(avancar, 2200);
         } else {
-            document.getElementById("vitoria-msg-sub").innerHTML = "🏆 PARABÉNS! Você completou TODAS as famílias! 🏆";
-            setTimeout(() => {
-                modalVitoria.style.display = "none";
-                aguardandoProxima = false;
-                transicaoCategoria = false;
-            }, 3000);
+            // Na última, não avança automaticamente, mas permite botão fechar
+            document.getElementById("btnProximoManual").style.display = "none";
         }
+        // Botão manual "Próxima" (caso automático falhe)
+        const btnManual = document.getElementById("btnProximoManual");
+        btnManual.style.display = "block";
+        btnManual.onclick = () => { if (!isLast) avancar(); };
     }
 
-    // ---------- SELEÇÃO MANUAL DE CATEGORIA ----------
-    function abrirSeletorCategorias() { modalCategorias.style.display = "flex"; }
+    // ========== SELEÇÃO DE CATEGORIAS ==========
+    function abrirSeletorCategorias() {
+        // Força reset de qualquer estado pendente
+        if (aguardandoProxima) aguardandoProxima = false;
+        if (intervaloRelogio) clearInterval(intervaloRelogio);
+        modalCategorias.style.display = "flex";
+    }
     function fecharSeletor() { modalCategorias.style.display = "none"; }
     function preencherGridCategorias() {
         const grid = document.getElementById("listaCategorias");
@@ -422,12 +423,16 @@
         });
     }
 
-    // ---------- NAVEGAÇÃO ----------
+    // ========== NAVEGAÇÃO ==========
     function toggleFullscreen(){ if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
     function toggleAudio(){ audioEnabled=!audioEnabled; document.getElementById("btn-audio").innerHTML=audioEnabled?"🔊 Som Ligado":"🔇 Som Desligado"; if(audioEnabled) document.getElementById("bg-audio").play().catch(e=>{}); else document.getElementById("bg-audio").pause(); }
     function voltarMenu(){ modalNavegacao.style.display="flex"; }
     function addBothEvents(el, handler) { if(el){ el.addEventListener('click', handler); el.addEventListener('touchstart', handler, { passive: false }); } }
 
+    const aquario = document.getElementById("aquario");
+    const modalVitoria = document.getElementById("modal-vitoria");
+    const modalNavegacao = document.getElementById("modal-navegacao");
+    const modalCategorias = document.getElementById("modal-categorias");
     const btnVoltarElem = document.getElementById("btnVoltar");
     const btnCancelar = document.getElementById("btnCancelarVolta");
     const btnConfirmar = document.getElementById("btnConfirmarVolta");
@@ -450,40 +455,23 @@
     addBothEvents(btnFull, toggleFullscreen);
     addBothEvents(btnAudioElem, toggleAudio);
 
-    // ---------- CURSOR E PARTÍCULAS ----------
+    // ========== CURSOR E PARTÍCULAS ==========
     function initCustomCursor() {
         if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-            const cursorDiv = document.createElement('div'); cursorDiv.className = 'custom-cursor'; document.body.appendChild(cursorDiv);
-            document.addEventListener('mousemove', (e) => { cursorDiv.style.left = e.clientX + 'px'; cursorDiv.style.top = e.clientY + 'px'; cursorDiv.style.display = 'block'; });
-            document.addEventListener('mouseleave', () => { cursorDiv.style.display = 'none'; });
-            document.addEventListener('mouseenter', () => { cursorDiv.style.display = 'block'; });
+            const cur = document.createElement('div'); cur.className = 'custom-cursor'; document.body.appendChild(cur);
+            document.addEventListener('mousemove', (e) => { cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px'; cur.style.display = 'block'; });
+            document.addEventListener('mouseleave', () => cur.style.display = 'none');
+            document.addEventListener('mouseenter', () => cur.style.display = 'block');
             document.body.style.cursor = 'none';
         }
     }
-
     function criarParticulasLuz() {
-        const container = document.getElementById("lightParticles");
-        for(let i=0;i<40;i++){
-            setTimeout(()=>{
-                const p=document.createElement("div"); p.className="light-particle";
-                p.style.width=Math.random()*8+3+"px"; p.style.height=p.style.width;
-                p.style.left=Math.random()*100+"%"; p.style.animationDelay=Math.random()*10+"s";
-                p.style.animationDuration=Math.random()*6+6+"s";
-                container.appendChild(p);
-                setTimeout(()=>p.remove(),12000);
-            }, i*300);
-        }
+        const cont = document.getElementById("lightParticles");
+        for(let i=0;i<40;i++) setTimeout(()=>{ let p=document.createElement("div"); p.className="light-particle"; p.style.width=Math.random()*8+3+"px"; p.style.height=p.style.width; p.style.left=Math.random()*100+"%"; p.style.animationDelay=Math.random()*10+"s"; p.style.animationDuration=Math.random()*6+6+"s"; cont.appendChild(p); setTimeout(()=>p.remove(),12000); }, i*300);
     }
 
     window.addEventListener('resize',()=>{ criaturasNaTela = window.innerWidth<768?3:(window.innerWidth<1024?4:5); });
-    setInterval(()=>{
-        if(jogoAtivo && !aguardandoProxima && Math.random()>0.85){
-            const b=document.createElement("div"); b.className="bolha";
-            const t=Math.random()*20+8; b.style.width=t+"px"; b.style.height=t+"px";
-            b.style.left=Math.random()*100+"%"; b.style.animationDuration=Math.random()*3+2+"s";
-            document.body.appendChild(b); setTimeout(()=>b.remove(),5000);
-        }
-    },1000);
+    setInterval(()=>{ if(jogoAtivo && !aguardandoProxima && Math.random()>0.85){ let b=document.createElement("div"); b.className="bolha"; let t=Math.random()*20+8; b.style.width=t+"px"; b.style.height=t+"px"; b.style.left=Math.random()*100+"%"; b.style.animationDuration=Math.random()*3+2+"s"; document.body.appendChild(b); setTimeout(()=>b.remove(),5000); } },1000);
 
     window.onload = () => {
         criarParticulasLuz();
