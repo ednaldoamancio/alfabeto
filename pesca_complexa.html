@@ -334,8 +334,8 @@
             z-index: 1;
         }
         .creature:active { transform: scale(0.95); }
-        @media (min-width: 768px) { 
-            .creature { width: 160px; height: 160px; } 
+        @media (min-width: 768px) {
+            .creature { width: 160px; height: 160px; }
             .creature::after {
                 top: -25px;
                 left: -25px;
@@ -376,11 +376,11 @@
 
         @media (min-width: 768px) {
             .silaba-creature { font-size: 20px; padding: 6px 14px; }
-            .silaba-creature.modo-maiusc-cursiva, 
+            .silaba-creature.modo-maiusc-cursiva,
             .silaba-creature.modo-minusc-cursiva { font-size: 22px; }
         }
         @media (min-width: 1024px) {
-            .silaba-creature.modo-maiusc-cursiva, 
+            .silaba-creature.modo-maiusc-cursiva,
             .silaba-creature.modo-minusc-cursiva { font-size: 24px; }
         }
 
@@ -613,6 +613,7 @@
             .icon-btn { font-size: 11px; padding: 4px 8px; }
         }
     </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -731,7 +732,7 @@
     let silabasAtuais = [], indiceSilabaAtual = 0;
     let tempoInicioEtapa = null, intervaloRelogio = null;
     let criaturasNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
-    let transicaoCategoria = false; // evita múltiplas transições
+    let transicaoCategoria = false;
 
     // ========== FUNÇÕES DE ÁUDIO MP3 ==========
     function tocarAudioMP3(arquivo, callback) {
@@ -898,42 +899,86 @@
         carregarProximaSilaba();
     }
 
+    // ========== CORREÇÃO: CONCLUIR CATEGORIA ==========
     function concluirCategoria() {
-        if (aguardandoProxima || transicaoCategoria) return;
+        // Se já está em transição, não faz nada (evita duplo clique)
+        if (transicaoCategoria) {
+            console.log("Transição já em andamento, ignorando...");
+            return;
+        }
+
         transicaoCategoria = true;
         aguardandoProxima = true;
         jogoAtivo = false;
         pararCronometro();
         aquario.innerHTML = "";
-        
+
         // Exibe modal de vitória
         modalVitoria.style.display = "flex";
         document.getElementById("vitoria-msg-topo").innerHTML = `✨ ${categorias[indiceCategoriaAtual].nome} ✨`;
         document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length} | Pontos: ${pontuacaoTotal}`;
-        
-        // Verifica se é a última categoria
-        if (indiceCategoriaAtual + 1 < categorias.length) {
+
+        // Verifica se há próxima categoria
+        const temProxima = indiceCategoriaAtual + 1 < categorias.length;
+
+        if (temProxima) {
             document.getElementById("vitoria-msg-sub").innerHTML = "🐟 Avançando para a próxima família...";
             // Avança após 2 segundos
             setTimeout(() => {
                 modalVitoria.style.display = "none";
                 indiceCategoriaAtual++;
                 resetarJogoParaCategoria(indiceCategoriaAtual);
-                aguardandoProxima = false;
-                transicaoCategoria = false;
             }, 2000);
         } else {
-            document.getElementById("vitoria-msg-sub").innerHTML = "🏆 PARABÉNS! Você completou TODAS as famílias! 🏆";
-            setTimeout(() => {
+            // ÚLTIMA CATEGORIA - Mostra mensagem especial e oferece opções
+            document.getElementById("vitoria-msg-sub").innerHTML = "🏆 PARABÉNS! Você completou TODAS as famílias! 🏆<br><br>🎉 Escolha uma opção abaixo:";
+
+            // Cria botões de ação no modal
+            const botoesDiv = document.createElement('div');
+            botoesDiv.className = 'nav-buttons';
+            botoesDiv.style.marginTop = '20px';
+            botoesDiv.id = 'botoes-fim-jogo';
+
+            const btnReiniciar = document.createElement('button');
+            btnReiniciar.className = 'nav-btn';
+            btnReiniciar.innerHTML = '🔄 Jogar Novamente';
+            btnReiniciar.onclick = () => {
                 modalVitoria.style.display = "none";
+                document.getElementById('botoes-fim-jogo')?.remove();
+                indiceCategoriaAtual = 0;
+                resetarJogoParaCategoria(0);
+            };
+
+            const btnMenu = document.createElement('button');
+            btnMenu.className = 'nav-btn cancelar';
+            btnMenu.innerHTML = '🏠 Menu Principal';
+            btnMenu.onclick = () => {
+                window.location.href = "index_pesca.html";
+            };
+
+            botoesDiv.appendChild(btnReiniciar);
+            botoesDiv.appendChild(btnMenu);
+
+            // Remove botões anteriores se existirem
+            const oldBotoes = document.getElementById('botoes-fim-jogo');
+            if (oldBotoes) oldBotoes.remove();
+
+            modalVitoria.appendChild(botoesDiv);
+
+            // Não fecha automaticamente - aguarda ação do usuário
+            // Mas libera as flags para permitir interação
+            setTimeout(() => {
                 aguardandoProxima = false;
                 transicaoCategoria = false;
-            }, 3000);
+            }, 500);
         }
     }
 
     // ========== SELEÇÃO MANUAL DE CATEGORIA ==========
-    function abrirSeletorCategorias() { modalCategorias.style.display = "flex"; }
+    function abrirSeletorCategorias() { 
+        console.log("Abrindo seletor de categorias...");
+        modalCategorias.style.display = "flex"; 
+    }
     function fecharSeletor() { modalCategorias.style.display = "none"; }
     function preencherGridCategorias() {
         const grid = document.getElementById("listaCategorias");
@@ -942,20 +987,41 @@
             const btn = document.createElement("button");
             btn.className = "cat-botao";
             btn.innerText = cat.nome;
+            // CORREÇÃO: Usar onclick simples, sem touchstart com preventDefault
             btn.onclick = () => {
+                console.log("Categoria selecionada:", idx, cat.nome);
                 resetarJogoParaCategoria(idx);
                 fecharSeletor();
             };
-            btn.ontouchstart = (e) => { e.preventDefault(); resetarJogoParaCategoria(idx); fecharSeletor(); };
             grid.appendChild(btn);
         });
     }
 
     // ========== NAVEGAÇÃO E EVENTOS ==========
-    function toggleFullscreen(){ if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
-    function toggleAudio(){ audioEnabled=!audioEnabled; document.getElementById("btn-audio").innerHTML=audioEnabled?"🔊 Som Ligado":"🔇 Som Desligado"; if(audioEnabled) document.getElementById("bg-audio").play().catch(e=>{}); else document.getElementById("bg-audio").pause(); }
+    function toggleFullscreen(){ 
+        if(!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{}); 
+        else document.exitFullscreen().catch(()=>{}); 
+    }
+    function toggleAudio(){ 
+        audioEnabled=!audioEnabled; 
+        document.getElementById("btn-audio").innerHTML=audioEnabled?"🔊 Som Ligado":"🔇 Som Desligado"; 
+        if(audioEnabled) document.getElementById("bg-audio").play().catch(e=>{}); 
+        else document.getElementById("bg-audio").pause(); 
+    }
     function voltarMenu(){ modalNavegacao.style.display="flex"; }
-    function addBothEvents(el, handler) { if(el){ el.addEventListener('click', handler); el.addEventListener('touchstart', handler, { passive: false }); } }
+
+    // CORREÇÃO: Função segura para adicionar eventos (sem preventDefault no touchstart dos botões)
+    function addClickEvent(el, handler) { 
+        if(!el) return;
+        el.addEventListener('click', handler);
+    }
+
+    // Para elementos que precisam de touch e click (criaturas), mantém ambos
+    function addBothEvents(el, handler) { 
+        if(!el) return; 
+        el.addEventListener('click', handler); 
+        el.addEventListener('touchstart', handler, { passive: false }); 
+    }
 
     const btnVoltarElem = document.getElementById("btnVoltar");
     const btnCancelar = document.getElementById("btnCancelarVolta");
@@ -973,11 +1039,14 @@
     addBothEvents(btnConfirmar, () => { modalNavegacao.style.display = "none"; window.location.href = "index_pesca.html"; });
     addBothEvents(btnRepetir, repetirSilabaAlvo);
     addBothEvents(silabaAlvoElem, (e) => { e.stopPropagation(); repetirSilabaAlvo(); });
-    addBothEvents(btnEscolher, abrirSeletorCategorias);
-    addBothEvents(btnFecharCats, fecharSeletor);
-    addBothEvents(btnMenu, () => { window.location.href = "index_pesca.html"; });
-    addBothEvents(btnFull, toggleFullscreen);
-    addBothEvents(btnAudioElem, toggleAudio);
+
+    // CORREÇÃO: Botão Famílias usa click simples (não both events)
+    addClickEvent(btnEscolher, abrirSeletorCategorias);
+
+    addClickEvent(btnFecharCats, fecharSeletor);
+    addClickEvent(btnMenu, () => { window.location.href = "index_pesca.html"; });
+    addClickEvent(btnFull, toggleFullscreen);
+    addClickEvent(btnAudioElem, toggleAudio);
 
     // Cursor personalizado
     function initCustomCursor() {
