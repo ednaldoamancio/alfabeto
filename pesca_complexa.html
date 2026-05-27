@@ -12,8 +12,13 @@
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
-        :root { --cursive-school: 'Playwrite BR', 'Comic Neue', cursive; --primary: #00acc1; --secondary: #ffd54f; }
-        body { font-family: 'Comic Neue', 'Segoe UI', sans-serif; background: #000; color: #fff; width: 100vw; height: 100vh; overflow: hidden; position: fixed; touch-action: manipulation; }
+        :root { 
+            --cursive-school: 'Playwrite BR', cursive; 
+            --print-font: 'Comic Neue', sans-serif;
+            --primary: #00acc1; 
+            --secondary: #ffd54f; 
+        }
+        body { font-family: var(--print-font); background: #000; color: #fff; width: 100vw; height: 100vh; overflow: hidden; position: fixed; touch-action: manipulation; }
         
         .custom-cursor { position: fixed; width: 45px; height: 45px; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5)); transition: transform 0.05s; }
         .custom-cursor::before { content: "🔱"; font-size: 40px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
@@ -32,24 +37,30 @@
         .top-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
         .icon-btn { background: rgba(0, 0, 0, 0.8); border: 2px solid var(--secondary); color: white; padding: 6px 12px; border-radius: 40px; cursor: pointer; font-size: 14px; backdrop-filter: blur(4px); transition: transform 0.2s; display: inline-flex; align-items: center; gap: 6px; font-weight: bold; white-space: nowrap; }
         .icon-btn:active { transform: scale(0.95); }
-        @media (min-width: 768px) { .icon-btn { padding: 8px 16px; font-size: 16px; } }
         
         .modo-barra { display: flex; flex-wrap: wrap; gap: 6px; background: rgba(0,0,0,0.5); padding: 6px 10px; border-radius: 40px; border: 1px solid var(--primary); backdrop-filter: blur(4px); justify-content: center; }
         .modo-btn { background: rgba(255,255,255,0.1); border: 2px solid transparent; border-radius: 12px; padding: 4px 8px; font-size: 18px; cursor: pointer; color: white; transition: all 0.25s ease; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 36px; }
-        .modo-btn .label-modo { font-size: 7px; font-family: 'Comic Neue', sans-serif; font-weight: 700; text-transform: uppercase; opacity: 0.8; }
+        .modo-btn .label-modo { font-size: 7px; font-family: var(--print-font); font-weight: 700; text-transform: uppercase; opacity: 0.8; }
         .modo-btn .exemplo-letra { font-size: 22px; line-height: 1; }
-        .modo-btn.maiusc-forma .exemplo-letra { font-family: 'Comic Neue', sans-serif; font-weight: 700; }
-        .modo-btn.minusc-forma .exemplo-letra { font-family: 'Comic Neue', sans-serif; font-weight: 700; text-transform: lowercase; }
-        .modo-btn.maiusc-cursiva .exemplo-letra { font-family: var(--cursive-school); font-weight: 400; }
-        .modo-btn.minusc-cursiva .exemplo-letra { font-family: var(--cursive-school); font-weight: 400; text-transform: lowercase; }
+        
+        /* Classes de Fonte para os Botões de Modo */
+        .modo-btn.maiusc-forma .exemplo-letra, .modo-btn.minusc-forma .exemplo-letra { font-family: var(--print-font); font-weight: 700; }
+        .modo-btn.maiusc-cursiva .exemplo-letra, .modo-btn.minusc-cursiva .exemplo-letra { font-family: var(--cursive-school); font-weight: 400; }
+        
         .modo-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.08); }
         .modo-btn.ativo { background: linear-gradient(135deg, var(--primary), #006064); border-color: var(--secondary); box-shadow: 0 0 12px rgba(0,172,193,0.5); transform: scale(1.1); }
         
         .instrucao-wrapper { position: relative; z-index: 30; display: flex; justify-content: center; margin: 15px 0 10px; pointer-events: auto; }
         .instrucao { font-size: 16px; font-weight: 900; background: rgba(0,0,0,0.75); padding: 8px 18px; border-radius: 50px; backdrop-filter: blur(8px); display: flex; align-items: baseline; gap: 10px; cursor: pointer; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border: 1px solid var(--secondary); pointer-events: auto; }
+        
+        /* Sílaba Alvo e Sílabas nas Criaturas */
         #silabaAlvo { color: var(--secondary); font-size: 28px; font-weight: bold; background: linear-gradient(135deg, #1a2a3a, #0a1a2a); padding: 0 15px; border-radius: 40px; letter-spacing: 2px; text-shadow: 0 0 8px #ff9800; cursor: pointer; transition: transform 0.15s ease; border: 1px solid var(--primary); }
         #silabaAlvo.pulsando { transform: scale(1.25); text-shadow: 0 0 20px #ffca28; border-color: var(--secondary); }
         
+        /* Estilos Dinâmicos de Fonte */
+        .font-print { font-family: var(--print-font) !important; font-weight: 700 !important; }
+        .font-cursive { font-family: var(--cursive-school) !important; font-weight: 400 !important; }
+
         .oceano { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; overflow: visible; pointer-events: auto; }
         .creature { position: absolute; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 140px; height: 140px; pointer-events: auto; filter: brightness(1.1) saturate(1.1); z-index: 500; transition: transform 0.05s; }
         .creature::after { content: ""; position: absolute; top: -20px; left: -20px; right: -20px; bottom: -20px; border-radius: 50%; background: transparent; pointer-events: auto; z-index: 1; }
@@ -194,7 +205,7 @@
         { nome: "🐠 PRA - PRE - PRI - PRO - PRU - PRÃO", silabas: [{ texto: "PRA", audio: "pra.mp3" },{ texto: "PRE", audio: "pre.mp3" },{ texto: "PRI", audio: "pri.mp3" },{ texto: "PRO", audio: "pro.mp3" },{ texto: "PRU", audio: "pru.mp3" },{ texto: "PRÃO", audio: "prao.mp3" }] },
         { nome: "🐋 TLA - TLE - TLI - TLO - TLU - TLÃO", silabas: [{ texto: "TLA", audio: "tla.mp3" },{ texto: "TLE", audio: "tle.mp3" },{ texto: "TLI", audio: "tli.mp3" },{ texto: "TLO", audio: "tlo.mp3" },{ texto: "TLU", audio: "tlu.mp3" },{ texto: "TLÃO", audio: "tlao.mp3" }] },
         { nome: "🐢 TRA - TRE - TRI - TRO - TRU - TRÃO", silabas: [{ texto: "TRA", audio: "tra.mp3" },{ texto: "TRE", audio: "tre.mp3" },{ texto: "TRI", audio: "tri.mp3" },{ texto: "TRO", audio: "tro.mp3" },{ texto: "TRU", audio: "tru.mp3" },{ texto: "TRÃO", audio: "trao.mp3" }] },
-        { nome: "🐚 VLA - VLE - VLI - VLO - VLU - VLÃO", silabas: [{ texto: "VLA", audio: "vla.mp3" },{ texto: "VLE", audio: "vle.mp3" },{ texto: "VLI", audio: "vli.mp3" },{ texto: "VLO", audio: "vlo.mp3" },{ texto: "VLU", audio: "vlu.mp3" },{ texto: "VLÃO", audio: "vlao.mp3" }] },
+        { nome: "🐚 VLA - VLE - VLI - VLO - VLU - VLÃO", silabas: [{ texto: "VLA", audio: "vla.mp3" },{ texto: "VLE", audio: "vle.mp3" },{ texto: "VLI", audio: "vla.mp3" },{ texto: "VLO", audio: "vlo.mp3" },{ texto: "VLU", audio: "vlu.mp3" },{ texto: "VLÃO", audio: "vlao.mp3" }] },
         { nome: "🪸 VRA - VRE - VRI - VRO - VRU - VRÃO", silabas: [{ texto: "VRA", audio: "vra.mp3" },{ texto: "VRE", audio: "vre.mp3" },{ texto: "VRI", audio: "vri.mp3" },{ texto: "VRO", audio: "vro.mp3" },{ texto: "VRU", audio: "vru.mp3" },{ texto: "VRÃO", audio: "vrao.mp3" }] }
     ];
 
@@ -242,27 +253,34 @@
     // ---------- GRAFIA ----------
     let modoGrafia = 'maiusc-forma';
     function capitalizeSilaba(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : s; }
+    
     const mapaModo = {
-        'maiusc-forma':   { transform: (s) => capitalizeSilaba(s) },
-        'minusc-forma':   { transform: (s) => s.toLowerCase() },
-        'maiusc-cursiva': { transform: (s) => capitalizeSilaba(s) },
-        'minusc-cursiva': { transform: (s) => s.toLowerCase() }
+        'maiusc-forma':   { transform: (s) => capitalizeSilaba(s), fontClass: 'font-print' },
+        'minusc-forma':   { transform: (s) => s.toLowerCase(), fontClass: 'font-print' },
+        'maiusc-cursiva': { transform: (s) => capitalizeSilaba(s), fontClass: 'font-cursive' },
+        'minusc-cursiva': { transform: (s) => s.toLowerCase(), fontClass: 'font-cursive' }
     };
+
     function getTextoTransformado(texto) { return mapaModo[modoGrafia].transform(texto); }
     
     function selecionarModo(modo) {
         modoGrafia = modo;
         document.querySelectorAll('.modo-btn').forEach(btn => btn.classList.toggle('ativo', btn.dataset.modo === modo));
+        
+        const config = mapaModo[modoGrafia];
+        
+        // Atualiza Sílaba Alvo
         if (silabasAtuais.length && indiceSilabaAtual < silabasAtuais.length) {
             const silaba = silabasAtuais[indiceSilabaAtual];
-            silabaAlvoElem.innerText = getTextoTransformado(silaba.texto);
-            silabaAlvoElem.className = 'modo-' + modo;
+            silabaAlvoElem.innerText = config.transform(silaba.texto);
+            silabaAlvoElem.className = config.fontClass;
         }
+        
         // Atualiza criaturas na tela
         document.querySelectorAll('.silaba-creature').forEach(span => {
             const original = span.dataset.original;
-            span.innerText = getTextoTransformado(original);
-            span.className = `silaba-creature modo-${modoGrafia}`;
+            span.innerText = config.transform(original);
+            span.className = `silaba-creature ${config.fontClass}`;
         });
     }
 
@@ -306,8 +324,11 @@
     function carregarProximaSilaba() {
         if (indiceSilabaAtual >= silabasAtuais.length) { concluirCategoria(); return; }
         const certa = silabasAtuais[indiceSilabaAtual];
-        silabaAlvoElem.innerText = getTextoTransformado(certa.texto);
-        silabaAlvoElem.className = 'modo-' + modoGrafia;
+        const config = mapaModo[modoGrafia];
+        
+        silabaAlvoElem.innerText = config.transform(certa.texto);
+        silabaAlvoElem.className = config.fontClass;
+        
         atualizarUI();
         aquario.innerHTML = "";
         let opcoes = [certa];
@@ -327,7 +348,7 @@
         const c = document.createElement("div");
         c.className = "creature";
         const minTop = calcularAreaSegura();
-        const maxTop = 85; // Limite inferior
+        const maxTop = 85; 
         c.style.top = (Math.random() * (maxTop - minTop) + minTop) + "%";
         
         const dir = Math.random() > 0.5;
@@ -336,10 +357,11 @@
         
         const emoji = criaturas[Math.floor(Math.random() * criaturas.length)];
         const flip = dir ? 'transform: scaleX(-1);' : '';
-        const silTexto = getTextoTransformado(silabaObj.texto);
+        const config = mapaModo[modoGrafia];
+        const silTexto = config.transform(silabaObj.texto);
         
         c.innerHTML = `<span class="creature-icon" style="${flip}">${emoji}</span>
-                       <span class="silaba-creature modo-${modoGrafia}" data-original="${silabaObj.texto}">${silTexto}</span>`;
+                       <span class="silaba-creature ${config.fontClass}" data-original="${silabaObj.texto}">${silTexto}</span>`;
         
         const handleInteraction = (e) => {
             if(e.type === 'touchstart') e.preventDefault();
@@ -370,7 +392,7 @@
         pontuacaoTotal += 15;
         acertosNaEtapa++;
         atualizarUI();
-        mostrarFeedback(getTextoTransformado(silabaObj.texto), true, x, y);
+        mostrarFeedback(mapaModo[modoGrafia].transform(silabaObj.texto), true, x, y);
         
         tocarSilaba(silabaObj, () => {
             indiceSilabaAtual++;
@@ -386,7 +408,7 @@
     function errou(elem, silabaObj) {
         if(!jogoAtivo) return;
         if(audioEnabled) document.getElementById("sfx-erro").play().catch(()=>{});
-        mostrarFeedback(getTextoTransformado(silabaObj.texto), false);
+        mostrarFeedback(mapaModo[modoGrafia].transform(silabaObj.texto), false);
         elem.classList.add("erro-anim");
         setTimeout(()=>elem.classList.remove("erro-anim"), 400);
         tocarSilaba(silabaObj);
