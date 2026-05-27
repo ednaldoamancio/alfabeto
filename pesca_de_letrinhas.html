@@ -820,12 +820,14 @@
     
     const emojisPeixe = ["🐟", "🐠", "🐡", "🐋", "🦈", "🐙", "🐬", "🐳"];
 
+    // PRONÚNCIA COM "S" = "ÉSSE" (É aberto)
     function obterPronunciaLetra(letra) {
         const pronunciaMap = {
             "A": "á", "B": "bê", "C": "cê", "D": "dê", "E": "ê", "F": "efe",
             "G": "gê", "H": "agá", "I": "i", "J": "jóta", "K": "cá", "L": "éle",
             "M": "ême", "N": "êne", "O": "ô", "P": "pê", "Q": "quê", "R": "érre",
-            "S": "esse", "T": "tê", "U": "u", "V": "vê", "W": "dáblio",
+            "S": "ésse",   // <--- ALTERADO PARA "ÉSSE" (com E aberto)
+            "T": "tê", "U": "u", "V": "vê", "W": "dáblio",
             "X": "xis", "Y": "ípsilon", "Z": "zê"
         };
         return pronunciaMap[letra.toUpperCase()] || letra.toLowerCase();
@@ -854,7 +856,7 @@
         window.speechSynthesis.speak(utterance);
     }
 
-    // PRONÚNCIA SIMPLES: apenas o som da letra
+    // PRONÚNCIA SIMPLES: apenas o som da letra (sem "maiúscula de forma", etc.)
     function falarLetra(letra, callback) {
         const pronuncia = obterPronunciaLetra(letra);
         falar(pronuncia, callback);
