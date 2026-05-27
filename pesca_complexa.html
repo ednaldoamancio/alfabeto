@@ -5,29 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Sílabas Complexas - Tesouros do Mar Profundo | EdHumanas</title>
 
+    <!-- Google Fonts: Playwrite BR (cursiva escolar) + Comic Neue (forma) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Playwrite+BR:wght@100..400&display=swap" rel="stylesheet">
 
     <style>
-        /* ========== ESTILOS (mesmo do código anterior, compactado) ========== */
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
         :root { --cursive-school: 'Playwrite BR', 'Comic Neue', cursive; --primary: #00acc1; --secondary: #ffd54f; }
         body { font-family: 'Comic Neue', 'Segoe UI', sans-serif; background: #000; color: #fff; width: 100vw; height: 100vh; overflow: hidden; position: fixed; touch-action: manipulation; }
+        
         .custom-cursor { position: fixed; width: 45px; height: 45px; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5)); transition: transform 0.05s; }
         .custom-cursor::before { content: "🔱"; font-size: 40px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
         @media (hover: none) and (pointer: coarse) { .custom-cursor { display: none; } body { cursor: auto; } }
+        
         #bg-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.6; filter: brightness(0.8) contrast(1.1); pointer-events: none; }
         body::before { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0,20,50,0.7), rgba(0,5,20,0.85)); z-index: 0; pointer-events: none; }
+        
         .light-particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
         .light-particle { position: absolute; background: radial-gradient(circle, rgba(255,255,200,0.6), transparent); border-radius: 50%; animation: floatLight 8s ease-in-out infinite; }
         @keyframes floatLight { 0% { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; } 20% { opacity: 0.8; } 100% { transform: translateY(-20vh) translateX(100px) scale(1.5); opacity: 0; } }
+        
         #game-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: flex; flex-direction: column; pointer-events: none; }
         .game-header { position: relative; z-index: 100; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(12px); border-bottom: 2px solid var(--secondary); pointer-events: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        
         .top-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
         .icon-btn { background: rgba(0, 0, 0, 0.8); border: 2px solid var(--secondary); color: white; padding: 6px 12px; border-radius: 40px; cursor: pointer; font-size: 14px; backdrop-filter: blur(4px); transition: transform 0.2s; display: inline-flex; align-items: center; gap: 6px; font-weight: bold; white-space: nowrap; }
         .icon-btn:active { transform: scale(0.95); }
         @media (min-width: 768px) { .icon-btn { padding: 8px 16px; font-size: 16px; } }
+        
         .modo-barra { display: flex; flex-wrap: wrap; gap: 6px; background: rgba(0,0,0,0.5); padding: 6px 10px; border-radius: 40px; border: 1px solid var(--primary); backdrop-filter: blur(4px); justify-content: center; }
         .modo-btn { background: rgba(255,255,255,0.1); border: 2px solid transparent; border-radius: 12px; padding: 4px 8px; font-size: 18px; cursor: pointer; color: white; transition: all 0.25s ease; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 36px; }
         .modo-btn .label-modo { font-size: 7px; font-family: 'Comic Neue', sans-serif; font-weight: 700; text-transform: uppercase; opacity: 0.8; }
@@ -38,65 +44,71 @@
         .modo-btn.minusc-cursiva .exemplo-letra { font-family: var(--cursive-school); font-weight: 400; text-transform: lowercase; }
         .modo-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.08); }
         .modo-btn.ativo { background: linear-gradient(135deg, var(--primary), #006064); border-color: var(--secondary); box-shadow: 0 0 12px rgba(0,172,193,0.5); transform: scale(1.1); }
-        @media (min-width: 768px) { .modo-barra { gap: 10px; padding: 8px 14px; border-radius: 50px; } .modo-btn { padding: 6px 12px; font-size: 26px; min-width: 50px; } .modo-btn .exemplo-letra { font-size: 32px; } .modo-btn .label-modo { font-size: 9px; } }
+        
         .instrucao-wrapper { position: relative; z-index: 30; display: flex; justify-content: center; margin: 15px 0 10px; pointer-events: auto; }
         .instrucao { font-size: 16px; font-weight: 900; background: rgba(0,0,0,0.75); padding: 8px 18px; border-radius: 50px; backdrop-filter: blur(8px); display: flex; align-items: baseline; gap: 10px; cursor: pointer; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border: 1px solid var(--secondary); pointer-events: auto; }
-        @media (min-width: 768px) { .instrucao { font-size: 24px; padding: 8px 24px; } }
         #silabaAlvo { color: var(--secondary); font-size: 28px; font-weight: bold; background: linear-gradient(135deg, #1a2a3a, #0a1a2a); padding: 0 15px; border-radius: 40px; letter-spacing: 2px; text-shadow: 0 0 8px #ff9800; cursor: pointer; transition: transform 0.15s ease; border: 1px solid var(--primary); }
         #silabaAlvo.pulsando { transform: scale(1.25); text-shadow: 0 0 20px #ffca28; border-color: var(--secondary); }
-        #silabaAlvo.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; }
-        #silabaAlvo.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
-        #silabaAlvo.modo-maiusc-cursiva { font-family: var(--cursive-school); font-weight: 400; }
-        #silabaAlvo.modo-minusc-cursiva { font-family: var(--cursive-school); font-weight: 400; text-transform: lowercase; }
-        @media (min-width: 768px) { #silabaAlvo { font-size: 42px; padding: 0 20px; } }
+        
         .oceano { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; overflow: visible; pointer-events: auto; }
         .creature { position: absolute; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 140px; height: 140px; pointer-events: auto; filter: brightness(1.1) saturate(1.1); z-index: 500; transition: transform 0.05s; }
         .creature::after { content: ""; position: absolute; top: -20px; left: -20px; right: -20px; bottom: -20px; border-radius: 50%; background: transparent; pointer-events: auto; z-index: 1; }
-        .creature:active { transform: scale(0.95); }
-        @media (min-width: 768px) { .creature { width: 160px; height: 160px; } .creature::after { top: -25px; left: -25px; right: -25px; bottom: -25px; } }
         .creature-icon { font-size: 65px; position: absolute; filter: drop-shadow(3px 6px 10px rgba(0,0,0,0.5)); pointer-events: none; z-index: 2; }
-        @media (min-width: 768px) { .creature-icon { font-size: 85px; } }
         .silaba-creature { font-size: 18px; font-weight: bold; color: #FFFDE7; background: rgba(0,0,0,0.65); padding: 5px 10px; border-radius: 30px; position: absolute; text-shadow: 1px 1px 0 #0a2f5a; white-space: nowrap; backdrop-filter: blur(2px); border: 1px solid rgba(255,215,0,0.5); pointer-events: none; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3; }
-        .silaba-creature.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; }
-        .silaba-creature.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
-        .silaba-creature.modo-maiusc-cursiva { font-family: var(--cursive-school); font-size: 18px; font-weight: 400; }
-        .silaba-creature.modo-minusc-cursiva { font-family: var(--cursive-school); font-size: 18px; font-weight: 400; text-transform: lowercase; }
-        @media (min-width: 768px) { .silaba-creature { font-size: 20px; padding: 6px 14px; } .silaba-creature.modo-maiusc-cursiva, .silaba-creature.modo-minusc-cursiva { font-size: 22px; } }
+        
         .pescado { animation: subir-vertical 0.8s cubic-bezier(0.4,0,0.2,1) forwards !important; pointer-events: none !important; z-index: 300; filter: brightness(1.5) !important; }
         @keyframes subir-vertical { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-120vh) scale(0.3); opacity: 0; } }
         @keyframes nadar-direita { 0% { left: -180px; } 100% { left: 100%; } }
         @keyframes nadar-esquerda { 0% { left: 100%; } 100% { left: -180px; } }
+        
         .treasure-effect { position: absolute; font-size: 40px; pointer-events: none; z-index: 200; animation: treasureFloat 0.8s ease-out forwards; }
         @keyframes treasureFloat { 0% { transform: scale(0.2) translateY(0) rotate(0deg); opacity: 1; } 100% { transform: scale(1.5) translateY(-100px) rotate(360deg); opacity: 0; } }
-        .bolha { position: absolute; bottom: -50px; background: radial-gradient(circle, rgba(100,200,255,0.5), rgba(50,100,200,0.2)); border-radius: 50%; pointer-events: none; animation: subir-bolha linear forwards; }
-        @keyframes subir-bolha { to { transform: translateY(-120vh) translateX(60px); opacity: 0; } }
+        
         .shockwave { position: absolute; width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle, rgba(255,215,0,0.8), transparent); pointer-events: none; animation: expandWave 0.5s ease-out forwards; }
         @keyframes expandWave { 0% { transform: scale(0.5); opacity: 0.8; } 100% { transform: scale(8); opacity: 0; } }
+        
         #modal-vitoria, #modal-navegacao, #modal-categorias { display: none; position: fixed; inset: 0; background: rgba(0,10,25,0.98); backdrop-filter: blur(14px); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
         .vitoria-texto { font-size: 4vh; color: var(--secondary); margin: 15px 0; font-weight: bold; }
         .icone-vitoria { font-size: 12vh; animation: float 2s infinite; }
         @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        
         .score-panel { font-size: 16px; background: linear-gradient(135deg,#1e2a3a,#0a1520); padding: 8px 20px; border-radius: 60px; border: 1px solid var(--secondary); }
         .erro-anim { animation: tremer 0.3s ease; filter: grayscale(0.5) brightness(0.6); }
         @keyframes tremer { 0%,100%{ transform:translateX(0); } 25%{ transform:translateX(-8px); } 75%{ transform:translateX(8px); } }
+        
         .feedback-correto { position: fixed; bottom: 25%; left: 50%; transform: translateX(-50%); background: #2e7d32ee; backdrop-filter: blur(8px); padding: 10px 20px; border-radius: 50px; font-size: 20px; font-weight: bold; z-index: 200; animation: fadeUp 0.9s ease-out forwards; pointer-events: none; white-space: nowrap; border: 2px solid var(--secondary); }
         @keyframes fadeUp { 0% { opacity: 0; transform: translateX(-50%) translateY(20px); } 20% { opacity: 1; transform: translateX(-50%) translateY(0); } 80% { opacity: 1; } 100% { opacity: 0; transform: translateX(-50%) translateY(-50px); } }
+        
         .progresso-categoria { position: fixed; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); padding: 6px 12px; border-radius: 25px; font-size: 10px; backdrop-filter: blur(5px); color: var(--secondary); pointer-events: none; z-index: 100; }
-        @media (min-width: 768px) { .progresso-categoria { bottom: 20px; right: 20px; padding: 10px 18px; font-size: 14px; } }
         .btn-voltar { position: fixed; bottom: 15px; left: 15px; background: linear-gradient(135deg, #00acc1, #006064); border: none; border-radius: 40px; padding: 10px 18px; font-size: 12px; font-weight: bold; color: white; cursor: pointer; z-index: 200; backdrop-filter: blur(4px); pointer-events: auto; transition: all 0.3s; }
-        @media (min-width: 768px) { .btn-voltar { bottom: 30px; left: 30px; padding: 14px 28px; font-size: 18px; } }
-        .btn-voltar:active { transform: scale(0.95); }
-        .dica-som { position: fixed; bottom: 10px; left: 10px; background: rgba(0,0,0,0.5); padding: 3px 8px; border-radius: 15px; font-size: 9px; color: #aaa; pointer-events: none; z-index: 100; }
+        
         .nav-buttons { display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap; justify-content: center; }
         .nav-btn { background: linear-gradient(135deg, #00acc1, #006064); border: 2px solid var(--secondary); padding: 12px 24px; font-size: 18px; border-radius: 40px; cursor: pointer; color: white; transition: transform 0.2s; }
-        .nav-btn:active { transform: scale(0.95); }
         .nav-btn.cancelar { background: linear-gradient(135deg, #555, #333); border-color: #888; }
+        
         .grid-categorias { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; max-height: 60vh; overflow-y: auto; padding: 15px; margin-top: 20px; background: rgba(0,0,0,0.6); border-radius: 30px; width: 90vw; max-width: 800px; }
         .cat-botao { background: linear-gradient(135deg, #1e3c4c, #0a2a38); border: 2px solid #ffd966; border-radius: 50px; padding: 12px; font-size: 1rem; font-weight: bold; color: #ffecb3; cursor: pointer; transition: 0.2s; }
-        .cat-botao:active { transform: scale(0.96); background: #2a5f6e; }
-        .cat-botao:hover { background: #2a5f6e; transform: scale(1.02); }
-        @media (max-width: 700px) { .game-header { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px; } .top-bar, .modo-barra { justify-content: center; } .instrucao-wrapper { margin: 8px 0 4px; } .instrucao { font-size: 14px; padding: 6px 12px; white-space: nowrap; } #silabaAlvo { font-size: 20px; padding: 0 8px; } }
-        @media (max-width: 480px) { .instrucao { font-size: 12px; } #silabaAlvo { font-size: 18px; } .icon-btn { font-size: 11px; padding: 4px 8px; } }
+        
+        .bolha { position: absolute; bottom: -50px; background: radial-gradient(circle, rgba(100,200,255,0.5), rgba(50,100,200,0.2)); border-radius: 50%; pointer-events: none; animation: subir-bolha linear forwards; }
+        @keyframes subir-bolha { to { transform: translateY(-120vh) translateX(60px); opacity: 0; } }
+
+        @media (min-width: 768px) {
+            .instrucao { font-size: 24px; padding: 8px 24px; gap: 12px; }
+            #silabaAlvo { font-size: 42px; padding: 0 20px; }
+            .creature { width: 160px; height: 160px; }
+            .creature-icon { font-size: 85px; }
+            .silaba-creature { font-size: 20px; padding: 6px 14px; }
+            .progresso-categoria { bottom: 20px; right: 20px; padding: 10px 18px; font-size: 14px; }
+            .btn-voltar { bottom: 30px; left: 30px; padding: 14px 28px; font-size: 18px; }
+        }
+
+        @media (max-width: 700px) {
+            .game-header { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px; }
+            .top-bar, .modo-barra { justify-content: center; }
+            .instrucao-wrapper { margin: 8px 0 4px; }
+            .instrucao { font-size: 14px; padding: 6px 12px; }
+            #silabaAlvo { font-size: 20px; padding: 0 8px; }
+        }
     </style>
 </head>
 <body>
@@ -104,7 +116,9 @@
 <video autoplay loop muted playsinline id="bg-video">
     <source src="fundo-do-mar.mp4" type="video/mp4">
 </video>
+
 <div class="light-particles" id="lightParticles"></div>
+
 <audio id="bg-audio" src="som_fundo_do_mar.mp3" loop></audio>
 <audio id="sfx-pescado" src="pescado.ogg"></audio>
 <audio id="sfx-erro" src="erro.ogg"></audio>
@@ -114,8 +128,8 @@
         <div class="top-bar">
             <button id="btnMenuPrincipal" class="icon-btn">🏠 Menu</button>
             <button id="btnEscolherCategoria" class="icon-btn">📚 Famílias</button>
-            <button id="btn-audio" class="icon-btn">🔇 Som</button>
             <button id="btnFullscreen" class="icon-btn">⛶ Tela</button>
+            <button id="btn-audio" class="icon-btn">🔇 Som</button>
         </div>
         <div class="modo-barra" id="modoBarra">
             <button class="modo-btn maiusc-forma ativo" data-modo="maiusc-forma" onclick="selecionarModo('maiusc-forma')"><span class="exemplo-letra">Ba</span><span class="label-modo">Maiúscula</span></button>
@@ -130,7 +144,6 @@
     <div class="oceano" id="aquario"></div>
     <div class="progresso-categoria" id="progressHint">🏆 Tesouros do Mar Profundo</div>
     <button class="btn-voltar" id="btnVoltar"><span>🏝️</span> Voltar ao Menu</button>
-    <div class="dica-som">💡 Clique na sílaba para ouvir | Escolha qualquer família!</div>
 </div>
 
 <div id="modal-categorias">
@@ -139,13 +152,14 @@
     <div class="grid-categorias" id="listaCategorias"></div>
     <button class="nav-btn cancelar" id="btnFecharCategorias" style="margin-top:20px;">Fechar</button>
 </div>
+
 <div id="modal-vitoria">
     <div class="icone-vitoria">🏆🗿🏆</div>
     <div class="vitoria-texto" id="vitoria-msg-topo">Parabéns!</div>
     <div class="score-panel" id="scoreFinalModal">Pontuação: 0</div>
     <div class="vitoria-texto" id="vitoria-msg-sub">Continue explorando!</div>
-    <button id="btnProximoManual" class="nav-btn confirmar" style="margin-top:15px;">▶ Próxima Família</button>
 </div>
+
 <div id="modal-navegacao">
     <div class="icone-vitoria">🐢➡️🏝️</div>
     <div class="vitoria-texto">Voltar para o menu principal?</div>
@@ -156,7 +170,7 @@
 </div>
 
 <script>
-    // ========== CATEGORIAS COMPLETAS ==========
+    // ---------- CATEGORIAS COMPLETAS ----------
     const categorias = [
         { nome: "🌊 AL - EL - IL - OL - UL", silabas: [{ texto: "AL", audio: "al.mp3" },{ texto: "EL", audio: "el.mp3" },{ texto: "IL", audio: "il.mp3" },{ texto: "OL", audio: "ol.mp3" },{ texto: "UL", audio: "ul.mp3" }] },
         { nome: "🐚 AM - EM - IM - OM - UM", silabas: [{ texto: "AM", audio: "am.mp3" },{ texto: "EM", audio: "em.mp3" },{ texto: "IM", audio: "im.mp3" },{ texto: "OM", audio: "om.mp3" },{ texto: "UM", audio: "um.mp3" }] },
@@ -185,29 +199,39 @@
     ];
 
     const criaturas = ["🐟","🐠","🐡","🐋","🦈","🐙","🐬","🐳","🦀","🦑","🐚","🦭","🪼","🐢","🦞","🪸","🧜‍♀️","🧜‍♂️"];
+    
+    // DOM Elements
+    const aquario = document.getElementById("aquario");
+    const modalVitoria = document.getElementById("modal-vitoria");
+    const modalCategorias = document.getElementById("modal-categorias");
+    const modalNavegacao = document.getElementById("modal-navegacao");
+    const btnAudioElem = document.getElementById("btn-audio");
+    const silabaAlvoElem = document.getElementById("silabaAlvo");
+    
     let audioEnabled = false, currentAudio = null, jogoAtivo = true, aguardandoProxima = false;
     let indiceCategoriaAtual = 0, pontuacaoTotal = 0, acertosNaEtapa = 0;
     let silabasAtuais = [], indiceSilabaAtual = 0;
     let tempoInicioEtapa = null, intervaloRelogio = null;
     let criaturasNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
+    let transicaoCategoria = false;
 
-    // ========== ÁUDIO COM FALLBACK ==========
+    // ---------- ÁUDIO ----------
     function tocarAudioMP3(arquivo, callback) {
         if (!arquivo) { if(callback) callback(); return; }
         if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
         const audio = new Audio(arquivo);
         currentAudio = audio;
-        let done = false;
-        const finish = () => {
-            if (done) return;
-            done = true;
+        let chamouCallback = false;
+        const done = () => {
+            if (chamouCallback) return;
+            chamouCallback = true;
             if (currentAudio === audio) currentAudio = null;
             if (callback) callback();
         };
-        audio.play().catch(() => finish());
-        audio.onended = finish;
-        audio.onerror = finish;
-        setTimeout(finish, 1200);
+        audio.play().catch(e => { console.warn("Erro ao tocar áudio:", arquivo, e); done(); });
+        audio.onended = done;
+        audio.onerror = done;
+        setTimeout(done, 1500); // Segurança
     }
 
     function tocarSilaba(silabaObj, callback) {
@@ -215,69 +239,85 @@
         else if (callback) callback();
     }
 
-    // ========== MODO DE GRAFIA ==========
+    // ---------- GRAFIA ----------
     let modoGrafia = 'maiusc-forma';
     function capitalizeSilaba(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : s; }
     const mapaModo = {
-        'maiusc-forma':   { transform: s => capitalizeSilaba(s) },
-        'minusc-forma':   { transform: s => s.toLowerCase() },
-        'maiusc-cursiva': { transform: s => capitalizeSilaba(s) },
-        'minusc-cursiva': { transform: s => s.toLowerCase() }
+        'maiusc-forma':   { transform: (s) => capitalizeSilaba(s) },
+        'minusc-forma':   { transform: (s) => s.toLowerCase() },
+        'maiusc-cursiva': { transform: (s) => capitalizeSilaba(s) },
+        'minusc-cursiva': { transform: (s) => s.toLowerCase() }
     };
     function getTextoTransformado(texto) { return mapaModo[modoGrafia].transform(texto); }
+    
     function selecionarModo(modo) {
         modoGrafia = modo;
         document.querySelectorAll('.modo-btn').forEach(btn => btn.classList.toggle('ativo', btn.dataset.modo === modo));
         if (silabasAtuais.length && indiceSilabaAtual < silabasAtuais.length) {
-            const sil = silabasAtuais[indiceSilabaAtual];
-            document.getElementById("silabaAlvo").innerText = getTextoTransformado(sil.texto);
-            document.getElementById("silabaAlvo").className = 'modo-' + modo;
+            const silaba = silabasAtuais[indiceSilabaAtual];
+            silabaAlvoElem.innerText = getTextoTransformado(silaba.texto);
+            silabaAlvoElem.className = 'modo-' + modo;
         }
-        if (jogoAtivo && !aguardandoProxima) carregarProximaSilaba();
+        // Atualiza criaturas na tela
+        document.querySelectorAll('.silaba-creature').forEach(span => {
+            const original = span.dataset.original;
+            span.innerText = getTextoTransformado(original);
+            span.className = `silaba-creature modo-${modoGrafia}`;
+        });
     }
 
-    // ========== UTILITÁRIOS ==========
-    function formatarTempo(seg) { return `${Math.floor(seg/60).toString().padStart(2,'0')}:${(seg%60).toString().padStart(2,'0')}`; }
-    function iniciarCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); tempoInicioEtapa = Date.now(); intervaloRelogio = setInterval(()=>{}, 1000); }
-    function pararCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); return tempoInicioEtapa ? Math.floor((Date.now()-tempoInicioEtapa)/1000) : 0; }
-    function criarTesouro(x,y){ const t=["💎","👑","💰","🗿","⚓","🔱","🐚","⭐","🏆","✨"][Math.floor(Math.random()*10)]; const e=document.createElement("div"); e.className="treasure-effect"; e.innerText=t; e.style.left=(x-25)+"px"; e.style.top=(y-25)+"px"; document.body.appendChild(e); setTimeout(()=>e.remove(),800); }
-    function criarOndaChoque(x,y){ const w=document.createElement("div"); w.className="shockwave"; w.style.left=(x-15)+"px"; w.style.top=(y-15)+"px"; document.body.appendChild(w); setTimeout(()=>w.remove(),500); }
+    // ---------- UTILITÁRIOS ----------
+    function criarTesouro(x,y){ 
+        const t=["💎","👑","💰","🗿","⚓","🔱","🐚","⭐","🏆","✨"][Math.floor(Math.random()*10)]; 
+        const e=document.createElement("div"); e.className="treasure-effect"; e.innerText=t; 
+        e.style.left=(x-25)+"px"; e.style.top=(y-25)+"px"; document.body.appendChild(e); 
+        setTimeout(()=>e.remove(),800); 
+    }
+    function criarOndaChoque(x,y){ 
+        const w=document.createElement("div"); w.className="shockwave"; 
+        w.style.left=(x-15)+"px"; w.style.top=(y-15)+"px"; document.body.appendChild(w); 
+        setTimeout(()=>w.remove(),500); 
+    }
     function mostrarFeedback(texto, acerto, x, y){
-        const d=document.createElement("div"); d.className="feedback-correto"; d.style.background=acerto?"#2e7d32ee":"#c62828ee";
-        d.innerText=acerto?`🎣✨ +15 ⭐ ${texto} ✨`:`❌ ${texto}`; document.body.appendChild(d); setTimeout(()=>d.remove(),850);
+        const d=document.createElement("div"); d.className="feedback-correto"; 
+        d.style.background=acerto?"#2e7d32ee":"#c62828ee";
+        d.innerText=acerto?`🎣✨ +15 ⭐ ${texto} ✨`:`❌ ${texto}`; 
+        document.body.appendChild(d); setTimeout(()=>d.remove(),850);
         if(acerto && x){ criarTesouro(x,y); criarOndaChoque(x,y); }
     }
-    function atualizarUI(){ document.getElementById("progressHint").innerHTML = `🏆 ${categorias[indiceCategoriaAtual].nome.substring(0,22)} | ${acertosNaEtapa}/${silabasAtuais.length}`; }
+    function atualizarUI(){ 
+        document.getElementById("progressHint").innerHTML = `🏆 ${categorias[indiceCategoriaAtual].nome.substring(0,22)} | ${acertosNaEtapa}/${silabasAtuais.length}`; 
+    }
     function repetirSilabaAlvo() {
-        const sil = silabasAtuais[indiceSilabaAtual];
-        if(sil){ 
-            document.getElementById("silabaAlvo").classList.add("pulsando");
-            setTimeout(()=>document.getElementById("silabaAlvo").classList.remove("pulsando"),300);
-            tocarSilaba(sil);
-        }
+        const silabaObj = silabasAtuais[indiceSilabaAtual];
+        if (!silabaObj) return;
+        silabaAlvoElem.classList.add("pulsando");
+        setTimeout(() => silabaAlvoElem.classList.remove("pulsando"), 300);
+        tocarSilaba(silabaObj);
     }
 
     function calcularAreaSegura() {
         const header = document.querySelector('.game-header');
-        const instrucao = document.querySelector('.instrucao-wrapper');
-        const hh = header ? header.offsetHeight : 120;
-        const ih = instrucao ? instrucao.offsetHeight + 30 : 80;
-        return Math.max(((hh + ih) / window.innerHeight) * 100 + 5, 25);
+        const headerHeight = header ? header.offsetHeight : 120;
+        return Math.max((headerHeight / window.innerHeight) * 100 + 10, 25);
     }
 
-    // ========== JOGO ==========
+    // ---------- JOGO ----------
     function carregarProximaSilaba() {
         if (indiceSilabaAtual >= silabasAtuais.length) { concluirCategoria(); return; }
         const certa = silabasAtuais[indiceSilabaAtual];
-        document.getElementById("silabaAlvo").innerText = getTextoTransformado(certa.texto);
-        document.getElementById("silabaAlvo").className = 'modo-' + modoGrafia;
+        silabaAlvoElem.innerText = getTextoTransformado(certa.texto);
+        silabaAlvoElem.className = 'modo-' + modoGrafia;
         atualizarUI();
         aquario.innerHTML = "";
         let opcoes = [certa];
         let outras = silabasAtuais.filter(s => s.texto !== certa.texto);
         outras.sort(()=>0.5-Math.random());
         opcoes.push(...outras.slice(0, criaturasNaTela-1));
-        while(opcoes.length < criaturasNaTela) opcoes.push({texto:"CHA", audio:"cha.mp3"});
+        while(opcoes.length < criaturasNaTela) {
+            const aleatoria = categorias[Math.floor(Math.random()*categorias.length)].silabas[0];
+            opcoes.push(aleatoria);
+        }
         opcoes.sort(()=>Math.random()-0.5);
         opcoes.forEach(sil => criarCriatura(sil, certa));
         setTimeout(()=>{ if(jogoAtivo && !aguardandoProxima) tocarSilaba(certa); }, 500);
@@ -287,44 +327,51 @@
         const c = document.createElement("div");
         c.className = "creature";
         const minTop = calcularAreaSegura();
-        const maxTop = 85;
-        c.style.top = Math.random() * (maxTop - minTop) + minTop + "%";
+        const maxTop = 85; // Limite inferior
+        c.style.top = (Math.random() * (maxTop - minTop) + minTop) + "%";
+        
         const dir = Math.random() > 0.5;
         const dur = Math.random() * 5 + 4.5;
         c.style.animation = dir ? `nadar-direita ${dur}s linear infinite` : `nadar-esquerda ${dur}s linear infinite`;
+        
         const emoji = criaturas[Math.floor(Math.random() * criaturas.length)];
         const flip = dir ? 'transform: scaleX(-1);' : '';
         const silTexto = getTextoTransformado(silabaObj.texto);
+        
         c.innerHTML = `<span class="creature-icon" style="${flip}">${emoji}</span>
-                       <span class="silaba-creature modo-${modoGrafia}">${silTexto}</span>`;
-        function handle(e) {
-            e.preventDefault(); e.stopPropagation();
+                       <span class="silaba-creature modo-${modoGrafia}" data-original="${silabaObj.texto}">${silTexto}</span>`;
+        
+        const handleInteraction = (e) => {
+            if(e.type === 'touchstart') e.preventDefault();
             if(!jogoAtivo || aguardandoProxima) return;
             const rect = c.getBoundingClientRect();
-            const cx = rect.left + rect.width/2;
-            const cy = rect.top + rect.height/2;
-            if(silabaObj.texto === alvoObj.texto) acertou(c, silabaObj, cx, cy);
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            if(silabaObj.texto === alvoObj.texto) acertou(c, silabaObj, centerX, centerY);
             else errou(c, silabaObj);
-        }
-        c.addEventListener('pointerdown', handle, { passive: false });
-        c.addEventListener('touchstart', handle, { passive: false });
-        c.addEventListener('click', handle);
+        };
+
+        c.addEventListener('click', handleInteraction);
+        c.addEventListener('touchstart', handleInteraction, { passive: false });
         aquario.appendChild(c);
     }
 
     function acertou(elem, silabaObj, x, y) {
         if(!jogoAtivo) return;
         jogoAtivo = false;
-        if(audioEnabled) document.getElementById("sfx-pescado").play().catch(e=>{});
+        if(audioEnabled) document.getElementById("sfx-pescado").play().catch(()=>{});
+        
         const rect = elem.getBoundingClientRect();
         elem.style.animation = "none";
         elem.style.left = rect.left + "px";
         elem.style.top = rect.top + "px";
         elem.classList.add("pescado");
+        
         pontuacaoTotal += 15;
         acertosNaEtapa++;
         atualizarUI();
         mostrarFeedback(getTextoTransformado(silabaObj.texto), true, x, y);
+        
         tocarSilaba(silabaObj, () => {
             indiceSilabaAtual++;
             if(indiceSilabaAtual < silabasAtuais.length) {
@@ -338,74 +385,54 @@
 
     function errou(elem, silabaObj) {
         if(!jogoAtivo) return;
-        if(audioEnabled) document.getElementById("sfx-erro").play().catch(e=>{});
+        if(audioEnabled) document.getElementById("sfx-erro").play().catch(()=>{});
         mostrarFeedback(getTextoTransformado(silabaObj.texto), false);
         elem.classList.add("erro-anim");
-        setTimeout(()=>elem.classList.remove("erro-anim"),400);
+        setTimeout(()=>elem.classList.remove("erro-anim"), 400);
         tocarSilaba(silabaObj);
     }
 
     function resetarJogoParaCategoria(indice) {
-        if(intervaloRelogio) clearInterval(intervaloRelogio);
         jogoAtivo = false;
         aguardandoProxima = false;
-        pontuacaoTotal = 0;
+        transicaoCategoria = false;
         indiceCategoriaAtual = indice;
-        const cat = categorias[indiceCategoriaAtual];
-        silabasAtuais = [...cat.silabas];
+        const categoria = categorias[indiceCategoriaAtual];
+        silabasAtuais = [...categoria.silabas];
         indiceSilabaAtual = 0;
         acertosNaEtapa = 0;
         atualizarUI();
         aquario.innerHTML = "";
         jogoAtivo = true;
-        iniciarCronometro();
         carregarProximaSilaba();
     }
 
     function concluirCategoria() {
-        if (aguardandoProxima) return;
+        if (transicaoCategoria) return;
+        transicaoCategoria = true;
         aguardandoProxima = true;
         jogoAtivo = false;
-        pararCronometro();
         aquario.innerHTML = "";
         
-        const totalCats = categorias.length;
-        const isLast = (indiceCategoriaAtual + 1 >= totalCats);
+        modalVitoria.style.display = "flex";
         document.getElementById("vitoria-msg-topo").innerHTML = `✨ ${categorias[indiceCategoriaAtual].nome} ✨`;
         document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length} | Pontos: ${pontuacaoTotal}`;
-        document.getElementById("vitoria-msg-sub").innerHTML = isLast ? "🏆 PARABÉNS! Você completou TODAS as famílias! 🏆" : "🐟 Avançando para a próxima família...";
-        modalVitoria.style.display = "flex";
         
-        // Função de avanço
-        const avancar = () => {
-            modalVitoria.style.display = "none";
-            if (!isLast) {
+        if (indiceCategoriaAtual + 1 < categorias.length) {
+            document.getElementById("vitoria-msg-sub").innerHTML = "🐟 Avançando para a próxima família...";
+            setTimeout(() => {
+                modalVitoria.style.display = "none";
                 indiceCategoriaAtual++;
                 resetarJogoParaCategoria(indiceCategoriaAtual);
-            }
-            aguardandoProxima = false;
-        };
-        
-        // Avanço automático (exceto última)
-        if (!isLast) {
-            setTimeout(avancar, 2200);
+            }, 2500);
         } else {
-            // Na última, não avança automaticamente, mas permite botão fechar
-            document.getElementById("btnProximoManual").style.display = "none";
+            document.getElementById("vitoria-msg-sub").innerHTML = "🏆 PARABÉNS! Você completou TUDO! 🏆";
+            setTimeout(() => { modalVitoria.style.display = "none"; transicaoCategoria = false; }, 4000);
         }
-        // Botão manual "Próxima" (caso automático falhe)
-        const btnManual = document.getElementById("btnProximoManual");
-        btnManual.style.display = "block";
-        btnManual.onclick = () => { if (!isLast) avancar(); };
     }
 
-    // ========== SELEÇÃO DE CATEGORIAS ==========
-    function abrirSeletorCategorias() {
-        // Força reset de qualquer estado pendente
-        if (aguardandoProxima) aguardandoProxima = false;
-        if (intervaloRelogio) clearInterval(intervaloRelogio);
-        modalCategorias.style.display = "flex";
-    }
+    // ---------- SELEÇÃO DE CATEGORIA ----------
+    function abrirSeletorCategorias() { modalCategorias.style.display = "flex"; }
     function fecharSeletor() { modalCategorias.style.display = "none"; }
     function preencherGridCategorias() {
         const grid = document.getElementById("listaCategorias");
@@ -414,72 +441,68 @@
             const btn = document.createElement("button");
             btn.className = "cat-botao";
             btn.innerText = cat.nome;
-            btn.onclick = () => {
-                resetarJogoParaCategoria(idx);
-                fecharSeletor();
-            };
-            btn.ontouchstart = (e) => { e.preventDefault(); resetarJogoParaCategoria(idx); fecharSeletor(); };
+            btn.onclick = () => { resetarJogoParaCategoria(idx); fecharSeletor(); };
             grid.appendChild(btn);
         });
     }
 
-    // ========== NAVEGAÇÃO ==========
+    // ---------- NAVEGAÇÃO ----------
     function toggleFullscreen(){ if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
-    function toggleAudio(){ audioEnabled=!audioEnabled; document.getElementById("btn-audio").innerHTML=audioEnabled?"🔊 Som Ligado":"🔇 Som Desligado"; if(audioEnabled) document.getElementById("bg-audio").play().catch(e=>{}); else document.getElementById("bg-audio").pause(); }
-    function voltarMenu(){ modalNavegacao.style.display="flex"; }
-    function addBothEvents(el, handler) { if(el){ el.addEventListener('click', handler); el.addEventListener('touchstart', handler, { passive: false }); } }
+    function toggleAudio(){ 
+        audioEnabled=!audioEnabled; 
+        btnAudioElem.innerHTML=audioEnabled?"🔊 Som":"🔇 Som"; 
+        if(audioEnabled) document.getElementById("bg-audio").play().catch(()=>{}); 
+        else document.getElementById("bg-audio").pause(); 
+    }
 
-    const aquario = document.getElementById("aquario");
-    const modalVitoria = document.getElementById("modal-vitoria");
-    const modalNavegacao = document.getElementById("modal-navegacao");
-    const modalCategorias = document.getElementById("modal-categorias");
-    const btnVoltarElem = document.getElementById("btnVoltar");
-    const btnCancelar = document.getElementById("btnCancelarVolta");
-    const btnConfirmar = document.getElementById("btnConfirmarVolta");
-    const btnRepetir = document.getElementById("btnRepetirSilaba");
-    const silabaAlvoElem = document.getElementById("silabaAlvo");
-    const btnFecharCats = document.getElementById("btnFecharCategorias");
-    const btnMenu = document.getElementById("btnMenuPrincipal");
-    const btnFull = document.getElementById("btnFullscreen");
-    const btnAudioElem = document.getElementById("btn-audio");
-    const btnEscolher = document.getElementById("btnEscolherCategoria");
+    // Event Listeners
+    document.getElementById("btnVoltar").onclick = () => modalNavegacao.style.display="flex";
+    document.getElementById("btnCancelarVolta").onclick = () => modalNavegacao.style.display = "none";
+    document.getElementById("btnConfirmarVolta").onclick = () => { window.location.href = "index_pesca.html"; };
+    document.getElementById("btnRepetirSilaba").onclick = repetirSilabaAlvo;
+    silabaAlvoElem.onclick = (e) => { e.stopPropagation(); repetirSilabaAlvo(); };
+    document.getElementById("btnEscolherCategoria").onclick = abrirSeletorCategorias;
+    document.getElementById("btnFecharCategorias").onclick = fecharSeletor;
+    document.getElementById("btnMenuPrincipal").onclick = () => { window.location.href = "index_pesca.html"; };
+    document.getElementById("btnFullscreen").onclick = toggleFullscreen;
+    btnAudioElem.onclick = toggleAudio;
 
-    addBothEvents(btnVoltarElem, voltarMenu);
-    addBothEvents(btnCancelar, () => modalNavegacao.style.display = "none");
-    addBothEvents(btnConfirmar, () => { modalNavegacao.style.display = "none"; window.location.href = "index_pesca.html"; });
-    addBothEvents(btnRepetir, repetirSilabaAlvo);
-    addBothEvents(silabaAlvoElem, (e) => { e.stopPropagation(); repetirSilabaAlvo(); });
-    addBothEvents(btnEscolher, abrirSeletorCategorias);
-    addBothEvents(btnFecharCats, fecharSeletor);
-    addBothEvents(btnMenu, () => { window.location.href = "index_pesca.html"; });
-    addBothEvents(btnFull, toggleFullscreen);
-    addBothEvents(btnAudioElem, toggleAudio);
-
-    // ========== CURSOR E PARTÍCULAS ==========
+    // ---------- CURSOR E PARTÍCULAS ----------
     function initCustomCursor() {
         if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-            const cur = document.createElement('div'); cur.className = 'custom-cursor'; document.body.appendChild(cur);
-            document.addEventListener('mousemove', (e) => { cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px'; cur.style.display = 'block'; });
-            document.addEventListener('mouseleave', () => cur.style.display = 'none');
-            document.addEventListener('mouseenter', () => cur.style.display = 'block');
+            const cursorDiv = document.createElement('div'); cursorDiv.className = 'custom-cursor'; document.body.appendChild(cursorDiv);
+            document.addEventListener('mousemove', (e) => { cursorDiv.style.left = e.clientX + 'px'; cursorDiv.style.top = e.clientY + 'px'; cursorDiv.style.display = 'block'; });
             document.body.style.cursor = 'none';
         }
     }
-    function criarParticulasLuz() {
-        const cont = document.getElementById("lightParticles");
-        for(let i=0;i<40;i++) setTimeout(()=>{ let p=document.createElement("div"); p.className="light-particle"; p.style.width=Math.random()*8+3+"px"; p.style.height=p.style.width; p.style.left=Math.random()*100+"%"; p.style.animationDelay=Math.random()*10+"s"; p.style.animationDuration=Math.random()*6+6+"s"; cont.appendChild(p); setTimeout(()=>p.remove(),12000); }, i*300);
-    }
 
-    window.addEventListener('resize',()=>{ criaturasNaTela = window.innerWidth<768?3:(window.innerWidth<1024?4:5); });
-    setInterval(()=>{ if(jogoAtivo && !aguardandoProxima && Math.random()>0.85){ let b=document.createElement("div"); b.className="bolha"; let t=Math.random()*20+8; b.style.width=t+"px"; b.style.height=t+"px"; b.style.left=Math.random()*100+"%"; b.style.animationDuration=Math.random()*3+2+"s"; document.body.appendChild(b); setTimeout(()=>b.remove(),5000); } },1000);
+    function criarParticulasLuz() {
+        const container = document.getElementById("lightParticles");
+        for(let i=0;i<30;i++){
+            setTimeout(()=>{
+                const p=document.createElement("div"); p.className="light-particle";
+                p.style.width=Math.random()*8+3+"px"; p.style.height=p.style.width;
+                p.style.left=Math.random()*100+"%"; p.style.animationDelay=Math.random()*10+"s";
+                container.appendChild(p);
+            }, i*300);
+        }
+    }
 
     window.onload = () => {
         criarParticulasLuz();
         preencherGridCategorias();
         initCustomCursor();
-        indiceCategoriaAtual = 0;
         resetarJogoParaCategoria(0);
     };
+
+    setInterval(()=>{
+        if(jogoAtivo && !aguardandoProxima && Math.random()>0.85){
+            const b=document.createElement("div"); b.className="bolha";
+            const t=Math.random()*20+8; b.style.width=t+"px"; b.style.height=t+"px";
+            b.style.left=Math.random()*100+"%"; b.style.animationDuration=Math.random()*3+2+"s";
+            document.body.appendChild(b); setTimeout(()=>b.remove(),5000);
+        }
+    },1000);
 </script>
 </body>
 </html>
