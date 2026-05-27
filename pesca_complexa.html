@@ -11,609 +11,97 @@
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Playwrite+BR:wght@100..400&display=swap" rel="stylesheet">
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        :root {
-            --cursive-school: 'Playwrite BR', 'Comic Neue', cursive;
-            --primary: #00acc1;
-            --secondary: #ffd54f;
-        }
-
-        body {
-            font-family: 'Comic Neue', 'Segoe UI', 'Comic Sans MS', Tahoma, sans-serif;
-            background: #000;
-            color: #ffffff;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            position: fixed;
-            touch-action: manipulation;
-        }
-
-        /* Cursor personalizado - Tridente */
-        .custom-cursor {
-            position: fixed;
-            width: 45px;
-            height: 45px;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
-            transition: transform 0.05s;
-        }
-        .custom-cursor::before {
-            content: "🔱";
-            font-size: 40px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        @media (hover: none) and (pointer: coarse) {
-            .custom-cursor { display: none; }
-            body { cursor: auto; }
-        }
-
-        #bg-video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 0;
-            opacity: 0.6;
-            filter: brightness(0.8) contrast(1.1) saturate(1.2);
-            pointer-events: none;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(0,20,50,0.7), rgba(0,5,20,0.85));
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .light-particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            overflow: hidden;
-        }
-        .light-particle {
-            position: absolute;
-            background: radial-gradient(circle, rgba(255,255,200,0.6), transparent);
-            border-radius: 50%;
-            animation: floatLight 8s ease-in-out infinite;
-        }
-        @keyframes floatLight {
-            0% { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; }
-            20% { opacity: 0.8; }
-            100% { transform: translateY(-20vh) translateX(100px) scale(1.5); opacity: 0; }
-        }
-
-        #game-wrapper {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            pointer-events: none;
-        }
-
-        .game-header {
-            position: relative;
-            z-index: 100;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            background: rgba(0, 0, 0, 0.65);
-            backdrop-filter: blur(12px);
-            border-bottom: 2px solid var(--secondary);
-            pointer-events: auto;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-        .top-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .icon-btn {
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid var(--secondary);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 14px;
-            backdrop-filter: blur(4px);
-            transition: transform 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: bold;
-            white-space: nowrap;
-        }
+        /* (mesmo CSS do código anterior, mantido por brevidade) */
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+        :root { --cursive-school: 'Playwrite BR', 'Comic Neue', cursive; --primary: #00acc1; --secondary: #ffd54f; }
+        body { font-family: 'Comic Neue', 'Segoe UI', sans-serif; background: #000; color: #fff; width: 100vw; height: 100vh; overflow: hidden; position: fixed; touch-action: manipulation; }
+        .custom-cursor { position: fixed; width: 45px; height: 45px; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5)); transition: transform 0.05s; }
+        .custom-cursor::before { content: "🔱"; font-size: 40px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        @media (hover: none) and (pointer: coarse) { .custom-cursor { display: none; } body { cursor: auto; } }
+        #bg-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.6; filter: brightness(0.8) contrast(1.1); pointer-events: none; }
+        body::before { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0,20,50,0.7), rgba(0,5,20,0.85)); z-index: 0; pointer-events: none; }
+        .light-particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
+        .light-particle { position: absolute; background: radial-gradient(circle, rgba(255,255,200,0.6), transparent); border-radius: 50%; animation: floatLight 8s ease-in-out infinite; }
+        @keyframes floatLight { 0% { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; } 20% { opacity: 0.8; } 100% { transform: translateY(-20vh) translateX(100px) scale(1.5); opacity: 0; } }
+        #game-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: flex; flex-direction: column; pointer-events: none; }
+        .game-header { position: relative; z-index: 100; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(12px); border-bottom: 2px solid var(--secondary); pointer-events: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .top-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+        .icon-btn { background: rgba(0, 0, 0, 0.8); border: 2px solid var(--secondary); color: white; padding: 6px 12px; border-radius: 40px; cursor: pointer; font-size: 14px; backdrop-filter: blur(4px); transition: transform 0.2s; display: inline-flex; align-items: center; gap: 6px; font-weight: bold; white-space: nowrap; }
         .icon-btn:active { transform: scale(0.95); }
-        @media (min-width: 768px) {
-            .icon-btn { padding: 8px 16px; font-size: 16px; }
-        }
-
-        .modo-barra {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            background: rgba(0,0,0,0.5);
-            padding: 6px 10px;
-            border-radius: 40px;
-            border: 1px solid var(--primary);
-            backdrop-filter: blur(4px);
-            justify-content: center;
-        }
-
-        .modo-btn {
-            background: rgba(255,255,255,0.1);
-            border: 2px solid transparent;
-            border-radius: 12px;
-            padding: 4px 8px;
-            font-size: 18px;
-            cursor: pointer;
-            color: white;
-            transition: all 0.25s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            min-width: 36px;
-        }
-
-        .modo-btn .label-modo {
-            font-size: 7px;
-            font-family: 'Comic Neue', sans-serif;
-            font-weight: 700;
-            text-transform: uppercase;
-            opacity: 0.8;
-        }
-
-        .modo-btn .exemplo-letra {
-            font-size: 22px;
-            line-height: 1;
-        }
-
+        @media (min-width: 768px) { .icon-btn { padding: 8px 16px; font-size: 16px; } }
+        .modo-barra { display: flex; flex-wrap: wrap; gap: 6px; background: rgba(0,0,0,0.5); padding: 6px 10px; border-radius: 40px; border: 1px solid var(--primary); backdrop-filter: blur(4px); justify-content: center; }
+        .modo-btn { background: rgba(255,255,255,0.1); border: 2px solid transparent; border-radius: 12px; padding: 4px 8px; font-size: 18px; cursor: pointer; color: white; transition: all 0.25s ease; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 36px; }
+        .modo-btn .label-modo { font-size: 7px; font-family: 'Comic Neue', sans-serif; font-weight: 700; text-transform: uppercase; opacity: 0.8; }
+        .modo-btn .exemplo-letra { font-size: 22px; line-height: 1; }
         .modo-btn.maiusc-forma .exemplo-letra { font-family: 'Comic Neue', sans-serif; font-weight: 700; }
         .modo-btn.minusc-forma .exemplo-letra { font-family: 'Comic Neue', sans-serif; font-weight: 700; text-transform: lowercase; }
         .modo-btn.maiusc-cursiva .exemplo-letra { font-family: var(--cursive-school); font-weight: 400; }
         .modo-btn.minusc-cursiva .exemplo-letra { font-family: var(--cursive-school); font-weight: 400; text-transform: lowercase; }
-
-        .modo-btn:hover {
-            background: rgba(255,255,255,0.2);
-            transform: scale(1.08);
-        }
-
-        .modo-btn.ativo {
-            background: linear-gradient(135deg, var(--primary), #006064);
-            border-color: var(--secondary);
-            box-shadow: 0 0 12px rgba(0,172,193,0.5);
-            transform: scale(1.1);
-        }
-
-        @media (min-width: 768px) {
-            .modo-barra {
-                gap: 10px;
-                padding: 8px 14px;
-                border-radius: 50px;
-            }
-            .modo-btn {
-                padding: 6px 12px;
-                font-size: 26px;
-                min-width: 50px;
-                border-radius: 16px;
-            }
-            .modo-btn .label-modo { font-size: 9px; }
-            .modo-btn .exemplo-letra { font-size: 32px; }
-        }
-
-        @media (min-width: 1024px) {
-            .modo-btn { padding: 8px 16px; min-width: 60px; }
-            .modo-btn .exemplo-letra { font-size: 38px; }
-            .modo-btn .label-modo { font-size: 10px; }
-        }
-
-        .instrucao-wrapper {
-            position: relative;
-            z-index: 30;
-            display: flex;
-            justify-content: center;
-            margin: 15px 0 10px;
-            pointer-events: auto;
-        }
-        .instrucao {
-            font-size: 16px;
-            font-weight: 900;
-            background: rgba(0,0,0,0.75);
-            padding: 8px 18px;
-            border-radius: 50px;
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-            cursor: pointer;
-            white-space: nowrap;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            border: 1px solid var(--secondary);
-            pointer-events: auto;
-        }
-        @media (min-width: 768px) {
-            .instrucao { font-size: 24px; padding: 8px 24px; gap: 12px; }
-        }
-        #silabaAlvo {
-            color: var(--secondary);
-            font-size: 28px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #1a2a3a, #0a1a2a);
-            padding: 0 15px;
-            border-radius: 40px;
-            letter-spacing: 2px;
-            text-shadow: 0 0 8px #ff9800;
-            cursor: pointer;
-            transition: transform 0.15s ease;
-            border: 1px solid var(--primary);
-        }
-        #silabaAlvo.pulsando {
-            transform: scale(1.25);
-            text-shadow: 0 0 20px #ffca28;
-            border-color: var(--secondary);
-        }
+        .modo-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.08); }
+        .modo-btn.ativo { background: linear-gradient(135deg, var(--primary), #006064); border-color: var(--secondary); box-shadow: 0 0 12px rgba(0,172,193,0.5); transform: scale(1.1); }
+        @media (min-width: 768px) { .modo-barra { gap: 10px; padding: 8px 14px; border-radius: 50px; } .modo-btn { padding: 6px 12px; font-size: 26px; min-width: 50px; border-radius: 16px; } .modo-btn .label-modo { font-size: 9px; } .modo-btn .exemplo-letra { font-size: 32px; } }
+        @media (min-width: 1024px) { .modo-btn { padding: 8px 16px; min-width: 60px; } .modo-btn .exemplo-letra { font-size: 38px; } .modo-btn .label-modo { font-size: 10px; } }
+        .instrucao-wrapper { position: relative; z-index: 30; display: flex; justify-content: center; margin: 15px 0 10px; pointer-events: auto; }
+        .instrucao { font-size: 16px; font-weight: 900; background: rgba(0,0,0,0.75); padding: 8px 18px; border-radius: 50px; backdrop-filter: blur(8px); display: flex; align-items: baseline; gap: 10px; cursor: pointer; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border: 1px solid var(--secondary); pointer-events: auto; }
+        @media (min-width: 768px) { .instrucao { font-size: 24px; padding: 8px 24px; gap: 12px; } }
+        #silabaAlvo { color: var(--secondary); font-size: 28px; font-weight: bold; background: linear-gradient(135deg, #1a2a3a, #0a1a2a); padding: 0 15px; border-radius: 40px; letter-spacing: 2px; text-shadow: 0 0 8px #ff9800; cursor: pointer; transition: transform 0.15s ease; border: 1px solid var(--primary); }
+        #silabaAlvo.pulsando { transform: scale(1.25); text-shadow: 0 0 20px #ffca28; border-color: var(--secondary); }
         #silabaAlvo.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; }
         #silabaAlvo.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
         #silabaAlvo.modo-maiusc-cursiva { font-family: var(--cursive-school); font-weight: 400; }
         #silabaAlvo.modo-minusc-cursiva { font-family: var(--cursive-school); font-weight: 400; text-transform: lowercase; }
-
-        @media (min-width: 768px) {
-            #silabaAlvo { font-size: 42px; padding: 0 20px; }
-        }
-
-        .oceano {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 5;
-            overflow: visible;
-            pointer-events: auto;
-        }
-
-        .creature {
-            position: absolute;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 140px;
-            height: 140px;
-            pointer-events: auto;
-            filter: brightness(1.1) saturate(1.1);
-            z-index: 500;
-            transition: transform 0.05s;
-        }
-        .creature::after {
-            content: "";
-            position: absolute;
-            top: -20px;
-            left: -20px;
-            right: -20px;
-            bottom: -20px;
-            border-radius: 50%;
-            background: transparent;
-            pointer-events: auto;
-            z-index: 1;
-        }
+        @media (min-width: 768px) { #silabaAlvo { font-size: 42px; padding: 0 20px; } }
+        .oceano { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; overflow: visible; pointer-events: auto; }
+        .creature { position: absolute; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 140px; height: 140px; pointer-events: auto; filter: brightness(1.1) saturate(1.1); z-index: 500; transition: transform 0.05s; }
+        .creature::after { content: ""; position: absolute; top: -20px; left: -20px; right: -20px; bottom: -20px; border-radius: 50%; background: transparent; pointer-events: auto; z-index: 1; }
         .creature:active { transform: scale(0.95); }
-        @media (min-width: 768px) {
-            .creature { width: 160px; height: 160px; }
-            .creature::after {
-                top: -25px;
-                left: -25px;
-                right: -25px;
-                bottom: -25px;
-            }
-        }
-        .creature-icon {
-            font-size: 65px;
-            position: absolute;
-            filter: drop-shadow(3px 6px 10px rgba(0,0,0,0.5));
-            pointer-events: none;
-            z-index: 2;
-        }
+        @media (min-width: 768px) { .creature { width: 160px; height: 160px; } .creature::after { top: -25px; left: -25px; right: -25px; bottom: -25px; } }
+        .creature-icon { font-size: 65px; position: absolute; filter: drop-shadow(3px 6px 10px rgba(0,0,0,0.5)); pointer-events: none; z-index: 2; }
         @media (min-width: 768px) { .creature-icon { font-size: 85px; } }
-        .silaba-creature {
-            font-size: 18px;
-            font-weight: bold;
-            color: #FFFDE7;
-            background: rgba(0,0,0,0.65);
-            padding: 5px 10px;
-            border-radius: 30px;
-            position: absolute;
-            text-shadow: 1px 1px 0 #0a2f5a;
-            white-space: nowrap;
-            backdrop-filter: blur(2px);
-            border: 1px solid rgba(255,215,0,0.5);
-            pointer-events: none;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 3;
-        }
+        .silaba-creature { font-size: 18px; font-weight: bold; color: #FFFDE7; background: rgba(0,0,0,0.65); padding: 5px 10px; border-radius: 30px; position: absolute; text-shadow: 1px 1px 0 #0a2f5a; white-space: nowrap; backdrop-filter: blur(2px); border: 1px solid rgba(255,215,0,0.5); pointer-events: none; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3; }
         .silaba-creature.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; }
         .silaba-creature.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
         .silaba-creature.modo-maiusc-cursiva { font-family: var(--cursive-school); font-size: 18px; font-weight: 400; }
         .silaba-creature.modo-minusc-cursiva { font-family: var(--cursive-school); font-size: 18px; font-weight: 400; text-transform: lowercase; }
-
-        @media (min-width: 768px) {
-            .silaba-creature { font-size: 20px; padding: 6px 14px; }
-            .silaba-creature.modo-maiusc-cursiva,
-            .silaba-creature.modo-minusc-cursiva { font-size: 22px; }
-        }
-        @media (min-width: 1024px) {
-            .silaba-creature.modo-maiusc-cursiva,
-            .silaba-creature.modo-minusc-cursiva { font-size: 24px; }
-        }
-
-        .pescado {
-            animation: subir-vertical 0.8s cubic-bezier(0.4,0,0.2,1) forwards !important;
-            pointer-events: none !important;
-            z-index: 300;
-            filter: brightness(1.5) !important;
-        }
-        @keyframes subir-vertical {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-120vh) scale(0.3); opacity: 0; }
-        }
-        @keyframes nadar-direita {
-            0% { left: -180px; }
-            100% { left: 100%; }
-        }
-        @keyframes nadar-esquerda {
-            0% { left: 100%; }
-            100% { left: -180px; }
-        }
-        @media (min-width: 768px) {
-            @keyframes nadar-direita { 0% { left: -200px; } 100% { left: 100%; } }
-            @keyframes nadar-esquerda { 0% { left: 100%; } 100% { left: -200px; } }
-        }
-
-        .treasure-effect {
-            position: absolute;
-            font-size: 40px;
-            pointer-events: none;
-            z-index: 200;
-            animation: treasureFloat 0.8s ease-out forwards;
-        }
-        @keyframes treasureFloat {
-            0% { transform: scale(0.2) translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: scale(1.5) translateY(-100px) rotate(360deg); opacity: 0; }
-        }
-        .bolha {
-            position: absolute;
-            bottom: -50px;
-            background: radial-gradient(circle, rgba(100,200,255,0.5), rgba(50,100,200,0.2));
-            border-radius: 50%;
-            pointer-events: none;
-            animation: subir-bolha linear forwards;
-        }
-        @keyframes subir-bolha {
-            to { transform: translateY(-120vh) translateX(60px); opacity: 0; }
-        }
-        .shockwave {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,215,0,0.8), transparent);
-            pointer-events: none;
-            animation: expandWave 0.5s ease-out forwards;
-        }
-        @keyframes expandWave {
-            0% { transform: scale(0.5); opacity: 0.8; }
-            100% { transform: scale(8); opacity: 0; }
-        }
-
-        #modal-vitoria, #modal-navegacao, #modal-categorias {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,10,25,0.98);
-            backdrop-filter: blur(14px);
-            z-index: 1000;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
-        }
+        @media (min-width: 768px) { .silaba-creature { font-size: 20px; padding: 6px 14px; } .silaba-creature.modo-maiusc-cursiva, .silaba-creature.modo-minusc-cursiva { font-size: 22px; } }
+        @media (min-width: 1024px) { .silaba-creature.modo-maiusc-cursiva, .silaba-creature.modo-minusc-cursiva { font-size: 24px; } }
+        .pescado { animation: subir-vertical 0.8s cubic-bezier(0.4,0,0.2,1) forwards !important; pointer-events: none !important; z-index: 300; filter: brightness(1.5) !important; }
+        @keyframes subir-vertical { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-120vh) scale(0.3); opacity: 0; } }
+        @keyframes nadar-direita { 0% { left: -180px; } 100% { left: 100%; } }
+        @keyframes nadar-esquerda { 0% { left: 100%; } 100% { left: -180px; } }
+        @media (min-width: 768px) { @keyframes nadar-direita { 0% { left: -200px; } 100% { left: 100%; } } @keyframes nadar-esquerda { 0% { left: 100%; } 100% { left: -200px; } } }
+        .treasure-effect { position: absolute; font-size: 40px; pointer-events: none; z-index: 200; animation: treasureFloat 0.8s ease-out forwards; }
+        @keyframes treasureFloat { 0% { transform: scale(0.2) translateY(0) rotate(0deg); opacity: 1; } 100% { transform: scale(1.5) translateY(-100px) rotate(360deg); opacity: 0; } }
+        .bolha { position: absolute; bottom: -50px; background: radial-gradient(circle, rgba(100,200,255,0.5), rgba(50,100,200,0.2)); border-radius: 50%; pointer-events: none; animation: subir-bolha linear forwards; }
+        @keyframes subir-bolha { to { transform: translateY(-120vh) translateX(60px); opacity: 0; } }
+        .shockwave { position: absolute; width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle, rgba(255,215,0,0.8), transparent); pointer-events: none; animation: expandWave 0.5s ease-out forwards; }
+        @keyframes expandWave { 0% { transform: scale(0.5); opacity: 0.8; } 100% { transform: scale(8); opacity: 0; } }
+        #modal-vitoria, #modal-navegacao, #modal-categorias { display: none; position: fixed; inset: 0; background: rgba(0,10,25,0.98); backdrop-filter: blur(14px); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
         .vitoria-texto { font-size: 4vh; color: var(--secondary); margin: 15px 0; font-weight: bold; }
         .icone-vitoria { font-size: 12vh; animation: float 2s infinite; }
         @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-        .score-panel {
-            font-size: 16px;
-            background: linear-gradient(135deg,#1e2a3a,#0a1520);
-            padding: 8px 20px;
-            border-radius: 60px;
-            border: 1px solid var(--secondary);
-        }
-        .erro-anim {
-            animation: tremer 0.3s ease;
-            filter: grayscale(0.5) brightness(0.6);
-        }
+        .score-panel { font-size: 16px; background: linear-gradient(135deg,#1e2a3a,#0a1520); padding: 8px 20px; border-radius: 60px; border: 1px solid var(--secondary); }
+        .erro-anim { animation: tremer 0.3s ease; filter: grayscale(0.5) brightness(0.6); }
         @keyframes tremer { 0%,100%{ transform:translateX(0); } 25%{ transform:translateX(-8px); } 75%{ transform:translateX(8px); } }
-        .feedback-correto {
-            position: fixed;
-            bottom: 25%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2e7d32ee;
-            backdrop-filter: blur(8px);
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-size: 20px;
-            font-weight: bold;
-            z-index: 200;
-            animation: fadeUp 0.9s ease-out forwards;
-            pointer-events: none;
-            white-space: nowrap;
-            border: 2px solid var(--secondary);
-        }
-        @keyframes fadeUp {
-            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            20% { opacity: 1; transform: translateX(-50%) translateY(0); }
-            80% { opacity: 1; }
-            100% { opacity: 0; transform: translateX(-50%) translateY(-50px); }
-        }
-        .progresso-categoria {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.7);
-            padding: 6px 12px;
-            border-radius: 25px;
-            font-size: 10px;
-            backdrop-filter: blur(5px);
-            color: var(--secondary);
-            pointer-events: none;
-            z-index: 100;
-        }
-        @media (min-width: 768px) {
-            .progresso-categoria { bottom: 20px; right: 20px; padding: 10px 18px; font-size: 14px; }
-        }
-        .btn-voltar {
-            position: fixed;
-            bottom: 15px;
-            left: 15px;
-            background: linear-gradient(135deg, #00acc1, #006064);
-            border: none;
-            border-radius: 40px;
-            padding: 10px 18px;
-            font-size: 12px;
-            font-weight: bold;
-            color: white;
-            cursor: pointer;
-            z-index: 200;
-            backdrop-filter: blur(4px);
-            pointer-events: auto;
-            transition: all 0.3s;
-        }
-        @media (min-width: 768px) {
-            .btn-voltar { bottom: 30px; left: 30px; padding: 14px 28px; font-size: 18px; }
-        }
+        .feedback-correto { position: fixed; bottom: 25%; left: 50%; transform: translateX(-50%); background: #2e7d32ee; backdrop-filter: blur(8px); padding: 10px 20px; border-radius: 50px; font-size: 20px; font-weight: bold; z-index: 200; animation: fadeUp 0.9s ease-out forwards; pointer-events: none; white-space: nowrap; border: 2px solid var(--secondary); }
+        @keyframes fadeUp { 0% { opacity: 0; transform: translateX(-50%) translateY(20px); } 20% { opacity: 1; transform: translateX(-50%) translateY(0); } 80% { opacity: 1; } 100% { opacity: 0; transform: translateX(-50%) translateY(-50px); } }
+        .progresso-categoria { position: fixed; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); padding: 6px 12px; border-radius: 25px; font-size: 10px; backdrop-filter: blur(5px); color: var(--secondary); pointer-events: none; z-index: 100; }
+        @media (min-width: 768px) { .progresso-categoria { bottom: 20px; right: 20px; padding: 10px 18px; font-size: 14px; } }
+        .btn-voltar { position: fixed; bottom: 15px; left: 15px; background: linear-gradient(135deg, #00acc1, #006064); border: none; border-radius: 40px; padding: 10px 18px; font-size: 12px; font-weight: bold; color: white; cursor: pointer; z-index: 200; backdrop-filter: blur(4px); pointer-events: auto; transition: all 0.3s; }
+        @media (min-width: 768px) { .btn-voltar { bottom: 30px; left: 30px; padding: 14px 28px; font-size: 18px; } }
         .btn-voltar:active { transform: scale(0.95); }
-        .dica-som {
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            background: rgba(0,0,0,0.5);
-            padding: 3px 8px;
-            border-radius: 15px;
-            font-size: 9px;
-            color: #aaa;
-            pointer-events: none;
-            z-index: 100;
-        }
+        .dica-som { position: fixed; bottom: 10px; left: 10px; background: rgba(0,0,0,0.5); padding: 3px 8px; border-radius: 15px; font-size: 9px; color: #aaa; pointer-events: none; z-index: 100; }
         .nav-buttons { display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap; justify-content: center; }
-        .nav-btn {
-            background: linear-gradient(135deg, #00acc1, #006064);
-            border: 2px solid var(--secondary);
-            padding: 12px 24px;
-            font-size: 18px;
-            border-radius: 40px;
-            cursor: pointer;
-            color: white;
-            transition: transform 0.2s;
-        }
+        .nav-btn { background: linear-gradient(135deg, #00acc1, #006064); border: 2px solid var(--secondary); padding: 12px 24px; font-size: 18px; border-radius: 40px; cursor: pointer; color: white; transition: transform 0.2s; }
         .nav-btn:active { transform: scale(0.95); }
         .nav-btn.cancelar { background: linear-gradient(135deg, #555, #333); border-color: #888; }
-
-        .grid-categorias {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 12px;
-            max-height: 60vh;
-            overflow-y: auto;
-            padding: 15px;
-            margin-top: 20px;
-            background: rgba(0,0,0,0.6);
-            border-radius: 30px;
-            width: 90vw;
-            max-width: 800px;
-        }
-        .cat-botao {
-            background: linear-gradient(135deg, #1e3c4c, #0a2a38);
-            border: 2px solid #ffd966;
-            border-radius: 50px;
-            padding: 12px;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #ffecb3;
-            cursor: pointer;
-            transition: 0.2s;
-        }
+        .grid-categorias { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; max-height: 60vh; overflow-y: auto; padding: 15px; margin-top: 20px; background: rgba(0,0,0,0.6); border-radius: 30px; width: 90vw; max-width: 800px; }
+        .cat-botao { background: linear-gradient(135deg, #1e3c4c, #0a2a38); border: 2px solid #ffd966; border-radius: 50px; padding: 12px; font-size: 1rem; font-weight: bold; color: #ffecb3; cursor: pointer; transition: 0.2s; }
         .cat-botao:active { transform: scale(0.96); background: #2a5f6e; }
         .cat-botao:hover { background: #2a5f6e; transform: scale(1.02); }
-
-        #fireworks-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 2000;
-            display: none;
-        }
-
-        @media (max-width: 700px) {
-            .game-header {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px;
-                padding: 10px;
-            }
-            .top-bar, .modo-barra { justify-content: center; }
-            .instrucao-wrapper { margin: 8px 0 4px; }
-            .instrucao { font-size: 14px; padding: 6px 12px; white-space: nowrap; }
-            #silabaAlvo { font-size: 20px; padding: 0 8px; }
-        }
-        @media (max-width: 480px) {
-            .instrucao { font-size: 12px; }
-            #silabaAlvo { font-size: 18px; }
-            .icon-btn { font-size: 11px; padding: 4px 8px; }
-        }
+        @media (max-width: 700px) { .game-header { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px; } .top-bar, .modo-barra { justify-content: center; } .instrucao-wrapper { margin: 8px 0 4px; } .instrucao { font-size: 14px; padding: 6px 12px; white-space: nowrap; } #silabaAlvo { font-size: 20px; padding: 0 8px; } }
+        @media (max-width: 480px) { .instrucao { font-size: 12px; } #silabaAlvo { font-size: 18px; } .icon-btn { font-size: 11px; padding: 4px 8px; } }
     </style>
-<base target="_blank">
 </head>
 <body>
 
@@ -635,40 +123,19 @@
             <button id="btn-audio" class="icon-btn">🔇 Som</button>
             <button id="btnFullscreen" class="icon-btn">⛶ Tela</button>
         </div>
-
         <div class="modo-barra" id="modoBarra">
-            <button class="modo-btn maiusc-forma ativo" data-modo="maiusc-forma" onclick="selecionarModo('maiusc-forma')">
-                <span class="exemplo-letra">Ba</span>
-                <span class="label-modo">Maiúscula</span>
-            </button>
-            <button class="modo-btn minusc-forma" data-modo="minusc-forma" onclick="selecionarModo('minusc-forma')">
-                <span class="exemplo-letra">ba</span>
-                <span class="label-modo">Minúscula</span>
-            </button>
-            <button class="modo-btn maiusc-cursiva" data-modo="maiusc-cursiva" onclick="selecionarModo('maiusc-cursiva')">
-                <span class="exemplo-letra">Ba</span>
-                <span class="label-modo">Cursiva</span>
-            </button>
-            <button class="modo-btn minusc-cursiva" data-modo="minusc-cursiva" onclick="selecionarModo('minusc-cursiva')">
-                <span class="exemplo-letra">ba</span>
-                <span class="label-modo">Manuscrita</span>
-            </button>
+            <button class="modo-btn maiusc-forma ativo" data-modo="maiusc-forma" onclick="selecionarModo('maiusc-forma')"><span class="exemplo-letra">Ba</span><span class="label-modo">Maiúscula</span></button>
+            <button class="modo-btn minusc-forma" data-modo="minusc-forma" onclick="selecionarModo('minusc-forma')"><span class="exemplo-letra">ba</span><span class="label-modo">Minúscula</span></button>
+            <button class="modo-btn maiusc-cursiva" data-modo="maiusc-cursiva" onclick="selecionarModo('maiusc-cursiva')"><span class="exemplo-letra">Ba</span><span class="label-modo">Cursiva</span></button>
+            <button class="modo-btn minusc-cursiva" data-modo="minusc-cursiva" onclick="selecionarModo('minusc-cursiva')"><span class="exemplo-letra">ba</span><span class="label-modo">Manuscrita</span></button>
         </div>
     </div>
-
     <div class="instrucao-wrapper">
-        <p class="instrucao" id="btnRepetirSilaba">
-            🌊 Pesque a sílaba: <span id="silabaAlvo">---</span> 🔊
-        </p>
+        <p class="instrucao" id="btnRepetirSilaba">🌊 Pesque a sílaba: <span id="silabaAlvo">---</span> 🔊</p>
     </div>
-
     <div class="oceano" id="aquario"></div>
-
     <div class="progresso-categoria" id="progressHint">🏆 Tesouros do Mar Profundo</div>
-
-    <button class="btn-voltar" id="btnVoltar">
-        <span>🏝️</span> Voltar ao Menu
-    </button>
+    <button class="btn-voltar" id="btnVoltar"><span>🏝️</span> Voltar ao Menu</button>
     <div class="dica-som">💡 Clique na sílaba para ouvir | Escolha qualquer família!</div>
 </div>
 
@@ -678,14 +145,12 @@
     <div class="grid-categorias" id="listaCategorias"></div>
     <button class="nav-btn cancelar" id="btnFecharCategorias" style="margin-top:20px;">Fechar</button>
 </div>
-
 <div id="modal-vitoria">
     <div class="icone-vitoria">🏆🗿🏆</div>
     <div class="vitoria-texto" id="vitoria-msg-topo">Parabéns!</div>
     <div class="score-panel" id="scoreFinalModal">Pontuação: 0</div>
     <div class="vitoria-texto" id="vitoria-msg-sub">Continue explorando!</div>
 </div>
-
 <div id="modal-navegacao">
     <div class="icone-vitoria">🐢➡️🏝️</div>
     <div class="vitoria-texto">Voltar para o menu principal?</div>
@@ -695,10 +160,8 @@
     </div>
 </div>
 
-<canvas id="fireworks-canvas"></canvas>
-
 <script>
-    // ========== CATEGORIAS COM ÁUDIOS MP3 (ORIGINAL) ==========
+    // ---------- CATEGORIAS COMPLETAS (MP3) ----------
     const categorias = [
         { nome: "🌊 AL - EL - IL - OL - UL", silabas: [{ texto: "AL", audio: "al.mp3" },{ texto: "EL", audio: "el.mp3" },{ texto: "IL", audio: "il.mp3" },{ texto: "OL", audio: "ol.mp3" },{ texto: "UL", audio: "ul.mp3" }] },
         { nome: "🐚 AM - EM - IM - OM - UM", silabas: [{ texto: "AM", audio: "am.mp3" },{ texto: "EM", audio: "em.mp3" },{ texto: "IM", audio: "im.mp3" },{ texto: "OM", audio: "om.mp3" },{ texto: "UM", audio: "um.mp3" }] },
@@ -734,17 +197,27 @@
     let criaturasNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
     let transicaoCategoria = false;
 
-    // ========== FUNÇÕES DE ÁUDIO MP3 ==========
+    // ---------- ÁUDIO MP3 COM FALLBACK (garante que o callback sempre será chamado) ----------
     function tocarAudioMP3(arquivo, callback) {
         if (!arquivo) { if(callback) callback(); return; }
         if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
         const audio = new Audio(arquivo);
         currentAudio = audio;
-        audio.play().catch(e => console.log("Erro ao tocar áudio:", e));
-        audio.onended = () => {
+        let chamouCallback = false;
+        const done = () => {
+            if (chamouCallback) return;
+            chamouCallback = true;
             if (currentAudio === audio) currentAudio = null;
             if (callback) callback();
         };
+        audio.play().catch(e => {
+            console.warn("Erro ao tocar áudio:", arquivo, e);
+            done();
+        });
+        audio.onended = done;
+        audio.onerror = done;
+        // Timeout de segurança (1 segundo)
+        setTimeout(done, 1000);
     }
 
     function tocarSilaba(silabaObj, callback) {
@@ -752,14 +225,14 @@
         else if (callback) callback();
     }
 
-    // ========== MODO DE GRAFIA ==========
+    // ---------- MODO DE GRAFIA ----------
     let modoGrafia = 'maiusc-forma';
     function capitalizeSilaba(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : s; }
     const mapaModo = {
-        'maiusc-forma':   { transform: (s) => capitalizeSilaba(s), familia: 'Comic Neue', falaPrefixo: 'maiúscula de fôrma' },
-        'minusc-forma':   { transform: (s) => s.toLowerCase(), familia: 'Comic Neue', falaPrefixo: 'minúscula de fôrma' },
-        'maiusc-cursiva': { transform: (s) => capitalizeSilaba(s), familia: 'Playwrite BR', falaPrefixo: 'maiúscula cursiva' },
-        'minusc-cursiva': { transform: (s) => s.toLowerCase(), familia: 'Playwrite BR', falaPrefixo: 'minúscula manuscrita' }
+        'maiusc-forma':   { transform: (s) => capitalizeSilaba(s), familia: 'Comic Neue' },
+        'minusc-forma':   { transform: (s) => s.toLowerCase(), familia: 'Comic Neue' },
+        'maiusc-cursiva': { transform: (s) => capitalizeSilaba(s), familia: 'Playwrite BR' },
+        'minusc-cursiva': { transform: (s) => s.toLowerCase(), familia: 'Playwrite BR' }
     };
     function getTextoTransformado(texto) { return mapaModo[modoGrafia].transform(texto); }
     function selecionarModo(modo) {
@@ -773,7 +246,7 @@
         if (jogoAtivo && !aguardandoProxima) carregarProximaSilaba();
     }
 
-    // ========== UTILITÁRIOS ==========
+    // ---------- UTILITÁRIOS ----------
     function formatarTempo(seg) { return `${Math.floor(seg/60).toString().padStart(2,'0')}:${(seg%60).toString().padStart(2,'0')}`; }
     function iniciarCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); tempoInicioEtapa = Date.now(); intervaloRelogio = setInterval(()=>{}, 1000); }
     function pararCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); return tempoInicioEtapa ? Math.floor((Date.now()-tempoInicioEtapa)/1000) : 0; }
@@ -801,7 +274,7 @@
         return Math.max(((headerHeight + instrucaoHeight) / window.innerHeight) * 100 + 5, 25);
     }
 
-    // ========== JOGO PRINCIPAL ==========
+    // ---------- JOGO ----------
     function carregarProximaSilaba() {
         if (indiceSilabaAtual >= silabasAtuais.length) { concluirCategoria(); return; }
         const certa = silabasAtuais[indiceSilabaAtual];
@@ -899,86 +372,39 @@
         carregarProximaSilaba();
     }
 
-    // ========== CORREÇÃO: CONCLUIR CATEGORIA ==========
     function concluirCategoria() {
-        // Se já está em transição, não faz nada (evita duplo clique)
-        if (transicaoCategoria) {
-            console.log("Transição já em andamento, ignorando...");
-            return;
-        }
-
+        if (aguardandoProxima || transicaoCategoria) return;
         transicaoCategoria = true;
         aguardandoProxima = true;
         jogoAtivo = false;
         pararCronometro();
         aquario.innerHTML = "";
-
-        // Exibe modal de vitória
+        
         modalVitoria.style.display = "flex";
         document.getElementById("vitoria-msg-topo").innerHTML = `✨ ${categorias[indiceCategoriaAtual].nome} ✨`;
         document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length} | Pontos: ${pontuacaoTotal}`;
-
-        // Verifica se há próxima categoria
-        const temProxima = indiceCategoriaAtual + 1 < categorias.length;
-
-        if (temProxima) {
+        
+        if (indiceCategoriaAtual + 1 < categorias.length) {
             document.getElementById("vitoria-msg-sub").innerHTML = "🐟 Avançando para a próxima família...";
-            // Avança após 2 segundos
             setTimeout(() => {
                 modalVitoria.style.display = "none";
                 indiceCategoriaAtual++;
                 resetarJogoParaCategoria(indiceCategoriaAtual);
-            }, 2000);
-        } else {
-            // ÚLTIMA CATEGORIA - Mostra mensagem especial e oferece opções
-            document.getElementById("vitoria-msg-sub").innerHTML = "🏆 PARABÉNS! Você completou TODAS as famílias! 🏆<br><br>🎉 Escolha uma opção abaixo:";
-
-            // Cria botões de ação no modal
-            const botoesDiv = document.createElement('div');
-            botoesDiv.className = 'nav-buttons';
-            botoesDiv.style.marginTop = '20px';
-            botoesDiv.id = 'botoes-fim-jogo';
-
-            const btnReiniciar = document.createElement('button');
-            btnReiniciar.className = 'nav-btn';
-            btnReiniciar.innerHTML = '🔄 Jogar Novamente';
-            btnReiniciar.onclick = () => {
-                modalVitoria.style.display = "none";
-                document.getElementById('botoes-fim-jogo')?.remove();
-                indiceCategoriaAtual = 0;
-                resetarJogoParaCategoria(0);
-            };
-
-            const btnMenu = document.createElement('button');
-            btnMenu.className = 'nav-btn cancelar';
-            btnMenu.innerHTML = '🏠 Menu Principal';
-            btnMenu.onclick = () => {
-                window.location.href = "index_pesca.html";
-            };
-
-            botoesDiv.appendChild(btnReiniciar);
-            botoesDiv.appendChild(btnMenu);
-
-            // Remove botões anteriores se existirem
-            const oldBotoes = document.getElementById('botoes-fim-jogo');
-            if (oldBotoes) oldBotoes.remove();
-
-            modalVitoria.appendChild(botoesDiv);
-
-            // Não fecha automaticamente - aguarda ação do usuário
-            // Mas libera as flags para permitir interação
-            setTimeout(() => {
                 aguardandoProxima = false;
                 transicaoCategoria = false;
-            }, 500);
+            }, 2000);
+        } else {
+            document.getElementById("vitoria-msg-sub").innerHTML = "🏆 PARABÉNS! Você completou TODAS as famílias! 🏆";
+            setTimeout(() => {
+                modalVitoria.style.display = "none";
+                aguardandoProxima = false;
+                transicaoCategoria = false;
+            }, 3000);
         }
     }
 
-    // ========== SELEÇÃO MANUAL DE CATEGORIA ==========
-    function abrirSeletorCategorias() { 
-        console.log("Abrindo seletor de categorias...");
-        modalCategorias.style.display = "flex"; 
-    }
+    // ---------- SELEÇÃO MANUAL DE CATEGORIA ----------
+    function abrirSeletorCategorias() { modalCategorias.style.display = "flex"; }
     function fecharSeletor() { modalCategorias.style.display = "none"; }
     function preencherGridCategorias() {
         const grid = document.getElementById("listaCategorias");
@@ -987,41 +413,20 @@
             const btn = document.createElement("button");
             btn.className = "cat-botao";
             btn.innerText = cat.nome;
-            // CORREÇÃO: Usar onclick simples, sem touchstart com preventDefault
             btn.onclick = () => {
-                console.log("Categoria selecionada:", idx, cat.nome);
                 resetarJogoParaCategoria(idx);
                 fecharSeletor();
             };
+            btn.ontouchstart = (e) => { e.preventDefault(); resetarJogoParaCategoria(idx); fecharSeletor(); };
             grid.appendChild(btn);
         });
     }
 
-    // ========== NAVEGAÇÃO E EVENTOS ==========
-    function toggleFullscreen(){ 
-        if(!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{}); 
-        else document.exitFullscreen().catch(()=>{}); 
-    }
-    function toggleAudio(){ 
-        audioEnabled=!audioEnabled; 
-        document.getElementById("btn-audio").innerHTML=audioEnabled?"🔊 Som Ligado":"🔇 Som Desligado"; 
-        if(audioEnabled) document.getElementById("bg-audio").play().catch(e=>{}); 
-        else document.getElementById("bg-audio").pause(); 
-    }
+    // ---------- NAVEGAÇÃO ----------
+    function toggleFullscreen(){ if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
+    function toggleAudio(){ audioEnabled=!audioEnabled; document.getElementById("btn-audio").innerHTML=audioEnabled?"🔊 Som Ligado":"🔇 Som Desligado"; if(audioEnabled) document.getElementById("bg-audio").play().catch(e=>{}); else document.getElementById("bg-audio").pause(); }
     function voltarMenu(){ modalNavegacao.style.display="flex"; }
-
-    // CORREÇÃO: Função segura para adicionar eventos (sem preventDefault no touchstart dos botões)
-    function addClickEvent(el, handler) { 
-        if(!el) return;
-        el.addEventListener('click', handler);
-    }
-
-    // Para elementos que precisam de touch e click (criaturas), mantém ambos
-    function addBothEvents(el, handler) { 
-        if(!el) return; 
-        el.addEventListener('click', handler); 
-        el.addEventListener('touchstart', handler, { passive: false }); 
-    }
+    function addBothEvents(el, handler) { if(el){ el.addEventListener('click', handler); el.addEventListener('touchstart', handler, { passive: false }); } }
 
     const btnVoltarElem = document.getElementById("btnVoltar");
     const btnCancelar = document.getElementById("btnCancelarVolta");
@@ -1039,16 +444,13 @@
     addBothEvents(btnConfirmar, () => { modalNavegacao.style.display = "none"; window.location.href = "index_pesca.html"; });
     addBothEvents(btnRepetir, repetirSilabaAlvo);
     addBothEvents(silabaAlvoElem, (e) => { e.stopPropagation(); repetirSilabaAlvo(); });
+    addBothEvents(btnEscolher, abrirSeletorCategorias);
+    addBothEvents(btnFecharCats, fecharSeletor);
+    addBothEvents(btnMenu, () => { window.location.href = "index_pesca.html"; });
+    addBothEvents(btnFull, toggleFullscreen);
+    addBothEvents(btnAudioElem, toggleAudio);
 
-    // CORREÇÃO: Botão Famílias usa click simples (não both events)
-    addClickEvent(btnEscolher, abrirSeletorCategorias);
-
-    addClickEvent(btnFecharCats, fecharSeletor);
-    addClickEvent(btnMenu, () => { window.location.href = "index_pesca.html"; });
-    addClickEvent(btnFull, toggleFullscreen);
-    addClickEvent(btnAudioElem, toggleAudio);
-
-    // Cursor personalizado
+    // ---------- CURSOR E PARTÍCULAS ----------
     function initCustomCursor() {
         if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
             const cursorDiv = document.createElement('div'); cursorDiv.className = 'custom-cursor'; document.body.appendChild(cursorDiv);
