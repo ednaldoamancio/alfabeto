@@ -119,7 +119,6 @@
             pointer-events: none;
         }
 
-        /* ===== HEADER ORGANIZADO ===== */
         .game-header {
             position: relative;
             z-index: 100;
@@ -164,7 +163,6 @@
             .icon-btn { padding: 8px 16px; font-size: 16px; }
         }
 
-        /* Barra de seleção de modo */
         .modo-barra {
             display: flex;
             flex-wrap: wrap;
@@ -245,7 +243,6 @@
             .modo-btn .label-modo { font-size: 10px; }
         }
 
-        /* Instrução */
         .instrucao-wrapper {
             position: relative;
             z-index: 30;
@@ -311,24 +308,19 @@
             pointer-events: auto;
         }
 
-        /* ===== CRIATURA COM ÁREA DE CLIQUE AMPLIADA ===== */
         .creature {
             position: absolute;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            /* Área de clique aumentada: 140x140px (antes 100x100) */
             width: 140px;
             height: 140px;
             pointer-events: auto;
             filter: brightness(1.1) saturate(1.1);
-            /* Z-index aumentado para ficar ACIMA do header (z-index 100) */
             z-index: 500;
             transition: transform 0.05s;
         }
-
-        /* Área de toque ampliada via pseudo-elemento */
         .creature::after {
             content: "";
             position: absolute;
@@ -341,9 +333,7 @@
             pointer-events: auto;
             z-index: 1;
         }
-
         .creature:active { transform: scale(0.95); }
-
         @media (min-width: 768px) { 
             .creature { width: 160px; height: 160px; } 
             .creature::after {
@@ -353,7 +343,6 @@
                 bottom: -25px;
             }
         }
-
         .creature-icon {
             font-size: 65px;
             position: absolute;
@@ -361,9 +350,7 @@
             pointer-events: none;
             z-index: 2;
         }
-
         @media (min-width: 768px) { .creature-icon { font-size: 85px; } }
-
         .silaba-creature {
             font-size: 18px;
             font-weight: bold;
@@ -384,30 +371,17 @@
         }
         .silaba-creature.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; }
         .silaba-creature.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
-        .silaba-creature.modo-maiusc-cursiva { 
-            font-family: var(--cursive-school); 
-            font-size: 18px; 
-            font-weight: 400; 
-        }
-        .silaba-creature.modo-minusc-cursiva { 
-            font-family: var(--cursive-school); 
-            font-size: 18px; 
-            font-weight: 400; 
-            text-transform: lowercase; 
-        }
+        .silaba-creature.modo-maiusc-cursiva { font-family: var(--cursive-school); font-size: 18px; font-weight: 400; }
+        .silaba-creature.modo-minusc-cursiva { font-family: var(--cursive-school); font-size: 18px; font-weight: 400; text-transform: lowercase; }
 
         @media (min-width: 768px) {
             .silaba-creature { font-size: 20px; padding: 6px 14px; }
             .silaba-creature.modo-maiusc-cursiva, 
-            .silaba-creature.modo-minusc-cursiva { 
-                font-size: 22px; 
-            }
+            .silaba-creature.modo-minusc-cursiva { font-size: 22px; }
         }
         @media (min-width: 1024px) {
             .silaba-creature.modo-maiusc-cursiva, 
-            .silaba-creature.modo-minusc-cursiva { 
-                font-size: 24px; 
-            }
+            .silaba-creature.modo-minusc-cursiva { font-size: 24px; }
         }
 
         .pescado {
@@ -469,7 +443,6 @@
             100% { transform: scale(8); opacity: 0; }
         }
 
-        /* Modais */
         #modal-vitoria, #modal-navegacao, #modal-categorias {
             display: none;
             position: fixed;
@@ -640,7 +613,6 @@
             .icon-btn { font-size: 11px; padding: 4px 8px; }
         }
     </style>
-<base target="_blank">
 </head>
 <body>
 
@@ -653,8 +625,6 @@
 <audio id="bg-audio" src="som_fundo_do_mar.mp3" loop></audio>
 <audio id="sfx-pescado" src="pescado.ogg"></audio>
 <audio id="sfx-erro" src="erro.ogg"></audio>
-<audio id="sfx-applause" src="palmas.mp3" preload="auto"></audio>
-<audio id="sfx-fireworks" src="fogos.mp3" preload="auto"></audio>
 
 <div id="game-wrapper">
     <div class="game-header">
@@ -727,306 +697,287 @@
 <canvas id="fireworks-canvas"></canvas>
 
 <script>
-    // ========== TODAS AS CATEGORIAS (mesmas do original) ==========
+    // ========== TODAS AS CATEGORIAS (agora apenas textos, áudio via síntese) ==========
     const categorias = [
-        { nome: "🌊 AL - EL - IL - OL - UL", silabas: [{ texto: "AL", audio: "al.mp3" },{ texto: "EL", audio: "el.mp3" },{ texto: "IL", audio: "il.mp3" },{ texto: "OL", audio: "ol.mp3" },{ texto: "UL", audio: "ul.mp3" }] },
-        { nome: "🐚 AM - EM - IM - OM - UM", silabas: [{ texto: "AM", audio: "am.mp3" },{ texto: "EM", audio: "em.mp3" },{ texto: "IM", audio: "im.mp3" },{ texto: "OM", audio: "om.mp3" },{ texto: "UM", audio: "um.mp3" }] },
-        { nome: "🪸 AN - EN - IN - ON - UN", silabas: [{ texto: "AN", audio: "an.mp3" },{ texto: "EN", audio: "en.mp3" },{ texto: "IN", audio: "in.mp3" },{ texto: "ON", audio: "on.mp3" },{ texto: "UN", audio: "un.mp3" }] },
-        { nome: "⭐ AR - ER - IR - OR - UR", silabas: [{ texto: "AR", audio: "ar.mp3" },{ texto: "ER", audio: "er.mp3" },{ texto: "IR", audio: "ir.mp3" },{ texto: "OR", audio: "or.mp3" },{ texto: "UR", audio: "ur.mp3" }] },
-        { nome: "🌀 AS - ES - IS - OS - US", silabas: [{ texto: "AS", audio: "as.mp3" },{ texto: "ES", audio: "es.mp3" },{ texto: "IS", audio: "is.mp3" },{ texto: "OS", audio: "os.mp3" },{ texto: "US", audio: "us.mp3" }] },
-        { nome: "✨ AZ - EZ - IZ - OZ - UZ", silabas: [{ texto: "AZ", audio: "az.mp3" },{ texto: "EZ", audio: "ez.mp3" },{ texto: "IZ", audio: "iz.mp3" },{ texto: "OZ", audio: "oz.mp3" },{ texto: "UZ", audio: "uz.mp3" }] },
-        { nome: "🐙 BLA - BLE - BLI - BLO - BLU - BLÃO", silabas: [{ texto: "BLA", audio: "bla.mp3" },{ texto: "BLE", audio: "ble.mp3" },{ texto: "BLI", audio: "bli.mp3" },{ texto: "BLO", audio: "blo.mp3" },{ texto: "BLU", audio: "blu.mp3" },{ texto: "BLÃO", audio: "blao.mp3" }] },
-        { nome: "🦑 BRA - BRE - BRI - BRO - BRU - BRÃO", silabas: [{ texto: "BRA", audio: "bra.mp3" },{ texto: "BRE", audio: "bre.mp3" },{ texto: "BRI", audio: "bri.mp3" },{ texto: "BRO", audio: "bro.mp3" },{ texto: "BRU", audio: "bru.mp3" },{ texto: "BRÃO", audio: "brao.mp3" }] },
-        { nome: "🐠 CHA - CHE - CHI - CHO - CHU - CHÃO", silabas: [{ texto: "CHA", audio: "cha.mp3" },{ texto: "CHE", audio: "che.mp3" },{ texto: "CHI", audio: "chi.mp3" },{ texto: "CHO", audio: "cho.mp3" },{ texto: "CHU", audio: "chu.mp3" },{ texto: "CHÃO", audio: "chao.mp3" }] },
-        { nome: "🐡 CLA - CLE - CLI - CLO - CLU - CLÃO", silabas: [{ texto: "CLA", audio: "cla.mp3" },{ texto: "CLE", audio: "cle.mp3" },{ texto: "CLI", audio: "cli.mp3" },{ texto: "CLO", audio: "clo.mp3" },{ texto: "CLU", audio: "clu.mp3" },{ texto: "CLÃO", audio: "clao.mp3" }] },
-        { nome: "🐋 CRA - CRE - CRI - CRO - CRU - CRÃO", silabas: [{ texto: "CRA", audio: "cra.mp3" },{ texto: "CRE", audio: "cre.mp3" },{ texto: "CRI", audio: "cri.mp3" },{ texto: "CRO", audio: "cro.mp3" },{ texto: "CRU", audio: "cru.mp3" },{ texto: "CRÃO", audio: "crao.mp3" }] },
-        { nome: "🦈 DRA - DRE - DRI - DRO - DRU - DRÃO", silabas: [{ texto: "DRA", audio: "dra.mp3" },{ texto: "DRE", audio: "dre.mp3" },{ texto: "DRI", audio: "dri.mp3" },{ texto: "DRO", audio: "dro.mp3" },{ texto: "DRU", audio: "dru.mp3" },{ texto: "DRÃO", audio: "drao.mp3" }] },
-        { nome: "🐬 FLA - FLE - FLI - FLO - FLU - FLÃO", silabas: [{ texto: "FLA", audio: "fla.mp3" },{ texto: "FLE", audio: "fle.mp3" },{ texto: "FLI", audio: "fli.mp3" },{ texto: "FLO", audio: "flo.mp3" },{ texto: "FLU", audio: "flu.mp3" },{ texto: "FLÃO", audio: "flao.mp3" }] },
-        { nome: "🐳 FRA - FRE - FRI - FRO - FRU - FRÃO", silabas: [{ texto: "FRA", audio: "fra.mp3" },{ texto: "FRE", audio: "fre.mp3" },{ texto: "FRI", audio: "fri.mp3" },{ texto: "FRO", audio: "fro.mp3" },{ texto: "FRU", audio: "fru.mp3" },{ texto: "FRÃO", audio: "frao.mp3" }] },
-        { nome: "🦀 GLA - GLE - GLI - GLO - GLU - GLÃO", silabas: [{ texto: "GLA", audio: "gla.mp3" },{ texto: "GLE", audio: "gle.mp3" },{ texto: "GLI", audio: "gli.mp3" },{ texto: "GLO", audio: "glo.mp3" },{ texto: "GLU", audio: "glu.mp3" },{ texto: "GLÃO", audio: "glao.mp3" }] },
-        { nome: "🪼 GRA - GRE - GRI - GRO - GRU - GRÃO", silabas: [{ texto: "GRA", audio: "gra.mp3" },{ texto: "GRE", audio: "gre.mp3" },{ texto: "GRI", audio: "gri.mp3" },{ texto: "GRO", audio: "gro.mp3" },{ texto: "GRU", audio: "gru.mp3" },{ texto: "GRÃO", audio: "grao.mp3" }] },
-        { nome: "🐙 LHA - LHE - LHI - LHO - LHU - LHÃO", silabas: [{ texto: "LHA", audio: "lha.mp3" },{ texto: "LHE", audio: "lhe.mp3" },{ texto: "LHI", audio: "lhi.mp3" },{ texto: "LHO", audio: "lho.mp3" },{ texto: "LHU", audio: "lhu.mp3" },{ texto: "LHÃO", audio: "lhao.mp3" }] },
-        { nome: "🐡 NHA - NHE - NHI - NHO - NHU - NHÃO", silabas: [{ texto: "NHA", audio: "nha.mp3" },{ texto: "NHE", audio: "nhe.mp3" },{ texto: "NHI", audio: "nhi.mp3" },{ texto: "NHO", audio: "nho.mp3" },{ texto: "NHU", audio: "nhu.mp3" },{ texto: "NHÃO", audio: "nhao.mp3" }] },
-        { nome: "🦑 PLA - PLE - PLI - PLO - PLU - PLÃO", silabas: [{ texto: "PLA", audio: "pla.mp3" },{ texto: "PLE", audio: "ple.mp3" },{ texto: "PLI", audio: "pli.mp3" },{ texto: "PLO", audio: "plo.mp3" },{ texto: "PLU", audio: "plu.mp3" },{ texto: "PLÃO", audio: "plao.mp3" }] },
-        { nome: "🐠 PRA - PRE - PRI - PRO - PRU - PRÃO", silabas: [{ texto: "PRA", audio: "pra.mp3" },{ texto: "PRE", audio: "pre.mp3" },{ texto: "PRI", audio: "pri.mp3" },{ texto: "PRO", audio: "pro.mp3" },{ texto: "PRU", audio: "pru.mp3" },{ texto: "PRÃO", audio: "prao.mp3" }] },
-        { nome: "🐋 TLA - TLE - TLI - TLO - TLU - TLÃO", silabas: [{ texto: "TLA", audio: "tla.mp3" },{ texto: "TLE", audio: "tle.mp3" },{ texto: "TLI", audio: "tli.mp3" },{ texto: "TLO", audio: "tlo.mp3" },{ texto: "TLU", audio: "tlu.mp3" },{ texto: "TLÃO", audio: "tlao.mp3" }] },
-        { nome: "🐢 TRA - TRE - TRI - TRO - TRU - TRÃO", silabas: [{ texto: "TRA", audio: "tra.mp3" },{ texto: "TRE", audio: "tre.mp3" },{ texto: "TRI", audio: "tri.mp3" },{ texto: "TRO", audio: "tro.mp3" },{ texto: "TRU", audio: "tru.mp3" },{ texto: "TRÃO", audio: "trao.mp3" }] },
-        { nome: "🐚 VLA - VLE - VLI - VLO - VLU - VLÃO", silabas: [{ texto: "VLA", audio: "vla.mp3" },{ texto: "VLE", audio: "vle.mp3" },{ texto: "VLI", audio: "vli.mp3" },{ texto: "VLO", audio: "vlo.mp3" },{ texto: "VLU", audio: "vlu.mp3" },{ texto: "VLÃO", audio: "vlao.mp3" }] },
-        { nome: "🪸 VRA - VRE - VRI - VRO - VRU - VRÃO", silabas: [{ texto: "VRA", audio: "vra.mp3" },{ texto: "VRE", audio: "vre.mp3" },{ texto: "VRI", audio: "vri.mp3" },{ texto: "VRO", audio: "vro.mp3" },{ texto: "VRU", audio: "vru.mp3" },{ texto: "VRÃO", audio: "vrao.mp3" }] }
+        { nome: "🌊 AL - EL - IL - OL - UL", silabas: ["AL","EL","IL","OL","UL"] },
+        { nome: "🐚 AM - EM - IM - OM - UM", silabas: ["AM","EM","IM","OM","UM"] },
+        { nome: "🪸 AN - EN - IN - ON - UN", silabas: ["AN","EN","IN","ON","UN"] },
+        { nome: "⭐ AR - ER - IR - OR - UR", silabas: ["AR","ER","IR","OR","UR"] },
+        { nome: "🌀 AS - ES - IS - OS - US", silabas: ["AS","ES","IS","OS","US"] },
+        { nome: "✨ AZ - EZ - IZ - OZ - UZ", silabas: ["AZ","EZ","IZ","OZ","UZ"] },
+        { nome: "🐙 BLA - BLE - BLI - BLO - BLU - BLÃO", silabas: ["BLA","BLE","BLI","BLO","BLU","BLÃO"] },
+        { nome: "🦑 BRA - BRE - BRI - BRO - BRU - BRÃO", silabas: ["BRA","BRE","BRI","BRO","BRU","BRÃO"] },
+        { nome: "🐠 CHA - CHE - CHI - CHO - CHU - CHÃO", silabas: ["CHA","CHE","CHI","CHO","CHU","CHÃO"] },
+        { nome: "🐡 CLA - CLE - CLI - CLO - CLU - CLÃO", silabas: ["CLA","CLE","CLI","CLO","CLU","CLÃO"] },
+        { nome: "🐋 CRA - CRE - CRI - CRO - CRU - CRÃO", silabas: ["CRA","CRE","CRI","CRO","CRU","CRÃO"] },
+        { nome: "🦈 DRA - DRE - DRI - DRO - DRU - DRÃO", silabas: ["DRA","DRE","DRI","DRO","DRU","DRÃO"] },
+        { nome: "🐬 FLA - FLE - FLI - FLO - FLU - FLÃO", silabas: ["FLA","FLE","FLI","FLO","FLU","FLÃO"] },
+        { nome: "🐳 FRA - FRE - FRI - FRO - FRU - FRÃO", silabas: ["FRA","FRE","FRI","FRO","FRU","FRÃO"] },
+        { nome: "🦀 GLA - GLE - GLI - GLO - GLU - GLÃO", silabas: ["GLA","GLE","GLI","GLO","GLU","GLÃO"] },
+        { nome: "🪼 GRA - GRE - GRI - GRO - GRU - GRÃO", silabas: ["GRA","GRE","GRI","GRO","GRU","GRÃO"] },
+        { nome: "🐙 LHA - LHE - LHI - LHO - LHU - LHÃO", silabas: ["LHA","LHE","LHI","LHO","LHU","LHÃO"] },
+        { nome: "🐡 NHA - NHE - NHI - NHO - NHU - NHÃO", silabas: ["NHA","NHE","NHI","NHO","NHU","NHÃO"] },
+        { nome: "🦑 PLA - PLE - PLI - PLO - PLU - PLÃO", silabas: ["PLA","PLE","PLI","PLO","PLU","PLÃO"] },
+        { nome: "🐠 PRA - PRE - PRI - PRO - PRU - PRÃO", silabas: ["PRA","PRE","PRI","PRO","PRU","PRÃO"] },
+        { nome: "🐋 TLA - TLE - TLI - TLO - TLU - TLÃO", silabas: ["TLA","TLE","TLI","TLO","TLU","TLÃO"] },
+        { nome: "🐢 TRA - TRE - TRI - TRO - TRU - TRÃO", silabas: ["TRA","TRE","TRI","TRO","TRU","TRÃO"] },
+        { nome: "🐚 VLA - VLE - VLI - VLO - VLU - VLÃO", silabas: ["VLA","VLE","VLI","VLO","VLU","VLÃO"] },
+        { nome: "🪸 VRA - VRE - VRI - VRO - VRU - VRÃO", silabas: ["VRA","VRE","VRI","VRO","VRU","VRÃO"] }
     ];
 
-    const criaturas = ["🐟","🐠","🐡","🐋","🦈","🐙","🐬","🐳","🦀","🦑","🐚","🦭","🪼","🐢","🦞","🪸","🧜‍♀️","🧜‍♂️"];
-    let audioEnabled = false, currentAudio = null, jogoAtivo = true, aguardandoProxima = false;
-    let faseAtual = 0, pontuacaoTotal = 0, acertosNaEtapa = 0, silabasAtuais = [], indiceSilabaAtual = 0;
-    let categoriaCorrente = null, tempoInicioEtapa = null, intervaloRelogio = null;
-    let criaturasNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
-
-    // ========== MODO DE GRAFIA COM A CORREÇÃO: maiúsculas apenas na primeira letra ==========
-    let modoGrafia = 'maiusc-forma';
-
-    function capitalizeSilaba(s) {
-        if (!s) return s;
-        return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
-    }
-
-    const mapaModo = {
-        'maiusc-forma':   { 
-            transform: (s) => s ? capitalizeSilaba(s) : s, 
-            familia: 'Comic Neue', 
-            falaPrefixo: 'maiúscula de fôrma' 
-        },
-        'minusc-forma':   { 
-            transform: (s) => s ? s.toLowerCase() : s, 
-            familia: 'Comic Neue', 
-            falaPrefixo: 'minúscula de fôrma' 
-        },
-        'maiusc-cursiva': { 
-            transform: (s) => s ? capitalizeSilaba(s) : s, 
-            familia: 'Playwrite BR', 
-            falaPrefixo: 'maiúscula cursiva' 
-        },
-        'minusc-cursiva': { 
-            transform: (s) => s ? s.toLowerCase() : s, 
-            familia: 'Playwrite BR', 
-            falaPrefixo: 'minúscula manuscrita' 
-        }
+    // Mapa de pronúncia para síntese de voz (português)
+    const pronunciaSilaba = {
+        "AL":"au", "EL":"éu", "IL":"iu", "OL":"óu", "UL":"u",
+        "AM":"ã", "EM":"ẽ", "IM":"ĩ", "OM":"õ", "UM":"ũ",
+        "AN":"ã", "EN":"ẽ", "IN":"ĩ", "ON":"õ", "UN":"ũ",
+        "AR":"ár", "ER":"ér", "IR":"ír", "OR":"ór", "UR":"úr",
+        "AS":"ás", "ES":"és", "IS":"ís", "OS":"ós", "US":"ús",
+        "AZ":"áz", "EZ":"éz", "IZ":"íz", "OZ":"óz", "UZ":"úz",
+        "BLA":"blá", "BLE":"blé", "BLI":"bli", "BLO":"bló", "BLU":"blu", "BLÃO":"blão",
+        "BRA":"brá", "BRE":"bré", "BRI":"bri", "BRO":"bró", "BRU":"bru", "BRÃO":"brão",
+        "CHA":"chá", "CHE":"chê", "CHI":"chi", "CHO":"chô", "CHU":"chu", "CHÃO":"chão",
+        "CLA":"clá", "CLE":"clé", "CLI":"cli", "CLO":"cló", "CLU":"clu", "CLÃO":"clão",
+        "CRA":"crá", "CRE":"cre", "CRI":"cri", "CRO":"cró", "CRU":"cru", "CRÃO":"crão",
+        "DRA":"drá", "DRE":"dré", "DRI":"dri", "DRO":"dró", "DRU":"dru", "DRÃO":"drão",
+        "FLA":"flá", "FLE":"flé", "FLI":"fli", "FLO":"fló", "FLU":"flu", "FLÃO":"flão",
+        "FRA":"frá", "FRE":"fré", "FRI":"fri", "FRO":"fró", "FRU":"fru", "FRÃO":"frão",
+        "GLA":"glá", "GLE":"glé", "GLI":"gli", "GLO":"gló", "GLU":"glu", "GLÃO":"glão",
+        "GRA":"grá", "GRE":"gré", "GRI":"gri", "GRO":"gró", "GRU":"gru", "GRÃO":"grão",
+        "LHA":"lhã", "LHE":"lhe", "LHI":"lhi", "LHO":"lho", "LHU":"lhu", "LHÃO":"lhão",
+        "NHA":"nhã", "NHE":"nhe", "NHI":"nhi", "NHO":"nho", "NHU":"nhu", "NHÃO":"nhão",
+        "PLA":"plá", "PLE":"plé", "PLI":"pli", "PLO":"pló", "PLU":"plu", "PLÃO":"plão",
+        "PRA":"prá", "PRE":"pré", "PRI":"pri", "PRO":"pró", "PRU":"pru", "PRÃO":"prão",
+        "TLA":"tlá", "TLE":"tlé", "TLI":"tli", "TLO":"tló", "TLU":"tlu", "TLÃO":"tlão",
+        "TRA":"trá", "TRE":"tré", "TRI":"tri", "TRO":"tró", "TRU":"tru", "TRÃO":"trão",
+        "VLA":"vlá", "VLE":"vlé", "VLI":"vli", "VLO":"vló", "VLU":"vlu", "VLÃO":"vlão",
+        "VRA":"vrá", "VRE":"vré", "VRI":"vri", "VRO":"vró", "VRU":"vru", "VRÃO":"vrão"
     };
 
-    function getTextoTransformado(texto) {
-        return mapaModo[modoGrafia].transform(texto);
-    }
+    const criaturas = ["🐟","🐠","🐡","🐋","🦈","🐙","🐬","🐳","🦀","🦑","🐚","🦭","🪼","🐢","🦞","🪸","🧜‍♀️","🧜‍♂️"];
+    let audioEnabled = false, currentUtterance = null, jogoAtivo = true, aguardandoProxima = false;
+    let indiceCategoriaAtual = 0, pontuacaoTotal = 0, acertosNaEtapa = 0;
+    let silabasAtuais = [], indiceSilabaAtual = 0;
+    let tempoInicioEtapa = null, intervaloRelogio = null;
+    let criaturasNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
 
+    // Modo de grafia
+    let modoGrafia = 'maiusc-forma';
+    function capitalizeSilaba(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : s; }
+    const mapaModo = {
+        'maiusc-forma':   { transform: (s) => capitalizeSilaba(s), familia: 'Comic Neue', falaPrefixo: 'maiúscula de fôrma' },
+        'minusc-forma':   { transform: (s) => s.toLowerCase(), familia: 'Comic Neue', falaPrefixo: 'minúscula de fôrma' },
+        'maiusc-cursiva': { transform: (s) => capitalizeSilaba(s), familia: 'Playwrite BR', falaPrefixo: 'maiúscula cursiva' },
+        'minusc-cursiva': { transform: (s) => s.toLowerCase(), familia: 'Playwrite BR', falaPrefixo: 'minúscula manuscrita' }
+    };
+    function getTextoTransformado(texto) { return mapaModo[modoGrafia].transform(texto); }
     function selecionarModo(modo) {
         modoGrafia = modo;
-        document.querySelectorAll('.modo-btn').forEach(btn => {
-            btn.classList.toggle('ativo', btn.dataset.modo === modo);
-        });
-        if (categoriaCorrente && silabasAtuais.length > 0 && indiceSilabaAtual < silabasAtuais.length) {
-            const silabaCerta = silabasAtuais[indiceSilabaAtual];
-            document.getElementById("silabaAlvo").innerText = getTextoTransformado(silabaCerta.texto);
+        document.querySelectorAll('.modo-btn').forEach(btn => btn.classList.toggle('ativo', btn.dataset.modo === modo));
+        if (silabasAtuais.length && indiceSilabaAtual < silabasAtuais.length) {
+            const silaba = silabasAtuais[indiceSilabaAtual];
+            document.getElementById("silabaAlvo").innerText = getTextoTransformado(silaba);
             document.getElementById("silabaAlvo").className = 'modo-' + modo;
         }
-        if (jogoAtivo && !aguardandoProxima && categoriaCorrente) {
-            carregarProximaSilaba();
+        if (jogoAtivo && !aguardandoProxima) carregarProximaSilaba();
+    }
+
+    // Síntese de voz
+    function falar(texto, callback) {
+        if (!window.speechSynthesis) { if(callback) callback(); return; }
+        if (currentUtterance) window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(texto);
+        utterance.lang = 'pt-BR';
+        utterance.rate = 0.85;
+        utterance.pitch = 1.0;
+        utterance.onend = () => { currentUtterance = null; if(callback) callback(); };
+        window.speechSynthesis.speak(utterance);
+        currentUtterance = utterance;
+    }
+    function falarSilaba(silaba, callback) {
+        const pron = pronunciaSilaba[silaba] || silaba.toLowerCase();
+        falar(pron, callback);
+    }
+    function repetirSilabaAlvo() {
+        const silaba = document.getElementById("silabaAlvo").innerText;
+        if (!silaba || silaba === "---") return;
+        const original = silabasAtuais[indiceSilabaAtual];
+        if (original) {
+            document.getElementById("silabaAlvo").classList.add("pulsando");
+            setTimeout(() => document.getElementById("silabaAlvo").classList.remove("pulsando"), 300);
+            falarSilaba(original);
         }
     }
 
-    // Elementos
-    const bgAudio = document.getElementById("bg-audio"), sfxPescado = document.getElementById("sfx-pescado"), sfxErro = document.getElementById("sfx-erro");
-    const aquario = document.getElementById("aquario"), modalVitoria = document.getElementById("modal-vitoria"), modalNavegacao = document.getElementById("modal-navegacao");
-    const modalCategorias = document.getElementById("modal-categorias"), btnEscolherCategoria = document.getElementById("btnEscolherCategoria");
-    const fireworksCanvas = document.getElementById("fireworks-canvas");
-
-    // Funções auxiliares
-    function tocarAudioMP3(arquivo, callback) { if (!arquivo) return; if(currentAudio) currentAudio.pause(); const a = new Audio(arquivo); currentAudio = a; a.play().catch(e=>console.log); a.onended = ()=>{ currentAudio=null; if(callback)callback(); }; }
-    function tocarSilaba(silabaObj, callback) { 
-        if(silabaObj?.audio) tocarAudioMP3(silabaObj.audio, callback); 
-        else if(callback) callback(); 
-    }
-    function repetirSilabaAlvo() { 
-        const t = document.getElementById("silabaAlvo").innerText; 
-        const s = silabasAtuais.find(x => getTextoTransformado(x.texto) === t); 
-        if(s){ 
-            document.getElementById("silabaAlvo").classList.add("pulsando"); 
-            setTimeout(()=>document.getElementById("silabaAlvo").classList.remove("pulsando"),300); 
-            tocarSilaba(s); 
-        } 
-    }
+    // Utilitários
     function formatarTempo(seg) { return `${Math.floor(seg/60).toString().padStart(2,'0')}:${(seg%60).toString().padStart(2,'0')}`; }
-    function iniciarCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); tempoInicioEtapa=Date.now(); intervaloRelogio=setInterval(()=>{ if(tempoInicioEtapa&&jogoAtivo&&!aguardandoProxima) { } },1000); }
-    function pararCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); return tempoInicioEtapa?Math.floor((Date.now()-tempoInicioEtapa)/1000):0; }
+    function iniciarCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); tempoInicioEtapa = Date.now(); intervaloRelogio = setInterval(()=>{}, 1000); }
+    function pararCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); return tempoInicioEtapa ? Math.floor((Date.now()-tempoInicioEtapa)/1000) : 0; }
     function criarTesouro(x,y){ const t=["💎","👑","💰","🗿","⚓","🔱","🐚","⭐","🏆","✨"][Math.floor(Math.random()*10)]; const e=document.createElement("div"); e.className="treasure-effect"; e.innerText=t; e.style.left=(x-25)+"px"; e.style.top=(y-25)+"px"; document.body.appendChild(e); setTimeout(()=>e.remove(),800); }
     function criarOndaChoque(x,y){ const w=document.createElement("div"); w.className="shockwave"; w.style.left=(x-15)+"px"; w.style.top=(y-15)+"px"; document.body.appendChild(w); setTimeout(()=>w.remove(),500); }
-    function mostrarFeedback(texto, acerto, x, y){ const d=document.createElement("div"); d.className="feedback-correto"; d.style.background=acerto?"#2e7d32ee":"#c62828ee"; d.innerText=acerto?`🎣✨ +15 ⭐ ${texto} ✨`:`❌ ${texto}`; document.body.appendChild(d); setTimeout(()=>d.remove(),850); if(acerto&&x){ criarTesouro(x,y); criarOndaChoque(x,y); } }
-
-    function atualizarUI(){ 
-        document.getElementById("progressHint").innerHTML = `🏆 ${categoriaCorrente?.nome?.substring(0,22)} | ${acertosNaEtapa}/${silabasAtuais.length}`; 
+    function mostrarFeedback(texto, acerto, x, y){
+        const d=document.createElement("div"); d.className="feedback-correto"; d.style.background=acerto?"#2e7d32ee":"#c62828ee";
+        d.innerText=acerto?`🎣✨ +15 ⭐ ${texto} ✨`:`❌ ${texto}`; document.body.appendChild(d); setTimeout(()=>d.remove(),850);
+        if(acerto && x){ criarTesouro(x,y); criarOndaChoque(x,y); }
     }
+    function atualizarUI(){ document.getElementById("progressHint").innerHTML = `🏆 ${categorias[indiceCategoriaAtual].nome.substring(0,22)} | ${acertosNaEtapa}/${silabasAtuais.length}`; }
 
-    // ========== FUNÇÃO CORRIGIDA: spawn seguro abaixo do header ==========
+    // Posicionamento seguro (abaixo do header)
     function calcularAreaSegura() {
         const header = document.querySelector('.game-header');
         const instrucao = document.querySelector('.instrucao-wrapper');
         const headerHeight = header ? header.offsetHeight : 120;
         const instrucaoHeight = instrucao ? instrucao.offsetHeight + 30 : 80;
-        const margemSuperior = ((headerHeight + instrucaoHeight) / window.innerHeight) * 100;
-        return Math.max(margemSuperior + 5, 25); // Mínimo 25% do topo
+        return Math.max(((headerHeight + instrucaoHeight) / window.innerHeight) * 100 + 5, 25);
     }
 
-    function carregarProximaSilaba(){ 
-        if(indiceSilabaAtual >= silabasAtuais.length){ 
-            concluirEtapa(); 
-            return; 
-        } 
-        const certa = silabasAtuais[indiceSilabaAtual]; 
-        const certaTransformada = getTextoTransformado(certa.texto);
-        document.getElementById("silabaAlvo").innerText = certaTransformada;
+    function carregarProximaSilaba() {
+        if (indiceSilabaAtual >= silabasAtuais.length) { concluirCategoria(); return; }
+        const certa = silabasAtuais[indiceSilabaAtual];
+        document.getElementById("silabaAlvo").innerText = getTextoTransformado(certa);
         document.getElementById("silabaAlvo").className = 'modo-' + modoGrafia;
-        atualizarUI(); 
-        aquario.innerHTML = ""; 
-
-        let opcoes = [certa]; 
-        let outras = silabasAtuais.filter(s => s.texto !== certa.texto); 
-        outras.sort(()=>0.5-Math.random()); 
-        opcoes.push(...outras.slice(0, criaturasNaTela-1)); 
-        while(opcoes.length < criaturasNaTela) opcoes.push({texto:"CHA", audio:"cha.mp3"}); 
-        opcoes.sort(()=>Math.random()-0.5); 
-        opcoes.forEach(sil => criarCriatura(sil, certa)); 
-        setTimeout(()=>{ 
-            if(jogoAtivo && !aguardandoProxima) tocarSilaba(certa); 
-        }, 500); 
+        atualizarUI();
+        aquario.innerHTML = "";
+        let opcoes = [certa];
+        let outras = silabasAtuais.filter(s => s !== certa);
+        outras.sort(()=>0.5-Math.random());
+        opcoes.push(...outras.slice(0, criaturasNaTela-1));
+        while(opcoes.length < criaturasNaTela) opcoes.push("CHA");
+        opcoes.sort(()=>Math.random()-0.5);
+        opcoes.forEach(sil => criarCriatura(sil, certa));
+        setTimeout(()=>{ if(jogoAtivo && !aguardandoProxima) falarSilaba(certa); }, 500);
     }
 
-    // ========== FUNÇÃO CORRIGIDA: posicionamento seguro e área de toque ampliada ==========
-    function criarCriatura(silaba, alvo){ 
-        const c = document.createElement("div"); 
-        c.className = "creature"; 
-
-        // Calcula área segura abaixo do header
+    function criarCriatura(silaba, alvo) {
+        const c = document.createElement("div");
+        c.className = "creature";
         const minTop = calcularAreaSegura();
-        const maxTop = 85; // Máximo 85% para não sair da tela
-        c.style.top = Math.random() * (maxTop - minTop) + minTop + "%"; 
-
-        const dir = Math.random() > 0.5; 
-        const dur = Math.random() * 5 + 4.5; 
-        c.style.animation = dir ? `nadar-direita ${dur}s linear infinite` : `nadar-esquerda ${dur}s linear infinite`; 
-        const emoji = criaturas[Math.floor(Math.random() * criaturas.length)]; 
-        const flip = dir ? 'transform: scaleX(-1);' : ''; 
-        const silabaTexto = getTextoTransformado(silaba.texto);
+        const maxTop = 85;
+        c.style.top = Math.random() * (maxTop - minTop) + minTop + "%";
+        const dir = Math.random() > 0.5;
+        const dur = Math.random() * 5 + 4.5;
+        c.style.animation = dir ? `nadar-direita ${dur}s linear infinite` : `nadar-esquerda ${dur}s linear infinite`;
+        const emoji = criaturas[Math.floor(Math.random() * criaturas.length)];
+        const flip = dir ? 'transform: scaleX(-1);' : '';
+        const silTexto = getTextoTransformado(silaba);
         c.innerHTML = `<span class="creature-icon" style="${flip}">${emoji}</span>
-                       <span class="silaba-creature modo-${modoGrafia}">${silabaTexto}</span>`; 
-
-        // Evento unificado para mouse e touch com área ampliada
-        function handleInteraction(e) { 
-            e.preventDefault(); 
-            e.stopPropagation();
-            if(!jogoAtivo || aguardandoProxima) return; 
-            const rect = c.getBoundingClientRect(); 
+                       <span class="silaba-creature modo-${modoGrafia}">${silTexto}</span>`;
+        function handleInteraction(e) {
+            e.preventDefault(); e.stopPropagation();
+            if(!jogoAtivo || aguardandoProxima) return;
+            const rect = c.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
-            if(silaba.texto === alvo.texto) acertou(c, silaba, centerX, centerY); 
-            else errou(c, silaba); 
+            if(silaba === alvo) acertou(c, silaba, centerX, centerY);
+            else errou(c, silaba);
         }
-
-        // Usa pointerdown para unificar mouse e touch (melhor suporte)
         c.addEventListener('pointerdown', handleInteraction, { passive: false });
         c.addEventListener('touchstart', handleInteraction, { passive: false });
         c.addEventListener('click', handleInteraction);
-
-        aquario.appendChild(c); 
+        aquario.appendChild(c);
     }
 
-    function acertou(elem, silabaObj, x, y){ 
-        if(!jogoAtivo) return; 
-        jogoAtivo=false; 
-        if(audioEnabled) sfxPescado.play().catch(e=>{}); 
-        const rect = elem.getBoundingClientRect(); 
-        elem.style.animation = "none"; 
-        elem.style.left = rect.left + "px"; 
-        elem.style.top = rect.top + "px"; 
-        elem.classList.add("pescado"); 
-        pontuacaoTotal += 15; 
-        acertosNaEtapa++; 
-        atualizarUI(); 
-        mostrarFeedback(getTextoTransformado(silabaObj.texto), true, x, y); 
-        tocarSilaba(silabaObj, () => { 
-            indiceSilabaAtual++; 
-            if(indiceSilabaAtual < silabasAtuais.length){ 
-                jogoAtivo = true; 
-                carregarProximaSilaba(); 
-            } else { 
-                concluirEtapa(); 
-            } 
-        }); 
+    function acertou(elem, silaba, x, y) {
+        if(!jogoAtivo) return;
+        jogoAtivo = false;
+        if(audioEnabled) document.getElementById("sfx-pescado").play().catch(e=>{});
+        const rect = elem.getBoundingClientRect();
+        elem.style.animation = "none";
+        elem.style.left = rect.left + "px";
+        elem.style.top = rect.top + "px";
+        elem.classList.add("pescado");
+        pontuacaoTotal += 15;
+        acertosNaEtapa++;
+        atualizarUI();
+        mostrarFeedback(getTextoTransformado(silaba), true, x, y);
+        falarSilaba(silaba, () => {
+            indiceSilabaAtual++;
+            if(indiceSilabaAtual < silabasAtuais.length) {
+                jogoAtivo = true;
+                carregarProximaSilaba();
+            } else {
+                concluirCategoria();
+            }
+        });
     }
 
-    function errou(elem, silabaObj){ 
-        if(!jogoAtivo) return; 
-        if(audioEnabled) sfxErro.play().catch(e=>{}); 
-        mostrarFeedback(getTextoTransformado(silabaObj.texto), false); 
-        elem.classList.add("erro-anim"); 
-        setTimeout(()=>elem.classList.remove("erro-anim"),400); 
-        tocarSilaba(silabaObj); 
+    function errou(elem, silaba) {
+        if(!jogoAtivo) return;
+        if(audioEnabled) document.getElementById("sfx-erro").play().catch(e=>{});
+        mostrarFeedback(getTextoTransformado(silaba), false);
+        elem.classList.add("erro-anim");
+        setTimeout(()=>elem.classList.remove("erro-anim"),400);
+        falarSilaba(silaba);
     }
 
-    function resetarJogoParaCategoria(indice){ 
-        if(intervaloRelogio) clearInterval(intervaloRelogio); 
-        jogoAtivo = false; 
-        aguardandoProxima = false; 
-        pontuacaoTotal = 0; 
-        faseAtual = indice; 
-        categoriaCorrente = categorias[indice]; 
-        silabasAtuais = [...categoriaCorrente.silabas]; 
-        indiceSilabaAtual = 0; 
-        acertosNaEtapa = 0; 
-        atualizarUI(); 
-        aquario.innerHTML = ""; 
-        jogoAtivo = true; 
-        iniciarCronometro(); 
-        carregarProximaSilaba(); 
+    function resetarJogoParaCategoria(indice) {
+        if(intervaloRelogio) clearInterval(intervaloRelogio);
+        jogoAtivo = false;
+        aguardandoProxima = false;
+        pontuacaoTotal = 0;
+        indiceCategoriaAtual = indice;
+        const categoria = categorias[indiceCategoriaAtual];
+        silabasAtuais = [...categoria.silabas];
+        indiceSilabaAtual = 0;
+        acertosNaEtapa = 0;
+        atualizarUI();
+        aquario.innerHTML = "";
+        jogoAtivo = true;
+        iniciarCronometro();
+        carregarProximaSilaba();
     }
 
-    function concluirEtapa(){ 
-        if(aguardandoProxima) return; 
-        pararCronometro(); 
-        aguardandoProxima = true; 
-        jogoAtivo = false; 
-        aquario.innerHTML = ""; 
-        modalVitoria.style.display = "flex"; 
-        document.getElementById("vitoria-msg-topo").innerHTML = `✨ ${categoriaCorrente.nome} ✨`; 
-        document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length} | Pontos: ${pontuacaoTotal}`; 
-        document.getElementById("vitoria-msg-sub").innerHTML = "🎉 Parabéns! Escolha outra família no botão Famílias 📚"; 
-        setTimeout(()=>{ 
-            modalVitoria.style.display = "none"; 
-            aguardandoProxima = false; 
-        }, 2000); 
-    }
-
-    // ========== SELEÇÃO DE CATEGORIAS ==========
-    function abrirSeletorCategorias(){ 
-        modalCategorias.style.display = "flex"; 
-    }
-    function fecharSeletor(){ modalCategorias.style.display = "none"; }
-    function preencherGridCategorias(){ 
-        const grid = document.getElementById("listaCategorias"); 
-        grid.innerHTML = ""; 
-        categorias.forEach((cat, idx) => { 
-            const btn = document.createElement("button"); 
-            btn.className = "cat-botao"; 
-            btn.innerText = cat.nome; 
-            btn.onclick = () => { 
-                resetarJogoParaCategoria(idx); 
-                fecharSeletor(); 
-            }; 
-            btn.ontouchstart = (e) => { e.preventDefault(); resetarJogoParaCategoria(idx); fecharSeletor(); };
-            grid.appendChild(btn); 
-        }); 
-    }
-
-    // ========== CURSOR PERSONALIZADO (TRIDENTE) ==========
-    function initCustomCursor() {
-        const isMouse = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-        if (isMouse) {
-            const cursorDiv = document.createElement('div');
-            cursorDiv.className = 'custom-cursor';
-            document.body.appendChild(cursorDiv);
-            document.addEventListener('mousemove', (e) => {
-                cursorDiv.style.left = e.clientX + 'px';
-                cursorDiv.style.top = e.clientY + 'px';
-                cursorDiv.style.display = 'block';
+    function concluirCategoria() {
+        if(aguardandoProxima) return;
+        pararCronometro();
+        aguardandoProxima = true;
+        jogoAtivo = false;
+        aquario.innerHTML = "";
+        modalVitoria.style.display = "flex";
+        document.getElementById("vitoria-msg-topo").innerHTML = `✨ ${categorias[indiceCategoriaAtual].nome} ✨`;
+        document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length} | Pontos: ${pontuacaoTotal}`;
+        if (indiceCategoriaAtual + 1 < categorias.length) {
+            document.getElementById("vitoria-msg-sub").innerHTML = "🐟 Avançando para a próxima família...";
+            falar(`Parabéns! Você completou a família ${categorias[indiceCategoriaAtual].nome}. Avançando!`, () => {
+                setTimeout(() => {
+                    modalVitoria.style.display = "none";
+                    indiceCategoriaAtual++;
+                    resetarJogoParaCategoria(indiceCategoriaAtual);
+                    aguardandoProxima = false;
+                }, 1500);
             });
-            document.addEventListener('mouseleave', () => { cursorDiv.style.display = 'none'; });
-            document.addEventListener('mouseenter', () => { cursorDiv.style.display = 'block'; });
-            document.body.style.cursor = 'none';
+        } else {
+            document.getElementById("vitoria-msg-sub").innerHTML = "🏆 PARABÉNS! Você completou TODAS as famílias! 🏆";
+            falar("Parabéns! Você completou todas as famílias silábicas complexas!", () => {
+                setTimeout(() => { modalVitoria.style.display = "none"; aguardandoProxima = false; }, 3000);
+            });
         }
     }
 
-    // ========== NAVEGAÇÃO COM SUPORTE TOUCH ==========
-    function toggleFullscreen(){ if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
-    function toggleAudio(){ audioEnabled=!audioEnabled; document.getElementById("btn-audio").innerHTML=audioEnabled?"🔊 Som Ligado":"🔇 Som Desligado"; if(audioEnabled) bgAudio.play().catch(e=>{}); else bgAudio.pause(); }
-    function voltarMenu(){ modalNavegacao.style.display="flex"; }
+    // Seleção manual de categoria (mantém sequência)
+    function abrirSeletorCategorias() { modalCategorias.style.display = "flex"; }
+    function fecharSeletor() { modalCategorias.style.display = "none"; }
+    function preencherGridCategorias() {
+        const grid = document.getElementById("listaCategorias");
+        grid.innerHTML = "";
+        categorias.forEach((cat, idx) => {
+            const btn = document.createElement("button");
+            btn.className = "cat-botao";
+            btn.innerText = cat.nome;
+            btn.onclick = () => {
+                resetarJogoParaCategoria(idx);
+                fecharSeletor();
+            };
+            btn.ontouchstart = (e) => { e.preventDefault(); resetarJogoParaCategoria(idx); fecharSeletor(); };
+            grid.appendChild(btn);
+        });
+    }
 
-    // Adiciona eventos para clique e toque
+    // Navegação e eventos
+    function toggleFullscreen(){ if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
+    function toggleAudio(){ audioEnabled=!audioEnabled; document.getElementById("btn-audio").innerHTML=audioEnabled?"🔊 Som Ligado":"🔇 Som Desligado"; if(audioEnabled) document.getElementById("bg-audio").play().catch(e=>{}); else document.getElementById("bg-audio").pause(); }
+    function voltarMenu(){ modalNavegacao.style.display="flex"; }
+    function addBothEvents(el, handler) { if(el){ el.addEventListener('click', handler); el.addEventListener('touchstart', handler, { passive: false }); } }
+
     const btnVoltarElem = document.getElementById("btnVoltar");
     const btnCancelar = document.getElementById("btnCancelarVolta");
     const btnConfirmar = document.getElementById("btnConfirmarVolta");
@@ -1036,49 +987,63 @@
     const btnMenu = document.getElementById("btnMenuPrincipal");
     const btnFull = document.getElementById("btnFullscreen");
     const btnAudioElem = document.getElementById("btn-audio");
-
-    function addBothEvents(element, handler) {
-        if (!element) return;
-        element.addEventListener('click', handler);
-        element.addEventListener('touchstart', handler, { passive: false });
-    }
+    const btnEscolher = document.getElementById("btnEscolherCategoria");
 
     addBothEvents(btnVoltarElem, voltarMenu);
     addBothEvents(btnCancelar, () => modalNavegacao.style.display = "none");
     addBothEvents(btnConfirmar, () => { modalNavegacao.style.display = "none"; window.location.href = "index_pesca.html"; });
     addBothEvents(btnRepetir, repetirSilabaAlvo);
     addBothEvents(silabaAlvoElem, (e) => { e.stopPropagation(); repetirSilabaAlvo(); });
-    addBothEvents(btnEscolherCategoria, abrirSeletorCategorias);
+    addBothEvents(btnEscolher, abrirSeletorCategorias);
     addBothEvents(btnFecharCats, fecharSeletor);
     addBothEvents(btnMenu, () => { window.location.href = "index_pesca.html"; });
     addBothEvents(btnFull, toggleFullscreen);
     addBothEvents(btnAudioElem, toggleAudio);
 
-    function criarParticulasLuz(){ const c=document.getElementById("lightParticles"); for(let i=0;i<40;i++){ setTimeout(()=>{ const p=document.createElement("div"); p.className="light-particle"; p.style.width=Math.random()*8+3+"px"; p.style.height=p.style.width; p.style.left=Math.random()*100+"%"; p.style.animationDelay=Math.random()*10+"s"; p.style.animationDuration=Math.random()*6+6+"s"; c.appendChild(p); setTimeout(()=>p.remove(),12000); }, i*300); } }
+    // Cursor personalizado (tridente)
+    function initCustomCursor() {
+        if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+            const cursorDiv = document.createElement('div'); cursorDiv.className = 'custom-cursor'; document.body.appendChild(cursorDiv);
+            document.addEventListener('mousemove', (e) => { cursorDiv.style.left = e.clientX + 'px'; cursorDiv.style.top = e.clientY + 'px'; cursorDiv.style.display = 'block'; });
+            document.addEventListener('mouseleave', () => { cursorDiv.style.display = 'none'; });
+            document.addEventListener('mouseenter', () => { cursorDiv.style.display = 'block'; });
+            document.body.style.cursor = 'none';
+        }
+    }
 
-    window.addEventListener('resize',()=>{ 
-        criaturasNaTela=window.innerWidth<768?3:(window.innerWidth<1024?4:5); 
-    });
+    // Partículas de luz
+    function criarParticulasLuz() {
+        const container = document.getElementById("lightParticles");
+        for(let i=0;i<40;i++){
+            setTimeout(()=>{
+                const p=document.createElement("div"); p.className="light-particle";
+                p.style.width=Math.random()*8+3+"px"; p.style.height=p.style.width;
+                p.style.left=Math.random()*100+"%"; p.style.animationDelay=Math.random()*10+"s";
+                p.style.animationDuration=Math.random()*6+6+"s";
+                container.appendChild(p);
+                setTimeout(()=>p.remove(),12000);
+            }, i*300);
+        }
+    }
 
-    setInterval(()=>{ 
-        if(jogoAtivo&&!aguardandoProxima&&Math.random()>0.85){ 
-            const b=document.createElement("div"); 
-            b.className="bolha"; 
-            const t=Math.random()*20+8; 
-            b.style.width=t+"px"; 
-            b.style.height=t+"px"; 
-            b.style.left=Math.random()*100+"%"; 
-            b.style.animationDuration=Math.random()*3+2+"s"; 
-            document.body.appendChild(b); 
-            setTimeout(()=>b.remove(),5000); 
-        } 
+    window.addEventListener('resize',()=>{ criaturasNaTela = window.innerWidth<768?3:(window.innerWidth<1024?4:5); });
+    setInterval(()=>{
+        if(jogoAtivo && !aguardandoProxima && Math.random()>0.85){
+            const b=document.createElement("div"); b.className="bolha";
+            const t=Math.random()*20+8; b.style.width=t+"px"; b.style.height=t+"px";
+            b.style.left=Math.random()*100+"%"; b.style.animationDuration=Math.random()*3+2+"s";
+            document.body.appendChild(b); setTimeout(()=>b.remove(),5000);
+        }
     },1000);
 
-    window.onload=()=>{ 
-        criarParticulasLuz(); 
-        preencherGridCategorias(); 
+    window.onload = () => {
+        if(window.speechSynthesis) window.speechSynthesis.getVoices();
+        criarParticulasLuz();
+        preencherGridCategorias();
+        initCustomCursor();
+        // Inicia sempre na primeira categoria (índice 0)
+        indiceCategoriaAtual = 0;
         resetarJogoParaCategoria(0);
-        initCustomCursor(); 
     };
 </script>
 </body>
