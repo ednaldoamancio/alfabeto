@@ -37,9 +37,7 @@
             cursor: none;
         }
 
-        /* =====================================================
-           CURSOR PERSONALIZADO - ANZOL DE PESCAR 🎣
-           ===================================================== */
+        /* CURSOR PERSONALIZADO - ANZOL DE PESCAR */
         .custom-cursor {
             position: fixed;
             width: 50px;
@@ -83,9 +81,7 @@
             flex-direction: column;
         }
 
-        /* =====================================================
-           HEADER ORGANIZADO (sem sobreposição)
-           ===================================================== */
+        /* HEADER ORGANIZADO */
         .game-header {
             position: relative;
             z-index: 100;
@@ -129,9 +125,7 @@
             .icon-btn { width: 50px; height: 50px; font-size: 24px; }
         }
 
-        /* =====================================================
-           BARRA DE SELEÇÃO DE MODO DE GRAFIA
-           ===================================================== */
+        /* BARRA DE SELEÇÃO DE MODO DE GRAFIA */
         .modo-barra {
             display: flex;
             flex-wrap: wrap;
@@ -191,17 +185,8 @@
         }
         
         @media (min-width: 768px) {
-            .modo-barra {
-                gap: 10px;
-                padding: 8px 14px;
-                border-radius: 50px;
-            }
-            .modo-btn {
-                padding: 6px 12px;
-                font-size: 26px;
-                min-width: 50px;
-                border-radius: 16px;
-            }
+            .modo-barra { gap: 10px; padding: 8px 14px; border-radius: 50px; }
+            .modo-btn { padding: 6px 12px; font-size: 26px; min-width: 50px; border-radius: 16px; }
             .modo-btn .label-modo { font-size: 9px; }
             .modo-btn .exemplo-letra { font-size: 32px; }
         }
@@ -212,7 +197,7 @@
             .modo-btn .label-modo { font-size: 10px; }
         }
 
-        /* Container da instrução (abaixo do header) */
+        /* Container da instrução */
         .game-info-container {
             width: 100%;
             padding-top: 15px;
@@ -245,18 +230,11 @@
         }
         
         @media (min-width: 768px) {
-            .instrucao {
-                font-size: 22px;
-                padding: 8px 24px;
-                gap: 12px;
-            }
+            .instrucao { font-size: 22px; padding: 8px 24px; gap: 12px; }
         }
         
         @media (min-width: 1024px) {
-            .instrucao {
-                font-size: 28px;
-                padding: 10px 30px;
-            }
+            .instrucao { font-size: 28px; padding: 10px 30px; }
         }
         
         #letraAlvo {
@@ -585,9 +563,7 @@
             .dica-som { bottom: 20px; left: 20px; padding: 5px 12px; font-size: 12px; border-radius: 20px; }
         }
 
-        /* =====================================================
-           MODAL DO ALFABETO - ESCOLHER LETRA
-           ===================================================== */
+        /* MODAL DO ALFABETO */
         #modal-alfabeto {
             display: none;
             position: fixed;
@@ -697,46 +673,18 @@
         
         .alfabeto-fechar:active { transform: scale(0.95); }
 
-        /* Responsividade para mobile: empilhar header */
         @media (max-width: 700px) {
-            .game-header {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 10px;
-                padding: 10px;
-            }
-            .top-bar {
-                justify-content: center;
-            }
-            .modo-barra {
-                justify-content: center;
-            }
-            .game-info-container {
-                padding-top: 10px;
-            }
-            .instrucao {
-                font-size: 14px;
-                padding: 6px 12px;
-                white-space: nowrap;
-            }
-            #letraAlvo {
-                font-size: 22px;
-                min-width: 50px;
-                padding: 0 8px;
-            }
+            .game-header { flex-direction: column; align-items: stretch; gap: 10px; padding: 10px; }
+            .top-bar { justify-content: center; }
+            .modo-barra { justify-content: center; }
+            .game-info-container { padding-top: 10px; }
+            .instrucao { font-size: 14px; padding: 6px 12px; white-space: nowrap; }
+            #letraAlvo { font-size: 22px; min-width: 50px; padding: 0 8px; }
         }
         @media (max-width: 480px) {
-            .instrucao {
-                font-size: 12px;
-            }
-            #letraAlvo {
-                font-size: 18px;
-            }
-            .icon-btn {
-                width: 36px;
-                height: 36px;
-                font-size: 18px;
-            }
+            .instrucao { font-size: 12px; }
+            #letraAlvo { font-size: 18px; }
+            .icon-btn { width: 36px; height: 36px; font-size: 18px; }
         }
     </style>
 </head>
@@ -753,7 +701,6 @@
 <div id="badge-fase2">🚀 FASE 2 — Peixes mais rápidos!</div>
 
 <div id="game-wrapper">
-    <!-- HEADER REFORMULADO (sem sobreposição) -->
     <div class="game-header">
         <div class="top-bar">
             <button class="icon-btn" onclick="window.location.href='index.html'">⬅️</button>
@@ -762,7 +709,6 @@
             <button class="icon-btn" onclick="abrirAlfabeto()" title="Escolher letra">🔤</button>
         </div>
 
-        <!-- BARRA DE SELEÇÃO DE MODO DE GRAFIA -->
         <div class="modo-barra" id="modoBarra">
             <button class="modo-btn maiusc-forma ativo" data-modo="maiusc-forma" onclick="selecionarModo('maiusc-forma')">
                 <span class="exemplo-letra">A</span>
@@ -815,7 +761,6 @@
     </div>
 </div>
 
-<!-- MODAL DO ALFABETO PARA ESCOLHER LETRA -->
 <div id="modal-alfabeto">
     <div class="alfabeto-titulo">🔤 Escolha uma Letra</div>
     <div class="alfabeto-sub">Toque na letra que você quer pescar!</div>
@@ -839,19 +784,13 @@
     const modalAlfabeto  = document.getElementById("modal-alfabeto");
     const alfabetoGrid   = document.getElementById("alfabetoGrid");
 
-    // ================================================================
-    // MODO DE GRAFIA ATUAL (inicia com maiúscula de forma)
-    // ================================================================
     let modoGrafia = 'maiusc-forma';
     
-    // ================================================================
-    // MAPEAMENTO DOS MODOS (fala e transformação)
-    // ================================================================
     const mapaModo = {
-        'maiusc-forma':   { transform: l => l.toUpperCase(), familia: 'Comic Neue', falaPrefixo: 'maiúscula de fôrma' },
-        'minusc-forma':   { transform: l => l.toLowerCase(), familia: 'Comic Neue', falaPrefixo: 'minúscula de fôrma' },
-        'maiusc-cursiva': { transform: l => l.toUpperCase(), familia: 'Playwrite BR', falaPrefixo: 'maiúscula cursiva' },
-        'minusc-cursiva': { transform: l => l.toLowerCase(), familia: 'Playwrite BR', falaPrefixo: 'minúscula manuscrita' }
+        'maiusc-forma':   { transform: l => l.toUpperCase(), familia: 'Comic Neue' },
+        'minusc-forma':   { transform: l => l.toLowerCase(), familia: 'Comic Neue' },
+        'maiusc-cursiva': { transform: l => l.toUpperCase(), familia: 'Playwrite BR' },
+        'minusc-cursiva': { transform: l => l.toLowerCase(), familia: 'Playwrite BR' }
     };
 
     function selecionarModo(modo) {
@@ -863,9 +802,7 @@
         iniciarRodada();
     }
 
-    // Alfabeto em ORDEM ALFABÉTICA
     const alfabetoCompleto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-
     let indiceLetraAtual = 0;
     let faseAtual = 1;
     let pontuacaoTotal = 0;
@@ -874,8 +811,7 @@
     let aguardandoProxima = false;
 
     function obterDuracaoPeixe() {
-        if (faseAtual === 1) return (Math.random() * 5) + 7;
-        else return (Math.random() * 2.5) + 3.5;
+        return faseAtual === 1 ? (Math.random() * 5) + 7 : (Math.random() * 2.5) + 3.5;
     }
     
     if (window.innerWidth < 768) peixesNaTela = 3;
@@ -918,10 +854,10 @@
         window.speechSynthesis.speak(utterance);
     }
 
+    // PRONÚNCIA SIMPLES: apenas o som da letra
     function falarLetra(letra, callback) {
-        const cfg = mapaModo[modoGrafia];
         const pronuncia = obterPronunciaLetra(letra);
-        falar(`${cfg.falaPrefixo}: ${pronuncia}`, callback);
+        falar(pronuncia, callback);
     }
 
     function falarMensagem(msg, callback) {
@@ -929,18 +865,15 @@
     }
 
     function falarParabensELetra(letra, callback) {
-        const cfg = mapaModo[modoGrafia];
         const pronuncia = obterPronunciaLetra(letra);
-        falar(`Muito bem! ${cfg.falaPrefixo} ${pronuncia}`, callback);
+        falar(`Muito bem! ${pronuncia}`, callback);
     }
 
     function repetirLetraAlvo() {
         const letraAtual = alfabetoCompleto[indiceLetraAtual];
         if (!letraAtual) return;
-
         elLetraAlvo.classList.add("pulsando");
         setTimeout(() => elLetraAlvo.classList.remove("pulsando"), 300);
-
         falarLetra(letraAtual);
     }
 
@@ -956,9 +889,6 @@
         else bgAudio.pause();
     }
 
-    // ================================================================
-    // MODAL DO ALFABETO - ESCOLHER LETRA
-    // ================================================================
     function abrirAlfabeto() {
         modalAlfabeto.style.display = "flex";
         montarGridAlfabeto();
@@ -989,10 +919,8 @@
         fecharAlfabeto();
         jogoAtivo = true;
         iniciarRodada();
-        
         const letraEscolhida = alfabetoCompleto[indice];
-        const cfg = mapaModo[modoGrafia];
-        falarMensagem(`Vamos pescar a letra ${cfg.falaPrefixo} ${obterPronunciaLetra(letraEscolhida)}!`);
+        falarMensagem(`Vamos pescar a letra ${obterPronunciaLetra(letraEscolhida)}!`);
     }
 
     function criarEfeitoBolhas(quantidade = 100) {
@@ -1052,13 +980,12 @@
             if (!letrasRodada.includes(aleat)) letrasRodada.push(aleat);
         }
 
-        letrasRodada.sort(() => Math.random() - 0.5).forEach(letraBase => {
-            criarPeixe(cfg.transform(letraBase), letraCerta, letraBase === alfabetoCompleto[indiceLetraAtual]);
+        letrasRodada.sort(() => Math.random() - 0.5).forEach(letraBasePeixe => {
+            criarPeixe(cfg.transform(letraBasePeixe), letraCerta, letraBasePeixe === alfabetoCompleto[indiceLetraAtual]);
         });
         
         setTimeout(() => {
-            const cfg = mapaModo[modoGrafia];
-            falarMensagem("Pesque a letra " + cfg.falaPrefixo + " " + obterPronunciaLetra(letraBase));
+            falarMensagem(`Pesque a letra ${obterPronunciaLetra(letraBase)}`);
         }, 500);
     }
 
@@ -1122,7 +1049,8 @@
         mostrarEstrela(rect.left + 30, rect.top + 30);
         mostrarFeedback(`✅ +10  ${letraClicada}`, true);
         
-        falarParabensELetra(alfabetoCompleto[indiceLetraAtual - 1], () => {
+        const letraPescada = alfabetoCompleto[indiceLetraAtual - 1];
+        falarParabensELetra(letraPescada, () => {
             if (indiceLetraAtual === 13 && faseAtual === 1) {
                 concluirEtapa();
             } else if (indiceLetraAtual >= alfabetoCompleto.length) {
@@ -1161,7 +1089,6 @@
         document.getElementById("scoreFinalModal").innerHTML = `🌟 Pontuação final: ${pontuacaoTotal} 🌟`;
         modalVitoria.style.display = "flex";
         falarMensagem("Incrível! Você pescou todo o alfabeto! Parabéns!");
-        
         setTimeout(() => { modalVitoria.style.display = "none"; }, 5000);
     }
 
@@ -1191,7 +1118,6 @@
         setTimeout(() => { window.location.href = "pesca_silabica.html"; }, 500);
     }
     
-    // Eventos
     document.getElementById("btnMudarSilabas").addEventListener("click", convidarParaSilabas);
     document.getElementById("btnCancelarNavegacao").addEventListener("click", fecharModalNavegacao);
     document.getElementById("btnConfirmarNavegacao").addEventListener("click", irParaSilabas);
@@ -1199,7 +1125,6 @@
     document.getElementById("btnRepetirLetra").addEventListener("click", (e) => {
         if (e.target.id !== "letraAlvo") repetirLetraAlvo();
     });
-
     document.getElementById("letraAlvo").addEventListener("click", (e) => {
         e.stopPropagation();
         repetirLetraAlvo();
@@ -1209,9 +1134,7 @@
         repetirLetraAlvo();
     }, { passive: true });
 
-    // ================================================================
-    // CURSOR PERSONALIZADO - ANZOL DE PESCAR 🪝
-    // ================================================================
+    // Cursor personalizado
     const cursor = document.createElement('div');
     cursor.className = 'custom-cursor';
     document.body.appendChild(cursor);
@@ -1225,7 +1148,6 @@
     document.addEventListener('mouseleave', () => { cursor.style.display = 'none'; });
     document.addEventListener('mouseenter', () => { cursor.style.display = 'block'; });
     
-    // Bolhas contínuas
     setInterval(() => {
         if (jogoAtivo && !aguardandoProxima && Math.random() > 0.8) {
             const bolha = document.createElement("div");
@@ -1248,7 +1170,13 @@
     
     window.onload = () => {
         if (window.speechSynthesis) window.speechSynthesis.getVoices();
+        // Inicia sempre com a letra A
+        indiceLetraAtual = 0;
+        faseAtual = 1;
+        pontuacaoTotal = 0;
         iniciarRodada();
+        // Tenta ativar fullscreen automaticamente
+        document.documentElement.requestFullscreen().catch(e => console.log("Fullscreen não permitido automaticamente:", e));
     };
 </script>
 </body>
