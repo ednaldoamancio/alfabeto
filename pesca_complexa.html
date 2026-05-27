@@ -731,6 +731,7 @@
     let silabasAtuais = [], indiceSilabaAtual = 0;
     let tempoInicioEtapa = null, intervaloRelogio = null;
     let criaturasNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
+    let transicaoCategoria = false; // evita múltiplas transições
 
     // ========== FUNÇÕES DE ÁUDIO MP3 ==========
     function tocarAudioMP3(arquivo, callback) {
@@ -750,7 +751,7 @@
         else if (callback) callback();
     }
 
-    // ========== MODO DE GRAFIA (transformação visual) ==========
+    // ========== MODO DE GRAFIA ==========
     let modoGrafia = 'maiusc-forma';
     function capitalizeSilaba(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : s; }
     const mapaModo = {
@@ -771,7 +772,7 @@
         if (jogoAtivo && !aguardandoProxima) carregarProximaSilaba();
     }
 
-    // ========== FUNÇÕES AUXILIARES ==========
+    // ========== UTILITÁRIOS ==========
     function formatarTempo(seg) { return `${Math.floor(seg/60).toString().padStart(2,'0')}:${(seg%60).toString().padStart(2,'0')}`; }
     function iniciarCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); tempoInicioEtapa = Date.now(); intervaloRelogio = setInterval(()=>{}, 1000); }
     function pararCronometro() { if(intervaloRelogio) clearInterval(intervaloRelogio); return tempoInicioEtapa ? Math.floor((Date.now()-tempoInicioEtapa)/1000) : 0; }
@@ -791,7 +792,6 @@
         tocarSilaba(silabaObj);
     }
 
-    // Posicionamento seguro abaixo do header
     function calcularAreaSegura() {
         const header = document.querySelector('.game-header');
         const instrucao = document.querySelector('.instrucao-wrapper');
@@ -884,6 +884,7 @@
         if(intervaloRelogio) clearInterval(intervaloRelogio);
         jogoAtivo = false;
         aguardandoProxima = false;
+        transicaoCategoria = false;
         pontuacaoTotal = 0;
         indiceCategoriaAtual = indice;
         const categoria = categorias[indiceCategoriaAtual];
@@ -898,26 +899,36 @@
     }
 
     function concluirCategoria() {
-        if(aguardandoProxima) return;
-        pararCronometro();
+        if (aguardandoProxima || transicaoCategoria) return;
+        transicaoCategoria = true;
         aguardandoProxima = true;
         jogoAtivo = false;
+        pararCronometro();
         aquario.innerHTML = "";
+        
+        // Exibe modal de vitória
         modalVitoria.style.display = "flex";
         document.getElementById("vitoria-msg-topo").innerHTML = `✨ ${categorias[indiceCategoriaAtual].nome} ✨`;
         document.getElementById("scoreFinalModal").innerHTML = `✅ Acertos: ${acertosNaEtapa}/${silabasAtuais.length} | Pontos: ${pontuacaoTotal}`;
         
+        // Verifica se é a última categoria
         if (indiceCategoriaAtual + 1 < categorias.length) {
             document.getElementById("vitoria-msg-sub").innerHTML = "🐟 Avançando para a próxima família...";
+            // Avança após 2 segundos
             setTimeout(() => {
                 modalVitoria.style.display = "none";
                 indiceCategoriaAtual++;
                 resetarJogoParaCategoria(indiceCategoriaAtual);
                 aguardandoProxima = false;
+                transicaoCategoria = false;
             }, 2000);
         } else {
             document.getElementById("vitoria-msg-sub").innerHTML = "🏆 PARABÉNS! Você completou TODAS as famílias! 🏆";
-            setTimeout(() => { modalVitoria.style.display = "none"; aguardandoProxima = false; }, 3000);
+            setTimeout(() => {
+                modalVitoria.style.display = "none";
+                aguardandoProxima = false;
+                transicaoCategoria = false;
+            }, 3000);
         }
     }
 
@@ -979,7 +990,6 @@
         }
     }
 
-    // Partículas de luz
     function criarParticulasLuz() {
         const container = document.getElementById("lightParticles");
         for(let i=0;i<40;i++){
@@ -1008,7 +1018,6 @@
         criarParticulasLuz();
         preencherGridCategorias();
         initCustomCursor();
-        // Inicia pela primeira categoria (índice 0)
         indiceCategoriaAtual = 0;
         resetarJogoParaCategoria(0);
     };
