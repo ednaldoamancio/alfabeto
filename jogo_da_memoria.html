@@ -13,7 +13,7 @@
             user-select: none;
         }
 
-        /* ---------- FUNDO OCEÂNICO COM BOLHAS ---------- */
+        /* FUNDO OCEÂNICO COM BOLHAS */
         body {
             background: linear-gradient(145deg, #022b3a 0%, #015a6e 100%);
             font-family: 'Comic Neue', 'Segoe UI', system-ui, sans-serif;
@@ -27,7 +27,6 @@
             overflow-x: hidden;
         }
 
-        /* bolhas animadas */
         .bubble {
             position: fixed;
             bottom: -50px;
@@ -42,7 +41,6 @@
             100% { transform: translateY(-120vh) scale(1.2); opacity: 0; }
         }
 
-        /* container principal com duas colunas (lateral + jogo) */
         .game-container {
             max-width: 1400px;
             width: 100%;
@@ -55,7 +53,6 @@
             z-index: 2;
         }
 
-        /* Área do jogo (cartas) com fundo transparente azulado */
         .game-area {
             flex: 3;
             min-width: 280px;
@@ -67,7 +64,6 @@
             border: 1px solid #48cae4;
         }
 
-        /* Painel lateral com estatísticas */
         .side-panel {
             flex: 1;
             min-width: 220px;
@@ -112,7 +108,6 @@
         }
         .btn-icon:active { transform: scale(0.96); }
 
-        /* cartões estatísticos */
         .stat-card {
             background: #043b46;
             border-radius: 28px;
@@ -178,7 +173,6 @@
         }
         .mode-btn:active, .qty-btn:active { transform: scale(0.96); }
 
-        /* GRADE DAS CARTAS - COR AZUL COM PEIXE AMARELO */
         .game-board {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -214,7 +208,6 @@
             font-weight: 800;
             box-shadow: 0 8px 14px rgba(0,0,0,0.3);
         }
-        /* FRENTE DA CARTA (LADO DA LETRA) */
         .front-face {
             transform: rotateY(180deg);
             background: #f0f9ff;
@@ -225,7 +218,6 @@
             border: 3px solid #ffd966;
             box-shadow: inset 0 0 5px #48cae4;
         }
-        /* VERSO DA CARTA – AZUL ESCURO COM PEIXE AMARELO */
         .back-face {
             background: linear-gradient(135deg, #0c6b7a, #043b46);
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffd966" width="32px" height="32px"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>');
@@ -242,7 +234,6 @@
             bottom: 15%;
             opacity: 0.9;
         }
-        /* estilos para letras (cursiva / forma) */
         .cursive-upper .front-face { font-family: 'Dancing Script', cursive; text-transform: uppercase; }
         .cursive-lower .front-face { font-family: 'Caveat', cursive; text-transform: lowercase; }
         .form-upper .front-face { font-family: 'Comic Neue', sans-serif; text-transform: uppercase; font-weight: 700; }
@@ -300,8 +291,6 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
 </head>
 <body>
-
-<!-- bolhas geradas por JS -->
 <div id="bubble-container" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1; overflow:hidden;"></div>
 
 <div class="game-container">
@@ -316,7 +305,6 @@
         <footer>🐟 toque nas cartas – encontre os pares com o menor número de toques!</footer>
     </div>
 
-    <!-- Painel lateral -->
     <div class="side-panel">
         <div class="stat-card">
             <div class="stat-label">🎯 TOQUES USADOS</div>
@@ -377,7 +365,7 @@
         const qtyBtns = document.querySelectorAll("[data-pairs]");
         const audioToggleBtn = document.getElementById("themeAudioBtn");
         
-        // ---------- BOLHAS DE FUNDO (movimento suave) ----------
+        // ---------- BOLHAS DE FUNDO ----------
         function createBubbles() {
             const bubbleContainer = document.getElementById("bubble-container");
             setInterval(() => {
@@ -396,7 +384,7 @@
         }
         createBubbles();
 
-        // ---------- SONS (web audio + speech) ----------
+        // ---------- SONS ----------
         let audioCtx = null;
         function initAudioContext() {
             if (!audioCtx && soundEnabled) {
@@ -466,6 +454,45 @@
                     osc.stop(now + idx*0.12 + 0.5);
                 });
             } catch(e) {}
+        }
+
+        // ---------- COMEMORAÇÕES (normal + perfeita) ----------
+        function celebrateNormal() {
+            // confetes suaves e mensagem
+            canvasConfetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#48cae4', '#ffd966', '#a0ffa0'] });
+            canvasConfetti({ particleCount: 40, spread: 45, origin: { y: 0.5, x: 0.2 }, startVelocity: 15 });
+            canvasConfetti({ particleCount: 40, spread: 45, origin: { y: 0.5, x: 0.8 }, startVelocity: 15 });
+            if(soundEnabled) playVictoryFanfare();
+        }
+
+        function celebratePerfect() {
+            // FESTA GRANDIOSA: muitos fogos, confetes pesados, brilho extra
+            canvasConfetti({ particleCount: 280, spread: 130, origin: { y: 0.6 }, colors: ['#ffd966', '#ffb347', '#2ecc71', '#f1c40f', '#ff6f61'], startVelocity: 25 });
+            canvasConfetti({ particleCount: 120, spread: 90, origin: { y: 0.45, x: 0.2 }, startVelocity: 22 });
+            canvasConfetti({ particleCount: 120, spread: 90, origin: { y: 0.45, x: 0.8 }, startVelocity: 22 });
+            setTimeout(() => {
+                canvasConfetti({ particleCount: 450, spread: 140, origin: { y: 0.5 }, startVelocity: 28, colors: ['#ffd966', '#ffb347', '#2ecc71', '#48cae4', '#ffaa44'] });
+                canvasConfetti({ particleCount: 200, spread: 100, origin: { y: 0.55, x: 0.5 }, startVelocity: 30, decay: 0.9 });
+            }, 200);
+            setTimeout(() => {
+                canvasConfetti({ particleCount: 300, spread: 120, origin: { y: 0.4, x: 0.3 }, startVelocity: 26 });
+                canvasConfetti({ particleCount: 300, spread: 120, origin: { y: 0.4, x: 0.7 }, startVelocity: 26 });
+            }, 500);
+            if(soundEnabled) {
+                playVictoryFanfare();
+                // toque adicional de glória
+                try {
+                    const osc2 = audioCtx.createOscillator();
+                    const gain2 = audioCtx.createGain();
+                    osc2.connect(gain2);
+                    gain2.connect(audioCtx.destination);
+                    osc2.frequency.value = 1568;
+                    gain2.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gain2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.5);
+                    osc2.start();
+                    osc2.stop(audioCtx.currentTime+0.6);
+                } catch(e) {}
+            }
         }
 
         // ---------- LÓGICA DO JOGO ----------
@@ -606,30 +633,29 @@
             gameActive = false;
             blockBoard = true;
             const perfectWin = (totalTaps === minPossibleTaps);
+            
+            // SEMPRE comemoração (normal ou especial)
+            if (perfectWin) {
+                celebratePerfect();   // GRANDE comemoração
+            } else {
+                celebrateNormal();    // comemoração simples
+            }
+            
             let trophyHtml = "";
+            let msg = "";
             if (perfectWin) {
                 trophyHtml = '<span class="trophy-badge">🏆✨ PERFEITO! ✨🏆</span>';
-                playVictoryFanfare();
-                canvasConfetti({ particleCount: 220, spread: 120, origin: { y: 0.6 }, colors: ['#2ecc71', '#f1c40f', '#48cae4'] });
-                canvasConfetti({ particleCount: 120, spread: 80, origin: { y: 0.4, x: 0.3 }, startVelocity: 20 });
-                canvasConfetti({ particleCount: 120, spread: 80, origin: { y: 0.4, x: 0.7 }, startVelocity: 20 });
-                setTimeout(() => {
-                    canvasConfetti({ particleCount: 400, spread: 140, origin: { y: 0.5 }, startVelocity: 25, colors: ['#ffd966', '#ffb347', '#2ecc71'] });
-                }, 200);
                 speakLetter("Parabéns! Desempenho perfeito! Você é um mestre da memória!");
+                msg = `🎉 VITÓRIA PERFEITA! 🎉<br> Você usou ${totalTaps} toques (MÍNIMO = ${minPossibleTaps})! 🌟`;
             } else {
-                canvasConfetti({ particleCount: 140, spread: 80, origin: { y: 0.6 }, colors: ['#7fe07f', '#ffd966'] });
                 speakLetter("Muito bem! Você completou o jogo!");
-                playVictoryFanfare();
+                msg = `🐠 Parabéns! Você completou em ${totalTaps} toques.<br> O mínimo possível é ${minPossibleTaps}. Tente superar! 🐟`;
             }
-            const msg = perfectWin ? 
-                `🎉 VITÓRIA PERFEITA! 🎉<br> Você usou ${totalTaps} toques (MÍNIMO = ${minPossibleTaps})! 🌟` : 
-                `🐠 Parabéns! Você completou em ${totalTaps} toques.<br> O mínimo possível é ${minPossibleTaps}. Tente superar! 🐟`;
             winMsgDiv.innerHTML = `${msg} ${trophyHtml} <div style="margin-top:8px;">💪 continue treinando!</div>`;
             winMsgDiv.style.display = "block";
         }
         
-        // ---------- CONFIGURAÇÕES ----------
+        // ---------- CONFIGURAÇÕES DINÂMICAS ----------
         function setPairs(pairs) {
             currentPairs = pairs;
             updateMinTaps();
@@ -705,7 +731,6 @@
             generateLetterSet();
             createBoard();
             bindEvents();
-            // garantir que o botão ativo seja o de 16 cartas
             document.querySelector("[data-pairs='8']").classList.add("active");
             document.querySelector("[data-style='form-upper']").classList.add("active");
             audioCtx = null;
