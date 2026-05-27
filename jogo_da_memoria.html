@@ -13,7 +13,6 @@
             user-select: none;
         }
 
-        /* FUNDO OCEÂNICO COM BOLHAS */
         body {
             background: linear-gradient(145deg, #022b3a 0%, #015a6e 100%);
             font-family: 'Comic Neue', 'Segoe UI', system-ui, sans-serif;
@@ -456,31 +455,41 @@
             } catch(e) {}
         }
 
-        // ---------- COMEMORAÇÕES (normal + perfeita) ----------
+        // ---------- COMEMORAÇÕES (normal + perfeita) com garantia de execução ----------
         function celebrateNormal() {
-            // confetes suaves e mensagem
-            canvasConfetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#48cae4', '#ffd966', '#a0ffa0'] });
-            canvasConfetti({ particleCount: 40, spread: 45, origin: { y: 0.5, x: 0.2 }, startVelocity: 15 });
-            canvasConfetti({ particleCount: 40, spread: 45, origin: { y: 0.5, x: 0.8 }, startVelocity: 15 });
+            // garante que canvas-confetti está disponível
+            if (typeof canvasConfetti === 'function') {
+                canvasConfetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#48cae4', '#ffd966', '#a0ffa0'] });
+                canvasConfetti({ particleCount: 50, spread: 50, origin: { y: 0.5, x: 0.2 }, startVelocity: 15 });
+                canvasConfetti({ particleCount: 50, spread: 50, origin: { y: 0.5, x: 0.8 }, startVelocity: 15 });
+            } else {
+                console.warn("canvasConfetti não carregado, mas comemoração ainda ocorre via mensagem");
+            }
             if(soundEnabled) playVictoryFanfare();
         }
 
         function celebratePerfect() {
-            // FESTA GRANDIOSA: muitos fogos, confetes pesados, brilho extra
-            canvasConfetti({ particleCount: 280, spread: 130, origin: { y: 0.6 }, colors: ['#ffd966', '#ffb347', '#2ecc71', '#f1c40f', '#ff6f61'], startVelocity: 25 });
-            canvasConfetti({ particleCount: 120, spread: 90, origin: { y: 0.45, x: 0.2 }, startVelocity: 22 });
-            canvasConfetti({ particleCount: 120, spread: 90, origin: { y: 0.45, x: 0.8 }, startVelocity: 22 });
-            setTimeout(() => {
-                canvasConfetti({ particleCount: 450, spread: 140, origin: { y: 0.5 }, startVelocity: 28, colors: ['#ffd966', '#ffb347', '#2ecc71', '#48cae4', '#ffaa44'] });
-                canvasConfetti({ particleCount: 200, spread: 100, origin: { y: 0.55, x: 0.5 }, startVelocity: 30, decay: 0.9 });
-            }, 200);
-            setTimeout(() => {
-                canvasConfetti({ particleCount: 300, spread: 120, origin: { y: 0.4, x: 0.3 }, startVelocity: 26 });
-                canvasConfetti({ particleCount: 300, spread: 120, origin: { y: 0.4, x: 0.7 }, startVelocity: 26 });
-            }, 500);
+            if (typeof canvasConfetti === 'function') {
+                // primeira leva intensa
+                canvasConfetti({ particleCount: 300, spread: 130, origin: { y: 0.6 }, colors: ['#ffd966', '#ffb347', '#2ecc71', '#f1c40f', '#ff6f61'], startVelocity: 25 });
+                canvasConfetti({ particleCount: 150, spread: 90, origin: { y: 0.45, x: 0.2 }, startVelocity: 22 });
+                canvasConfetti({ particleCount: 150, spread: 90, origin: { y: 0.45, x: 0.8 }, startVelocity: 22 });
+                // segunda leva após 200ms
+                setTimeout(() => {
+                    canvasConfetti({ particleCount: 500, spread: 150, origin: { y: 0.5 }, startVelocity: 30, colors: ['#ffd966', '#ffb347', '#2ecc71', '#48cae4', '#ffaa44'] });
+                    canvasConfetti({ particleCount: 250, spread: 110, origin: { y: 0.55, x: 0.5 }, startVelocity: 32, decay: 0.9 });
+                }, 200);
+                // terceira leva (cascata)
+                setTimeout(() => {
+                    canvasConfetti({ particleCount: 350, spread: 130, origin: { y: 0.4, x: 0.3 }, startVelocity: 28 });
+                    canvasConfetti({ particleCount: 350, spread: 130, origin: { y: 0.4, x: 0.7 }, startVelocity: 28 });
+                }, 500);
+            } else {
+                console.warn("canvasConfetti não carregado, mas mensagem de parabéns aparece");
+            }
             if(soundEnabled) {
                 playVictoryFanfare();
-                // toque adicional de glória
+                // som extra de glória
                 try {
                     const osc2 = audioCtx.createOscillator();
                     const gain2 = audioCtx.createGain();
