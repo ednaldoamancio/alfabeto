@@ -125,6 +125,50 @@
             .icon-btn { width: 50px; height: 50px; font-size: 24px; }
         }
 
+        /* ===== BOTÃO DOURADO CINTILANTE ===== */
+        .btn-dourado {
+            font-family: 'Comic Neue', sans-serif;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            background: linear-gradient(135deg, #f5b042, #ffd700, #f5a623);
+            border: 2px solid #fff2b5;
+            color: #3a2a1a;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            animation: brilhoDourado 1.5s ease-in-out infinite alternate;
+            text-shadow: 0 1px 2px rgba(255,255,200,0.5);
+            white-space: nowrap;
+        }
+
+        @keyframes brilhoDourado {
+            0% {
+                box-shadow: 0 0 5px rgba(255, 215, 0, 0.4);
+                background: linear-gradient(135deg, #f5b042, #ffd700);
+            }
+            100% {
+                box-shadow: 0 0 25px rgba(255, 215, 0, 0.9), 0 0 8px rgba(255, 220, 100, 0.7);
+                background: linear-gradient(135deg, #ffcc44, #ffea8c);
+            }
+        }
+
+        .btn-dourado:hover {
+            transform: scale(1.05);
+            animation: none;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 1);
+            background: linear-gradient(135deg, #ffdd66, #ffea9e);
+        }
+
+        @media (max-width: 560px) {
+            .btn-dourado { padding: 6px 10px; font-size: 0.7rem; gap: 4px; }
+        }
+
         /* BARRA DE SELEÇÃO DE MODO DE GRAFIA */
         .modo-barra {
             display: flex;
@@ -703,7 +747,10 @@
 <div id="game-wrapper">
     <div class="game-header">
         <div class="top-bar">
-            <button class="icon-btn" onclick="window.location.href='index.html'">⬅️</button>
+            <!-- BOTÃO DOURADO CINTILANTE - VOLTAR À PÁGINA ANTERIOR -->
+            <button class="btn-dourado" id="btnVoltarDourado" title="Voltar à página anterior">
+                ⬅️⭐ Voltar
+            </button>
             <button id="btn-audio" class="icon-btn" onclick="toggleAudio()">🔇</button>
             <button class="icon-btn" onclick="toggleFullscreen()">⛶</button>
             <button class="icon-btn" onclick="abrirAlfabeto()" title="Escolher letra">🔤</button>
@@ -771,6 +818,7 @@
 <script>
     let audioEnabled = false;
     let currentUtterance = null;
+    let isFullscreenActive = false;
     
     const bgAudio    = document.getElementById("bg-audio");
     const sfxPescado = document.getElementById("sfx-pescado");
@@ -810,6 +858,42 @@
     let jogoAtivo = true;
     let aguardandoProxima = false;
 
+    // ========== BOTÃO DOURADO - VOLTAR PARA PÁGINA ANTERIOR ==========
+    function voltarParaPaginaAnterior() {
+        // Efeito de confete dourado
+        confetti({ 
+            particleCount: 80, 
+            spread: 70, 
+            origin: { y: 0.3 }, 
+            colors: ['#ffd700', '#ffaa33', '#ffcc66'],
+            startVelocity: 10
+        });
+        
+        // URL da página inicial (Ilha das Vogais)
+        const urlDestino = 'https://ilha-das-vogais.vercel.app/';
+        
+        // Se estiver em modo fullscreen, propaga a flag
+        if (document.fullscreenElement) {
+            const separador = urlDestino.includes('?') ? '&' : '?';
+            const novaUrl = urlDestino + separador + 'fullscreen=force';
+            sessionStorage.setItem('parent_fullscreen_request', 'true');
+            window.location.href = novaUrl;
+        } else {
+            window.location.href = urlDestino;
+        }
+    }
+    
+    const btnVoltarDourado = document.getElementById('btnVoltarDourado');
+    btnVoltarDourado.addEventListener('click', voltarParaPaginaAnterior);
+
+    // Atualizar estado do fullscreen
+    function atualizarEstadoFullscreen() {
+        isFullscreenActive = !!document.fullscreenElement;
+    }
+    document.addEventListener('fullscreenchange', atualizarEstadoFullscreen);
+    document.addEventListener('webkitfullscreenchange', atualizarEstadoFullscreen);
+    atualizarEstadoFullscreen();
+
     function obterDuracaoPeixe() {
         return faseAtual === 1 ? (Math.random() * 5) + 7 : (Math.random() * 2.5) + 3.5;
     }
@@ -826,8 +910,7 @@
             "A": "á", "B": "bê", "C": "cê", "D": "dê", "E": "ê", "F": "efe",
             "G": "gê", "H": "agá", "I": "i", "J": "jóta", "K": "cá", "L": "éle",
             "M": "ême", "N": "êne", "O": "ô", "P": "pê", "Q": "quê", "R": "érre",
-            "S": "ésse",   // <--- ALTERADO PARA "ÉSSE" (com E aberto)
-            "T": "tê", "U": "u", "V": "vê", "W": "dáblio",
+            "S": "ésse", "T": "tê", "U": "u", "V": "vê", "W": "dáblio",
             "X": "xis", "Y": "ípsilon", "Z": "zê"
         };
         return pronunciaMap[letra.toUpperCase()] || letra.toLowerCase();
@@ -856,7 +939,6 @@
         window.speechSynthesis.speak(utterance);
     }
 
-    // PRONÚNCIA SIMPLES: apenas o som da letra (sem "maiúscula de forma", etc.)
     function falarLetra(letra, callback) {
         const pronuncia = obterPronunciaLetra(letra);
         falar(pronuncia, callback);
@@ -1172,12 +1254,10 @@
     
     window.onload = () => {
         if (window.speechSynthesis) window.speechSynthesis.getVoices();
-        // Inicia sempre com a letra A
         indiceLetraAtual = 0;
         faseAtual = 1;
         pontuacaoTotal = 0;
         iniciarRodada();
-        // Tenta ativar fullscreen automaticamente
         document.documentElement.requestFullscreen().catch(e => console.log("Fullscreen não permitido automaticamente:", e));
     };
 </script>
