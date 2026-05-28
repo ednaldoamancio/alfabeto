@@ -2,19 +2,12 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width,
-initial-scale=1.0,
-maximum-scale=1.0,
-user-scalable=yes">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
 <title>Memória Oceânica – Alfabeto Marítimo</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700;900&family=Playwrite+BR+Guides&display=swap" rel="stylesheet">
 
 <style>
-
 *{
     margin:0;
     padding:0;
@@ -43,11 +36,7 @@ body::after{
     left:0;
     width:100%;
     height:120px;
-    background:radial-gradient(
-        circle at 50% 120%,
-        #ee9b00 0%,
-        transparent 70%
-    );
+    background:radial-gradient(circle at 50% 120%, #ee9b00 0%, transparent 70%);
     opacity:0.4;
     z-index:-1;
 }
@@ -55,11 +44,7 @@ body::after{
 .bubble{
     position:fixed;
     bottom:-50px;
-    background:radial-gradient(
-        circle,
-        rgba(255,255,255,0.8) 0%,
-        rgba(150,220,255,0.2) 70%
-    );
+    background:radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(150,220,255,0.2) 70%);
     border-radius:50%;
     pointer-events:none;
     z-index:0;
@@ -67,19 +52,9 @@ body::after{
 }
 
 @keyframes riseBubbles{
-    0%{
-        transform:translateY(0) scale(0.3);
-        opacity:0;
-    }
-
-    10%{
-        opacity:0.7;
-    }
-
-    100%{
-        transform:translateY(-120vh) scale(1.3);
-        opacity:0;
-    }
+    0%{ transform:translateY(0) scale(0.3); opacity:0; }
+    10%{ opacity:0.7; }
+    100%{ transform:translateY(-120vh) scale(1.3); opacity:0; }
 }
 
 .game-container{
@@ -149,12 +124,7 @@ h1{
     font-size:0.95rem;
     box-shadow:0 4px 0px #bb7900;
 }
-
-.btn-icon:active{
-    transform:translateY(2px);
-    box-shadow:0 2px 0px #bb7900;
-}
-
+.btn-icon:active{ transform:translateY(2px); box-shadow:0 2px 0px #bb7900; }
 .btn-back-home{
     background:#e9d8a6;
     color:#005f73;
@@ -168,11 +138,7 @@ h1{
     transition:0.2s;
     display:block;
 }
-
-.btn-back-home:active{
-    transform:translateY(2px);
-    box-shadow:0 2px 0px #b5a478;
-}
+.btn-back-home:active{ transform:translateY(2px); box-shadow:0 2px 0px #b5a478; }
 
 .stat-card{
     background:rgba(0,0,0,0.2);
@@ -181,55 +147,14 @@ h1{
     text-align:center;
     border-bottom:4px solid #ee9b00;
 }
+.stat-label{ font-size:0.85rem; font-weight:700; color:#94d2bd; letter-spacing:1px; }
+.stat-value{ font-size:2.6rem; font-weight:900; color:#ffffff; margin:5px 0; }
+.badge-min{ font-size:0.85rem; background:rgba(255,255,255,0.15); display:inline-block; padding:4px 12px; border-radius:40px; color:#e9d8a6; font-weight:700; }
 
-.stat-label{
-    font-size:0.85rem;
-    font-weight:700;
-    color:#94d2bd;
-    letter-spacing:1px;
-}
-
-.stat-value{
-    font-size:2.6rem;
-    font-weight:900;
-    color:#ffffff;
-    margin:5px 0;
-}
-
-.badge-min{
-    font-size:0.85rem;
-    background:rgba(255,255,255,0.15);
-    display:inline-block;
-    padding:4px 12px;
-    border-radius:40px;
-    color:#e9d8a6;
-    font-weight:700;
-}
-
-.control-group{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-}
-
-.control-title{
-    font-weight:900;
-    font-size:1.05rem;
-    color:#ffffff;
-    display:flex;
-    align-items:center;
-    gap:6px;
-}
-
-.mode-buttons,
-.amount-buttons{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-}
-
-.mode-btn,
-.qty-btn{
+.control-group{ display:flex; flex-direction:column; gap:10px; }
+.control-title{ font-weight:900; font-size:1.05rem; color:#ffffff; display:flex; align-items:center; gap:6px; }
+.mode-buttons, .amount-buttons{ display:flex; flex-wrap:wrap; gap:8px; }
+.mode-btn, .qty-btn{
     background:rgba(0,0,0,0.2);
     border:2px solid transparent;
     padding:10px;
@@ -242,9 +167,7 @@ h1{
     flex:1 1 calc(50% - 8px);
     text-align:center;
 }
-
-.mode-btn.active,
-.qty-btn.active{
+.mode-btn.active, .qty-btn.active{
     background:#00cbd6;
     color:#002124;
     font-weight:900;
@@ -258,16 +181,9 @@ h1{
     gap:16px;
     margin-bottom:20px;
 }
-
 @media (max-width:600px){
-
-    .game-board{
-        gap:10px;
-    }
-
-    h1{
-        font-size:1.5rem;
-    }
+    .game-board{ gap:10px; }
+    h1{ font-size:1.5rem; }
 }
 
 .memory-card{
@@ -277,20 +193,10 @@ h1{
     cursor:pointer;
     position:relative;
     transform-style:preserve-3d;
-    transition:transform 0.4s cubic-bezier(
-        0.175,
-        0.885,
-        0.32,
-        1.15
-    );
+    transition:transform 0.4s cubic-bezier(0.175,0.885,0.32,1.15);
 }
-
-.memory-card.flip{
-    transform:rotateY(180deg);
-}
-
-.front-face,
-.back-face{
+.memory-card.flip{ transform:rotateY(180deg); }
+.front-face, .back-face{
     position:absolute;
     width:100%;
     height:100%;
@@ -302,54 +208,50 @@ h1{
     border:4px solid #7fdcff;
     box-shadow:0 6px 12px rgba(0,0,0,0.25);
 }
-
 .front-face{
     transform:rotateY(180deg);
-    background-color:rgb(0,0,255);
+    background: linear-gradient(145deg, #1e6091, #0b3b4f);
     color:#ffffff;
     font-size:3.2rem;
     font-weight:900;
     text-align:center;
 }
-
-/* CURSIVA PEDAGÓGICA BRASILEIRA */
-
 .cursive-upper .front-face{
     font-family:'Playwrite BR Guides',cursive;
     text-transform:uppercase;
     font-size:3.4rem;
     letter-spacing:2px;
 }
-
 .cursive-lower .front-face{
     font-family:'Playwrite BR Guides',cursive;
     text-transform:lowercase;
     font-size:3.8rem;
 }
-
 .form-upper .front-face{
     font-family:'Comic Neue',sans-serif;
     text-transform:uppercase;
 }
-
 .form-lower .front-face{
     font-family:'Comic Neue',sans-serif;
     text-transform:lowercase;
 }
-
 .back-face{
-    background:linear-gradient(
-        135deg,
-        rgb(0,0,255) 0%,
-        rgb(40,40,255) 100%
-    );
-
+    background: linear-gradient(135deg, #184e68 0%, #0a5e6b 100%);
     border-color:#ffffff;
 }
-
 .back-face::after{
     content:"🐠";
     font-size:3.2rem;
+}
+
+@keyframes celebrateFlash {
+    0% { box-shadow: 0 0 0 0 rgba(255,215,0,0.7); border-color: #ffd700; transform: scale(1);}
+    50% { box-shadow: 0 0 0 12px rgba(255,215,0,0); border-color: #ffaa00; transform: scale(1.02);}
+    100% { box-shadow: 0 0 0 0 rgba(255,215,0,0); border-color: #7fdcff; transform: scale(1);}
+}
+.memory-card.win-celebrate .front-face,
+.memory-card.win-celebrate .back-face {
+    animation: celebrateFlash 0.5s ease-in-out 2;
 }
 
 .win-message{
@@ -364,8 +266,9 @@ h1{
     display:none;
     border:3px solid #52b788;
     box-shadow:0 10px 20px rgba(0,0,0,0.3);
+    position:relative;
+    z-index:10;
 }
-
 .restart-btn{
     background:#ee9b00;
     border:none;
@@ -380,26 +283,9 @@ h1{
     margin-top:10px;
     box-shadow:0 5px 0px #bb7900;
 }
-
-.restart-btn:active{
-    transform:translateY(3px);
-    box-shadow:0 2px 0px #bb7900;
-}
-
-footer{
-    font-size:0.8rem;
-    text-align:center;
-    margin-top:15px;
-    opacity:0.8;
-    color:#94d2bd;
-}
-
-.trophy-badge{
-    font-size:2.2rem;
-    display:inline-block;
-    margin-left:5px;
-}
-
+.restart-btn:active{ transform:translateY(3px); box-shadow:0 2px 0px #bb7900; }
+footer{ font-size:0.8rem; text-align:center; margin-top:15px; opacity:0.8; color:#94d2bd; }
+.trophy-badge{ font-size:2.2rem; display:inline-block; margin-left:5px; }
 canvas#confetti-canvas{
     position:fixed;
     top:0;
@@ -409,522 +295,363 @@ canvas#confetti-canvas{
     pointer-events:none;
     z-index:2000;
 }
-
+.celebration-text {
+    animation: bounceText 0.4s ease-out;
+}
+@keyframes bounceText {
+    0% { transform: scale(0.8); opacity: 0; }
+    80% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+}
 </style>
-
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
 </head>
-
 <body>
-
-<div id="bubble-container"
-style="
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-pointer-events:none;
-z-index:1;
-overflow:hidden;
-"></div>
-
+<div id="bubble-container" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1; overflow:hidden;"></div>
 <div class="game-container">
-
 <div class="game-area">
-
 <div class="game-header">
 <h1>🌊 MEMÓRIA OCEÂNICA</h1>
-
-<button class="btn-icon" id="themeAudioBtn">
-🔊 Sons Ativos
-</button>
+<button class="btn-icon" id="themeAudioBtn">🔊 Sons Ativos</button>
 </div>
-
 <div class="game-board" id="gameBoard"></div>
-
 <div class="win-message" id="winMessage"></div>
-
-<button class="restart-btn" id="restartGameBtn">
-🐚 NOVA PARTIDA 🐚
-</button>
-
-<footer>
-Toque nas cartas para encontrar os pares!
-</footer>
-
+<button class="restart-btn" id="restartGameBtn">🐚 NOVA PARTIDA 🐚</button>
+<footer>✨ Toque nas cartas para formar os pares! Cada vitória será celebrada com festa ✨</footer>
 </div>
-
 <div class="side-panel">
-
-<a href="https://alfabeto-mu.vercel.app/"
-class="btn-back-home">
-
-⚓ VOLTAR AO INÍCIO
-
-</a>
-
+<a href="https://alfabeto-mu.vercel.app/" class="btn-back-home">⚓ VOLTAR AO INÍCIO</a>
 <div class="stat-card">
-
-<div class="stat-label">
-🎯 TOQUES USADOS
+<div class="stat-label">🎯 TOQUES USADOS</div>
+<div class="stat-value" id="tapCounter">0</div>
+<div class="stat-label">⚡ MÍNIMO POSSÍVEL</div>
+<div class="stat-value" id="minTapsDisplay">0</div>
+<div class="badge-min" id="bestHint">🐙 Desafio: iguale o mínimo (visualize todas)</div>
 </div>
-
-<div class="stat-value" id="tapCounter">
-0
-</div>
-
-<div class="stat-label">
-⚡ MÍNIMO POSSÍVEL
-</div>
-
-<div class="stat-value" id="minTapsDisplay">
-0
-</div>
-
-<div class="badge-min" id="bestHint">
-✨ Desafio: iguale o mínimo!
-</div>
-
-</div>
-
 <div class="control-group">
-
-<div class="control-title">
-✍️ TIPO DE LETRA
-</div>
-
+<div class="control-title">✍️ TIPO DE LETRA</div>
 <div class="mode-buttons" id="styleButtons">
-
-<button data-style="form-upper"
-class="mode-btn active">
-MAIÚSCULA
-</button>
-
-<button data-style="form-lower"
-class="mode-btn">
-minúscula
-</button>
-
-<button data-style="cursive-upper"
-class="mode-btn">
-CURSIVA M.
-</button>
-
-<button data-style="cursive-lower"
-class="mode-btn">
-cursiva m.
-</button>
-
+<button data-style="form-upper" class="mode-btn active">MAIÚSCULA</button>
+<button data-style="form-lower" class="mode-btn">minúscula</button>
+<button data-style="cursive-upper" class="mode-btn">CURSIVA M.</button>
+<button data-style="cursive-lower" class="mode-btn">cursiva m.</button>
 </div>
 </div>
-
 <div class="control-group">
-
-<div class="control-title">
-🐟 CARTAS
-</div>
-
+<div class="control-title">🐟 CARTAS</div>
 <div class="amount-buttons" id="qtyButtons">
-
-<button data-pairs="8"
-class="qty-btn active">
-16 Cartas
-</button>
-
-<button data-pairs="10"
-class="qty-btn">
-20 Cartas
-</button>
-
-<button data-pairs="12"
-class="qty-btn">
-24 Cartas
-</button>
-
+<button data-pairs="8" class="qty-btn active">16 Cartas</button>
+<button data-pairs="10" class="qty-btn">20 Cartas</button>
+<button data-pairs="12" class="qty-btn">24 Cartas</button>
 </div>
 </div>
 </div>
 </div>
-
 <canvas id="confetti-canvas"></canvas>
 
 <script>
-
 (function(){
-
-let currentPairs = 8;
-let currentStyle = "form-upper";
-
-let totalTaps = 0;
-let minPossibleTaps = 0;
-
-let gameActive = true;
-let blockBoard = false;
-
-let firstCard = null;
-let secondCard = null;
-
-let matchedPairs = 0;
-
-let cardsArray = [];
-let letterList = [];
-
-const boardEl =
-document.getElementById("gameBoard");
-
-const tapCounterSpan =
-document.getElementById("tapCounter");
-
-const minTapsSpan =
-document.getElementById("minTapsDisplay");
-
-const winMsgDiv =
-document.getElementById("winMessage");
-
-const restartBtn =
-document.getElementById("restartGameBtn");
-
-const styleBtns =
-document.querySelectorAll("[data-style]");
-
-const qtyBtns =
-document.querySelectorAll("[data-pairs]");
-
-function createBubbles(){
-
-const bubbleContainer =
-document.getElementById("bubble-container");
-
-setInterval(()=>{
-
-if(document.hidden) return;
-
-const bubble =
-document.createElement("div");
-
-bubble.classList.add("bubble");
-
-const size =
-Math.random()*30 + 15;
-
-bubble.style.width = size + "px";
-bubble.style.height = size + "px";
-
-bubble.style.left =
-Math.random()*100 + "%";
-
-bubble.style.animationDuration =
-Math.random()*5 + 4 + "s";
-
-bubbleContainer.appendChild(bubble);
-
-setTimeout(()=>{
-bubble.remove();
-},7000);
-
-},1000);
-}
-
-createBubbles();
-
-function updateMinTaps(){
-
-minPossibleTaps =
-currentPairs * 2;
-
-minTapsSpan.innerText =
-minPossibleTaps;
-}
-
-function generateLetterSet(){
-
-const alphabet =
-"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-
-letterList =
-alphabet.slice(0,currentPairs);
-}
-
-function getDisplayLetter(letter,style){
-
-if(style.includes("lower")){
-return letter.toLowerCase();
-}
-
-return letter.toUpperCase();
-}
-
-function createBoard(){
-
-boardEl.innerHTML = "";
-
-let deck = [];
-
-letterList.forEach((letter,idx)=>{
-
-deck.push({
-pairId:idx,
-letter:letter
-});
-
-deck.push({
-pairId:idx,
-letter:letter
-});
-});
-
-for(let i=deck.length-1;i>0;i--){
-
-const j =
-Math.floor(Math.random()*(i+1));
-
-[deck[i],deck[j]] =
-[deck[j],deck[i]];
-}
-
-cardsArray = [];
-
-deck.forEach((item)=>{
-
-const cardDiv =
-document.createElement("div");
-
-cardDiv.classList.add("memory-card");
-
-cardDiv.dataset.pairId =
-item.pairId;
-
-const displayChar =
-getDisplayLetter(
-item.letter,
-currentStyle
-);
-
-cardDiv.innerHTML = `
-<div class="front-face">
-${displayChar}
-</div>
-
-<div class="back-face"></div>
-`;
-
-cardDiv.addEventListener(
-"click",
-()=>onCardClick(cardDiv)
-);
-
-boardEl.appendChild(cardDiv);
-
-cardsArray.push({
-element:cardDiv,
-letter:item.letter,
-pairId:item.pairId,
-matched:false
-});
-});
-
-boardEl.className =
-`game-board ${currentStyle}`;
-}
-
-function onCardClick(card){
-
-if(
-!gameActive ||
-blockBoard ||
-card.classList.contains("flip")
-){
-return;
-}
-
-const cardData =
-cardsArray.find(c=>c.element===card);
-
-if(cardData.matched) return;
-
-totalTaps++;
-
-tapCounterSpan.innerText =
-totalTaps;
-
-card.classList.add("flip");
-
-if(firstCard === null){
-
-firstCard = card;
-return;
-}
-
-if(secondCard === null &&
-firstCard !== card){
-
-secondCard = card;
-
-checkMatch();
-}
-}
-
-function checkMatch(){
-
-const firstData =
-cardsArray.find(
-c=>c.element===firstCard
-);
-
-const secondData =
-cardsArray.find(
-c=>c.element===secondCard
-);
-
-if(firstData.pairId === secondData.pairId){
-
-firstData.matched = true;
-secondData.matched = true;
-
-matchedPairs++;
-
-firstCard = null;
-secondCard = null;
-
-if(matchedPairs === currentPairs){
-
-setTimeout(
-endGameVictory,
-500
-);
-}
-
-}else{
-
-blockBoard = true;
-
-setTimeout(()=>{
-
-firstCard.classList.remove("flip");
-secondCard.classList.remove("flip");
-
-firstCard = null;
-secondCard = null;
-
-blockBoard = false;
-
-},800);
-}
-}
-
-function endGameVictory(){
-
-gameActive = false;
-
-const perfectWin =
-totalTaps === minPossibleTaps;
-
-if(typeof canvasConfetti === "function"){
-
-canvasConfetti({
-particleCount:150,
-spread:80,
-origin:{ y:0.6 }
-});
-}
-
-let msg = perfectWin
-
-? `🎉 VITÓRIA PERFEITA! 🎉<br>
-Você conseguiu com o mínimo
-de ${totalTaps} toques!
-<span class="trophy-badge">🏆</span>`
-
-: `🐠 Parabéns! Você completou em
-${totalTaps} toques.<br>
-O mínimo possível é
-${minPossibleTaps}.`;
-
-winMsgDiv.innerHTML = msg;
-
-winMsgDiv.style.display = "block";
-}
-
-function resetAndRestart(){
-
-blockBoard = false;
-gameActive = true;
-
-matchedPairs = 0;
-
-totalTaps = 0;
-
-tapCounterSpan.innerText =
-totalTaps;
-
-winMsgDiv.style.display = "none";
-
-firstCard = null;
-secondCard = null;
-
-generateLetterSet();
-createBoard();
-}
-
-function bindEvents(){
-
-restartBtn.addEventListener(
-"click",
-resetAndRestart
-);
-
-styleBtns.forEach(btn=>{
-
-btn.addEventListener("click",()=>{
-
-styleBtns.forEach(b=>
-b.classList.remove("active")
-);
-
-btn.classList.add("active");
-
-currentStyle =
-btn.dataset.style;
-
-resetAndRestart();
-});
-});
-
-qtyBtns.forEach(btn=>{
-
-btn.addEventListener("click",()=>{
-
-qtyBtns.forEach(b=>
-b.classList.remove("active")
-);
-
-btn.classList.add("active");
-
-currentPairs =
-parseInt(
-btn.dataset.pairs,
-10
-);
-
-updateMinTaps();
-
-resetAndRestart();
-});
-});
-}
-
-updateMinTaps();
-
-generateLetterSet();
-
-createBoard();
-
-bindEvents();
-
+    // -------------------- NOVA LÓGICA DE PONTUAÇÃO MÍNIMA --------------------
+    // Para jogo de memória justo: o jogador precisa virar cada carta uma vez para conhecê-las
+    // Com 16 cartas: mínimo = 16 (para ver todas) + 8 pares para fechar = 24 toques
+    // Com 20 cartas: mínimo = 20 + 10 pares = 30 toques
+    // Com 24 cartas: mínimo = 24 + 12 pares = 36 toques
+    function calcularMinimoPorPairs(pairs) {
+        const totalCards = pairs * 2;
+        return totalCards + pairs;  // visualizar todas + formar os pares
+    }
+    
+    let currentPairs = 8;       // 8 pares = 16 cartas
+    let currentStyle = "form-upper";
+    let totalTaps = 0;
+    let minPossibleTaps = calcularMinimoPorPairs(currentPairs);
+    
+    let gameActive = true;
+    let blockBoard = false;
+    let firstCard = null;
+    let secondCard = null;
+    let matchedPairs = 0;
+    let cardsArray = [];
+    let letterList = [];
+    let celebrateTimeout = null;
+    let isCelebrating = false;
+
+    const boardEl = document.getElementById("gameBoard");
+    const tapCounterSpan = document.getElementById("tapCounter");
+    const minTapsSpan = document.getElementById("minTapsDisplay");
+    const winMsgDiv = document.getElementById("winMessage");
+    const restartBtn = document.getElementById("restartGameBtn");
+    const styleBtns = document.querySelectorAll("[data-style]");
+    const qtyBtns = document.querySelectorAll("[data-pairs]");
+
+    function createBubbles(){
+        const bubbleContainer = document.getElementById("bubble-container");
+        setInterval(()=>{
+            if(document.hidden) return;
+            const bubble = document.createElement("div");
+            bubble.classList.add("bubble");
+            const size = Math.random()*30 + 15;
+            bubble.style.width = size + "px";
+            bubble.style.height = size + "px";
+            bubble.style.left = Math.random()*100 + "%";
+            bubble.style.animationDuration = Math.random()*5 + 4 + "s";
+            bubbleContainer.appendChild(bubble);
+            setTimeout(()=>{ bubble.remove(); },7000);
+        },1000);
+    }
+    createBubbles();
+
+    function updateMinTapsDisplay(){
+        minPossibleTaps = calcularMinimoPorPairs(currentPairs);
+        minTapsSpan.innerText = minPossibleTaps;
+        // Atualiza dica no badge
+        const badgeHint = document.getElementById("bestHint");
+        if(badgeHint) badgeHint.innerHTML = `🐙 Desafio: ${minPossibleTaps} toques (visualize todas!)`;
+    }
+
+    function generateLetterSet(){
+        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+        letterList = alphabet.slice(0, currentPairs);
+    }
+
+    function getDisplayLetter(letter, style){
+        if(style.includes("lower")) return letter.toLowerCase();
+        return letter.toUpperCase();
+    }
+
+    function animateCardsCelebration(){
+        const allCards = document.querySelectorAll(".memory-card");
+        allCards.forEach(card => {
+            card.classList.add("win-celebrate");
+            setTimeout(() => {
+                card.classList.remove("win-celebrate");
+            }, 600);
+        });
+    }
+
+    function performVictoryCelebration(){
+        if(isCelebrating) return;
+        isCelebrating = true;
+        
+        if(typeof canvasConfetti === "function"){
+            canvasConfetti({ particleCount: 220, spread: 110, origin: { y: 0.6 }, startVelocity: 22, colors: ['#ffd700', '#ffaa33', '#0a9396', '#ee9b00', '#52b788'] });
+            canvasConfetti({ particleCount: 120, spread: 60, origin: { y: 0.5, x: 0.2 }, startVelocity: 28 });
+            canvasConfetti({ particleCount: 120, spread: 60, origin: { y: 0.5, x: 0.8 }, startVelocity: 28 });
+            setTimeout(() => {
+                canvasConfetti({ particleCount: 350, spread: 130, origin: { y: 0.7 }, decay: 0.9 });
+            }, 180);
+        }
+        
+        animateCardsCelebration();
+        
+        const perfectWin = (totalTaps === minPossibleTaps);
+        let msg = perfectWin 
+            ? `🎉✨ VITÓRIA PERFEITA! ✨🎉<br>Você usou exatamente ${totalTaps} toques (míniMO ${minPossibleTaps})!<span class="trophy-badge">🏆🐟</span><br>Memória impecável!`
+            : `🐬🎉 PARABÉNS! VOCÊ VENCEU! 🎉🐬<br>Completou em ${totalTaps} toques.<br>O mínimo justo é ${minPossibleTaps} toques (visualizar + combinar).`;
+        winMsgDiv.innerHTML = msg;
+        winMsgDiv.style.display = "block";
+        winMsgDiv.classList.add("celebration-text");
+        setTimeout(() => { winMsgDiv.classList.remove("celebration-text"); }, 550);
+    }
+
+    // Função que finaliza o jogo, comemora e reinicia automaticamente (após desvirar cartas)
+    function endGameVictoryWithAutoReset(){
+        if(!gameActive) return;
+        gameActive = false;
+        
+        performVictoryCelebration();
+        
+        if(celebrateTimeout) clearTimeout(celebrateTimeout);
+        celebrateTimeout = setTimeout(() => {
+            // Desvira todas as cartas (remove classe flip)
+            const allCardElements = document.querySelectorAll(".memory-card");
+            allCardElements.forEach(card => {
+                card.classList.remove("flip");
+                card.classList.remove("win-celebrate");
+            });
+            
+            // Reinicia totalmente o estado para nova partida (novas posições)
+            resetGameStateForAutoRestart();
+            
+            // Recria o tabuleiro com letras na mesma quantidade, mas posições aleatórias
+            generateLetterSet();
+            createBoard();    // Embaralhamento interno garante novas posições
+            
+            gameActive = true;
+            blockBoard = false;
+            isCelebrating = false;
+            winMsgDiv.style.display = "none";
+            totalTaps = 0;
+            matchedPairs = 0;
+            tapCounterSpan.innerText = totalTaps;
+            firstCard = null;
+            secondCard = null;
+        }, 1900);
+    }
+    
+    function resetGameStateForAutoRestart(){
+        matchedPairs = 0;
+        totalTaps = 0;
+        tapCounterSpan.innerText = totalTaps;
+        firstCard = null;
+        secondCard = null;
+        blockBoard = false;
+    }
+    
+    function createBoard(){
+        boardEl.innerHTML = "";
+        let deck = [];
+        letterList.forEach((letter, idx) => {
+            deck.push({ pairId: idx, letter: letter });
+            deck.push({ pairId: idx, letter: letter });
+        });
+        // shuffle completo => posições sempre diferentes
+        for(let i = deck.length - 1; i > 0; i--){
+            const j = Math.floor(Math.random() * (i + 1));
+            [deck[i], deck[j]] = [deck[j], deck[i]];
+        }
+        
+        cardsArray = [];
+        deck.forEach((item) => {
+            const cardDiv = document.createElement("div");
+            cardDiv.classList.add("memory-card");
+            cardDiv.dataset.pairId = item.pairId;
+            const displayChar = getDisplayLetter(item.letter, currentStyle);
+            cardDiv.innerHTML = `
+                <div class="front-face">${displayChar}</div>
+                <div class="back-face"></div>
+            `;
+            cardDiv.addEventListener("click", () => onCardClick(cardDiv));
+            boardEl.appendChild(cardDiv);
+            cardsArray.push({
+                element: cardDiv,
+                letter: item.letter,
+                pairId: item.pairId,
+                matched: false
+            });
+        });
+        boardEl.className = `game-board ${currentStyle}`;
+    }
+    
+    function onCardClick(card){
+        if(!gameActive || blockBoard || isCelebrating) return;
+        const cardData = cardsArray.find(c => c.element === card);
+        if(cardData.matched) return;
+        if(card.classList.contains("flip")) return;
+        
+        totalTaps++;
+        tapCounterSpan.innerText = totalTaps;
+        card.classList.add("flip");
+        
+        if(firstCard === null){
+            firstCard = card;
+            return;
+        }
+        if(secondCard === null && firstCard !== card){
+            secondCard = card;
+            checkMatch();
+        }
+    }
+    
+    function checkMatch(){
+        const firstData = cardsArray.find(c => c.element === firstCard);
+        const secondData = cardsArray.find(c => c.element === secondCard);
+        
+        if(firstData.pairId === secondData.pairId){
+            firstData.matched = true;
+            secondData.matched = true;
+            matchedPairs++;
+            firstCard = null;
+            secondCard = null;
+            
+            if(matchedPairs === currentPairs){
+                endGameVictoryWithAutoReset();
+            }
+        } else {
+            blockBoard = true;
+            setTimeout(() => {
+                if(firstCard) firstCard.classList.remove("flip");
+                if(secondCard) secondCard.classList.remove("flip");
+                firstCard = null;
+                secondCard = null;
+                blockBoard = false;
+            }, 800);
+        }
+    }
+    
+    // Reset manual (botão Nova Partida) - também reinicia com novas posições e zera toques, sem comemoração extra
+    function manualReset(){
+        if(celebrateTimeout) clearTimeout(celebrateTimeout);
+        isCelebrating = false;
+        gameActive = true;
+        blockBoard = false;
+        matchedPairs = 0;
+        totalTaps = 0;
+        tapCounterSpan.innerText = totalTaps;
+        winMsgDiv.style.display = "none";
+        firstCard = null;
+        secondCard = null;
+        generateLetterSet();
+        createBoard();
+        const allCards = document.querySelectorAll(".memory-card");
+        allCards.forEach(c => c.classList.remove("flip", "win-celebrate"));
+    }
+    
+    // Lidar com troca de estilo: mantém a quantidade de pares e recria com novas posições
+    function handleStyleChange(style){
+        currentStyle = style;
+        manualReset();
+    }
+    
+    // Trocar quantidade de cartas: atualiza mínimo e reinicia
+    function handleQtyChange(pairs){
+        currentPairs = pairs;
+        updateMinTapsDisplay();
+        manualReset();
+    }
+    
+    function bindEvents(){
+        restartBtn.addEventListener("click", () => {
+            if(celebrateTimeout) clearTimeout(celebrateTimeout);
+            manualReset();
+        });
+        
+        styleBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                styleBtns.forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                currentStyle = btn.dataset.style;
+                manualReset();
+            });
+        });
+        
+        qtyBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                qtyBtns.forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                const newPairs = parseInt(btn.dataset.pairs, 10);
+                currentPairs = newPairs;
+                updateMinTapsDisplay();
+                manualReset();
+            });
+        });
+    }
+    
+    // Botão de áudio apenas feedback visual
+    const audioBtn = document.getElementById("themeAudioBtn");
+    if(audioBtn){
+        audioBtn.addEventListener("click", function(){
+            this.style.transform = "scale(0.95)";
+            setTimeout(()=> this.style.transform = "", 120);
+        });
+    }
+    
+    // Inicialização
+    updateMinTapsDisplay();
+    generateLetterSet();
+    createBoard();
+    bindEvents();
 })();
-
 </script>
-
 </body>
 </html>
