@@ -10,6 +10,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Playwrite+BR:wght@100..400&display=swap" rel="stylesheet">
     
+    <!-- Canvas Confetti para efeitos mágicos -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
     <style>
         :root {
             --primary: #ab47bc; 
@@ -747,8 +750,8 @@
 <div id="game-wrapper">
     <div class="game-header">
         <div class="top-bar">
-            <!-- BOTÃO DOURADO CINTILANTE - VOLTAR À PÁGINA ANTERIOR -->
-            <button class="btn-dourado" id="btnVoltarDourado" title="Voltar à página anterior">
+            <!-- BOTÃO DOURADO CINTILANTE - VOLTAR PARA A PÁGINA ANTERIOR (Pesca de Letrinhas) -->
+            <button class="btn-dourado" id="btnVoltarDourado" title="Voltar para Pesca de Letrinhas">
                 ⬅️⭐ Voltar
             </button>
             <button id="btn-audio" class="icon-btn" onclick="toggleAudio()">🔇</button>
@@ -858,19 +861,21 @@
     let jogoAtivo = true;
     let aguardandoProxima = false;
 
-    // ========== BOTÃO DOURADO - VOLTAR PARA PÁGINA ANTERIOR ==========
+    // ========== BOTÃO DOURADO - VOLTAR PARA PÁGINA ANTERIOR (Pesca de Letrinhas) ==========
     function voltarParaPaginaAnterior() {
         // Efeito de confete dourado
-        confetti({ 
-            particleCount: 80, 
-            spread: 70, 
-            origin: { y: 0.3 }, 
-            colors: ['#ffd700', '#ffaa33', '#ffcc66'],
-            startVelocity: 10
-        });
+        if (typeof confetti !== 'undefined') {
+            confetti({ 
+                particleCount: 80, 
+                spread: 70, 
+                origin: { y: 0.3 }, 
+                colors: ['#ffd700', '#ffaa33', '#ffcc66'],
+                startVelocity: 10
+            });
+        }
         
-        // URL da página inicial (Ilha das Vogais)
-        const urlDestino = 'https://ilha-das-vogais.vercel.app/';
+        // URL CORRETA: Pesca de Letrinhas (página anterior)
+        const urlDestino = 'https://alfabeto-mu.vercel.app/index_pesca.html';
         
         // Se estiver em modo fullscreen, propaga a flag
         if (document.fullscreenElement) {
@@ -884,7 +889,10 @@
     }
     
     const btnVoltarDourado = document.getElementById('btnVoltarDourado');
+    // Remove qualquer listener anterior e adiciona o novo
+    btnVoltarDourado.removeEventListener('click', voltarParaPaginaAnterior);
     btnVoltarDourado.addEventListener('click', voltarParaPaginaAnterior);
+    btnVoltarDourado.addEventListener('touchstart', voltarParaPaginaAnterior, { passive: false });
 
     // Atualizar estado do fullscreen
     function atualizarEstadoFullscreen() {
