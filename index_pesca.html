@@ -123,6 +123,7 @@
             display: flex;
             gap: 12px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .btn-musica, .btn-fullscreen {
@@ -152,6 +153,45 @@
             background: rgba(255, 205, 126, 0.4);
             box-shadow: 0 0 15px rgba(255,205,126,0.5);
             color: white;
+        }
+
+        /* ===== BOTÃO DOURADO CINTILANTE ===== */
+        .btn-dourado {
+            font-family: 'Nunito', sans-serif;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            background: linear-gradient(135deg, #f5b042, #ffd700, #f5a623);
+            border: 2px solid #fff2b5;
+            color: #3a2a1a;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            animation: brilhoDourado 1.5s ease-in-out infinite alternate;
+            text-shadow: 0 1px 2px rgba(255,255,200,0.5);
+        }
+
+        @keyframes brilhoDourado {
+            0% {
+                box-shadow: 0 0 5px rgba(255, 215, 0, 0.4);
+                background: linear-gradient(135deg, #f5b042, #ffd700);
+            }
+            100% {
+                box-shadow: 0 0 25px rgba(255, 215, 0, 0.9), 0 0 8px rgba(255, 220, 100, 0.7);
+                background: linear-gradient(135deg, #ffcc44, #ffea8c);
+            }
+        }
+
+        .btn-dourado:hover {
+            transform: scale(1.05);
+            animation: none;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 1);
+            background: linear-gradient(135deg, #ffdd66, #ffea9e);
         }
 
         /* Container principal */
@@ -302,10 +342,11 @@
         @media (max-width: 560px) {
             .header-container { flex-direction: column; }
             .titulo-reino { font-size: 1rem; }
-            .btn-musica, .btn-fullscreen { padding: 6px 12px; font-size: 0.7rem; }
+            .btn-musica, .btn-fullscreen, .btn-dourado { padding: 6px 12px; font-size: 0.7rem; }
             .banner-marinho h1 { font-size: 1.2rem; }
             .game-icon { font-size: 3rem; }
             .game-card h2 { font-size: 1.2rem; }
+            .botoes-magicos { justify-content: center; }
         }
 
         .tridente-decor {
@@ -318,6 +359,17 @@
             pointer-events: none;
             filter: drop-shadow(0 0 5px cyan);
         }
+
+        /* Indicador de modo mágico */
+        .magic-indicator {
+            background: rgba(255, 215, 0, 0.3);
+            border-radius: 40px;
+            padding: 4px 10px;
+            font-size: 0.7rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
     </style>
 </head>
 <body>
@@ -329,13 +381,16 @@
 <div class="tridente-decor">🔱🐚</div>
 <div id="particulas-container"></div>
 
-<!-- HEADER REAL COM FULLSCREEN E MÚSICA -->
+<!-- HEADER REAL COM BOTÕES: MÚSICA + FULLSCREEN + BOTÃO DOURADO -->
 <header class="real-header">
     <div class="header-container">
         <div class="titulo-reino">
             <span>🧜‍♂️</span> Reino da Pesca Submersa · Alfabeto e Sílabas <span>🧜‍♀️</span>
         </div>
         <div class="botoes-magicos">
+            <button class="btn-dourado" id="btnVoltarAlfabeto" title="Voltar para o Reino do Alfabeto">
+                ⬅️🔱 Voltar ao Alfabeto
+            </button>
             <button class="btn-musica" id="musicaBtn" onclick="toggleMusicaFundo()">🎵 Música ON</button>
             <button class="btn-fullscreen" id="fullscreenBtn" onclick="toggleFullScreenMarinho()">⛶ Tela Cheia</button>
         </div>
@@ -455,8 +510,37 @@
     atualizarIconeFullscreen();
 
     // ============================================================
-    // 3. FORÇAR TODOS OS LINKS DAS SUBPÁGINAS A ABRIREM EM FULLSCREEN (se o índice estiver em tela cheia)
-    //    Adiciona ?fullscreen=force e sessionStorage como garantia
+    // 3. BOTÃO DOURADO - VOLTAR PARA O REINO DO ALFABETO
+    // ============================================================
+    const btnVoltarAlfabeto = document.getElementById('btnVoltarAlfabeto');
+    
+    function voltarParaAlfabeto() {
+        // Efeito de confete dourado
+        confetti({ 
+            particleCount: 80, 
+            spread: 70, 
+            origin: { y: 0.3 }, 
+            colors: ['#ffd700', '#ffaa33', '#ffcc66'],
+            startVelocity: 10
+        });
+        
+        const urlDestino = 'https://alfabeto-mu.vercel.app/';
+        
+        // Se estiver em modo fullscreen, propaga a flag
+        if (isFullscreenActive) {
+            const separador = urlDestino.includes('?') ? '&' : '?';
+            const novaUrl = urlDestino + separador + 'fullscreen=force';
+            sessionStorage.setItem('parent_fullscreen_request', 'true');
+            window.location.href = novaUrl;
+        } else {
+            window.location.href = urlDestino;
+        }
+    }
+    
+    btnVoltarAlfabeto.addEventListener('click', voltarParaAlfabeto);
+
+    // ============================================================
+    // 4. FORÇAR TODOS OS LINKS DAS SUBPÁGINAS A ABRIREM EM FULLSCREEN
     // ============================================================
     function adicionarFlagFullscreenNaUrl(url) {
         if (!url) return url;
@@ -521,7 +605,7 @@
     })();
 
     // ============================================================
-    // 4. DECORAÇÕES MARINHAS: BOLHAS, CONCHAS, PARTÍCULAS
+    // 5. DECORAÇÕES MARINHAS: BOLHAS, CONCHAS, PARTÍCULAS
     // ============================================================
     function criarBolhasMarinhas() {
         for (let i = 0; i < 20; i++) {
@@ -575,6 +659,17 @@
         setTimeout(() => {
             confetti({ particleCount: 120, spread: 80, origin: { y: 0.7 }, colors: ['#ffcd7e', '#2aa9c9', '#ffaa55'], startVelocity: 12 });
         }, 400);
+        
+        // Efeito de boas-vindas no botão dourado
+        setTimeout(() => {
+            const btn = document.getElementById('btnVoltarAlfabeto');
+            if(btn) {
+                btn.style.animation = 'brilhoDourado 0.8s ease-in-out 3';
+                setTimeout(() => {
+                    btn.style.animation = 'brilhoDourado 1.5s ease-in-out infinite alternate';
+                }, 2400);
+            }
+        }, 1000);
     });
 
     // Recriar conchas periodicamente
@@ -600,7 +695,7 @@
         }
     }, { once: true });
     
-    console.log("🌊 Reino da Pesca Submersa: fullscreen e música na barra superior. Links forçam fullscreen via parâmetro.");
+    console.log("🌊 Reino da Pesca Submersa: fullscreen e música na barra superior. Botão dourado para voltar ao Alfabeto!");
 </script>
 
 <!-- ============================================================ -->
