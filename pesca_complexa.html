@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Playwrite+BR:wght@100..400&display=swap" rel="stylesheet">
+    
+    <!-- Canvas Confetti para efeitos mágicos -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
@@ -38,12 +41,52 @@
         .icon-btn { background: rgba(0, 0, 0, 0.8); border: 2px solid var(--secondary); color: white; padding: 6px 12px; border-radius: 40px; cursor: pointer; font-size: 14px; backdrop-filter: blur(4px); transition: transform 0.2s; display: inline-flex; align-items: center; gap: 6px; font-weight: bold; white-space: nowrap; }
         .icon-btn:active { transform: scale(0.95); }
         
+        /* ===== BOTÃO DOURADO CINTILANTE ===== */
+        .btn-dourado {
+            font-family: 'Comic Neue', sans-serif;
+            background: linear-gradient(135deg, #f5b042, #ffd700, #f5a623);
+            border: 2px solid #fff2b5;
+            color: #3a2a1a;
+            padding: 6px 12px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            backdrop-filter: blur(4px);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            animation: brilhoDourado 1.5s ease-in-out infinite alternate;
+            text-shadow: 0 1px 2px rgba(255,255,200,0.5);
+            white-space: nowrap;
+        }
+
+        @keyframes brilhoDourado {
+            0% {
+                box-shadow: 0 0 5px rgba(255, 215, 0, 0.4);
+                background: linear-gradient(135deg, #f5b042, #ffd700);
+            }
+            100% {
+                box-shadow: 0 0 25px rgba(255, 215, 0, 0.9), 0 0 8px rgba(255, 220, 100, 0.7);
+                background: linear-gradient(135deg, #ffcc44, #ffea8c);
+            }
+        }
+
+        .btn-dourado:hover {
+            transform: scale(1.05);
+            animation: none;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 1);
+            background: linear-gradient(135deg, #ffdd66, #ffea9e);
+        }
+        .btn-dourado:active { transform: scale(0.95); }
+        
         .modo-barra { display: flex; flex-wrap: wrap; gap: 6px; background: rgba(0,0,0,0.5); padding: 6px 10px; border-radius: 40px; border: 1px solid var(--primary); backdrop-filter: blur(4px); justify-content: center; }
         .modo-btn { background: rgba(255,255,255,0.1); border: 2px solid transparent; border-radius: 12px; padding: 4px 8px; font-size: 18px; cursor: pointer; color: white; transition: all 0.25s ease; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 36px; }
         .modo-btn .label-modo { font-size: 7px; font-family: var(--print-font); font-weight: 700; text-transform: uppercase; opacity: 0.8; }
         .modo-btn .exemplo-letra { font-size: 22px; line-height: 1; }
         
-        /* Classes de Fonte para os Botões de Modo */
         .modo-btn.maiusc-forma .exemplo-letra, .modo-btn.minusc-forma .exemplo-letra { font-family: var(--print-font); font-weight: 700; }
         .modo-btn.maiusc-cursiva .exemplo-letra, .modo-btn.minusc-cursiva .exemplo-letra { font-family: var(--cursive-school); font-weight: 400; }
         
@@ -53,11 +96,9 @@
         .instrucao-wrapper { position: relative; z-index: 30; display: flex; justify-content: center; margin: 15px 0 10px; pointer-events: auto; }
         .instrucao { font-size: 16px; font-weight: 900; background: rgba(0,0,0,0.75); padding: 8px 18px; border-radius: 50px; backdrop-filter: blur(8px); display: flex; align-items: baseline; gap: 10px; cursor: pointer; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border: 1px solid var(--secondary); pointer-events: auto; }
         
-        /* Sílaba Alvo e Sílabas nas Criaturas */
         #silabaAlvo { color: var(--secondary); font-size: 28px; font-weight: bold; background: linear-gradient(135deg, #1a2a3a, #0a1a2a); padding: 0 15px; border-radius: 40px; letter-spacing: 2px; text-shadow: 0 0 8px #ff9800; cursor: pointer; transition: transform 0.15s ease; border: 1px solid var(--primary); }
         #silabaAlvo.pulsando { transform: scale(1.25); text-shadow: 0 0 20px #ffca28; border-color: var(--secondary); }
         
-        /* Estilos Dinâmicos de Fonte */
         .font-print { font-family: var(--print-font) !important; font-weight: 700 !important; }
         .font-cursive { font-family: var(--cursive-school) !important; font-weight: 400 !important; }
 
@@ -91,7 +132,6 @@
         @keyframes fadeUp { 0% { opacity: 0; transform: translateX(-50%) translateY(20px); } 20% { opacity: 1; transform: translateX(-50%) translateY(0); } 80% { opacity: 1; } 100% { opacity: 0; transform: translateX(-50%) translateY(-50px); } }
         
         .progresso-categoria { position: fixed; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); padding: 6px 12px; border-radius: 25px; font-size: 10px; backdrop-filter: blur(5px); color: var(--secondary); pointer-events: none; z-index: 100; }
-        .btn-voltar { position: fixed; bottom: 15px; left: 15px; background: linear-gradient(135deg, #00acc1, #006064); border: none; border-radius: 40px; padding: 10px 18px; font-size: 12px; font-weight: bold; color: white; cursor: pointer; z-index: 200; backdrop-filter: blur(4px); pointer-events: auto; transition: all 0.3s; }
         
         .nav-buttons { display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap; justify-content: center; }
         .nav-btn { background: linear-gradient(135deg, #00acc1, #006064); border: 2px solid var(--secondary); padding: 12px 24px; font-size: 18px; border-radius: 40px; cursor: pointer; color: white; transition: transform 0.2s; }
@@ -110,7 +150,6 @@
             .creature-icon { font-size: 85px; }
             .silaba-creature { font-size: 20px; padding: 6px 14px; }
             .progresso-categoria { bottom: 20px; right: 20px; padding: 10px 18px; font-size: 14px; }
-            .btn-voltar { bottom: 30px; left: 30px; padding: 14px 28px; font-size: 18px; }
         }
 
         @media (max-width: 700px) {
@@ -119,6 +158,10 @@
             .instrucao-wrapper { margin: 8px 0 4px; }
             .instrucao { font-size: 14px; padding: 6px 12px; }
             #silabaAlvo { font-size: 20px; padding: 0 8px; }
+            .btn-dourado, .icon-btn { font-size: 11px; padding: 5px 10px; }
+        }
+        @media (max-width: 480px) {
+            .btn-dourado, .icon-btn { font-size: 10px; padding: 4px 8px; }
         }
     </style>
 </head>
@@ -137,6 +180,10 @@
 <div id="game-wrapper">
     <div class="game-header">
         <div class="top-bar">
+            <!-- BOTÃO DOURADO CINTILANTE - VOLTAR PARA PESCA DE LETRINHAS -->
+            <button class="btn-dourado" id="btnVoltarDourado" title="Voltar para Pesca de Letrinhas">
+                ⬅️⭐ Voltar
+            </button>
             <button id="btnMenuPrincipal" class="icon-btn">🏠 Menu</button>
             <button id="btnEscolherCategoria" class="icon-btn">📚 Famílias</button>
             <button id="btnFullscreen" class="icon-btn">⛶ Tela</button>
@@ -154,7 +201,6 @@
     </div>
     <div class="oceano" id="aquario"></div>
     <div class="progresso-categoria" id="progressHint">🏆 Tesouros do Mar Profundo</div>
-    <button class="btn-voltar" id="btnVoltar"><span>🏝️</span> Voltar ao Menu</button>
 </div>
 
 <div id="modal-categorias">
@@ -226,6 +272,37 @@
     let criaturasNaTela = window.innerWidth < 768 ? 3 : (window.innerWidth < 1024 ? 4 : 5);
     let transicaoCategoria = false;
 
+    // ========== BOTÃO DOURADO - VOLTAR PARA PÁGINA ANTERIOR (Pesca de Letrinhas) ==========
+    function voltarParaPaginaAnterior() {
+        // Efeito de confete dourado
+        if (typeof confetti !== 'undefined') {
+            confetti({ 
+                particleCount: 80, 
+                spread: 70, 
+                origin: { y: 0.3 }, 
+                colors: ['#ffd700', '#ffaa33', '#ffcc66'],
+                startVelocity: 10
+            });
+        }
+        
+        // URL CORRETA: Pesca de Letrinhas (página anterior)
+        const urlDestino = 'https://alfabeto-mu.vercel.app/index_pesca.html';
+        
+        // Se estiver em modo fullscreen, propaga a flag
+        if (document.fullscreenElement) {
+            const separador = urlDestino.includes('?') ? '&' : '?';
+            const novaUrl = urlDestino + separador + 'fullscreen=force';
+            sessionStorage.setItem('parent_fullscreen_request', 'true');
+            window.location.href = novaUrl;
+        } else {
+            window.location.href = urlDestino;
+        }
+    }
+    
+    const btnVoltarDourado = document.getElementById('btnVoltarDourado');
+    btnVoltarDourado.addEventListener('click', voltarParaPaginaAnterior);
+    btnVoltarDourado.addEventListener('touchstart', voltarParaPaginaAnterior, { passive: false });
+
     // ---------- ÁUDIO ----------
     function tocarAudioMP3(arquivo, callback) {
         if (!arquivo) { if(callback) callback(); return; }
@@ -242,7 +319,7 @@
         audio.play().catch(e => { console.warn("Erro ao tocar áudio:", arquivo, e); done(); });
         audio.onended = done;
         audio.onerror = done;
-        setTimeout(done, 1500); // Segurança
+        setTimeout(done, 1500);
     }
 
     function tocarSilaba(silabaObj, callback) {
@@ -269,14 +346,12 @@
         
         const config = mapaModo[modoGrafia];
         
-        // Atualiza Sílaba Alvo
         if (silabasAtuais.length && indiceSilabaAtual < silabasAtuais.length) {
             const silaba = silabasAtuais[indiceSilabaAtual];
             silabaAlvoElem.innerText = config.transform(silaba.texto);
             silabaAlvoElem.className = config.fontClass;
         }
         
-        // Atualiza criaturas na tela
         document.querySelectorAll('.silaba-creature').forEach(span => {
             const original = span.dataset.original;
             span.innerText = config.transform(original);
@@ -478,7 +553,6 @@
     }
 
     // Event Listeners
-    document.getElementById("btnVoltar").onclick = () => modalNavegacao.style.display="flex";
     document.getElementById("btnCancelarVolta").onclick = () => modalNavegacao.style.display = "none";
     document.getElementById("btnConfirmarVolta").onclick = () => { window.location.href = "index_pesca.html"; };
     document.getElementById("btnRepetirSilaba").onclick = repetirSilabaAlvo;
