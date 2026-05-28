@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-<title>Memória Oceânica – Movimento Suave dos Peixes</title>
+<title>Memória Oceânica – Bolhas Mágicas</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700;900&family=Playwrite+BR+Guides&display=swap" rel="stylesheet">
 
@@ -236,7 +236,7 @@ h1{
     text-transform:lowercase;
 }
 
-/* ===== MOVIMENTO DOS PEIXES - VERSÃO SUAVE, LENTA E SUTIL ===== */
+/* ===== MOVIMENTO DOS PEIXES - VERSÃO SUAVE ===== */
 .back-face {
     background: linear-gradient(135deg, #184e68 0%, #0a5e6b 100%);
     border-color:#ffffff;
@@ -244,7 +244,6 @@ h1{
     position: relative;
 }
 
-/* Peixe principal - balanço calmo e suave */
 .back-face::before {
     content: "🐟";
     font-size: 2.8rem;
@@ -254,7 +253,6 @@ h1{
     opacity: 0.85;
 }
 
-/* Peixinho secundário - movimento ainda mais sutil */
 .back-face::after {
     content: "🐠";
     font-size: 1.5rem;
@@ -263,7 +261,6 @@ h1{
     opacity: 0.8;
 }
 
-/* Animação suave principal */
 @keyframes fishGentleSway {
     0% { transform: translate(-5%, -8%) rotate(-2deg); }
     25% { transform: translate(3%, -3%) rotate(1deg); }
@@ -272,7 +269,6 @@ h1{
     100% { transform: translate(-5%, -8%) rotate(-2deg); }
 }
 
-/* Peixe pequeno com movimento discreto */
 @keyframes smallFishGentle {
     0% { transform: translate(8%, 15%) rotate(3deg); }
     33% { transform: translate(2%, 10%) rotate(1deg); }
@@ -297,10 +293,6 @@ h1{
 .memory-card.win-celebrate .front-face,
 .memory-card.win-celebrate .back-face {
     animation: celebrateSoft 0.7s ease-in-out 2;
-}
-.memory-card.win-celebrate .back-face::before,
-.memory-card.win-celebrate .back-face::after {
-    animation-duration: 5s;
 }
 
 .win-message{
@@ -357,6 +349,47 @@ canvas#confetti-canvas{
     z-index:2000;
 }
 
+/* Container para bolhas de comemoração */
+.celebration-bubbles-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1999;
+    overflow: hidden;
+}
+
+.celebration-bubble {
+    position: fixed;
+    bottom: -30px;
+    background: radial-gradient(circle, rgba(200,230,255,0.9) 0%, rgba(100,200,255,0.5) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1999;
+    box-shadow: 0 0 15px rgba(100,200,255,0.6), inset 0 0 8px rgba(255,255,255,0.8);
+    animation: floatUpBubble 3s ease-out forwards;
+}
+
+@keyframes floatUpBubble {
+    0% {
+        transform: translateY(0) scale(0.3);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.9;
+    }
+    50% {
+        opacity: 0.8;
+        transform: translateY(-50vh) scale(1);
+    }
+    100% {
+        transform: translateY(-110vh) scale(1.2);
+        opacity: 0;
+    }
+}
+
 /* Botões de acessibilidade e fullscreen */
 .accessibility-control {
     margin-top: 15px;
@@ -387,16 +420,17 @@ canvas#confetti-canvas{
 </head>
 <body>
 <div id="bubble-container" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1; overflow:hidden;"></div>
+<div class="celebration-bubbles-container" id="celebrationBubblesContainer"></div>
 <div class="game-container">
 <div class="game-area">
 <div class="game-header">
-<h1>🌊 MEMÓRIA OCEÂNICA 🌊</h1>
+<h1>🌊 MEMÓRIA OCEÂNICA 🫧</h1>
 <button class="btn-icon" id="themeAudioBtn">🐟 MOVIMENTO SUAVE</button>
 </div>
 <div class="game-board" id="gameBoard"></div>
 <div class="win-message" id="winMessage"></div>
 <button class="restart-btn" id="restartGameBtn">🐚 NOVA PARTIDA 🐚</button>
-<footer>✨ Peixes se movem de forma calma e suave. Jogo pensado para todos! ✨</footer>
+<footer>✨ Peixes se movem de forma calma e suave. Vitória traz bolhas mágicas! ✨</footer>
 </div>
 <div class="side-panel">
 <a href="https://alfabeto-mu.vercel.app/" class="btn-back-home">⚓ VOLTAR AO INÍCIO</a>
@@ -439,7 +473,6 @@ canvas#confetti-canvas{
     try {
         applauseAudio = new Audio('aplause.mp3');
         applauseAudio.preload = 'auto';
-        // Configura para tocar assim que possível
         if(applauseAudio) {
             applauseAudio.volume = 0.8;
         }
@@ -447,12 +480,58 @@ canvas#confetti-canvas{
         console.log("Áudio não pôde ser carregado:", e);
     }
     
-    // Função para tocar aplausos
     function playApplause() {
         if(applauseAudio) {
-            // Reinicia o áudio se já estiver tocando
             applauseAudio.currentTime = 0;
-            applauseAudio.play().catch(e => console.log("Áudio bloqueado pelo navegador:", e));
+            applauseAudio.play().catch(e => console.log("Áudio bloqueado:", e));
+        }
+    }
+    
+    // ===== NOVO EFEITO: BOLHAS DE COMEMORAÇÃO =====
+    const bubblesContainer = document.getElementById("celebrationBubblesContainer");
+    
+    function createCelebrationBubbles() {
+        if(!bubblesContainer) return;
+        
+        // Remove bolhas antigas se houver
+        const oldBubbles = bubblesContainer.querySelectorAll('.celebration-bubble');
+        oldBubbles.forEach(bubble => bubble.remove());
+        
+        // Cria muitas bolhas (entre 80 e 120 bolhas)
+        const bubbleCount = Math.floor(Math.random() * 60) + 80; // 80-140 bolhas
+        
+        for(let i = 0; i < bubbleCount; i++) {
+            setTimeout(() => {
+                const bubble = document.createElement('div');
+                bubble.classList.add('celebration-bubble');
+                
+                // Tamanhos variados e bonitos
+                const size = Math.random() * 50 + 20; // 20px a 70px
+                bubble.style.width = size + 'px';
+                bubble.style.height = size + 'px';
+                
+                // Posição horizontal aleatória
+                bubble.style.left = Math.random() * 100 + '%';
+                
+                // Duração variada para efeito mais natural (2 a 4 segundos)
+                const duration = Math.random() * 2 + 2.5;
+                bubble.style.animationDuration = duration + 's';
+                
+                // Atraso de início para criar cascata
+                bubble.style.animationDelay = (Math.random() * 0.5) + 's';
+                
+                // Bolhas com diferentes opacidades e brilhos
+                const opacity = Math.random() * 0.5 + 0.4;
+                bubble.style.background = `radial-gradient(circle, rgba(200,230,255,${opacity + 0.2}) 0%, rgba(100,200,255,${opacity}) 70%)`;
+                bubble.style.boxShadow = `0 0 ${Math.random() * 15 + 8}px rgba(100,200,255,0.6), inset 0 0 ${Math.random() * 10 + 5}px rgba(255,255,255,0.7)`;
+                
+                bubblesContainer.appendChild(bubble);
+                
+                // Remove a bolha após a animação
+                setTimeout(() => {
+                    if(bubble && bubble.remove) bubble.remove();
+                }, duration * 1000 + 500);
+            }, i * 20); // Cascata suave de criação
         }
     }
     
@@ -487,7 +566,7 @@ canvas#confetti-canvas{
     const toggleBtn = document.getElementById("toggleAnimationsBtn");
     const fullscreenBtn = document.getElementById("fullscreenBtn");
     
-    // ===== FUNÇÃO DE TELA CHEIA =====
+    // Função de tela cheia
     function toggleFullscreen() {
         if (!document.fullscreenElement) {
             document.documentElement.requestFullscreen().catch(err => {
@@ -498,12 +577,10 @@ canvas#confetti-canvas{
         }
     }
     
-    // Evento do botão fullscreen
     if(fullscreenBtn) {
         fullscreenBtn.addEventListener("click", toggleFullscreen);
     }
     
-    // Função para controlar animações (acessibilidade)
     function setAnimationsEnabled(enabled) {
         animationsEnabled = enabled;
         if (enabled) {
@@ -515,7 +592,6 @@ canvas#confetti-canvas{
         }
     }
     
-    // CSS dinâmico para desabilitar animações
     const disableAnimStyle = document.createElement('style');
     disableAnimStyle.textContent = `
         body.no-fish-animation .back-face::before,
@@ -596,8 +672,8 @@ canvas#confetti-canvas{
     function showVictoryMessage(){
         const perfectWin = (totalTaps === minPossibleTaps);
         let msg = perfectWin 
-            ? `🏆✨ VITÓRIA ESPECIAL! ✨🏆<br>${totalTaps} toques (mínimo ${minPossibleTaps})!<span class="trophy-badge">🐟🌟</span><br>Memória brilhante! 👏`
-            : `🎉🐙 PARABÉNS! VOCÊ VENCEU! 🐙🎉<br>Toques: ${totalTaps}  |  Mínimo: ${minPossibleTaps}<br>🐠 Os peixes nadaram felizes! 👏🎉`;
+            ? `🏆✨ VITÓRIA ESPECIAL! ✨🏆<br>${totalTaps} toques (mínimo ${minPossibleTaps})!<span class="trophy-badge">🐟🌟🫧</span><br>Memória brilhante! 👏`
+            : `🎉🐙 PARABÉNS! VOCÊ VENCEU! 🐙🎉<br>Toques: ${totalTaps}  |  Mínimo: ${minPossibleTaps}<br>🐠 Os peixes nadaram felizes! 👏🫧🎉`;
         winMsgDiv.innerHTML = msg;
         winMsgDiv.style.display = "block";
         winMsgDiv.style.animation = "none";
@@ -609,11 +685,12 @@ canvas#confetti-canvas{
         gameFinished = true;
         gameActive = false;
         
-        // === FOGOS E APLAUSOS JUNTOS ===
+        // === TRÊS EFEITOS JUNTOS: CONFETE + BOLHAS + APLAUSOS ===
         triggerConfettiCelebration();
+        createCelebrationBubbles();  // NOVO EFEITO DE BOLHAS MÁGICAS
         animateCardsCelebration();
         showVictoryMessage();
-        playApplause();  // Toca o som de aplausos
+        playApplause();
         
         const themeBtn = document.getElementById("themeAudioBtn");
         if(themeBtn) {
@@ -689,6 +766,12 @@ canvas#confetti-canvas{
         allCards.forEach(c => {
             c.classList.remove("flip", "win-celebrate");
         });
+        
+        // Limpa bolhas de comemoração se houver
+        if(bubblesContainer) {
+            const remainingBubbles = bubblesContainer.querySelectorAll('.celebration-bubble');
+            remainingBubbles.forEach(b => b.remove());
+        }
     }
     
     function createBoard(){
@@ -769,6 +852,7 @@ canvas#confetti-canvas{
     if(themeBtn){
         themeBtn.addEventListener("click", function(){
             canvasConfetti({ particleCount: 40, spread: 45, origin: { y: 0.7 } });
+            createCelebrationBubbles(); // mini bolhas de diversão
         });
     }
     
