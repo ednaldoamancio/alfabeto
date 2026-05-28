@@ -3,52 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EdHumanas - Forca Educativa</title>
+    <title>🧜‍♀️ Forca Submarina - Reino de Netuno 🧜‍♂️</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Nunito:wght@400;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        * { box-sizing: border-box; touch-action: manipulation; }
+        * { 
+            box-sizing: border-box; 
+            touch-action: manipulation;
+            margin: 0;
+            padding: 0;
+        }
         
         body {
-            background-color: #000;
-            color: #fff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(145deg, #021a2b 0%, #043b5c 40%, #01121f 100%);
+            color: #eef5ff;
+            font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif;
             display: flex;
             flex-direction: column;
             height: 100vh;
             margin: 0;
             padding: 5px 15px;
             overflow: hidden;
+            position: relative;
+        }
+
+        /* Bolhas decorativas */
+        .bubble-marine {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            background: radial-gradient(circle, rgba(200, 240, 255, 0.4), rgba(100, 200, 255, 0.1));
+            border-radius: 50%;
+            animation: flutuarBolha linear infinite;
+        }
+
+        @keyframes flutuarBolha {
+            0% { transform: translateY(100vh) scale(0.3); opacity: 0; }
+            20% { opacity: 0.5; }
+            80% { opacity: 0.4; }
+            100% { transform: translateY(-20vh) scale(1); opacity: 0; }
+        }
+
+        .concha {
+            position: fixed;
+            font-size: 28px;
+            pointer-events: none;
+            z-index: 0;
+            animation: flutuarConcha 12s infinite ease-in-out;
+            filter: drop-shadow(0 0 5px rgba(255,215,0,0.3));
+        }
+
+        @keyframes flutuarConcha {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.3; }
+            50% { transform: translate(15px, -20px) rotate(8deg); opacity: 0.7; }
         }
 
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 40px;
-            flex-shrink: 0;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: rgba(2, 40, 60, 0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 50px;
+            padding: 8px 15px;
+            margin-bottom: 10px;
+            z-index: 10;
+            border: 1px solid #ffcd7e;
         }
 
-        h1 { font-size: 1rem; margin: 0; letter-spacing: 2px; }
+        h1 { 
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 0.9rem; 
+            margin: 0; 
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #ffdd99, #ffbc6e);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Seletor de modo */
+        .modo-selector {
+            display: flex;
+            gap: 8px;
+            background: rgba(0,0,0,0.4);
+            padding: 4px 10px;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+        }
+
+        .modo-btn {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #7ec8ff;
+            color: #7ec8ff;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            transition: all 0.3s;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .modo-btn.ativo {
+            background: linear-gradient(135deg, #1e5f8e, #0d3a5c);
+            border-color: #ffcd7e;
+            color: #ffeaac;
+            box-shadow: 0 0 10px rgba(255,205,126,0.4);
+        }
+
+        .modo-btn:hover {
+            transform: scale(1.05);
+            background: rgba(30, 95, 142, 0.6);
+        }
 
         .audio-controls {
             display: flex;
             gap: 8px;
         }
 
-        .audio-btn {
-            background: none;
-            border: 1.5px solid #fff;
-            color: #fff;
-            padding: 4px 8px;
+        .audio-btn, .btn-dourado {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #ffcd7e;
+            color: #ffeaac;
+            padding: 6px 12px;
             cursor: pointer;
             font-weight: bold;
-            border-radius: 5px;
+            border-radius: 40px;
             font-size: 0.7rem;
+            transition: all 0.3s;
+            font-family: 'Nunito', sans-serif;
         }
 
-        /* Botão de Tela Cheia com cor de destaque */
+        .audio-btn:hover, .btn-dourado:hover {
+            transform: scale(1.05);
+            background: rgba(255, 205, 126, 0.3);
+            box-shadow: 0 0 15px rgba(255,205,126,0.5);
+        }
+
+        /* Botão Dourado Cintilante */
+        .btn-dourado {
+            background: linear-gradient(135deg, #f5b042, #ffd700, #f5a623);
+            border: 2px solid #fff2b5;
+            color: #3a2a1a;
+            animation: brilhoDourado 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes brilhoDourado {
+            0% {
+                box-shadow: 0 0 5px rgba(255, 215, 0, 0.4);
+                background: linear-gradient(135deg, #f5b042, #ffd700);
+            }
+            100% {
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+                background: linear-gradient(135deg, #ffcc44, #ffea8c);
+            }
+        }
+
         #fullscreen-btn {
-            border-color: #44ff44;
-            color: #44ff44;
+            border-color: #48cae4;
+            color: #48cae4;
         }
 
         #game-area {
@@ -56,6 +174,7 @@
             display: flex;
             flex-direction: column;
             min-height: 0;
+            z-index: 5;
         }
 
         #top-row {
@@ -72,6 +191,10 @@
             height: 80%;
             display: flex;
             justify-content: center;
+            background: rgba(0, 30, 50, 0.5);
+            border-radius: 30px;
+            padding: 10px;
+            backdrop-filter: blur(4px);
         }
 
         #hangman-svg { height: 100%; width: auto; }
@@ -88,37 +211,46 @@
         }
 
         .key {
-            background-color: #111;
-            color: #fff;
-            border: 1.5px solid #fff;
+            background: rgba(10, 40, 60, 0.9);
+            color: #ffeaac;
+            border: 2px solid #7ec8ff;
             padding: 10px 0;
             font-size: 1rem;
             font-weight: bold;
-            border-radius: 6px;
+            border-radius: 12px;
             transition: all 0.2s;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
         }
 
+        .key:active { transform: scale(0.95); background: #1e5f8e; }
+
         .key:disabled { 
-            opacity: 0.15;
+            opacity: 0.3;
             border-color: #333;
-            color: #555;
+            color: #666;
             cursor: default;
+            transform: none;
         }
 
         #display-section {
-            padding: 15px 0 35px 0;
+            padding: 15px 0 25px 0;
             text-align: center;
-            border-top: 1px solid #333;
-            background: #000;
+            background: rgba(1, 30, 45, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 40px;
+            margin-top: 10px;
             flex-shrink: 0;
+            border: 1px solid #ffcd7e;
         }
 
         #category-info {
             font-size: 0.9rem;
-            color: #ffeb3b;
+            color: #ffeaac;
             margin-bottom: 8px;
             text-transform: uppercase;
             font-weight: bold;
+            font-family: 'Dancing Script', cursive;
         }
 
         #word-display {
@@ -127,7 +259,9 @@
             font-weight: 900;
             text-transform: uppercase;
             line-height: 1.2;
-            display: inline-block;
+            font-family: 'Cinzel Decorative', monospace;
+            color: #ffdd99;
+            text-shadow: 0 0 10px rgba(255, 200, 100, 0.5);
         }
 
         footer {
@@ -136,250 +270,476 @@
             justify-content: center;
             align-items: center;
             font-size: 0.7rem;
-            color: #666;
+            color: #8ab3cf;
             flex-shrink: 0;
         }
 
         #message {
             position: absolute;
-            top: 45px;
+            top: 70px;
             left: 50%;
             transform: translateX(-50%);
             font-weight: bold;
-            color: #ff4444;
-            z-index: 5;
+            z-index: 20;
             text-align: center;
             width: 90%;
-            font-size: 1.1rem;
+            font-size: 1rem;
+            background: rgba(0,0,0,0.7);
+            padding: 8px 16px;
+            border-radius: 40px;
+            backdrop-filter: blur(8px);
+            font-family: 'Dancing Script', cursive;
         }
 
-        line, circle, path { stroke: #fff; stroke-width: 6; fill: none; }
-        .dead-face { stroke: #ff4444 !important; }
+        line, circle, path { stroke: #7ec8ff; stroke-width: 5; fill: none; stroke-linecap: round; }
+        .dead-face { stroke: #ff6b6b !important; }
 
         #reset-btn {
             position: fixed;
-            top: 45%;
+            top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             padding: 15px 30px;
             font-size: 1.3rem;
-            background: #fff;
-            color: #000;
+            background: linear-gradient(135deg, #ffd700, #ffaa33);
+            color: #2c1a2e;
             font-weight: bold;
             z-index: 100;
             display: none;
-            border-radius: 10px;
-            border: none;
+            border-radius: 60px;
+            border: 3px solid #fff2b5;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            animation: pulse-glow 1.5s infinite;
+            box-shadow: 0 0 20px rgba(255,215,0,0.5);
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(255,215,0,0.5); transform: translate(-50%, -50%) scale(1); }
+            50% { box-shadow: 0 0 30px rgba(255,215,0,0.9); transform: translate(-50%, -50%) scale(1.05); }
+        }
+
+        .tridente-decor {
+            position: fixed;
+            bottom: 10px;
+            left: 20px;
+            font-size: 40px;
+            opacity: 0.2;
+            z-index: 0;
+            pointer-events: none;
+            filter: drop-shadow(0 0 5px cyan);
         }
 
         @media (max-width: 768px) {
-            #top-row { flex-direction: column; padding-top: 20px; }
+            header { flex-direction: column; border-radius: 20px; }
+            .modo-selector { order: 2; }
+            .audio-controls { order: 1; }
+            h1 { order: 0; }
+            #top-row { flex-direction: column; padding-top: 10px; }
             #hangman-container { height: 25%; min-height: 110px; }
-            #keyboard { grid-template-columns: repeat(9, 1fr); }
-            #word-display { font-size: 1.6rem; letter-spacing: 5px; }
-            #display-section { padding-bottom: 50px; }
+            #keyboard { grid-template-columns: repeat(9, 1fr); gap: 4px; }
+            .key { padding: 8px 0; font-size: 0.8rem; }
+            #word-display { font-size: 1.3rem; letter-spacing: 4px; }
+            #display-section { padding-bottom: 15px; }
+            h1 { font-size: 0.8rem; }
+            .audio-btn, .btn-douardo, .modo-btn { padding: 4px 8px; font-size: 0.6rem; }
+            #message { top: 95px; font-size: 0.8rem; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>FORCA</h1>
-        <div class="audio-controls">
-            <button id="fullscreen-btn" class="audio-btn" onclick="toggleFullscreen()">TELA CHEIA</button>
-            <button id="bg-music-btn" class="audio-btn" onclick="toggleMusic()">SOM: OFF</button>
-        </div>
-    </header>
+<!-- Decorações marinhas -->
+<div class="tridente-decor">🔱🐚</div>
+<div id="particulas-container"></div>
 
-    <div id="message"></div>
+<header>
+    <h1>🧜‍♀️ FORCA SUBMARINA - REINO DE NETUNO 🧜‍♂️</h1>
+    <div class="modo-selector">
+        <button class="modo-btn" data-modo="maritimo" onclick="selecionarModo('maritimo')">🌊 Mundo Marítimo</button>
+        <button class="modo-btn" data-modo="geral" onclick="selecionarModo('geral')">🌍 Aprendizado Geral</button>
+        <button class="modo-btn" data-modo="misterio" onclick="selecionarModo('misterio')">🎲 Mistério</button>
+    </div>
+    <div class="audio-controls">
+        <button id="btn-voltar-dourado" class="btn-dourado" onclick="voltarParaPaginaAnterior()">⬅️⭐</button>
+        <button id="fullscreen-btn" class="audio-btn" onclick="toggleFullscreen()">⛶ TELA CHEIA</button>
+        <button id="bg-music-btn" class="audio-btn" onclick="toggleMusic()">🔇 MÚSICA</button>
+    </div>
+</header>
 
-    <div id="game-area">
-        <div id="top-row">
-            <div id="hangman-container">
-                <svg id="hangman-svg" viewBox="0 0 200 250">
-                    <line x1="20" y1="230" x2="180" y2="230" />
-                    <line x1="50" y1="230" x2="50" y2="20" />
-                    <line x1="50" y1="20" x2="130" y2="20" />
-                    <line x1="130" y1="20" x2="130" y2="50" />
-                    <g id="head-group" style="display:none">
-                        <circle id="head-circle" cx="130" cy="75" r="20" />
-                        <g id="dead-details" style="display:none">
-                            <line x1="120" y1="65" x2="128" y2="73" class="dead-face" />
-                            <line x1="128" y1="65" x2="120" y2="73" class="dead-face" />
-                            <line x1="132" y1="65" x2="140" y2="73" class="dead-face" />
-                            <line x1="140" y1="65" x2="132" y2="73" class="dead-face" />
-                            <path d="M 120 85 Q 130 75 140 85" class="dead-face" />
-                        </g>
+<div id="message"></div>
+
+<div id="game-area">
+    <div id="top-row">
+        <div id="hangman-container">
+            <svg id="hangman-svg" viewBox="0 0 200 250">
+                <line x1="20" y1="230" x2="180" y2="230" stroke="#48cae4" stroke-width="6"/>
+                <line x1="50" y1="230" x2="50" y2="20" stroke="#48cae4" stroke-width="6"/>
+                <line x1="50" y1="20" x2="130" y2="20" stroke="#48cae4" stroke-width="6"/>
+                <line x1="130" y1="20" x2="130" y2="50" stroke="#48cae4" stroke-width="6"/>
+                <g id="head-group" style="display:none">
+                    <circle id="head-circle" cx="130" cy="75" r="18" stroke="#ffb347" stroke-width="5"/>
+                    <g id="dead-details" style="display:none">
+                        <line x1="120" y1="68" x2="126" y2="74" class="dead-face" stroke-width="4"/>
+                        <line x1="126" y1="68" x2="120" y2="74" class="dead-face" stroke-width="4"/>
+                        <line x1="134" y1="68" x2="140" y2="74" class="dead-face" stroke-width="4"/>
+                        <line x1="140" y1="68" x2="134" y2="74" class="dead-face" stroke-width="4"/>
+                        <path d="M 120 85 Q 130 78 140 85" class="dead-face" stroke-width="4" fill="none"/>
                     </g>
-                    <line id="body" x1="130" y1="95" x2="130" y2="170" style="display:none" />
-                    <line id="arm-l" x1="130" y1="120" x2="100" y2="150" style="display:none" />
-                    <line id="arm-r" x1="130" y1="120" x2="160" y2="150" style="display:none" />
-                    <line id="leg-l" x1="130" y1="170" x2="100" y2="210" style="display:none" />
-                    <line id="leg-r" x1="130" y1="170" x2="160" y2="210" style="display:none" />
-                </svg>
-            </div>
-
-            <div id="keyboard-container">
-                <div id="keyboard"></div>
-            </div>
+                </g>
+                <line id="body" x1="130" y1="93" x2="130" y2="165" stroke="#ffb347" stroke-width="5" style="display:none"/>
+                <line id="arm-l" x1="130" y1="115" x2="105" y2="145" stroke="#ffb347" stroke-width="5" style="display:none"/>
+                <line id="arm-r" x1="130" y1="115" x2="155" y2="145" stroke="#ffb347" stroke-width="5" style="display:none"/>
+                <path id="tail" d="M 130 165 Q 110 200 90 210" stroke="#48cae4" stroke-width="5" fill="none" style="display:none"/>
+                <path id="tail-r" d="M 130 165 Q 150 200 170 210" stroke="#48cae4" stroke-width="5" fill="none" style="display:none"/>
+            </svg>
         </div>
 
-        <div id="display-section">
-            <div id="category-info">CATEGORIA</div>
-            <div id="word-display">_ _ _ _ _</div>
+        <div id="keyboard-container">
+            <div id="keyboard"></div>
         </div>
     </div>
 
-    <footer>
-        BOM JOGO!
-    </footer>
+    <div id="display-section">
+        <div id="category-info">🌊 CATEGORIA MARINHA 🌊</div>
+        <div id="word-display">_ _ _ _ _</div>
+    </div>
+</div>
 
-    <button id="reset-btn" onclick="nextRound()">PRÓXIMA PALAVRA</button>
+<footer>
+    🧜‍♀️ Ajude a Sereia! Escolha um modo acima e clique nas letras para formar as palavras 🧜‍♂️
+</footer>
 
-    <audio id="snd-acerto" src="estampido.ogg"></audio>
-    <audio id="snd-erro" src="erro.ogg"></audio>
-    <audio id="snd-vitoria" src="aplausos.ogg"></audio>
-    <audio id="snd-bg" src="musica_fundo_sebran.ogg" loop></audio>
+<button id="reset-btn" onclick="nextRound()">✨ PRÓXIMA PALAVRA ✨</button>
 
-    <script>
-        const database = {
-            "ANIMAIS": ["CACHORRO", "GATO", "ELEFANTE", "GIRAFA", "LEÃO", "TIGRE", "ZEBRA", "MACACO", "COELHO", "RATO", "CAVALO", "VACA", "PORCO", "GALINHA", "PATO", "OVELHA", "BODE", "URSO", "LOBO", "RAPOSA", "ESQUILO", "CANGURU", "PANDA", "PINGUIM", "TUBARÃO", "BALEIA", "GOLFINHO", "TARTARUGA", "JACARÉ", "COBRA", "SAPO", "ABELHA", "FORMIGA", "BORBOLETA", "ARANHA", "ESCORPIÃO", "MORCEGO", "CORUJA", "ÁGUIA", "PAPAGAIO", "TUCANO", "AVESTRUZ", "CAMELO", "HIPOPÓTAMO", "RINOCERONTE", "ESQUILO", "CASTOR", "HAMSTER", "GUEPARDO", "COALA"],
-            "CASA": ["CADEIRA", "MESA", "SOFÁ", "CAMA", "ARMÁRIO", "GELADEIRA", "FOGÃO", "TELEVISÃO", "JANELA", "PORTA", "TAPETE", "CORTINA", "LÂMPADA", "ESPELHO", "TRAVESSEIRO", "LENÇOL", "TOALHA", "CHUVEIRO", "VASO", "PIA", "COPO", "PRATO", "TALHER", "PANELA", "VASSOURA", "BALDE", "RELOGIO", "QUADRO", "ESTANTE", "MICROONDAS", "GARFO", "FACA", "COLHER", "XÍCARA", "BULE", "FRIGIDEIRA", "ABAJUR", "COBERTOR", "CABIDE", "PENTE"],
-            "PAÍSES": ["BRASIL", "ARGENTINA", "CHILE", "MÉXICO", "CANADÁ", "ESTADOS UNIDOS", "PORTUGAL", "ESPANHA", "FRANÇA", "ITÁLIA", "ALEMANHA", "INGLATERRA", "JAPÃO", "CHINA", "EGITO", "AUSTRÁLIA", "RÚSSIA", "ÍNDIA", "ANGOLA", "GRÉCIA", "URUGUAI", "PARAGUAI", "PERU", "COLÔMBIA", "CANADÁ", "MÉXICO", "NORUEGA", "SUÉCIA", "EGITO", "MARROCOS"],
-            "ALIMENTOS": ["BANANA", "MAÇÃ", "LARANJA", "UVA", "MORANGO", "MELANCIA", "ABACAXI", "PERA", "MAMÃO", "LIMÃO", "BATATA", "CENOURA", "TOMATE", "ALFACE", "FEIJÃO", "ARROZ", "MACARRÃO", "CARNE", "OVO", "LEITE", "PÃO", "QUEIJO", "BOLO", "BISCOITO", "SUCO", "PIPOCA", "GELATINA", "CHOCOLATE", "PIZZA", "HAMBÚRGUER"],
-            "PROFISSÕES": ["PROFESSOR", "MÉDICO", "DENTISTA", "POLICIAL", "BOMBEIRO", "PADEIRO", "MOTORISTA", "COZINHEIRO", "PINTOR", "PEDREIRO", "CARPINTEIRO", "MECÂNICO", "VENDEDOR", "ARTISTA", "CANTOR", "Dançarino", "ATLETA", "JORNALISTA", "CIENTISTA", "ASTRONAUTA", "VETERINÁRIO", "ADVOGADO", "PILOTO", "CARTEIRO", "JARDINEIRO"],
-            "CORPO HUMANO": ["CABEÇA", "OMBRO", "JOELHO", "PÉ", "OLHO", "OUVIDO", "BOCA", "NARIZ", "MÃO", "DEDO", "BRAÇO", "PERNA", "BARRIGA", "COSTA", "PESCOÇO", "DENTE", "LÍNGUA", "UNHA", "CABELO", "CORAÇÃO", "PULMÃO", "ESTÔMAGO", "CÉREBRO", "SANGUE", "OSSO"]
-        };
+<!-- Áudios -->
+<audio id="snd-acerto" src="splash.mp3"></audio>
+<audio id="snd-erro" src="bubble_pop.mp3"></audio>
+<audio id="snd-vitoria" src="mermaid_laugh.mp3"></audio>
+<audio id="snd-bg" src="ocean_ambience.mp3" loop></audio>
 
-        let currentWordRaw = ""; 
-        let currentWordNormalized = ""; 
-        let currentCategory = "";
-        let guessedLetters = [];
-        let mistakes = 0;
-        let musicPlaying = false;
-        const bodyParts = ['head-group', 'body', 'arm-l', 'arm-r', 'leg-l', 'leg-r'];
+<script>
+    // ==================== BANCO DE PALAVRAS ====================
+    
+    // 🌊 MUNDO MARÍTIMO (Tema do oceano)
+    const databaseMaritimo = {
+        "🧜‍♀️ CRIATURAS MARINHAS": ["SEREIA", "TRITÃO", "NETUNO", "POLVO", "TUBARÃO", "BALEIA", "GOLFINHO", "TARTARUGA", "CAVALO MARINHO", "ESTRELA DO MAR", "AGUA VIVA", "LULA", "CARANGUEJO", "LAGOSTA", "SALMAO", "ATUM", "BACALHAU", "PEPINO DO MAR", "OURICO DO MAR"],
+        "🏰 REINO DE ATLÂNTIDA": ["ATLANTIDA", "TRIDENTE", "CORAL", "CONCHA", "PEROLA", "CASTELO", "PALACIO", "JARDIM MARINHO", "RECIFE", "ALGA", "TESOURO", "BAU", "COROA", "POSEIDON", "OCEANO", "MARE", "FUNDO DO MAR", "ABISMO"],
+        "👑 PERSONAGENS DA SEREIA": ["ARIEL", "PRINCIPE ERIC", "URSULA", "REI TRITAO", "CARANGUEJO SEBASTIAO", "PEIXE LINGUADO", "BRUXA DO MAR", "POLVO MALVADO", "PRINCESA SEREIA"],
+        "🌊 OCEANO E MAR": ["ONDA", "MARE ALTA", "TEMPORAL", "PRAIA", "AREIA", "COQUEIRO", "BARCO", "VELA", "ANCORA", "REMOS", "NAUFRAGIO", "ILHA", "ARQUIPELAGO", "LAGUNA", "CORRENTE"],
+        "💎 TESOUROS DO MAR": ["PEROLA", "CRISTAL", "RUBI", "ESMERALDA", "DIAMANTE", "OURO", "PRATA", "BRONZE", "CORAL", "MAPAS", "BUSSOLA", "CONCHA", "AMONITE", "MARFIM"]
+    };
 
-        // FUNÇÃO DE TELA CHEIA
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => {
-                    alert(`Erro ao tentar ativar tela cheia: ${err.message}`);
-                });
-                document.getElementById('fullscreen-btn').innerText = "SAIR TELA CHEIA";
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                    document.getElementById('fullscreen-btn').innerText = "TELA CHEIA";
-                }
+    // 🌍 APRENDIZADO GERAL (Categorias educativas do dia a dia)
+    const databaseGeral = {
+        "🐶 ANIMAIS": ["CACHORRO", "GATO", "ELEFANTE", "GIRAFA", "LEAO", "TIGRE", "ZEBRA", "MACACO", "COELHO", "RATO", "CAVALO", "VACA", "PORCO", "GALINHA", "PATO", "OVELHA", "BODE", "URSO", "LOBO", "RAPOSA", "ESQUILO", "CANGURU", "PANDA", "PINGUIM", "TUBARAO", "BALEIA", "JACARE", "COBRA", "SAPO", "ABELHA", "FORMIGA", "BORBOLETA", "MORCEGO", "CORUJA", "AGUIA", "PAPAGAIO", "HIPOPOTAMO", "RINOCERONTE", "COALA"],
+        "🏠 CASA": ["CADEIRA", "MESA", "SOFA", "CAMA", "ARMARIO", "GELADEIRA", "FOGAO", "TELEVISAO", "JANELA", "PORTA", "TAPETE", "CORTINA", "LAMPADA", "ESPELHO", "TRAVESSEIRO", "LENCOL", "TOALHA", "CHUVEIRO", "VASO", "PIA", "COPO", "PRATO", "TALHER", "PANELA", "VASSOURA", "BALDE", "RELÓGIO", "QUADRO", "ESTANTE", "MICROONDAS", "GARFO", "FACA", "COLHER", "XICARA", "COBERTOR", "CABIDE", "PENTE"],
+        "🌎 PAÍSES": ["BRASIL", "ARGENTINA", "CHILE", "MEXICO", "CANADA", "ESTADOS UNIDOS", "PORTUGAL", "ESPANHA", "FRANCA", "ITALIA", "ALEMANHA", "INGLATERRA", "JAPAO", "CHINA", "EGITO", "AUSTRALIA", "RUSSIA", "INDIA", "ANGOLA", "GRECIA", "URUGUAI", "PARAGUAI", "PERU", "COLOMBIA", "NORUEGA", "SUECIA", "MARROCOS"],
+        "🍎 ALIMENTOS": ["BANANA", "MACA", "LARANJA", "UVA", "MORANGO", "MELANCIA", "ABACAXI", "PERA", "MAMAO", "LIMAO", "BATATA", "CENOURA", "TOMATE", "ALFACE", "FEIJAO", "ARROZ", "MACARRAO", "CARNE", "OVO", "LEITE", "PAO", "QUEIJO", "BOLO", "BISCOITO", "SUCO", "PIPOCA", "GELATINA", "CHOCOLATE", "PIZZA", "HAMBURGUER"],
+        "👨‍⚕️ PROFISSÕES": ["PROFESSOR", "MEDICO", "DENTISTA", "POLICIAL", "BOMBEIRO", "PADEIRO", "MOTORISTA", "COZINHEIRO", "PINTOR", "PEDREIRO", "CARPINTEIRO", "MECANICO", "VENDEDOR", "ARTISTA", "CANTOR", "DANCARINO", "ATLETA", "JORNALISTA", "CIENTISTA", "ASTRONAUTA", "VETERINARIO", "ADVOGADO", "PILOTO", "CARTEIRO", "JARDINEIRO"],
+        "🧠 CORPO HUMANO": ["CABECA", "OMBRO", "JOELHO", "PE", "OLHO", "OUVIDO", "BOCA", "NARIZ", "MAO", "DEDO", "BRACO", "PERNA", "BARRIGA", "COSTA", "PESCOCO", "DENTE", "LINGUA", "UNHA", "CABELO", "CORACAO", "PULMAO", "ESTOMAGO", "CEREBRO", "SANGUE", "OSSO"]
+    };
+
+    // 🎲 MISTÉRIO (Junta todas as categorias dos dois mundos)
+    const databaseMisterio = {
+        ...databaseMaritimo,
+        ...databaseGeral
+    };
+
+    let currentDatabase = databaseMaritimo; // Padrão: Mundo Marítimo
+    let currentModo = "maritimo";
+    
+    let currentWordRaw = ""; 
+    let currentWordNormalized = ""; 
+    let currentCategory = "";
+    let guessedLetters = [];
+    let mistakes = 0;
+    let musicPlaying = false;
+    
+    const bodyParts = ['head-group', 'body', 'arm-l', 'arm-r', 'tail', 'tail-r'];
+
+    // ==================== FUNÇÃO PARA SELECIONAR MODO ====================
+    function selecionarModo(modo) {
+        currentModo = modo;
+        
+        // Atualizar visual dos botões
+        document.querySelectorAll('.modo-btn').forEach(btn => {
+            btn.classList.remove('ativo');
+            if (btn.getAttribute('data-modo') === modo) {
+                btn.classList.add('ativo');
             }
+        });
+        
+        // Selecionar o banco de dados correto
+        if (modo === "maritimo") {
+            currentDatabase = databaseMaritimo;
+            mostrarMensagemTemporaria("🌊 MODO MUNDO MARÍTIMO! Explore o fundo do mar! 🌊", "#7ec8ff");
+        } else if (modo === "geral") {
+            currentDatabase = databaseGeral;
+            mostrarMensagemTemporaria("🌍 MODO APRENDIZADO GERAL! Aprenda palavras do dia a dia! 🌍", "#ffeaac");
+        } else if (modo === "misterio") {
+            currentDatabase = databaseMisterio;
+            mostrarMensagemTemporaria("🎲 MODO MISTÉRIO! Todos os mundos se misturam! 🎲", "#ffaa66");
         }
-
-        function playSnd(id) {
-            const snd = document.getElementById(id);
-            snd.currentTime = 0;
-            snd.play().catch(e => {});
-        }
-
-        function toggleMusic() {
-            const bg = document.getElementById('snd-bg');
-            const btn = document.getElementById('bg-music-btn');
-            if (!musicPlaying) { bg.play(); btn.innerText = "SOM: ON"; }
-            else { bg.pause(); btn.innerText = "SOM: OFF"; }
-            musicPlaying = !musicPlaying;
-        }
-
-        function normalize(str) {
-            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
-        }
-
-        function initGame() {
-            const categories = Object.keys(database);
-            currentCategory = categories[Math.floor(Math.random() * categories.length)];
-            const wordsInCategory = database[currentCategory];
-            currentWordRaw = wordsInCategory[Math.floor(Math.random() * wordsInCategory.length)].toUpperCase();
-            
-            currentWordNormalized = normalize(currentWordRaw);
-            guessedLetters = [];
-            mistakes = 0;
-
-            document.getElementById('category-info').innerText = "CATEGORIA: " + currentCategory;
-            document.getElementById('reset-btn').style.display = "none";
-            document.getElementById('dead-details').style.display = "none";
-            bodyParts.forEach(p => document.getElementById(p).style.display = "none");
-            
-            renderWord();
-            renderKeyboard();
-            document.getElementById('message').innerText = "";
-        }
-
-        function renderWord() {
-            const container = document.getElementById('word-display');
-            let displayStr = "";
-            let winCounter = 0;
-            for (let i = 0; i < currentWordRaw.length; i++) {
-                const charRaw = currentWordRaw[i];
-                const charNorm = currentWordNormalized[i];
-                if (charRaw === " " || charRaw === "-") {
-                    displayStr += charRaw === " " ? "\u00A0\u00A0" : "- ";
-                } else if (guessedLetters.includes(charNorm)) {
-                    displayStr += charRaw + " ";
-                } else {
-                    displayStr += "_ ";
-                    winCounter++;
-                }
+        
+        // Reiniciar o jogo com o novo modo
+        initGame();
+    }
+    
+    function mostrarMensagemTemporaria(msg, cor) {
+        const msgDiv = document.getElementById('message');
+        msgDiv.innerHTML = msg;
+        msgDiv.style.color = cor;
+        setTimeout(() => {
+            if (msgDiv.innerHTML === msg) {
+                msgDiv.innerHTML = "🐚 Escolha uma letra para ajudar a Sereia! 🐚";
+                msgDiv.style.color = "#b9e6ff";
             }
-            container.innerText = displayStr;
-            if (winCounter === 0) endGame(true);
-        }
+        }, 2500);
+    }
 
-        function renderKeyboard() {
-            const kb = document.getElementById('keyboard');
-            kb.innerHTML = "";
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').forEach(l => {
-                const b = document.createElement('button');
-                b.innerText = l;
-                b.className = 'key';
-                b.id = 'k-' + l;
-                b.onclick = () => handleGuess(l);
-                kb.appendChild(b);
+    // ==================== FUNÇÃO PARA VOLTAR À PÁGINA ANTERIOR ====================
+    function voltarParaPaginaAnterior() {
+        if (typeof confetti !== 'undefined') {
+            confetti({ 
+                particleCount: 60, 
+                spread: 60, 
+                origin: { y: 0.3 }, 
+                colors: ['#ffd700', '#48cae4', '#ffaa33'],
+                startVelocity: 10
             });
         }
+        window.location.href = 'https://ilha-das-vogais.vercel.app/';
+    }
 
-        function handleGuess(l) {
-            if (guessedLetters.includes(l) || mistakes >= 6) return;
-            document.getElementById('k-' + l).disabled = true;
-
-            if (currentWordNormalized.includes(l)) {
-                guessedLetters.push(l);
-                playSnd('snd-acerto');
-                renderWord();
-            } else {
-                mistakes++;
-                playSnd('snd-erro');
-                document.getElementById(bodyParts[mistakes-1]).style.display = "block";
-                if (mistakes === 6) {
-                    document.getElementById('dead-details').style.display = "block";
-                    endGame(false);
-                }
+    // ==================== FUNÇÃO DE TELA CHEIA ====================
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {});
+            document.getElementById('fullscreen-btn').innerHTML = "✖ SAIR TELA";
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+                document.getElementById('fullscreen-btn').innerHTML = "⛶ TELA CHEIA";
             }
         }
+    }
 
-        function endGame(win) {
-            const msg = document.getElementById('message');
-            if (win) {
-                playSnd('snd-vitoria');
-                msg.innerText = "PARABÉNS!";
-                msg.style.color = "#44ff44";
-            } else {
-                msg.innerText = "OPS! A PALAVRA ERA: " + currentWordRaw;
-                msg.style.color = "#ff4444";
-                document.getElementById('word-display').innerText = currentWordRaw.split('').join(' ');
-            }
-            document.getElementById('reset-btn').style.display = "block";
+    function playSnd(id) {
+        const snd = document.getElementById(id);
+        if (snd) {
+            snd.currentTime = 0;
+            snd.play().catch(e => console.log("audio error", e));
         }
+    }
 
-        function nextRound() { initGame(); }
+    function toggleMusic() {
+        const bg = document.getElementById('snd-bg');
+        const btn = document.getElementById('bg-music-btn');
+        if (!musicPlaying) { 
+            bg.play().catch(e => console.log("bg music error")); 
+            btn.innerHTML = "🔊 MÚSICA";
+            btn.style.background = "rgba(100,200,255,0.4)";
+        } else { 
+            bg.pause(); 
+            btn.innerHTML = "🔇 MÚSICA";
+            btn.style.background = "rgba(0,0,0,0.6)";
+        }
+        musicPlaying = !musicPlaying;
+    }
+
+    function normalize(str) {
+        return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+    }
+
+    function initGame() {
+        const categories = Object.keys(currentDatabase);
+        currentCategory = categories[Math.floor(Math.random() * categories.length)];
+        const wordsInCategory = currentDatabase[currentCategory];
+        currentWordRaw = wordsInCategory[Math.floor(Math.random() * wordsInCategory.length)].toUpperCase();
+        
+        currentWordNormalized = normalize(currentWordRaw);
+        guessedLetters = [];
+        mistakes = 0;
+
+        let icone = "";
+        if (currentModo === "maritimo") icone = "🌊";
+        else if (currentModo === "geral") icone = "🌍";
+        else icone = "🎲";
+        
+        document.getElementById('category-info').innerHTML = icone + " " + currentCategory + " " + icone;
+        document.getElementById('reset-btn').style.display = "none";
+        document.getElementById('dead-details').style.display = "none";
+        bodyParts.forEach(p => {
+            const element = document.getElementById(p);
+            if (element) element.style.display = "none";
+        });
+        
+        renderWord();
+        renderKeyboard();
+        
+        let msgInicial = "";
+        if (currentModo === "maritimo") msgInicial = "🐚 Mergulhe no fundo do mar e adivinhe a palavra! 🐚";
+        else if (currentModo === "geral") msgInicial = "📚 Aprenda novas palavras do seu dia a dia! 📚";
+        else msgInicial = "🔮 O mistério está no ar! Qual será a palavra? 🔮";
+        
+        document.getElementById('message').innerHTML = msgInicial;
+        document.getElementById('message').style.color = "#b9e6ff";
+    }
+
+    function renderWord() {
+        const container = document.getElementById('word-display');
+        let displayStr = "";
+        let winCounter = 0;
+        for (let i = 0; i < currentWordRaw.length; i++) {
+            const charRaw = currentWordRaw[i];
+            const charNorm = currentWordNormalized[i];
+            if (charRaw === " " || charRaw === "-") {
+                displayStr += charRaw === " " ? "  " : "- ";
+            } else if (guessedLetters.includes(charNorm)) {
+                displayStr += charRaw + " ";
+            } else {
+                displayStr += "_ ";
+                winCounter++;
+            }
+        }
+        container.innerText = displayStr.trimEnd();
+        if (winCounter === 0 && currentWordRaw !== "") endGame(true);
+    }
+
+    function renderKeyboard() {
+        const kb = document.getElementById('keyboard');
+        kb.innerHTML = "";
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').forEach(l => {
+            const b = document.createElement('button');
+            b.innerText = l;
+            b.className = 'key';
+            b.id = 'k-' + l;
+            b.onclick = () => handleGuess(l);
+            kb.appendChild(b);
+        });
+    }
+
+    function handleGuess(l) {
+        if (guessedLetters.includes(l) || mistakes >= 6) return;
+        const keyBtn = document.getElementById('k-' + l);
+        if (keyBtn) keyBtn.disabled = true;
+
+        if (currentWordNormalized.includes(l)) {
+            guessedLetters.push(l);
+            playSnd('snd-acerto');
+            renderWord();
+        } else {
+            mistakes++;
+            playSnd('snd-erro');
+            const partId = bodyParts[mistakes-1];
+            const element = document.getElementById(partId);
+            if (element) element.style.display = "block";
+            if (mistakes === 6) {
+                document.getElementById('dead-details').style.display = "block";
+                endGame(false);
+            }
+        }
+    }
+
+    function endGame(win) {
+        const msg = document.getElementById('message');
+        if (win) {
+            playSnd('snd-vitoria');
+            let msgVitoria = "";
+            if (currentModo === "maritimo") msgVitoria = "🧜‍♀️ PARABÉNS! A SEREIA ESCAPOU! 🧜‍♀️✨";
+            else if (currentModo === "geral") msgVitoria = "🎉 PARABÉNS! VOCÊ APRENDEU MAIS UMA PALAVRA! 🎉";
+            else msgVitoria = "🔮 PARABÉNS! O MISTÉRIO FOI REVELADO! 🔮✨";
+            msg.innerHTML = msgVitoria;
+            msg.style.color = "#44ffaa";
+            if (typeof confetti !== 'undefined') {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ffd700', '#48cae4', '#ffaa33'] });
+            }
+        } else {
+            let msgDerrota = "";
+            if (currentModo === "maritimo") msgDerrota = "💔 OH NÃO! A SEREIA FOI CAPTURADA! A PALAVRA ERA: " + currentWordRaw + " 💔";
+            else if (currentModo === "geral") msgDerrota = "😢 QUE PENA! VOCÊ PODE TENTAR DE NOVO! A PALAVRA ERA: " + currentWordRaw;
+            else msgDerrota = "😱 O MISTÉRIO PERMANECE! A PALAVRA ERA: " + currentWordRaw;
+            msg.innerHTML = msgDerrota;
+            msg.style.color = "#ff8888";
+            const display = document.getElementById('word-display');
+            display.innerText = currentWordRaw.split('').join(' ');
+        }
+        document.getElementById('reset-btn').style.display = "block";
+    }
+
+    function nextRound() { 
+        initGame(); 
+    }
+
+    // ==================== ELEMENTOS FLUTUANTES (BOLHAS E CONCHAS) ====================
+    function criarBolhasMarinhas() {
+        for (let i = 0; i < 20; i++) {
+            setTimeout(() => {
+                const bolha = document.createElement('div');
+                bolha.className = 'bubble-marine';
+                const tamanho = Math.random() * 30 + 6;
+                bolha.style.width = tamanho + 'px';
+                bolha.style.height = tamanho + 'px';
+                bolha.style.left = Math.random() * 100 + '%';
+                bolha.style.animationDuration = Math.random() * 6 + 3 + 's';
+                bolha.style.animationDelay = Math.random() * 5 + 's';
+                bolha.style.opacity = Math.random() * 0.4 + 0.2;
+                document.body.appendChild(bolha);
+                setTimeout(() => bolha.remove(), 10000);
+            }, i * 150);
+        }
+        setInterval(() => {
+            const bolha = document.createElement('div');
+            bolha.className = 'bubble-marine';
+            const tamanho = Math.random() * 25 + 5;
+            bolha.style.width = tamanho + 'px';
+            bolha.style.height = tamanho + 'px';
+            bolha.style.left = Math.random() * 100 + '%';
+            bolha.style.animationDuration = Math.random() * 5 + 3 + 's';
+            document.body.appendChild(bolha);
+            setTimeout(() => bolha.remove(), 9000);
+        }, 2000);
+    }
+
+    function criarConchasFlutuantes() {
+        const conchasSimbolos = ['🐚', '⭐', '🌟', '🐟', '🧜‍♀️', '🔱', '🌊', '🐠', '🐙'];
+        for (let i = 0; i < 10; i++) {
+            const concha = document.createElement('div');
+            concha.className = 'concha';
+            concha.innerText = conchasSimbolos[Math.floor(Math.random() * conchasSimbolos.length)];
+            concha.style.left = Math.random() * 100 + '%';
+            concha.style.top = Math.random() * 100 + '%';
+            concha.style.fontSize = Math.random() * 20 + 16 + 'px';
+            concha.style.animationDuration = Math.random() * 12 + 8 + 's';
+            concha.style.animationDelay = Math.random() * 8 + 's';
+            document.body.appendChild(concha);
+        }
+    }
+
+    // ==================== INICIALIZAÇÃO ====================
+    window.onload = () => {
+        criarBolhasMarinhas();
+        criarConchasFlutuantes();
+        
+        // Marcar o botão ativo padrão (Mundo Marítimo)
+        document.querySelector('.modo-btn[data-modo="maritimo"]').classList.add('ativo');
+        
         initGame();
-    </script>
+        
+        // Tentativa automática de fullscreen
+        document.documentElement.requestFullscreen().catch(e => console.log("fullscreen não permitido automaticamente"));
+        
+        // Mensagem de boas-vindas
+        setTimeout(() => {
+            const msg = document.getElementById('message');
+            msg.innerHTML = "🧜‍♀️ Bem-vinda(o) ao Reino de Netuno! Escolha um modo de jogo acima! 🧜‍♂️";
+            msg.style.color = "#ffeaac";
+            setTimeout(() => {
+                if (msg.innerHTML.includes("Bem-vinda")) msg.innerHTML = "🌊 Clique no botão do modo que quiser e comece a brincadeira! 🌊";
+            }, 3500);
+        }, 500);
+    };
+</script>
 </body>
 </html>
