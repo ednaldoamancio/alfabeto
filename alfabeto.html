@@ -37,7 +37,6 @@
             position: relative;
         }
 
-        /* Bolhas decorativas */
         .bubble-marine {
             position: fixed;
             pointer-events: none;
@@ -66,7 +65,6 @@
             z-index: 10;
         }
 
-        /* Card com tema marinho */
         .card {
             position: relative;
             background: rgba(1, 30, 45, 0.75);
@@ -79,7 +77,6 @@
             overflow: hidden;
         }
 
-        /* Header com botões */
         .header-buttons {
             display: flex;
             justify-content: space-between;
@@ -123,7 +120,6 @@
             100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); background: linear-gradient(135deg, #ffcc44, #ffea8c); }
         }
 
-        /* Seletor de modo de escrita e de jogo */
         .modo-selector {
             display: flex;
             flex-wrap: wrap;
@@ -170,9 +166,8 @@
             margin-bottom: 20px;
         }
 
-        /* Área da letra */
         .stage {
-            min-height: 180px;
+            min-height: 200px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -181,9 +176,9 @@
         }
 
         .big-letter {
-            font-size: clamp(100px, 25vw, 180px);
+            font-size: clamp(80px, 20vw, 150px);
             font-weight: 900;
-            line-height: 1;
+            line-height: 1.2;
             background: linear-gradient(135deg, #ffdd99, #ffaa66);
             -webkit-background-clip: text;
             background-clip: text;
@@ -192,6 +187,11 @@
             opacity: 0;
             transform: scale(0.1) translateY(40px);
             transition: all 0.3s ease;
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
         .big-letter.flash-in {
@@ -204,7 +204,6 @@
             100% { opacity: 1; transform: scale(1); }
         }
 
-        /* Área de input manual */
         .manual-area {
             margin: 15px 0;
             text-align: center;
@@ -231,7 +230,6 @@
             margin-bottom: 8px;
         }
 
-        /* Grade das letras */
         .alphabet-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -254,18 +252,19 @@
             cursor: pointer;
             transition: all 0.2s;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .letter-btn:active { transform: scale(0.95); }
         .letter-btn.completed { opacity: 0.5; filter: grayscale(0.3); cursor: default; transform: none; }
-        .letter-btn.completed:active { transform: none; }
 
         .c1 { background: linear-gradient(135deg, #ff8a65, #ffb74d); }
         .c2 { background: linear-gradient(135deg, #4fc3f7, #64b5f6); }
         .c3 { background: linear-gradient(135deg, #81c784, #aed581); }
         .c4 { background: linear-gradient(135deg, #ba68c8, #f06292); }
 
-        /* Progresso */
         .progresso {
             margin-top: 15px;
             font-size: 1rem;
@@ -281,7 +280,6 @@
             margin-top: 15px;
         }
 
-        /* Mensagem de celebração */
         .celebration {
             position: fixed;
             top: 50%;
@@ -306,6 +304,27 @@
             100% { opacity: 0; transform: translate(-50%, -50%) scale(1); visibility: hidden; }
         }
 
+        .error-msg {
+            color: #ff8888;
+            font-size: 1rem;
+            margin-top: 10px;
+            animation: fadeOutMsg 1.5s ease-out forwards;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8);
+            padding: 10px 20px;
+            border-radius: 40px;
+            z-index: 200;
+        }
+
+        @keyframes fadeOutMsg {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(0.8); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1); visibility: hidden; }
+        }
+
         footer {
             margin-top: 15px;
             font-size: 0.7rem;
@@ -318,6 +337,7 @@
             .btn-acao { padding: 5px 10px; font-size: 0.65rem; }
             .modo-btn, .game-mode-btn { padding: 4px 8px; font-size: 0.6rem; }
             .manual-input { width: 90px; font-size: 1.5rem; }
+            .big-letter { min-height: 140px; font-size: clamp(60px, 18vw, 100px); }
         }
     </style>
 </head>
@@ -331,13 +351,12 @@
             <button class="btn-acao" id="audioBtn" onclick="toggleAudio()">🔊 Música</button>
         </div>
 
-        <!-- Seletor de modo de jogo: Sequencial ou Aleatório -->
         <div class="modo-selector">
             <button class="game-mode-btn" data-gamemode="sequencial" onclick="selecionarGameMode('sequencial')">📚 Sequencial</button>
             <button class="game-mode-btn" data-gamemode="aleatorio" onclick="selecionarGameMode('aleatorio')">🎲 Aleatório</button>
+            <button class="game-mode-btn" data-gamemode="misterio" onclick="selecionarGameMode('misterio')">❓ Mistério (SOMENTE SOM)</button>
         </div>
 
-        <!-- Seletor de modo de escrita -->
         <div class="modo-selector" id="modoSelector">
             <button class="modo-btn" data-modo="print-maius" onclick="selecionarModo('print-maius')">🔠 Fôrma MAIÚSCULA</button>
             <button class="modo-btn" data-modo="print-minus" onclick="selecionarModo('print-minus')">🔡 Fôrma minúscula</button>
@@ -374,26 +393,32 @@
 <audio id="sfxCorrect" src="splash.mp3"></audio>
 <audio id="sfxApplause" src="aplausos.mp3"></audio>
 <audio id="sfxS" src="s.mp3"></audio>
+<audio id="sfxN" src="n.mp3"></audio>
 
 <script>
     // ==================== CONFIGURAÇÕES INICIAIS ====================
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
     let completed = new Array(26).fill(false);
-    let letrasRestantes = [...letters];
     let currentLetterIndex = 0;
     let currentGameMode = "sequencial";
     let modoAtual = "print-maius";
     let audioEnabled = true;
     let jogoFinalizado = false;
     let currentUtterance = null;
+    
+    // Para o Modo Mistério: fila de letras (26 letras únicas + repetições de erros)
+    let misterioQueue = [];
+    let currentMisterioIndex = 0;
+    let letrasErradas = []; // Armazena letras que a criança errou para repetir
+    let repeticoesPendentes = [];
 
-    // Elementos de áudio
+    // Elementos de áudio especiais
     const audioS = document.getElementById("sfxS");
+    const audioN = document.getElementById("sfxN");
     const bgMusic = document.getElementById("bgMusic");
     const sfxCorrect = document.getElementById("sfxCorrect");
     const sfxApplause = document.getElementById("sfxApplause");
 
-    // Mapeamento de modos para estilos de fonte
     const modoFontes = {
         "print-maius": { transform: (l) => l.toUpperCase(), fontFamily: "'Nunito', sans-serif", label: "Fôrma Maiúscula" },
         "print-minus": { transform: (l) => l.toLowerCase(), fontFamily: "'Nunito', sans-serif", label: "Fôrma Minúscula" },
@@ -401,43 +426,19 @@
         "cursive-minus": { transform: (l) => l.toLowerCase(), fontFamily: "'Playwrite BR', cursive", label: "Manuscrito Minúsculo" }
     };
 
-    // Mapa de pronúncias para síntese de voz (usado apenas para as letras que NÃO são S)
     const pronunciaMap = {
-        "A": "á",
-        "B": "bê",
-        "C": "cê",
-        "D": "dê",
-        "E": "ê",
-        "F": "efe",
-        "G": "gê",
-        "H": "agá",
-        "I": "i",
-        "J": "jóta",
-        "K": "cá",
-        "L": "éle",
-        "M": "ême",
-        "N": "êne",
-        "O": "ô",
-        "P": "pê",
-        "Q": "quê",
-        "R": "érre",
-        // "S": "ésse",  // NÃO USA MAIS SÍNTESE - USA ÁUDIO MP3
-        "T": "tê",
-        "U": "u",
-        "V": "vê",
-        "W": "dáblio",
-        "X": "xis",
-        "Y": "ípsilon",
-        "Z": "zê"
+        "A": "á", "B": "bê", "C": "cê", "D": "dê", "E": "ê", "F": "efe",
+        "G": "gê", "H": "agá", "I": "i", "J": "jóta", "K": "cá", "L": "éle",
+        "M": "ême", "O": "ô", "P": "pê", "Q": "quê", "R": "érre",
+        "T": "tê", "U": "u", "V": "vê", "W": "dáblio", "X": "xis", "Y": "ípsilon", "Z": "zê"
     };
 
-    // Elementos DOM
     const alphabetGrid = document.getElementById("alphabetGrid");
     const bigLetterEl = document.getElementById("bigLetter");
     const manualInput = document.getElementById("manualInput");
     const progressoEl = document.getElementById("progresso");
 
-    // ==================== FUNÇÃO PARA VOLTAR ====================
+    // ==================== FUNÇÕES PRINCIPAIS ====================
     function voltarPagina() {
         if (typeof confetti !== 'undefined') {
             confetti({ particleCount: 60, spread: 60, origin: { y: 0.3 }, colors: ['#ffd700', '#48cae4'], startVelocity: 10 });
@@ -445,13 +446,11 @@
         window.location.href = 'https://alfabeto-mu.vercel.app/';
     }
 
-    // ==================== TELA CHEIA ====================
     function toggleFullscreen() {
         if (!document.fullscreenElement) document.documentElement.requestFullscreen();
         else document.exitFullscreen();
     }
 
-    // ==================== MÚSICA ====================
     function toggleAudio() {
         audioEnabled = !audioEnabled;
         const btn = document.getElementById("audioBtn");
@@ -464,7 +463,6 @@
         }
     }
 
-    // ==================== FUNÇÃO DE FALA CORRIGIDA (COM ÁUDIO MP3 PARA A LETRA "S") ====================
     function falar(texto, callback) {
         if (!window.speechSynthesis) { if(callback) callback(); return; }
         if (currentUtterance) window.speechSynthesis.cancel();
@@ -480,32 +478,39 @@
         currentUtterance = utterance;
     }
 
-    function falarLetra(letra) {
-        // Garantir que a letra esteja em maiúsculo
+    function tocarAudioLetra(letra, callback) {
         const chave = letra.toUpperCase().trim();
         
-        // CASO ESPECIAL: LETRA "S" - USA O ARQUIVO DE ÁUDIO MP3
-        if (chave === "S") {
-            if (audioS) {
-                audioS.currentTime = 0;
-                audioS.play().catch(e => console.log("erro ao tocar s.mp3", e));
-            } else {
-                // Fallback caso o áudio não exista
-                falar("ésse");
-            }
-            return;
-        }
-        
-        // Para as demais letras, usa a síntese de voz
-        const pronuncia = pronunciaMap[chave];
-        if (pronuncia) {
-            falar(pronuncia);
+        if (chave === "S" && audioS) {
+            audioS.currentTime = 0;
+            audioS.play().catch(e => console.log("erro s.mp3"));
+            if (callback) setTimeout(callback, 500);
+        } else if (chave === "N" && audioN) {
+            audioN.currentTime = 0;
+            audioN.play().catch(e => console.log("erro n.mp3"));
+            if (callback) setTimeout(callback, 500);
         } else {
-            falar(chave);
+            const pronuncia = pronunciaMap[chave];
+            if (pronuncia) {
+                falar(pronuncia, callback);
+            } else {
+                falar(chave, callback);
+            }
         }
     }
 
-    // ==================== SELECIONAR MODO DE ESCRITA ====================
+    function falarLetra(letra, callback) {
+        tocarAudioLetra(letra, callback);
+    }
+
+    function mostrarErro() {
+        const msg = document.createElement("div");
+        msg.className = "error-msg";
+        msg.innerHTML = "❌ Não é esta letra! Vamos tentar de novo! ❌";
+        document.body.appendChild(msg);
+        setTimeout(() => msg.remove(), 1500);
+    }
+
     function selecionarModo(modo) {
         modoAtual = modo;
         document.querySelectorAll('.modo-btn').forEach(btn => {
@@ -515,7 +520,6 @@
         atualizarInterface();
     }
 
-    // ==================== SELECIONAR MODO DE JOGO ====================
     function selecionarGameMode(mode) {
         currentGameMode = mode;
         document.querySelectorAll('.game-mode-btn').forEach(btn => {
@@ -529,7 +533,6 @@
         return modoFontes[modoAtual].transform(letra);
     }
 
-    // ==================== ATUALIZAR INTERFACE ====================
     function atualizarInterface() {
         const btns = document.querySelectorAll('.letter-btn');
         letters.forEach((letra, idx) => {
@@ -545,43 +548,101 @@
             }
         });
         
-        if (!jogoFinalizado && currentLetterIndex < 26 && !completed[currentLetterIndex]) {
-            const letraAtual = getLetraTransformada(letters[currentLetterIndex]);
-            bigLetterEl.textContent = letraAtual;
-            bigLetterEl.style.fontFamily = modoFontes[modoAtual].fontFamily;
+        if (!jogoFinalizado) {
+            if (currentGameMode === "misterio") {
+                bigLetterEl.textContent = "?";
+                bigLetterEl.style.fontFamily = "'Cinzel Decorative', cursive";
+                bigLetterEl.style.fontSize = "clamp(80px, 20vw, 150px)";
+            } else if (currentLetterIndex < 26 && !completed[currentLetterIndex]) {
+                const letraAtual = getLetraTransformada(letters[currentLetterIndex]);
+                bigLetterEl.textContent = letraAtual;
+                bigLetterEl.style.fontFamily = modoFontes[modoAtual].fontFamily;
+            }
         }
     }
 
-    // ==================== PROXIMA LETRA (SEQUENCIAL) ====================
-    function proximaLetraNaoCompletadaSequencial() {
-        for (let i = 0; i < 26; i++) {
-            if (!completed[i]) return i;
+    // ==================== CONSTRUÇÃO DA FILA DO MODO MISTÉRIO ====================
+    function construirFilaMisterio() {
+        // 1. Criar uma lista com todas as 26 letras em ordem aleatória
+        let todasLetras = [...letters];
+        for (let i = todasLetras.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [todasLetras[i], todasLetras[j]] = [todasLetras[j], todasLetras[i]];
         }
-        return -1;
+        
+        // 2. Inicializar a fila com as 26 letras
+        misterioQueue = [...todasLetras];
+        
+        // 3. Resetar controles de repetição
+        letrasErradas = [];
+        repeticoesPendentes = [];
+        currentMisterioIndex = 0;
     }
-
-    // ==================== PROXIMA LETRA (ALEATÓRIA) ====================
-    function atualizarLetrasRestantes() {
-        letrasRestantes = [];
-        for (let i = 0; i < 26; i++) {
-            if (!completed[i]) letrasRestantes.push(i);
+    
+    // Função para adicionar repetições de uma letra que a criança errou
+    function adicionarRepeticaoLetra(letra) {
+        // Verificar se a letra já não foi completada
+        const letraIndex = letters.indexOf(letra);
+        if (completed[letraIndex]) return;
+        
+        // Adicionar 3 repetições desta letra em posições aleatórias no futuro da fila
+        for (let r = 0; r < 3; r++) {
+            // Inserir em posição aleatória após o índice atual
+            const posInsercao = currentMisterioIndex + 1 + Math.floor(Math.random() * (misterioQueue.length - currentMisterioIndex + 1));
+            misterioQueue.splice(posInsercao, 0, letra);
         }
     }
-
-    function getProximaLetraAleatoria() {
-        atualizarLetrasRestantes();
-        if (letrasRestantes.length === 0) return -1;
-        const randomIndex = Math.floor(Math.random() * letrasRestantes.length);
-        return letrasRestantes[randomIndex];
+    
+    function getProximaLetraMisterio() {
+        if (currentMisterioIndex >= misterioQueue.length) {
+            // Verificar se ainda há letras não completadas (caso de segurança)
+            for (let i = 0; i < 26; i++) {
+                if (!completed[i]) return letters[i];
+            }
+            return -1;
+        }
+        return misterioQueue[currentMisterioIndex];
+    }
+    
+    function avancarMisterio() {
+        currentMisterioIndex++;
     }
 
     // ==================== CARREGAR PRÓXIMA LETRA ====================
     function carregarProximaLetra() {
-        let nextIndex;
+        let nextLetter = null;
+        let nextIndex = -1;
+        
         if (currentGameMode === "sequencial") {
             nextIndex = proximaLetraNaoCompletadaSequencial();
-        } else {
+            if (nextIndex !== -1) nextLetter = letters[nextIndex];
+        } else if (currentGameMode === "aleatorio") {
             nextIndex = getProximaLetraAleatoria();
+            if (nextIndex !== -1) nextLetter = letters[nextIndex];
+        } else { // Modo Mistério
+            nextLetter = getProximaLetraMisterio();
+            if (nextLetter !== -1) nextIndex = letters.indexOf(nextLetter);
+        }
+        
+        if (nextIndex === -1 || !nextLetter) {
+            // Verificar se todas as letras estão completadas
+            const todasCompletadas = completed.every(c => c === true);
+            if (todasCompletadas) {
+                finalizarJogo();
+            } else {
+                // Caso de segurança: encontrar a primeira letra não completada
+                for (let i = 0; i < 26; i++) {
+                    if (!completed[i]) {
+                        nextIndex = i;
+                        nextLetter = letters[i];
+                        break;
+                    }
+                }
+                if (nextIndex === -1) {
+                    finalizarJogo();
+                    return false;
+                }
+            }
         }
         
         if (nextIndex === -1) {
@@ -590,12 +651,19 @@
         }
         
         currentLetterIndex = nextIndex;
-        const letraAtual = getLetraTransformada(letters[currentLetterIndex]);
-        bigLetterEl.textContent = letraAtual;
+        
+        if (currentGameMode === "misterio") {
+            bigLetterEl.textContent = "?";
+            bigLetterEl.style.fontFamily = "'Cinzel Decorative', cursive";
+        } else {
+            const letraAtual = getLetraTransformada(letters[currentLetterIndex]);
+            bigLetterEl.textContent = letraAtual;
+            bigLetterEl.style.fontFamily = modoFontes[modoAtual].fontFamily;
+        }
+        
         bigLetterEl.classList.remove("flash-in");
         setTimeout(() => bigLetterEl.classList.add("flash-in"), 10);
         
-        // Falar a letra para a criança (com áudio MP3 para o S)
         setTimeout(() => {
             if (!jogoFinalizado) falarLetra(letters[currentLetterIndex]);
         }, 300);
@@ -603,7 +671,28 @@
         return true;
     }
 
-    // ==================== CELEBRAR ACERTO ====================
+    function proximaLetraNaoCompletadaSequencial() {
+        for (let i = 0; i < 26; i++) {
+            if (!completed[i]) return i;
+        }
+        return -1;
+    }
+
+    function atualizarLetrasRestantes() {
+        let letrasRestantes = [];
+        for (let i = 0; i < 26; i++) {
+            if (!completed[i]) letrasRestantes.push(i);
+        }
+        return letrasRestantes;
+    }
+
+    function getProximaLetraAleatoria() {
+        const restantes = atualizarLetrasRestantes();
+        if (restantes.length === 0) return -1;
+        const randomIndex = Math.floor(Math.random() * restantes.length);
+        return restantes[randomIndex];
+    }
+
     function celebrarAcerto(letra) {
         confetti({ particleCount: 60, spread: 50, origin: { y: 0.5 }, colors: ['#ffd700', '#48cae4', '#ffaa33'] });
         
@@ -625,7 +714,6 @@
         }
     }
 
-    // ==================== VERIFICAR RESPOSTA ====================
     function verificarResposta(resposta) {
         if (jogoFinalizado) return;
         
@@ -633,15 +721,16 @@
         const letraCorreta = letters[currentLetterIndex];
         
         if (respostaNorm === letraCorreta && !completed[currentLetterIndex]) {
-            // ACERTOU!
             completed[currentLetterIndex] = true;
             celebrarAcerto(letraCorreta);
-            
-            // Atualizar interface
             atualizarInterface();
             atualizarProgresso();
             
-            // Verificar se completou todas as letras
+            // Avançar para a próxima letra (no modo mistério, avança o índice da fila)
+            if (currentGameMode === "misterio") {
+                avancarMisterio();
+            }
+            
             const completados = completed.filter(c => c === true).length;
             if (completados === 26) {
                 finalizarJogo();
@@ -649,40 +738,47 @@
                 carregarProximaLetra();
             }
         } else if (!completed[currentLetterIndex]) {
-            // ERROU - feedback visual
-            manualInput.style.borderColor = "#ff4444";
-            setTimeout(() => manualInput.style.borderColor = "#ffcd7e", 500);
+            mostrarErro();
             
-            // Repetir a letra para ajudar (com áudio MP3 para o S)
-            falarLetra(letters[currentLetterIndex]);
+            // No modo mistério, adicionar repetições da letra que errou
+            if (currentGameMode === "misterio") {
+                adicionarRepeticaoLetra(letraCorreta);
+            }
+            
+            // Repetir o som da letra correta para ajudar
+            falarLetra(letraCorreta);
         }
         
         manualInput.value = "";
         manualInput.focus();
     }
 
-    // ==================== ATUALIZAR PROGRESSO ====================
     function atualizarProgresso() {
         const completados = completed.filter(c => c === true).length;
-        const modoTexto = currentGameMode === "sequencial" ? "📚 Sequencial" : "🎲 Aleatório";
-        progressoEl.innerHTML = `${modoTexto} | ✨ Progresso: ${completados}/26 letras ✨ ${completados === 26 ? "🏆 COMPLETO! 🏆" : ""}`;
+        let modoTexto = "";
+        if (currentGameMode === "sequencial") modoTexto = "📚 Sequencial";
+        else if (currentGameMode === "aleatorio") modoTexto = "🎲 Aleatório";
+        else modoTexto = "❓ Mistério (Somente Som)";
+        
+        let infoExtra = "";
+        if (currentGameMode === "misterio" && misterioQueue.length > 0) {
+            infoExtra = ` | 🎯 ${currentMisterioIndex + 1}/${misterioQueue.length} tentativas`;
+        }
+        
+        progressoEl.innerHTML = `${modoTexto} | ✨ Progresso: ${completados}/26 letras ✨ ${completados === 26 ? "🏆 COMPLETO! 🏆" : ""}${infoExtra}`;
     }
 
-    // ==================== FINALIZAR JOGO COM FESTA ====================
     function finalizarJogo() {
         if (jogoFinalizado) return;
         jogoFinalizado = true;
         
-        // Confete em grande quantidade
         confetti({ particleCount: 300, spread: 120, origin: { y: 0.5 }, colors: ['#ffd700', '#48cae4', '#ffaa33', '#ff6b6b', '#ff8888'] });
         
-        // Aplausos
         if (audioEnabled) {
             sfxApplause.currentTime = 0;
             sfxApplause.play().catch(e => console.log("erro aplausos"));
         }
         
-        // Muitas bolhas
         for (let i = 0; i < 80; i++) {
             setTimeout(() => {
                 const bolha = document.createElement('div');
@@ -699,6 +795,7 @@
         
         bigLetterEl.textContent = "🏆🏆🏆";
         bigLetterEl.style.fontSize = "100px";
+        bigLetterEl.style.fontFamily = "'Cinzel Decorative', cursive";
         
         const msgFinal = document.createElement("div");
         msgFinal.className = "celebration";
@@ -714,24 +811,35 @@
         setTimeout(() => msgFinal.remove(), 5000);
     }
 
-    // ==================== RESETAR JOGO ====================
     function resetarJogo() {
         completed = new Array(26).fill(false);
         jogoFinalizado = false;
         
         if (currentGameMode === "sequencial") {
             currentLetterIndex = 0;
-        } else {
-            atualizarLetrasRestantes();
-            currentLetterIndex = getProximaLetraAleatoria();
-            if (currentLetterIndex === -1) currentLetterIndex = 0;
+        } else if (currentGameMode === "aleatorio") {
+            const restantes = atualizarLetrasRestantes();
+            currentLetterIndex = restantes.length > 0 ? restantes[0] : 0;
+        } else { // Modo Mistério
+            construirFilaMisterio();
+            currentMisterioIndex = 0;
+            const primeiraLetra = getProximaLetraMisterio();
+            if (primeiraLetra !== -1) currentLetterIndex = letters.indexOf(primeiraLetra);
+            else currentLetterIndex = 0;
         }
         
         atualizarProgresso();
         atualizarInterface();
         
-        const letraAtual = getLetraTransformada(letters[currentLetterIndex]);
-        bigLetterEl.textContent = letraAtual;
+        if (currentGameMode === "misterio") {
+            bigLetterEl.textContent = "?";
+            bigLetterEl.style.fontFamily = "'Cinzel Decorative', cursive";
+        } else {
+            const letraAtual = getLetraTransformada(letters[currentLetterIndex]);
+            bigLetterEl.textContent = letraAtual;
+            bigLetterEl.style.fontFamily = modoFontes[modoAtual].fontFamily;
+        }
+        
         bigLetterEl.classList.remove("flash-in");
         setTimeout(() => bigLetterEl.classList.add("flash-in"), 10);
         
@@ -743,7 +851,6 @@
         manualInput.focus();
     }
 
-    // ==================== REPETIR LETRA ATUAL ====================
     function repetirLetra() {
         if (!jogoFinalizado && currentLetterIndex < 26 && !completed[currentLetterIndex]) {
             falarLetra(letters[currentLetterIndex]);
@@ -752,7 +859,6 @@
         }
     }
 
-    // ==================== CRIAR GRADE DE LETRAS ====================
     function criarGradeLetras() {
         alphabetGrid.innerHTML = "";
         letters.forEach((letra, idx) => {
@@ -772,7 +878,6 @@
         });
     }
 
-    // ==================== CRIAR BOLHAS DECORATIVAS ====================
     function criarBolhasMarinhas() {
         setInterval(() => {
             const bolha = document.createElement('div');
@@ -787,19 +892,18 @@
         }, 1500);
     }
 
-    // ==================== INICIALIZAR JOGO ====================
     function iniciarJogo() {
         criarGradeLetras();
         
-        // Marcar botões ativos padrão
         document.querySelector('.game-mode-btn[data-gamemode="sequencial"]').classList.add('ativo');
         document.querySelector('.modo-btn[data-modo="print-maius"]').classList.add('ativo');
+        
+        // Inicializar fila do modo mistério
+        construirFilaMisterio();
         
         atualizarInterface();
         atualizarProgresso();
         
-        const letraAtual = getLetraTransformada(letters[0]);
-        bigLetterEl.textContent = letraAtual;
         bigLetterEl.classList.add("flash-in");
         
         setTimeout(() => {
@@ -829,12 +933,13 @@
         manualInput.focus();
     }
 
-    // ==================== EVENTOS DOS BOTÕES ====================
     document.getElementById("btnRepetir").onclick = repetirLetra;
     document.getElementById("btnReset").onclick = resetarJogo;
+    document.getElementById("btnVoltar").onclick = voltarPagina;
+    document.getElementById("fullscreenBtn").onclick = toggleFullscreen;
+    document.getElementById("audioBtn").onclick = toggleAudio;
     
-    // Inicialização
-    window.onload = () => {
+    window.onload = function() {
         criarBolhasMarinhas();
         iniciarJogo();
         bgMusic.volume = 0.2;
