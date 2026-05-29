@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#021a2b">
-    <title>🧜‍♀️ Chuva de Letras - Reino de Netuno 🧜‍♂️</title>
+    <meta name="theme-color" content="#000000">
+    <title>🧜‍♂️ Chuva de Letras - Reino de Netuno 🧜‍♀️</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Nunito:wght@400;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        :root { --bg-color: #021a2b; }
-        
         * {
             margin: 0;
             padding: 0;
@@ -20,43 +18,75 @@
         body {
             margin: 0; 
             padding: 0; 
-            background: linear-gradient(145deg, #021a2b 0%, #043b5c 40%, #01121f 100%);
+            background: #000000;
             color: #eef5ff;
             font-family: 'Nunito', 'Segoe UI', sans-serif;
             overflow: hidden;
             touch-action: none;
             position: relative;
+            min-height: 100vh;
         }
 
-        /* Bolhas decorativas */
+        /* Fundo escuro com gradiente sutil */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #001a2a 0%, #000000 100%);
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* Bolhas flutuantes (subindo) */
         .bubble-marine {
             position: fixed;
             pointer-events: none;
-            z-index: 0;
-            background: radial-gradient(circle, rgba(200, 240, 255, 0.4), rgba(100, 200, 255, 0.1));
+            z-index: 1;
+            background: radial-gradient(circle, rgba(100, 200, 255, 0.5), rgba(50, 150, 200, 0.1));
             border-radius: 50%;
             animation: flutuarBolha linear infinite;
         }
 
         @keyframes flutuarBolha {
-            0% { transform: translateY(100vh) scale(0.3); opacity: 0; }
-            20% { opacity: 0.5; }
-            80% { opacity: 0.4; }
-            100% { transform: translateY(-20vh) scale(1); opacity: 0; }
+            0% {
+                transform: translateY(100vh) scale(0.3);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.6;
+            }
+            80% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-20vh) scale(1);
+                opacity: 0;
+            }
         }
 
+        /* Conchas e elementos decorativos */
         .concha {
             position: fixed;
-            font-size: 28px;
+            font-size: 24px;
             pointer-events: none;
-            z-index: 0;
-            animation: flutuarConcha 12s infinite ease-in-out;
+            z-index: 1;
+            animation: flutuarConcha 14s infinite ease-in-out;
             filter: drop-shadow(0 0 5px rgba(255,215,0,0.3));
+            opacity: 0.5;
         }
 
         @keyframes flutuarConcha {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.3; }
-            50% { transform: translate(15px, -20px) rotate(8deg); opacity: 0.7; }
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(15px, -30px) rotate(8deg);
+                opacity: 0.7;
+            }
         }
 
         /* Header com botões */
@@ -67,7 +97,7 @@
             right: 0;
             z-index: 100;
             padding: 10px 20px;
-            background: linear-gradient(135deg, rgba(2, 40, 60, 0.85), rgba(1, 25, 45, 0.9));
+            background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(12px);
             border-bottom: 2px solid #ffcd7e;
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
@@ -178,7 +208,7 @@
             top: 80px;
             left: 20px;
             z-index: 50;
-            background: rgba(1, 30, 45, 0.6);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(8px);
             border-radius: 30px;
             padding: 12px 20px;
@@ -206,14 +236,14 @@
             font-size: 1.3rem;
         }
 
-        /* BARRA VERTICAL DE PONTUAÇÃO (DIREITA) - estilo tridente */
+        /* BARRA VERTICAL DE PONTUAÇÃO (DIREITA) */
         .ranking-lateral {
             position: fixed;
             right: 20px;
             top: 100px;
             bottom: 50px;
             width: 30px;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
             border-radius: 15px;
             border: 2px solid #ffcd7e;
             overflow: hidden;
@@ -242,12 +272,12 @@
         }
         
         #tela-inicio { 
-            background: rgba(2, 26, 43, 0.95);
+            background: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(8px);
         }
 
         #tela-vitoria { 
-            background: rgba(2, 26, 43, 0.85);
+            background: rgba(0, 0, 0, 0.9);
             backdrop-filter: blur(8px);
         }
 
@@ -280,7 +310,7 @@
         .subtexto {
             font-family: 'Dancing Script', cursive;
             font-size: 1.2rem;
-            color: #b9e6ff;
+            color: #7ec8ff;
             margin-top: 15px;
         }
 
@@ -327,7 +357,7 @@
             bottom: 10px;
             left: 20px;
             font-size: 40px;
-            opacity: 0.2;
+            opacity: 0.3;
             z-index: 0;
             pointer-events: none;
             filter: drop-shadow(0 0 5px cyan);
@@ -341,13 +371,13 @@
             .hud { top: 70px; left: 10px; padding: 8px 12px; }
             #alvo-atual { font-size: 2rem; }
             .ranking-lateral { width: 25px; right: 10px; top: 80px; }
+            .letra-chuva { font-size: clamp(20px, 3.5vw, 45px); }
         }
     </style>
 </head>
 <body>
 
 <div class="tridente-decor">🔱🐚</div>
-<div id="particulas-container"></div>
 
 <!-- Header com botões -->
 <header class="real-header">
@@ -367,7 +397,7 @@
 
 <div id="tela-inicio" class="overlay">
     <h1>🌊 CHUVA DE LETRAS 🌊</h1>
-    <p class="subtexto">Aprenda a sequência do alfabeto no fundo do mar!</p>
+    <p class="subtexto">Aprenda o alfabeto no fundo do mar!</p>
     <button class="btn-jogar" id="btn-start">🐟 INICIAR JOGO 🐟</button>
     <p class="subtexto" style="margin-top: 20px; font-size: 0.9rem;">Pressione ENTER ou Toque para começar</p>
 </div>
@@ -471,7 +501,6 @@
         const porc = (score / maxScore) * 100;
         barra.style.height = porc + '%';
         
-        // Mudança de cor da barra conforme pontuação
         if (porc < 25) barra.style.background = "linear-gradient(180deg, #ff6b6b, #cc0000)";
         else if (porc < 50) barra.style.background = "linear-gradient(180deg, #ffaa33, #ff6600)";
         else if (porc < 75) barra.style.background = "linear-gradient(180deg, #ffdd66, #ffaa00)";
@@ -533,7 +562,6 @@
             objAtual.resolvida = true;
             objAtual.elemento.classList.add('congelada');
             
-            // Pequena explosão de confete no acerto
             confetti({ particleCount: 15, spread: 30, origin: { y: 0.7 }, colors: ['#ffd700', '#48cae4'] });
             
             indexAtual++;
@@ -551,12 +579,10 @@
         if (musicaAtiva) musicaFundo.play().catch(() => {});
         inputMobile.focus();
         
-        // Reset do jogo
         indexAtual = 0;
         score = 0;
         atualizarEnergia(0);
         
-        // Reset visual das letras
         for (let i = 0; i < letrasEmJogo.length; i++) {
             letrasEmJogo[i].ativa = false;
             letrasEmJogo[i].resolvida = false;
@@ -579,13 +605,11 @@
         musicaFundo.pause();
         tocarSom('aplausos.mp3');
         
-        // Festa final com muitas bolhas e confetes
         confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 }, colors: ['#ffd700', '#48cae4', '#ffaa33'] });
         
         document.getElementById('tela-vitoria').style.display = 'flex';
         document.getElementById('pontuacao-final').innerHTML = score + " PONTOS";
         
-        // Gerar bolhas extras na vitória
         for (let i = 0; i < 50; i++) {
             setTimeout(() => {
                 const bolha = document.createElement('div');
@@ -620,7 +644,6 @@
         }
     });
     
-    // Toque para focar no input mobile
     document.addEventListener('touchstart', () => {
         if (jogoRodando) inputMobile.focus();
     });
@@ -629,24 +652,24 @@
         if (jogoRodando) inputMobile.focus();
     });
     
-    // ==================== BOLHAS E CONCHAS DECORATIVAS ====================
+    // ==================== BOLHAS E CONCHAS DECORATIVAS FLUTUANTES ====================
     function criarBolhasMarinhas() {
         setInterval(() => {
-            if (!jogoRodando && document.getElementById('tela-inicio').style.display !== 'none') return;
             const bolha = document.createElement('div');
             bolha.className = 'bubble-marine';
-            const tamanho = Math.random() * 20 + 5;
+            const tamanho = Math.random() * 25 + 5;
             bolha.style.width = tamanho + 'px';
             bolha.style.height = tamanho + 'px';
             bolha.style.left = Math.random() * 100 + '%';
             bolha.style.animationDuration = Math.random() * 5 + 3 + 's';
+            bolha.style.opacity = Math.random() * 0.5 + 0.2;
             document.body.appendChild(bolha);
             setTimeout(() => bolha.remove(), 8000);
-        }, 2000);
+        }, 1200);
     }
     
     function criarConchasFlutuantes() {
-        const conchasSimbolos = ['🐚', '⭐', '🌟', '🐟', '🧜‍♀️', '🔱', '🌊', '🐠', '🐙'];
+        const conchasSimbolos = ['🐚', '⭐', '🌟', '🐟', '🧜‍♀️', '🔱', '🌊', '🐠', '🐙', '🪸', '🐡', '🐬'];
         setInterval(() => {
             if (document.body) {
                 const concha = document.createElement('div');
@@ -659,7 +682,7 @@
                 document.body.appendChild(concha);
                 setTimeout(() => concha.remove(), 13000);
             }
-        }, 8000);
+        }, 7000);
     }
     
     // Inicializar decorações
@@ -673,14 +696,14 @@
         msgDiv.style.bottom = '20px';
         msgDiv.style.left = '50%';
         msgDiv.style.transform = 'translateX(-50%)';
-        msgDiv.style.background = 'rgba(0,0,0,0.7)';
+        msgDiv.style.background = 'rgba(0,0,0,0.8)';
         msgDiv.style.color = '#ffeaac';
         msgDiv.style.padding = '8px 20px';
         msgDiv.style.borderRadius = '40px';
         msgDiv.style.fontSize = '0.8rem';
         msgDiv.style.zIndex = '1000';
         msgDiv.style.fontFamily = "'Dancing Script', cursive";
-        msgDiv.innerHTML = "🧜‍♀️ Bem-vindo ao Reino de Netuno! Clique nas letras no teclado! 🧜‍♂️";
+        msgDiv.innerHTML = "🧜‍♀️ Bem-vindo ao Reino de Netuno! Digite as letras no teclado! 🧜‍♂️";
         document.body.appendChild(msgDiv);
         setTimeout(() => msgDiv.remove(), 4000);
     }, 500);
