@@ -156,6 +156,45 @@
             color: white;
         }
 
+        /* ===== BOTÃO DOURADO CINTILANTE ===== */
+        .btn-dourado {
+            font-family: 'Nunito', sans-serif;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            background: linear-gradient(135deg, #f5b042, #ffd700, #f5a623);
+            border: 2px solid #fff2b5;
+            color: #3a2a1a;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            animation: brilhoDourado 1.5s ease-in-out infinite alternate;
+            text-shadow: 0 1px 2px rgba(255,255,200,0.5);
+        }
+
+        @keyframes brilhoDourado {
+            0% {
+                box-shadow: 0 0 5px rgba(255, 215, 0, 0.4);
+                background: linear-gradient(135deg, #f5b042, #ffd700);
+            }
+            100% {
+                box-shadow: 0 0 25px rgba(255, 215, 0, 0.9), 0 0 8px rgba(255, 220, 100, 0.7);
+                background: linear-gradient(135deg, #ffcc44, #ffea8c);
+            }
+        }
+
+        .btn-dourado:hover {
+            transform: scale(1.05);
+            animation: none;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 1);
+            background: linear-gradient(135deg, #ffdd66, #ffea9e);
+        }
+
         /* Container principal */
         .container {
             max-width: 1300px;
@@ -321,7 +360,7 @@
         @media (max-width: 560px) {
             .header-container { flex-direction: column; }
             .titulo-reino { font-size: 1rem; }
-            .btn-musica, .btn-fullscreen { padding: 6px 12px; font-size: 0.7rem; }
+            .btn-musica, .btn-fullscreen, .btn-dourado { padding: 6px 12px; font-size: 0.7rem; }
             .banner-marinho h1 { font-size: 1.2rem; }
             .game-icon { font-size: 2.8rem; }
             .game-card h3 { font-size: 1rem; }
@@ -355,6 +394,7 @@
             <span>🧜‍♂️</span> Reino de Netuno · Alfabeto Marítimo <span>🧜‍♀️</span>
         </div>
         <div class="botoes-magicos">
+            <button class="btn-dourado" id="btnVoltarReinos" title="Voltar para o Reino das Vogais">⬅️⭐ Voltar aos Reinos</button>
             <button class="btn-musica" id="musicaBtn" onclick="toggleMusicaFundo()">🎵 Música ON</button>
             <button class="btn-fullscreen" id="fullscreenBtn" onclick="toggleFullScreenMarinho()">⛶ Tela Cheia</button>
         </div>
@@ -519,7 +559,37 @@
     atualizarIconeFullscreen();
 
     // ============================================================
-    // 3. FORÇAR TODOS OS LINKS A ABRIREM EM FULLSCREEN
+    // 3. BOTÃO DOURADO - VOLTAR PARA OS REINOS
+    // ============================================================
+    const btnVoltarReinos = document.getElementById('btnVoltarReinos');
+    
+    function voltarParaReinos() {
+        // Efeito de confete dourado
+        confetti({ 
+            particleCount: 80, 
+            spread: 70, 
+            origin: { y: 0.3 }, 
+            colors: ['#ffd700', '#ffaa33', '#ffcc66'],
+            startVelocity: 10
+        });
+        
+        const urlDestino = 'https://letramento-vogais.vercel.app/';
+        
+        // Se estiver em modo fullscreen, propaga a flag
+        if (isFullscreenActive) {
+            const separador = urlDestino.includes('?') ? '&' : '?';
+            const novaUrl = urlDestino + separador + 'fullscreen=force';
+            sessionStorage.setItem('parent_fullscreen_request', 'true');
+            window.location.href = novaUrl;
+        } else {
+            window.location.href = urlDestino;
+        }
+    }
+    
+    btnVoltarReinos.addEventListener('click', voltarParaReinos);
+
+    // ============================================================
+    // 4. FORÇAR TODOS OS LINKS A ABRIREM EM FULLSCREEN
     // ============================================================
     function adicionarFlagFullscreenNaUrl(url) {
         if (!url) return url;
@@ -580,7 +650,7 @@
     })();
 
     // ============================================================
-    // 4. DECORAÇÕES MARINHAS
+    // 5. DECORAÇÕES MARINHAS
     // ============================================================
     function criarBolhasMarinhas() {
         for (let i = 0; i < 18; i++) {
@@ -633,6 +703,17 @@
         setTimeout(() => {
             confetti({ particleCount: 100, spread: 70, origin: { y: 0.7 }, colors: ['#ffcd7e', '#2aa9c9', '#ffaa55'], startVelocity: 12 });
         }, 400);
+        
+        // Efeito de boas-vindas no botão dourado
+        setTimeout(() => {
+            const btn = document.getElementById('btnVoltarReinos');
+            if(btn) {
+                btn.style.animation = 'brilhoDourado 0.8s ease-in-out 3';
+                setTimeout(() => {
+                    btn.style.animation = 'brilhoDourado 1.5s ease-in-out infinite alternate';
+                }, 2400);
+            }
+        }, 1000);
     });
 
     setInterval(() => {
@@ -656,7 +737,7 @@
         }
     }, { once: true });
     
-    console.log("🌊 Reino do Alfabeto Marítimo: navegação simplificada com 3 jogos de pesca integrados!");
+    console.log("🌊 Reino do Alfabeto Marítimo: navegação simplificada com botão dourado para voltar aos Reinos!");
 </script>
 </body>
 </html>
