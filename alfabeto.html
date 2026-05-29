@@ -2,9 +2,13 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Alfacel – Alfabeto Mágico</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-
+    <title>🧜‍♀️ Alfabeto do Reino Encantado - Aprenda com a Sereia 🧜‍♂️</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Nunito:wght@400;600;700;800&family=Dancing+Script:wght@700&family=Playwrite+BR:wght@100..400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
     <style>
         :root {
             --primary: #ff6f61;
@@ -12,8 +16,8 @@
             --accent-blue: #42a5f5;
             --accent-green: #66bb6a;
             --accent-purple: #ab47bc;
-            --bg-soft: #f3e9d7;
-            --text: #3e2723;
+            --cursive-school: 'Playwrite BR', cursive;
+            --print-font: 'Nunito', sans-serif;
         }
 
         * {
@@ -23,565 +27,820 @@
         }
 
         body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: var(--bg-soft);
+            font-family: 'Nunito', 'Segoe UI', sans-serif;
+            background: linear-gradient(145deg, #021a2b 0%, #043b5c 40%, #01121f 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            padding: 16px;
+            position: relative;
+        }
+
+        /* Bolhas decorativas */
+        .bubble-marine {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            background: radial-gradient(circle, rgba(200, 240, 255, 0.4), rgba(100, 200, 255, 0.1));
+            border-radius: 50%;
+            animation: flutuarBolha linear infinite;
+        }
+
+        @keyframes flutuarBolha {
+            0% { transform: translateY(100vh) scale(0.3); opacity: 0; }
+            20% { opacity: 0.5; }
+            80% { opacity: 0.4; }
+            100% { transform: translateY(-20vh) scale(1); opacity: 0; }
         }
 
         .app {
             width: 100%;
-            max-width: 960px;
-            min-height: 100vh;
+            max-width: 1000px;
+            min-height: auto;
             padding: 16px;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            position: relative;
+            z-index: 10;
         }
 
-        /* Folha pautada suave */
+        /* Card com tema marinho */
         .card {
             position: relative;
-            background-color: #fffdf8;
-            border-radius: 18px;
-            padding: 22px 16px 22px;
+            background: rgba(1, 30, 45, 0.75);
+            backdrop-filter: blur(12px);
+            border-radius: 48px;
+            padding: 22px 20px 32px;
             text-align: center;
-            box-shadow:
-                0 16px 40px rgba(0,0,0,0.16),
-                0 0 0 4px rgba(255,255,255,0.9);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,200,0.2);
+            border: 2px solid #ffcd7e;
             overflow: hidden;
-            background-image:
-                repeating-linear-gradient(
-                    to bottom,
-                    #fffdf8 0px,
-                    #fffdf8 28px,
-                    #d6e2f5 29px
-                );
-            background-size: 100% 29px;
         }
 
-        .card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 52px;
-            width: 2px;
-            background: rgba(255, 82, 82, 0.5);
-        }
-
-        .stamp {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
-            border: 2px dashed rgba(0,0,0,0.16);
+        /* Header com botões */
+        .header-buttons {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            color: rgba(0,0,0,0.7);
-            transform: rotate(-5deg);
-            opacity: 0.85;
-            background: rgba(255,255,255,0.9);
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
-        .stamp-1 {
-            top: 14px;
-            right: 20px;
-        }
-
-        .stamp-2 {
-            bottom: 14px;
-            left: 12px;
-            transform: rotate(6deg);
-        }
-
-        @media (min-width: 720px) {
-            .card {
-                padding: 26px 28px 26px;
-            }
-        }
-
-        .badge {
+        .btn-acao {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #ffcd7e;
+            color: #ffeaac;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            font-family: 'Nunito', sans-serif;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            background: rgba(255,255,255,0.9);
-            border-radius: 999px;
-            padding: 4px 10px;
-            font-size: 11px;
-            color: rgba(62,39,35,0.9);
-            margin-bottom: 6px;
-            position: relative;
-            z-index: 1;
+            gap: 8px;
         }
 
-        .badge-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--secondary);
-            box-shadow: 0 0 0 4px rgba(255,202,40,0.4);
+        .btn-acao:hover {
+            transform: scale(1.05);
+            background: rgba(255, 205, 126, 0.3);
+            box-shadow: 0 0 15px rgba(255,205,126,0.5);
         }
 
-        /* Botão modo claro/escuro */
-        .theme-toggle {
-            position: absolute;
-            top: 10px;
-            left: 14px;
-            width: 34px;
-            height: 34px;
-            border-radius: 999px;
-            border: 1px solid rgba(0,0,0,0.12);
-            background: #ffffffcc;
-            backdrop-filter: blur(6px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            cursor: pointer;
-            font-size: 18px;
+        .btn-dourado {
+            background: linear-gradient(135deg, #f5b042, #ffd700, #f5a623);
+            border: 2px solid #fff2b5;
+            color: #3a2a1a;
+            animation: brilhoDourado 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes brilhoDourado {
+            0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.4); background: linear-gradient(135deg, #f5b042, #ffd700); }
+            100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); background: linear-gradient(135deg, #ffcc44, #ffea8c); }
+        }
+
+        /* Seletor de modo de escrita e de jogo */
+        .modo-selector {
             display: flex;
-            align-items: center;
+            flex-wrap: wrap;
             justify-content: center;
-            z-index: 2;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .modo-btn, .game-mode-btn {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #7ec8ff;
+            color: #7ec8ff;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            transition: all 0.3s;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .modo-btn.ativo, .game-mode-btn.ativo {
+            background: linear-gradient(135deg, #1e5f8e, #0d3a5c);
+            border-color: #ffcd7e;
+            color: #ffeaac;
+            box-shadow: 0 0 10px rgba(255,205,126,0.4);
         }
 
         .title {
-            font-size: clamp(24px, 5vw, 32px);
-            color: var(--primary);
-            font-weight: 900;
-            margin-bottom: 4px;
-            position: relative;
-            z-index: 1;
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: clamp(20px, 5vw, 28px);
+            background: linear-gradient(135deg, #ffdd99, #ffbc6e);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(255,200,100,0.3);
+            margin-bottom: 8px;
         }
 
         .subtitle {
-            font-size: 14px;
-            color: var(--text);
-            opacity: 0.95;
-            margin-bottom: 10px;
-            position: relative;
-            z-index: 1;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1rem;
+            color: #b9e6ff;
+            margin-bottom: 20px;
         }
 
+        /* Área da letra */
         .stage {
-            min-height: 220px;
+            min-height: 180px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            position: relative;
-            overflow: hidden;
-            margin: 10px 0 14px;
-            z-index: 1;
+            margin: 10px 0;
         }
 
         .big-letter {
-            font-size: clamp(130px, 34vw, 220px);
+            font-size: clamp(100px, 25vw, 180px);
             font-weight: 900;
             line-height: 1;
-            color: var(--primary);
-            text-shadow:
-                0 0 0 rgba(0,0,0,0.1),
-                0 12px 22px rgba(0,0,0,0.18);
+            background: linear-gradient(135deg, #ffdd99, #ffaa66);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.2);
             opacity: 0;
             transform: scale(0.1) translateY(40px);
+            transition: all 0.3s ease;
         }
 
         .big-letter.flash-in {
-            animation: flashIn 0.9s ease-out forwards;
+            animation: flashIn 0.6s ease-out forwards;
         }
 
         @keyframes flashIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.1) translateY(40px);
-            }
-            40% {
-                opacity: 1;
-                transform: scale(1.1) translateY(0);
-            }
-            70% {
-                transform: scale(0.9);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
+            0% { opacity: 0; transform: scale(0.1) translateY(40px); }
+            40% { opacity: 1; transform: scale(1.1) translateY(0); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
-        .big-letter.pop {
-            animation: popOnce 0.45s ease-out;
+        /* Área de input manual */
+        .manual-area {
+            margin: 15px 0;
+            text-align: center;
         }
 
-        @keyframes popOnce {
-            0% { transform: scale(0.9); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+        .manual-input {
+            font-size: 2rem;
+            width: 120px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 60px;
+            border: 3px solid #ffcd7e;
+            background: rgba(255,255,240,0.9);
+            color: #2c1a3a;
+            font-weight: bold;
+            outline: none;
+            font-family: inherit;
         }
 
+        .manual-label {
+            font-size: 0.9rem;
+            color: #ffeaac;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* Grade das letras */
         .alphabet-grid {
             display: grid;
-            grid-template-columns: repeat(7, minmax(0, 1fr));
+            grid-template-columns: repeat(7, 1fr);
             gap: 8px;
-            justify-items: center;
-            margin: 4px 0 6px;
-            position: relative;
-            z-index: 1;
+            margin: 15px 0;
         }
 
         @media (max-width: 640px) {
-            .alphabet-grid {
-                grid-template-columns: repeat(6, minmax(0, 1fr));
-            }
+            .alphabet-grid { grid-template-columns: repeat(6, 1fr); }
         }
 
         .letter-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
+            width: 50px;
+            height: 50px;
+            border-radius: 16px;
             border: none;
-            font-size: 24px;
-            font-weight: 800;
-            color: #fff;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: white;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 5px 12px rgba(0,0,0,0.16);
-            transition: transform 0.12s ease, box-shadow 0.12s ease, outline 0.12s ease;
-            outline: 2px solid transparent;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        .letter-btn:active {
-            transform: translateY(2px) scale(0.96);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.18);
-        }
-
-        .letter-btn:focus-visible {
-            outline: 2px solid #00000066;
-        }
+        .letter-btn:active { transform: scale(0.95); }
+        .letter-btn.completed { opacity: 0.5; filter: grayscale(0.3); cursor: default; transform: none; }
+        .letter-btn.completed:active { transform: none; }
 
         .c1 { background: linear-gradient(135deg, #ff8a65, #ffb74d); }
         .c2 { background: linear-gradient(135deg, #4fc3f7, #64b5f6); }
         .c3 { background: linear-gradient(135deg, #81c784, #aed581); }
         .c4 { background: linear-gradient(135deg, #ba68c8, #f06292); }
 
-        .controls {
-            font-size: 12px;
-            color: rgba(62,39,35,0.8);
-            margin-top: 4px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .controls kbd {
-            background: rgba(0,0,0,0.05);
-            border-radius: 4px;
-            padding: 2px 5px;
-            font-size: 11px;
+        /* Progresso */
+        .progresso {
+            margin-top: 15px;
+            font-size: 1rem;
+            color: #ffeaac;
+            font-weight: bold;
         }
 
         .btn-row {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 8px;
-            margin-top: 10px;
-            position: relative;
-            z-index: 1;
+            gap: 10px;
+            margin-top: 15px;
         }
 
-        .btn {
-            padding: 7px 14px;
-            border-radius: 999px;
-            border: none;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 5px 12px rgba(0,0,0,0.18);
+        /* Mensagem de celebração */
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #ffd700, #ffaa33);
+            color: #2c1a3a;
+            padding: 20px 40px;
+            border-radius: 60px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            z-index: 200;
+            animation: fadeOut 2s ease-out forwards;
+            white-space: nowrap;
+            box-shadow: 0 0 30px rgba(255,215,0,0.8);
+            font-family: 'Cinzel Decorative', cursive;
         }
 
-        .btn-primary {
-            background: var(--accent-blue);
-            color: #fff;
+        @keyframes fadeOut {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(0.8); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1); visibility: hidden; }
         }
 
-        .btn-secondary {
-            background: #ffffff;
-            color: var(--text);
-            border: 1px solid rgba(0,0,0,0.08);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+        footer {
+            margin-top: 15px;
+            font-size: 0.7rem;
+            color: #8ab3cf;
+            text-align: center;
         }
 
-        .btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.18);
-        }
-
-        .hint {
-            font-size: 13px;
-            color: rgba(62,39,35,0.85);
-            margin-top: 6px;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Tema escuro (modo noturno) */
-        body.dark {
-            background: #101017;
-            color: #f5f5f5;
-        }
-
-        body.dark .card {
-            background-color: #181824;
-            box-shadow:
-                0 16px 40px rgba(0,0,0,0.7),
-                0 0 0 2px rgba(255,255,255,0.06);
-            background-image:
-                repeating-linear-gradient(
-                    to bottom,
-                    #181824 0px,
-                    #181824 28px,
-                    #2a3142 29px
-                );
-        }
-
-        body.dark .card::before {
-            background: rgba(255, 138, 101, 0.7);
-        }
-
-        body.dark .stamp {
-            border-color: rgba(255,255,255,0.15);
-            background: rgba(18,18,28,0.95);
-            color: rgba(255,255,255,0.8);
-        }
-
-        body.dark .title {
-            color: #ffb74d;
-        }
-
-        body.dark .subtitle,
-        body.dark .controls,
-        body.dark .hint {
-            color: rgba(250,250,250,0.9);
+        @media (max-width: 560px) {
+            .letter-btn { width: 40px; height: 40px; font-size: 1rem; }
+            .btn-acao { padding: 5px 10px; font-size: 0.65rem; }
+            .modo-btn, .game-mode-btn { padding: 4px 8px; font-size: 0.6rem; }
+            .manual-input { width: 90px; font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
+
 <div class="app">
     <div class="card">
-        <button class="theme-toggle" id="themeToggle" aria-label="Alternar modo noturno">
-            🌞
-        </button>
-
-        <div class="stamp stamp-1">🏝️</div>
-        <div class="stamp stamp-2">📬</div>
-
-        <div class="badge">
-            <span class="badge-dot"></span>
-            <span>Alfacel – Alfabeto maiúsculo animado</span>
+        <div class="header-buttons">
+            <button class="btn-acao btn-dourado" id="btnVoltar" onclick="voltarPagina()">⬅️⭐ Voltar</button>
+            <button class="btn-acao" id="fullscreenBtn" onclick="toggleFullscreen()">⛶ Tela Cheia</button>
+            <button class="btn-acao" id="audioBtn" onclick="toggleAudio()">🔊 Música</button>
         </div>
 
-        <h1 class="title">Alfabeto Mágico</h1>
-        <p class="subtitle" id="subtitle">
-            As letras vão aparecer bem grandes, uma de cada vez, e falar o seu nome.
-        </p>
-
-        <div class="stage" aria-live="polite">
-            <div id="bigLetter" class="big-letter" aria-label="Letra atual"></div>
+        <!-- Seletor de modo de jogo: Sequencial ou Aleatório -->
+        <div class="modo-selector">
+            <button class="game-mode-btn" data-gamemode="sequencial" onclick="selecionarGameMode('sequencial')">📚 Sequencial</button>
+            <button class="game-mode-btn" data-gamemode="aleatorio" onclick="selecionarGameMode('aleatorio')">🎲 Aleatório</button>
         </div>
 
-        <div class="alphabet-grid" id="alphabetGrid" aria-label="Todas as letras do alfabeto">
-            <!-- Letras A–Z serão inseridas via JavaScript -->
+        <!-- Seletor de modo de escrita -->
+        <div class="modo-selector" id="modoSelector">
+            <button class="modo-btn" data-modo="print-maius" onclick="selecionarModo('print-maius')">🔠 Fôrma MAIÚSCULA</button>
+            <button class="modo-btn" data-modo="print-minus" onclick="selecionarModo('print-minus')">🔡 Fôrma minúscula</button>
+            <button class="modo-btn" data-modo="cursive-maius" onclick="selecionarModo('cursive-maius')">✍️ Manuscrito MAIÚSCULO</button>
+            <button class="modo-btn" data-modo="cursive-minus" onclick="selecionarModo('cursive-minus')">✍️ Manuscrito minúsculo</button>
         </div>
 
-        <p class="hint" id="hint">
-            Toque em uma letra para vê-la grande e ouvir o som novamente.
-        </p>
+        <h1 class="title">🧜‍♀️ Alfabeto do Reino Encantado 🧜‍♂️</h1>
+        <p class="subtitle">🐚 Ouça a voz da Sereia e digite a letra correta! 🐚</p>
 
-        <p class="controls">
-            Clique em ▶ <strong>Apresentar alfabeto</strong> ou use o teclado:
-            <kbd>→</kbd> próxima letra, <kbd>←</kbd> letra anterior.
-        </p>
+        <div class="stage">
+            <div id="bigLetter" class="big-letter"></div>
+        </div>
+
+        <div class="manual-area">
+            <div class="manual-label">🎤 Digite a letra que você ouviu:</div>
+            <input type="text" class="manual-input" id="manualInput" maxlength="1" placeholder="?" autocomplete="off" spellcheck="false">
+        </div>
+
+        <div class="alphabet-grid" id="alphabetGrid"></div>
+
+        <div class="progresso" id="progresso">✨ Progresso: 0/26 letras ✨</div>
 
         <div class="btn-row">
-            <button class="btn btn-primary" id="btnPlaySequence">
-                ▶ Apresentar alfabeto
-            </button>
-            <button class="btn btn-secondary" id="btnRepeat">
-                🔁 Repetir letra atual
-            </button>
+            <button class="btn-acao" id="btnRepetir">🔁 Repetir letra</button>
+            <button class="btn-acao" id="btnReset">🔄 Recomeçar jogo</button>
         </div>
+
+        <footer>🧜‍♀️ Clique nas letras ou digite no teclado! Cada acerto é uma conquista submarina! 🧜‍♂️</footer>
     </div>
 </div>
 
+<audio id="bgMusic" src="ocean_ambience.mp3" loop></audio>
+<audio id="sfxCorrect" src="splash.mp3"></audio>
+<audio id="sfxApplause" src="aplausos.mp3"></audio>
+<audio id="sfxS" src="s.mp3"></audio>
+
 <script>
-    // Web Speech API em pt-BR [web:24][web:68]
-    const synth = window.speechSynthesis;
-    let voices = [];
-    let voicePtBr = null;
-
-    function loadVoices() {
-        voices = synth.getVoices();
-        voicePtBr = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("pt-br")) || null;
-    }
-
-    loadVoices();
-    if (speechSynthesis.onvoiceschanged !== undefined) {
-        speechSynthesis.onvoiceschanged = loadVoices;
-    }
-
-    function speak(text, rate = 0.85, pitch = 1.1) {
-        if (!text) return;
-        synth.cancel();
-        const u = new SpeechSynthesisUtterance(text);
-        u.lang = "pt-BR";
-        if (voicePtBr) u.voice = voicePtBr;
-        u.rate = rate;
-        u.pitch = pitch;
-        synth.speak(u);
-    }
-
-    // Letras A–Z
+    // ==================== CONFIGURAÇÕES INICIAIS ====================
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    let completed = new Array(26).fill(false);
+    let letrasRestantes = [...letters];
+    let currentLetterIndex = 0;
+    let currentGameMode = "sequencial";
+    let modoAtual = "print-maius";
+    let audioEnabled = true;
+    let jogoFinalizado = false;
+    let currentUtterance = null;
 
+    // Elementos de áudio
+    const audioS = document.getElementById("sfxS");
+    const bgMusic = document.getElementById("bgMusic");
+    const sfxCorrect = document.getElementById("sfxCorrect");
+    const sfxApplause = document.getElementById("sfxApplause");
+
+    // Mapeamento de modos para estilos de fonte
+    const modoFontes = {
+        "print-maius": { transform: (l) => l.toUpperCase(), fontFamily: "'Nunito', sans-serif", label: "Fôrma Maiúscula" },
+        "print-minus": { transform: (l) => l.toLowerCase(), fontFamily: "'Nunito', sans-serif", label: "Fôrma Minúscula" },
+        "cursive-maius": { transform: (l) => l.toUpperCase(), fontFamily: "'Playwrite BR', cursive", label: "Manuscrito Maiúsculo" },
+        "cursive-minus": { transform: (l) => l.toLowerCase(), fontFamily: "'Playwrite BR', cursive", label: "Manuscrito Minúsculo" }
+    };
+
+    // Mapa de pronúncias para síntese de voz (usado apenas para as letras que NÃO são S)
+    const pronunciaMap = {
+        "A": "á",
+        "B": "bê",
+        "C": "cê",
+        "D": "dê",
+        "E": "ê",
+        "F": "efe",
+        "G": "gê",
+        "H": "agá",
+        "I": "i",
+        "J": "jóta",
+        "K": "cá",
+        "L": "éle",
+        "M": "ême",
+        "N": "êne",
+        "O": "ô",
+        "P": "pê",
+        "Q": "quê",
+        "R": "érre",
+        // "S": "ésse",  // NÃO USA MAIS SÍNTESE - USA ÁUDIO MP3
+        "T": "tê",
+        "U": "u",
+        "V": "vê",
+        "W": "dáblio",
+        "X": "xis",
+        "Y": "ípsilon",
+        "Z": "zê"
+    };
+
+    // Elementos DOM
+    const alphabetGrid = document.getElementById("alphabetGrid");
     const bigLetterEl = document.getElementById("bigLetter");
-    const gridEl = document.getElementById("alphabetGrid");
-    const btnPlaySequence = document.getElementById("btnPlaySequence");
-    const btnRepeat = document.getElementById("btnRepeat");
-    const themeToggleBtn = document.getElementById("themeToggle");
+    const manualInput = document.getElementById("manualInput");
+    const progressoEl = document.getElementById("progresso");
 
-    let currentIndex = 0;
-    let playingSequence = false;
-
-    // Cria os botões de letras
-    letters.forEach((letter, idx) => {
-        const btn = document.createElement("button");
-        btn.className = "letter-btn " + ["c1","c2","c3","c4"][idx % 4];
-        btn.textContent = letter;
-        btn.setAttribute("data-letter", letter);
-        btn.setAttribute("aria-label", "Letra " + letter);
-        gridEl.appendChild(btn);
-    });
-
-    function showLetter(index, animateFlash = true) {
-        if (index < 0 || index >= letters.length) return;
-        currentIndex = index;
-        const letter = letters[index];
-        bigLetterEl.textContent = letter;
-        bigLetterEl.classList.remove("flash-in", "pop");
-        void bigLetterEl.offsetWidth;
-        bigLetterEl.style.opacity = "1";
-        bigLetterEl.classList.add(animateFlash ? "flash-in" : "pop");
-    }
-
-    function speakCurrentLetterName() {
-        const letter = letters[currentIndex];
-        speak(letter, 0.85, 1.1);
-    }
-
-    function playSequence() {
-        if (playingSequence) return;
-        playingSequence = true;
-        let i = 0;
-
-        function next() {
-            if (!playingSequence) return;
-            if (i >= letters.length) {
-                playingSequence = false;
-                return;
-            }
-            showLetter(i, true);
-            speak(letters[i], 0.85, 1.1);
-            i++;
-            setTimeout(next, 1100);
+    // ==================== FUNÇÃO PARA VOLTAR ====================
+    function voltarPagina() {
+        if (typeof confetti !== 'undefined') {
+            confetti({ particleCount: 60, spread: 60, origin: { y: 0.3 }, colors: ['#ffd700', '#48cae4'], startVelocity: 10 });
         }
-        next();
+        window.location.href = 'https://alfabeto-mu.vercel.app/';
     }
 
-    // Clique em uma letra
-    gridEl.addEventListener("click", (e) => {
-        const btn = e.target.closest(".letter-btn");
-        if (!btn) return;
-        const letter = btn.getAttribute("data-letter");
-        const index = letters.indexOf(letter);
-        if (index === -1) return;
-        playingSequence = false;
-        showLetter(index, false);
-        speak(letter, 0.85, 1.1);
-    });
+    // ==================== TELA CHEIA ====================
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+        else document.exitFullscreen();
+    }
 
-    // Botões principais
-    btnPlaySequence.addEventListener("click", () => {
-        playSequence();
-    });
-
-    btnRepeat.addEventListener("click", () => {
-        speakCurrentLetterName();
-    });
-
-    // Teclado
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowRight") {
-            e.preventDefault();
-            playingSequence = false;
-            const nextIndex = (currentIndex + 1) % letters.length;
-            showLetter(nextIndex, false);
-            speakCurrentLetterName();
-        } else if (e.key === "ArrowLeft") {
-            e.preventDefault();
-            playingSequence = false;
-            const prevIndex = (currentIndex - 1 + letters.length) % letters.length;
-            showLetter(prevIndex, false);
-            speakCurrentLetterName();
+    // ==================== MÚSICA ====================
+    function toggleAudio() {
+        audioEnabled = !audioEnabled;
+        const btn = document.getElementById("audioBtn");
+        if (audioEnabled) {
+            bgMusic.play().catch(e => console.log("erro audio"));
+            btn.innerHTML = "🔊 Música";
         } else {
+            bgMusic.pause();
+            btn.innerHTML = "🔇 Música";
+        }
+    }
+
+    // ==================== FUNÇÃO DE FALA CORRIGIDA (COM ÁUDIO MP3 PARA A LETRA "S") ====================
+    function falar(texto, callback) {
+        if (!window.speechSynthesis) { if(callback) callback(); return; }
+        if (currentUtterance) window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(texto);
+        utterance.lang = 'pt-BR';
+        utterance.rate = 0.85;
+        utterance.pitch = 1.1;
+        utterance.onend = () => {
+            currentUtterance = null;
+            if (callback) callback();
+        };
+        window.speechSynthesis.speak(utterance);
+        currentUtterance = utterance;
+    }
+
+    function falarLetra(letra) {
+        // Garantir que a letra esteja em maiúsculo
+        const chave = letra.toUpperCase().trim();
+        
+        // CASO ESPECIAL: LETRA "S" - USA O ARQUIVO DE ÁUDIO MP3
+        if (chave === "S") {
+            if (audioS) {
+                audioS.currentTime = 0;
+                audioS.play().catch(e => console.log("erro ao tocar s.mp3", e));
+            } else {
+                // Fallback caso o áudio não exista
+                falar("ésse");
+            }
+            return;
+        }
+        
+        // Para as demais letras, usa a síntese de voz
+        const pronuncia = pronunciaMap[chave];
+        if (pronuncia) {
+            falar(pronuncia);
+        } else {
+            falar(chave);
+        }
+    }
+
+    // ==================== SELECIONAR MODO DE ESCRITA ====================
+    function selecionarModo(modo) {
+        modoAtual = modo;
+        document.querySelectorAll('.modo-btn').forEach(btn => {
+            btn.classList.remove('ativo');
+            if (btn.getAttribute('data-modo') === modo) btn.classList.add('ativo');
+        });
+        atualizarInterface();
+    }
+
+    // ==================== SELECIONAR MODO DE JOGO ====================
+    function selecionarGameMode(mode) {
+        currentGameMode = mode;
+        document.querySelectorAll('.game-mode-btn').forEach(btn => {
+            btn.classList.remove('ativo');
+            if (btn.getAttribute('data-gamemode') === mode) btn.classList.add('ativo');
+        });
+        resetarJogo();
+    }
+
+    function getLetraTransformada(letra) {
+        return modoFontes[modoAtual].transform(letra);
+    }
+
+    // ==================== ATUALIZAR INTERFACE ====================
+    function atualizarInterface() {
+        const btns = document.querySelectorAll('.letter-btn');
+        letters.forEach((letra, idx) => {
+            if (btns[idx]) {
+                const letraTransformada = getLetraTransformada(letra);
+                btns[idx].textContent = letraTransformada;
+                btns[idx].style.fontFamily = modoFontes[modoAtual].fontFamily;
+                if (completed[idx]) {
+                    btns[idx].classList.add('completed');
+                } else {
+                    btns[idx].classList.remove('completed');
+                }
+            }
+        });
+        
+        if (!jogoFinalizado && currentLetterIndex < 26 && !completed[currentLetterIndex]) {
+            const letraAtual = getLetraTransformada(letters[currentLetterIndex]);
+            bigLetterEl.textContent = letraAtual;
+            bigLetterEl.style.fontFamily = modoFontes[modoAtual].fontFamily;
+        }
+    }
+
+    // ==================== PROXIMA LETRA (SEQUENCIAL) ====================
+    function proximaLetraNaoCompletadaSequencial() {
+        for (let i = 0; i < 26; i++) {
+            if (!completed[i]) return i;
+        }
+        return -1;
+    }
+
+    // ==================== PROXIMA LETRA (ALEATÓRIA) ====================
+    function atualizarLetrasRestantes() {
+        letrasRestantes = [];
+        for (let i = 0; i < 26; i++) {
+            if (!completed[i]) letrasRestantes.push(i);
+        }
+    }
+
+    function getProximaLetraAleatoria() {
+        atualizarLetrasRestantes();
+        if (letrasRestantes.length === 0) return -1;
+        const randomIndex = Math.floor(Math.random() * letrasRestantes.length);
+        return letrasRestantes[randomIndex];
+    }
+
+    // ==================== CARREGAR PRÓXIMA LETRA ====================
+    function carregarProximaLetra() {
+        let nextIndex;
+        if (currentGameMode === "sequencial") {
+            nextIndex = proximaLetraNaoCompletadaSequencial();
+        } else {
+            nextIndex = getProximaLetraAleatoria();
+        }
+        
+        if (nextIndex === -1) {
+            finalizarJogo();
+            return false;
+        }
+        
+        currentLetterIndex = nextIndex;
+        const letraAtual = getLetraTransformada(letters[currentLetterIndex]);
+        bigLetterEl.textContent = letraAtual;
+        bigLetterEl.classList.remove("flash-in");
+        setTimeout(() => bigLetterEl.classList.add("flash-in"), 10);
+        
+        // Falar a letra para a criança (com áudio MP3 para o S)
+        setTimeout(() => {
+            if (!jogoFinalizado) falarLetra(letters[currentLetterIndex]);
+        }, 300);
+        
+        return true;
+    }
+
+    // ==================== CELEBRAR ACERTO ====================
+    function celebrarAcerto(letra) {
+        confetti({ particleCount: 60, spread: 50, origin: { y: 0.5 }, colors: ['#ffd700', '#48cae4', '#ffaa33'] });
+        
+        if (audioEnabled) {
+            sfxCorrect.currentTime = 0;
+            sfxCorrect.play().catch(e => console.log("erro som"));
+        }
+        
+        const msg = document.createElement("div");
+        msg.className = "celebration";
+        msg.innerHTML = `🎉 PARABÉNS! +${getLetraTransformada(letra)} 🎉`;
+        document.body.appendChild(msg);
+        setTimeout(() => msg.remove(), 1500);
+        
+        const btn = document.querySelector(`.letter-btn[data-letter="${letra}"]`);
+        if (btn) {
+            btn.style.transform = "scale(1.1)";
+            setTimeout(() => btn.style.transform = "", 300);
+        }
+    }
+
+    // ==================== VERIFICAR RESPOSTA ====================
+    function verificarResposta(resposta) {
+        if (jogoFinalizado) return;
+        
+        const respostaNorm = resposta.trim().toUpperCase();
+        const letraCorreta = letters[currentLetterIndex];
+        
+        if (respostaNorm === letraCorreta && !completed[currentLetterIndex]) {
+            // ACERTOU!
+            completed[currentLetterIndex] = true;
+            celebrarAcerto(letraCorreta);
+            
+            // Atualizar interface
+            atualizarInterface();
+            atualizarProgresso();
+            
+            // Verificar se completou todas as letras
+            const completados = completed.filter(c => c === true).length;
+            if (completados === 26) {
+                finalizarJogo();
+            } else {
+                carregarProximaLetra();
+            }
+        } else if (!completed[currentLetterIndex]) {
+            // ERROU - feedback visual
+            manualInput.style.borderColor = "#ff4444";
+            setTimeout(() => manualInput.style.borderColor = "#ffcd7e", 500);
+            
+            // Repetir a letra para ajudar (com áudio MP3 para o S)
+            falarLetra(letters[currentLetterIndex]);
+        }
+        
+        manualInput.value = "";
+        manualInput.focus();
+    }
+
+    // ==================== ATUALIZAR PROGRESSO ====================
+    function atualizarProgresso() {
+        const completados = completed.filter(c => c === true).length;
+        const modoTexto = currentGameMode === "sequencial" ? "📚 Sequencial" : "🎲 Aleatório";
+        progressoEl.innerHTML = `${modoTexto} | ✨ Progresso: ${completados}/26 letras ✨ ${completados === 26 ? "🏆 COMPLETO! 🏆" : ""}`;
+    }
+
+    // ==================== FINALIZAR JOGO COM FESTA ====================
+    function finalizarJogo() {
+        if (jogoFinalizado) return;
+        jogoFinalizado = true;
+        
+        // Confete em grande quantidade
+        confetti({ particleCount: 300, spread: 120, origin: { y: 0.5 }, colors: ['#ffd700', '#48cae4', '#ffaa33', '#ff6b6b', '#ff8888'] });
+        
+        // Aplausos
+        if (audioEnabled) {
+            sfxApplause.currentTime = 0;
+            sfxApplause.play().catch(e => console.log("erro aplausos"));
+        }
+        
+        // Muitas bolhas
+        for (let i = 0; i < 80; i++) {
+            setTimeout(() => {
+                const bolha = document.createElement('div');
+                bolha.className = 'bubble-marine';
+                const tamanho = Math.random() * 25 + 8;
+                bolha.style.width = tamanho + 'px';
+                bolha.style.height = tamanho + 'px';
+                bolha.style.left = Math.random() * 100 + '%';
+                bolha.style.animationDuration = Math.random() * 4 + 2 + 's';
+                document.body.appendChild(bolha);
+                setTimeout(() => bolha.remove(), 5000);
+            }, i * 60);
+        }
+        
+        bigLetterEl.textContent = "🏆🏆🏆";
+        bigLetterEl.style.fontSize = "100px";
+        
+        const msgFinal = document.createElement("div");
+        msgFinal.className = "celebration";
+        msgFinal.innerHTML = "🧜‍♀️ PARABÉNS! VOCÊ DOMINOU O ALFABETO! 🧜‍♂️<br>✨ Reino Encantado te agradece! ✨";
+        msgFinal.style.whiteSpace = "normal";
+        msgFinal.style.textAlign = "center";
+        msgFinal.style.padding = "25px 40px";
+        msgFinal.style.fontSize = "1.3rem";
+        document.body.appendChild(msgFinal);
+        
+        falar("Parabéns! Você completou todo o alfabeto! Você é um rei ou uma rainha do conhecimento!");
+        
+        setTimeout(() => msgFinal.remove(), 5000);
+    }
+
+    // ==================== RESETAR JOGO ====================
+    function resetarJogo() {
+        completed = new Array(26).fill(false);
+        jogoFinalizado = false;
+        
+        if (currentGameMode === "sequencial") {
+            currentLetterIndex = 0;
+        } else {
+            atualizarLetrasRestantes();
+            currentLetterIndex = getProximaLetraAleatoria();
+            if (currentLetterIndex === -1) currentLetterIndex = 0;
+        }
+        
+        atualizarProgresso();
+        atualizarInterface();
+        
+        const letraAtual = getLetraTransformada(letters[currentLetterIndex]);
+        bigLetterEl.textContent = letraAtual;
+        bigLetterEl.classList.remove("flash-in");
+        setTimeout(() => bigLetterEl.classList.add("flash-in"), 10);
+        
+        setTimeout(() => {
+            if (!jogoFinalizado) falarLetra(letters[currentLetterIndex]);
+        }, 300);
+        
+        manualInput.value = "";
+        manualInput.focus();
+    }
+
+    // ==================== REPETIR LETRA ATUAL ====================
+    function repetirLetra() {
+        if (!jogoFinalizado && currentLetterIndex < 26 && !completed[currentLetterIndex]) {
+            falarLetra(letters[currentLetterIndex]);
+            bigLetterEl.classList.remove("flash-in");
+            setTimeout(() => bigLetterEl.classList.add("flash-in"), 10);
+        }
+    }
+
+    // ==================== CRIAR GRADE DE LETRAS ====================
+    function criarGradeLetras() {
+        alphabetGrid.innerHTML = "";
+        letters.forEach((letra, idx) => {
+            const btn = document.createElement("button");
+            btn.className = "letter-btn " + ["c1","c2","c3","c4"][idx % 4];
+            btn.setAttribute("data-letter", letra);
+            btn.textContent = getLetraTransformada(letra);
+            btn.style.fontFamily = modoFontes[modoAtual].fontFamily;
+            btn.onclick = () => {
+                if (!completed[idx] && !jogoFinalizado && idx === currentLetterIndex) {
+                    verificarResposta(letra);
+                } else if (!completed[idx] && !jogoFinalizado && idx !== currentLetterIndex) {
+                    falarLetra(letters[currentLetterIndex]);
+                }
+            };
+            alphabetGrid.appendChild(btn);
+        });
+    }
+
+    // ==================== CRIAR BOLHAS DECORATIVAS ====================
+    function criarBolhasMarinhas() {
+        setInterval(() => {
+            const bolha = document.createElement('div');
+            bolha.className = 'bubble-marine';
+            const tamanho = Math.random() * 20 + 5;
+            bolha.style.width = tamanho + 'px';
+            bolha.style.height = tamanho + 'px';
+            bolha.style.left = Math.random() * 100 + '%';
+            bolha.style.animationDuration = Math.random() * 5 + 3 + 's';
+            document.body.appendChild(bolha);
+            setTimeout(() => bolha.remove(), 8000);
+        }, 1500);
+    }
+
+    // ==================== INICIALIZAR JOGO ====================
+    function iniciarJogo() {
+        criarGradeLetras();
+        
+        // Marcar botões ativos padrão
+        document.querySelector('.game-mode-btn[data-gamemode="sequencial"]').classList.add('ativo');
+        document.querySelector('.modo-btn[data-modo="print-maius"]').classList.add('ativo');
+        
+        atualizarInterface();
+        atualizarProgresso();
+        
+        const letraAtual = getLetraTransformada(letters[0]);
+        bigLetterEl.textContent = letraAtual;
+        bigLetterEl.classList.add("flash-in");
+        
+        setTimeout(() => {
+            falarLetra(letters[0]);
+        }, 500);
+        
+        manualInput.addEventListener('input', (e) => {
+            let val = e.target.value;
+            if (val.length > 0) {
+                const ultimaLetra = val[val.length-1].toUpperCase();
+                if (/[A-Z]/i.test(ultimaLetra)) {
+                    verificarResposta(ultimaLetra);
+                }
+                manualInput.value = "";
+            }
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (jogoFinalizado) return;
             const key = e.key.toUpperCase();
             if (letters.includes(key)) {
-                playingSequence = false;
-                showLetter(letters.indexOf(key), false);
-                speak(key, 0.85, 1.1);
+                e.preventDefault();
+                verificarResposta(key);
             }
-        }
-    });
-
-    // ---------- MODO NOTURNO ----------
-    function setTheme(theme) {
-        if (theme === "dark") {
-            document.body.classList.add("dark");
-            themeToggleBtn.textContent = "🌙";
-            themeToggleBtn.setAttribute("aria-label", "Alternar para modo claro");
-        } else {
-            document.body.classList.remove("dark");
-            themeToggleBtn.textContent = "🌞";
-            themeToggleBtn.setAttribute("aria-label", "Alternar para modo noturno");
-        }
-        localStorage.setItem("alfacel-theme", theme);
+        });
+        
+        manualInput.focus();
     }
 
-    function initTheme() {
-        const saved = localStorage.getItem("alfacel-theme");
-        if (saved === "dark" || saved === "light") {
-            setTheme(saved);
-        } else {
-            const prefersDark = window.matchMedia &&
-                window.matchMedia("(prefers-color-scheme: dark)").matches;
-            setTheme(prefersDark ? "dark" : "light");
-        }
-    }
-
-    themeToggleBtn.addEventListener("click", () => {
-        const isDark = document.body.classList.contains("dark");
-        setTheme(isDark ? "light" : "dark");
-    });
-
+    // ==================== EVENTOS DOS BOTÕES ====================
+    document.getElementById("btnRepetir").onclick = repetirLetra;
+    document.getElementById("btnReset").onclick = resetarJogo;
+    
     // Inicialização
-    window.addEventListener("load", () => {
-        initTheme();           // aplica tema salvo
-        showLetter(0, false);  // começa mostrando A
-    });
+    window.onload = () => {
+        criarBolhasMarinhas();
+        iniciarJogo();
+        bgMusic.volume = 0.2;
+        bgMusic.play().catch(e => console.log("autoplay bloqueado"));
+        document.documentElement.requestFullscreen().catch(e => console.log("fullscreen não permitido"));
+    };
 </script>
 </body>
 </html>
-
