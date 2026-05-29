@@ -307,6 +307,25 @@
         }
         .btn-jogar:active { transform: translateY(4px); box-shadow: 0 4px 0 #b8860b; }
 
+        .btn-voltar-vitoria {
+            padding: 10px 25px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.9rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #555, #333);
+            color: #ffeaac;
+            border: 2px solid #ffcd7e;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+        .btn-voltar-vitoria:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #666, #444);
+            box-shadow: 0 0 15px rgba(255,205,126,0.5);
+        }
+
         .subtexto {
             font-family: 'Dancing Script', cursive;
             font-size: 1.2rem;
@@ -372,6 +391,8 @@
             #alvo-atual { font-size: 2rem; }
             .ranking-lateral { width: 25px; right: 10px; top: 80px; }
             .letra-chuva { font-size: clamp(20px, 3.5vw, 45px); }
+            .btn-jogar { padding: 10px 25px; font-size: 1rem; }
+            .btn-voltar-vitoria { padding: 6px 18px; font-size: 0.8rem; }
         }
     </style>
 </head>
@@ -405,7 +426,8 @@
 <div id="tela-vitoria" class="overlay" style="display: none;">
     <h1 id="titulo-vitoria">🧜‍♀️ FANTÁSTICO! 🧜‍♂️</h1>
     <div style="font-size: 2.5rem; color: #ffdd99; text-shadow: 0 0 15px rgba(255,200,100,0.5);" id="pontuacao-final">0 PONTOS</div>
-    <button class="btn-jogar" onclick="location.reload()" style="margin-top: 30px;">🐠 JOGAR DE NOVO 🐠</button>
+    <button class="btn-jogar" onclick="reiniciarJogo()">🐠 JOGAR DE NOVO 🐠</button>
+    <button class="btn-voltar-vitoria" id="btnVoltarVitoria" onclick="voltarParaReinos()">🏠 Voltar para os Reinos</button>
 </div>
 
 <div class="hud">
@@ -473,9 +495,17 @@
     let jogoRodando = false;
     let animationId = null;
 
-    function tocarSom(arq) {
-        const som = new Audio(arq);
-        som.play().catch(() => {});
+    // Criar elementos de áudio
+    const somAcerto = new Audio('splash.mp3');
+    const somErro = new Audio('erro.mp3');
+    const somQueda = new Audio('bubble_pop.mp3');
+    const somVitoria = new Audio('aplausos.mp3');
+
+    function tocarSom(som) {
+        if (som) {
+            som.currentTime = 0;
+            som.play().catch(() => console.log("erro no som"));
+        }
     }
 
     const inputMobile = document.getElementById('mobile-input');
@@ -537,7 +567,7 @@
                     obj.y = alturaChao;
                     obj.resolvida = true;
                     obj.elemento.classList.add('perdida');
-                    tocarSom('bubble_pop.mp3');
+                    tocarSom(somQueda);
                     atualizarEnergia(-30);
                     indexAtual++;
                     iniciarLetra(indexAtual);
@@ -555,7 +585,7 @@
         const objAtual = letrasEmJogo[indexAtual];
         
         if (letraDigitada === objAtual.letra) {
-            tocarSom('splash.mp3');
+            tocarSom(somAcerto);
             const progresso = (Date.now() - objAtual.startTime) / (tempoQuedaSegundos * 1000);
             const pontosGanhos = Math.max(15, Math.floor(50 * (1 - progresso)));
             atualizarEnergia(pontosGanhos);
@@ -567,7 +597,7 @@
             indexAtual++;
             iniciarLetra(indexAtual);
         } else {
-            tocarSom('erro.mp3');
+            tocarSom(somErro);
             atualizarEnergia(-15);
             document.body.animate([{ opacity: 0.7 }, { opacity: 1 }], 100);
         }
@@ -599,11 +629,16 @@
         }, 500);
     }
 
+    function reiniciarJogo() {
+        document.getElementById('tela-vitoria').style.display = 'none';
+        iniciarJogo();
+    }
+
     function vencerJogo() {
         jogoRodando = false;
         if (animationId) cancelAnimationFrame(animationId);
         musicaFundo.pause();
-        tocarSom('aplausos.mp3');
+        tocarSom(somVitoria);
         
         confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 }, colors: ['#ffd700', '#48cae4', '#ffaa33'] });
         
