@@ -27,7 +27,7 @@
             min-height: 100vh;
         }
 
-        /* Fundo escuro com gradiente sutil */
+        /* Fundo escuro */
         body::before {
             content: "";
             position: fixed;
@@ -40,7 +40,7 @@
             pointer-events: none;
         }
 
-        /* Bolhas flutuantes (subindo) */
+        /* Bolhas flutuantes */
         .bubble-marine {
             position: fixed;
             pointer-events: none;
@@ -51,23 +51,12 @@
         }
 
         @keyframes flutuarBolha {
-            0% {
-                transform: translateY(100vh) scale(0.3);
-                opacity: 0;
-            }
-            20% {
-                opacity: 0.6;
-            }
-            80% {
-                opacity: 0.5;
-            }
-            100% {
-                transform: translateY(-20vh) scale(1);
-                opacity: 0;
-            }
+            0% { transform: translateY(100vh) scale(0.3); opacity: 0; }
+            20% { opacity: 0.6; }
+            80% { opacity: 0.5; }
+            100% { transform: translateY(-20vh) scale(1); opacity: 0; }
         }
 
-        /* Conchas e elementos decorativos */
         .concha {
             position: fixed;
             font-size: 24px;
@@ -79,17 +68,11 @@
         }
 
         @keyframes flutuarConcha {
-            0%, 100% {
-                transform: translate(0, 0) rotate(0deg);
-                opacity: 0.3;
-            }
-            50% {
-                transform: translate(15px, -30px) rotate(8deg);
-                opacity: 0.7;
-            }
+            0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.3; }
+            50% { transform: translate(15px, -30px) rotate(8deg); opacity: 0.7; }
         }
 
-        /* Header com botões */
+        /* Header */
         .real-header {
             position: fixed;
             top: 0;
@@ -163,7 +146,6 @@
             color: white;
         }
 
-        /* Botão Dourado Cintilante */
         .btn-dourado {
             font-family: 'Nunito', sans-serif;
             padding: 6px 14px;
@@ -185,21 +167,14 @@
         }
 
         @keyframes brilhoDourado {
-            0% {
-                box-shadow: 0 0 5px rgba(255, 215, 0, 0.4);
-                background: linear-gradient(135deg, #f5b042, #ffd700);
-            }
-            100% {
-                box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-                background: linear-gradient(135deg, #ffcc44, #ffea8c);
-            }
+            0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.4); background: linear-gradient(135deg, #f5b042, #ffd700); }
+            100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); background: linear-gradient(135deg, #ffcc44, #ffea8c); }
         }
 
         .btn-dourado:hover {
             transform: scale(1.05);
             animation: none;
             box-shadow: 0 0 30px rgba(255, 215, 0, 1);
-            background: linear-gradient(135deg, #ffdd66, #ffea9e);
         }
 
         /* HUD */
@@ -227,16 +202,10 @@
             color: #ffdd99;
             text-shadow: 0 0 10px rgba(255,200,100,0.5);
         }
-        .hud p {
-            margin: 5px 0;
-            font-weight: bold;
-        }
-        #score-text {
-            color: #ffeaac;
-            font-size: 1.3rem;
-        }
+        .hud p { margin: 5px 0; font-weight: bold; }
+        #score-text { color: #ffeaac; font-size: 1.3rem; }
 
-        /* BARRA VERTICAL DE PONTUAÇÃO (DIREITA) */
+        /* BARRA DE PONTUAÇÃO */
         .ranking-lateral {
             position: fixed;
             right: 20px;
@@ -248,14 +217,13 @@
             border: 2px solid #ffcd7e;
             overflow: hidden;
             z-index: 50;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
         .ranking-preenchimento {
             position: absolute;
             bottom: 0;
             width: 100%;
             height: 0%;
-            transition: height 0.3s ease-out, background 0.3s;
+            transition: height 0.3s ease-out;
             background: linear-gradient(180deg, #48cae4, #1e5f8e);
         }
 
@@ -271,15 +239,8 @@
             text-align: center;
         }
         
-        #tela-inicio { 
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(8px);
-        }
-
-        #tela-vitoria { 
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(8px);
-        }
+        #tela-inicio { background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(8px); }
+        #tela-vitoria { background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(8px); }
 
         h1 { 
             font-family: 'Cinzel Decorative', cursive;
@@ -347,40 +308,13 @@
             pointer-events: none;
         }
         
-        .congelada { 
-            opacity: 1 !important; 
-            border-bottom: 4px solid currentColor; 
-            animation: piscar 0.5s alternate infinite; 
-        }
+        .congelada { opacity: 1 !important; border-bottom: 4px solid currentColor; animation: piscar 0.5s alternate infinite; }
+        .perdida { opacity: 0.2 !important; filter: grayscale(100%); }
         
-        .perdida { 
-            opacity: 0.2 !important; 
-            filter: grayscale(100%); 
-        }
+        @keyframes piscar { from { transform: scale(1); } to { transform: scale(1.2); } }
         
-        @keyframes piscar { 
-            from { transform: scale(1); } 
-            to { transform: scale(1.2); } 
-        }
-        
-        #mobile-input { 
-            position: fixed; 
-            opacity: 0; 
-            pointer-events: none;
-            top: 0;
-            left: 0;
-        }
-
-        .tridente-decor {
-            position: fixed;
-            bottom: 10px;
-            left: 20px;
-            font-size: 40px;
-            opacity: 0.3;
-            z-index: 0;
-            pointer-events: none;
-            filter: drop-shadow(0 0 5px cyan);
-        }
+        #mobile-input { position: fixed; opacity: 0; pointer-events: none; top: 0; left: 0; }
+        .tridente-decor { position: fixed; bottom: 10px; left: 20px; font-size: 40px; opacity: 0.3; z-index: 0; pointer-events: none; filter: drop-shadow(0 0 5px cyan); }
 
         @media (max-width: 560px) {
             .real-header { padding: 8px 12px; }
@@ -392,7 +326,6 @@
             .ranking-lateral { width: 25px; right: 10px; top: 80px; }
             .letra-chuva { font-size: clamp(20px, 3.5vw, 45px); }
             .btn-jogar { padding: 10px 25px; font-size: 1rem; }
-            .btn-voltar-vitoria { padding: 6px 18px; font-size: 0.8rem; }
         }
     </style>
 </head>
@@ -400,7 +333,6 @@
 
 <div class="tridente-decor">🔱🐚</div>
 
-<!-- Header com botões -->
 <header class="real-header">
     <div class="header-container">
         <div class="titulo-reino">
@@ -443,13 +375,7 @@
     // ==================== FUNÇÃO PARA VOLTAR ====================
     function voltarParaReinos() {
         if (typeof confetti !== 'undefined') {
-            confetti({
-                particleCount: 60,
-                spread: 60,
-                origin: { y: 0.3 },
-                colors: ['#ffd700', '#48cae4', '#ffaa33'],
-                startVelocity: 10
-            });
+            confetti({ particleCount: 60, spread: 60, origin: { y: 0.3 }, colors: ['#ffd700', '#48cae4', '#ffaa33'], startVelocity: 10 });
         }
         window.location.href = 'https://letramento-vogais.vercel.app/';
     }
@@ -465,51 +391,175 @@
         }
     }
 
-    // ==================== MÚSICA ====================
+    // ==================== MÚSICA (Web Audio API - som ambiente gerado) ====================
     let musicaAtiva = true;
-    const musicaFundo = new Audio('ocean_ambience.mp3');
-    musicaFundo.loop = true;
-    musicaFundo.volume = 0.25;
-    const musicaBtn = document.getElementById('musicaBtn');
+    let audioContext = null;
+    let oscillator = null;
+    let gainNode = null;
+    let musicInterval = null;
+
+    function criarSomAmbiente() {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        
+        if (musicInterval) clearInterval(musicInterval);
+        
+        const playAmbientSound = () => {
+            if (!musicaAtiva || !audioContext) return;
+            
+            const now = audioContext.currentTime;
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.value = 100 + Math.random() * 50;
+            gain.gain.value = 0.05;
+            
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.00001, now + 1.5);
+            osc.stop(now + 1.5);
+        };
+        
+        playAmbientSound();
+        musicInterval = setInterval(playAmbientSound, 3000);
+    }
+
+    function pararSomAmbiente() {
+        if (musicInterval) {
+            clearInterval(musicInterval);
+            musicInterval = null;
+        }
+    }
 
     function toggleMusica() {
+        const btn = document.getElementById('musicaBtn');
         if (musicaAtiva) {
-            musicaFundo.pause();
-            musicaBtn.innerHTML = "🔇 MÚSICA";
-            musicaBtn.style.background = "rgba(0,0,0,0.6)";
+            musicaAtiva = false;
+            pararSomAmbiente();
+            btn.innerHTML = "🔇 MÚSICA";
+            btn.style.background = "rgba(0,0,0,0.6)";
         } else {
-            musicaFundo.play().catch(() => console.log("erro audio"));
-            musicaBtn.innerHTML = "🎵 MÚSICA ON";
-            musicaBtn.style.background = "rgba(255, 205, 126, 0.15)";
+            musicaAtiva = true;
+            if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            audioContext.resume();
+            criarSomAmbiente();
+            btn.innerHTML = "🎵 MÚSICA ON";
+            btn.style.background = "rgba(255, 205, 126, 0.15)";
         }
-        musicaAtiva = !musicaAtiva;
+    }
+
+    // ==================== SONS COM WEB AUDIO API ====================
+    let somContext = null;
+
+    function tocarSomAcerto() {
+        if (!somContext) somContext = new (window.AudioContext || window.webkitAudioContext)();
+        somContext.resume();
+        
+        const now = somContext.currentTime;
+        const osc = somContext.createOscillator();
+        const gain = somContext.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.value = 880;
+        gain.gain.value = 0.15;
+        
+        osc.connect(gain);
+        gain.connect(somContext.destination);
+        
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.00001, now + 0.3);
+        osc.stop(now + 0.3);
+    }
+
+    function tocarSomErro() {
+        if (!somContext) somContext = new (window.AudioContext || window.webkitAudioContext)();
+        somContext.resume();
+        
+        const now = somContext.currentTime;
+        const osc = somContext.createOscillator();
+        const gain = somContext.createGain();
+        
+        osc.type = 'sawtooth';
+        osc.frequency.value = 220;
+        gain.gain.value = 0.2;
+        
+        osc.connect(gain);
+        gain.connect(somContext.destination);
+        
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.00001, now + 0.4);
+        osc.stop(now + 0.4);
+    }
+
+    function tocarSomQueda() {
+        if (!somContext) somContext = new (window.AudioContext || window.webkitAudioContext)();
+        somContext.resume();
+        
+        const now = somContext.currentTime;
+        const osc = somContext.createOscillator();
+        const gain = somContext.createGain();
+        
+        osc.type = 'triangle';
+        osc.frequency.value = 150;
+        gain.gain.value = 0.1;
+        
+        osc.connect(gain);
+        gain.connect(somContext.destination);
+        
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.00001, now + 0.5);
+        osc.stop(now + 0.5);
+    }
+
+    function tocarSomVitoria() {
+        if (!somContext) somContext = new (window.AudioContext || window.webkitAudioContext)();
+        somContext.resume();
+        
+        const notas = [523.25, 587.33, 659.25, 698.46, 783.99, 880.00];
+        notas.forEach((freq, i) => {
+            setTimeout(() => {
+                const osc = somContext.createOscillator();
+                const gain = somContext.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                gain.gain.value = 0.15;
+                osc.connect(gain);
+                gain.connect(somContext.destination);
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.00001, somContext.currentTime + 0.5);
+                osc.stop(somContext.currentTime + 0.5);
+            }, i * 150);
+        });
     }
 
     // ==================== JOGO PRINCIPAL ====================
     const alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     let indexAtual = 0;
     let score = 0;
+    let currentUtterance = null;
     const maxScore = 1000;
     const tempoQuedaSegundos = 2.2;
     let letrasEmJogo = [];
     let jogoRodando = false;
     let animationId = null;
 
-    // Criar elementos de áudio
-    const somAcerto = new Audio('splash.mp3');
-    const somErro = new Audio('erro.mp3');
-    const somQueda = new Audio('bubble_pop.mp3');
-    const somVitoria = new Audio('aplausos.mp3');
-
-    function tocarSom(som) {
-        if (som) {
-            som.currentTime = 0;
-            som.play().catch(() => console.log("erro no som"));
-        }
-    }
-
     const inputMobile = document.getElementById('mobile-input');
     const btnStart = document.getElementById('btn-start');
+
+    // Função de fala para pronúncia das letras
+    function falarLetra(letra) {
+        if (currentUtterance) window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(letra);
+        utterance.lang = 'pt-BR';
+        utterance.rate = 0.9;
+        utterance.pitch = 1.1;
+        window.speechSynthesis.speak(utterance);
+        currentUtterance = utterance;
+    }
 
     // Criar elementos das letras
     for (let i = 0; i < alfabeto.length; i++) {
@@ -550,6 +600,7 @@
         obj.startTime = Date.now();
         obj.elemento.style.opacity = '1';
         obj.elemento.classList.remove('congelada', 'perdida');
+        falarLetra(obj.letra);
     }
 
     function loopJogo() {
@@ -567,7 +618,7 @@
                     obj.y = alturaChao;
                     obj.resolvida = true;
                     obj.elemento.classList.add('perdida');
-                    tocarSom(somQueda);
+                    tocarSomQueda();
                     atualizarEnergia(-30);
                     indexAtual++;
                     iniciarLetra(indexAtual);
@@ -585,7 +636,7 @@
         const objAtual = letrasEmJogo[indexAtual];
         
         if (letraDigitada === objAtual.letra) {
-            tocarSom(somAcerto);
+            tocarSomAcerto();
             const progresso = (Date.now() - objAtual.startTime) / (tempoQuedaSegundos * 1000);
             const pontosGanhos = Math.max(15, Math.floor(50 * (1 - progresso)));
             atualizarEnergia(pontosGanhos);
@@ -597,16 +648,21 @@
             indexAtual++;
             iniciarLetra(indexAtual);
         } else {
-            tocarSom(somErro);
+            tocarSomErro();
             atualizarEnergia(-15);
             document.body.animate([{ opacity: 0.7 }, { opacity: 1 }], 100);
+            falarLetra(objAtual.letra);
         }
     }
 
     function iniciarJogo() {
         if (jogoRodando) return;
         document.getElementById('tela-inicio').style.display = 'none';
-        if (musicaAtiva) musicaFundo.play().catch(() => {});
+        if (musicaAtiva) {
+            if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            audioContext.resume();
+            criarSomAmbiente();
+        }
         inputMobile.focus();
         
         indexAtual = 0;
@@ -637,8 +693,8 @@
     function vencerJogo() {
         jogoRodando = false;
         if (animationId) cancelAnimationFrame(animationId);
-        musicaFundo.pause();
-        tocarSom(somVitoria);
+        pararSomAmbiente();
+        tocarSomVitoria();
         
         confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 }, colors: ['#ffd700', '#48cae4', '#ffaa33'] });
         
@@ -687,7 +743,7 @@
         if (jogoRodando) inputMobile.focus();
     });
     
-    // ==================== BOLHAS E CONCHAS DECORATIVAS FLUTUANTES ====================
+    // ==================== DECORAÇÕES ====================
     function criarBolhasMarinhas() {
         setInterval(() => {
             const bolha = document.createElement('div');
@@ -720,7 +776,6 @@
         }, 7000);
     }
     
-    // Inicializar decorações
     criarBolhasMarinhas();
     criarConchasFlutuantes();
     
@@ -743,7 +798,6 @@
         setTimeout(() => msgDiv.remove(), 4000);
     }, 500);
     
-    // Tentar fullscreen automático
     document.documentElement.requestFullscreen().catch(e => console.log("fullscreen não permitido"));
 </script>
 </body>
