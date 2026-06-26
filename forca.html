@@ -9,13 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Nunito:wght@400;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        * { 
-            box-sizing: border-box; 
+        * {
+            box-sizing: border-box;
             touch-action: manipulation;
             margin: 0;
             padding: 0;
         }
-        
+
         body {
             background: linear-gradient(145deg, #021a2b 0%, #043b5c 40%, #01121f 100%);
             color: #eef5ff;
@@ -75,10 +75,10 @@
             border: 1px solid #ffcd7e;
         }
 
-        h1 { 
+        h1 {
             font-family: 'Cinzel Decorative', cursive;
-            font-size: 0.9rem; 
-            margin: 0; 
+            font-size: 0.9rem;
+            margin: 0;
             letter-spacing: 2px;
             background: linear-gradient(135deg, #ffdd99, #ffbc6e);
             -webkit-background-clip: text;
@@ -225,7 +225,7 @@
 
         .key:active { transform: scale(0.95); background: #1e5f8e; }
 
-        .key:disabled { 
+        .key:disabled {
             opacity: 0.3;
             border-color: #333;
             color: #666;
@@ -412,15 +412,139 @@
 
 <button id="reset-btn" onclick="nextRound()">✨ PRÓXIMA PALAVRA ✨</button>
 
-<!-- Áudios -->
-<audio id="snd-acerto" src="splash.mp3"></audio>
-<audio id="snd-erro" src="bubble_pop.mp3"></audio>
-<audio id="snd-vitoria" src="mermaid_laugh.mp3"></audio>
-<audio id="snd-bg" src="ocean_ambience.mp3" loop></audio>
-
+<!-- Áudios (gerados via Web Audio API para evitar dependências externas) -->
 <script>
+    // ==================== GERADOR DE SONS VIA WEB AUDIO API ====================
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+
+    function ensureAudioContext() {
+        if (!audioCtx) {
+            audioCtx = new AudioContext();
+        }
+        return audioCtx;
+    }
+
+    // Som de acerto (splash suave)
+    function playAcerto() {
+        try {
+            const ctx = ensureAudioContext();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(1200, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.15, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.15);
+        } catch(e) { console.log('audio error', e); }
+    }
+
+    // Som de erro (bolha estourando)
+    function playErro() {
+        try {
+            const ctx = ensureAudioContext();
+            const bufferSize = ctx.sampleRate * 0.08;
+            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.3));
+            }
+            const noise = ctx.createBufferSource();
+            noise.buffer = buffer;
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.12, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+            noise.connect(gain);
+            gain.connect(ctx.destination);
+            noise.start(ctx.currentTime);
+            noise.stop(ctx.currentTime + 0.08);
+        } catch(e) { console.log('audio error', e); }
+    }
+
+    // Som de vitória (trinado alegre)
+    function playVitoria() {
+        try {
+            const ctx = ensureAudioContext();
+            const notas = [523.25, 659.25, 783.99, 1046.50];
+            notas.forEach((freq, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                const start = ctx.currentTime + i * 0.08;
+                gain.gain.setValueAtTime(0.12, start);
+                gain.gain.exponentialRampToValueAtTime(0.01, start + 0.15);
+                osc.start(start);
+                osc.stop(start + 0.15);
+            });
+        } catch(e) { console.log('audio error', e); }
+    }
+
+    // Som de derrota (descendente melancólico)
+    function playDerrota() {
+        try {
+            const ctx = ensureAudioContext();
+            const notas = [523.25, 493.88, 440.00, 392.00, 349.23];
+            notas.forEach((freq, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                const start = ctx.currentTime + i * 0.1;
+                gain.gain.setValueAtTime(0.10, start);
+                gain.gain.exponentialRampToValueAtTime(0.01, start + 0.2);
+                osc.start(start);
+                osc.stop(start + 0.2);
+            });
+        } catch(e) { console.log('audio error', e); }
+    }
+
+    // Música de fundo (ambiente oceânico com notas suaves)
+    let bgInterval = null;
+    let musicPlaying = false;
+
+    function playBackgroundMusic() {
+        if (bgInterval) return;
+        try {
+            const ctx = ensureAudioContext();
+            let noteIndex = 0;
+            const notas = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25];
+            bgInterval = setInterval(() => {
+                if (!musicPlaying) return;
+                try {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.value = notas[noteIndex % notas.length];
+                    gain.gain.setValueAtTime(0.04, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.4);
+                    noteIndex++;
+                } catch(e) { /* ignora erros de áudio */ }
+            }, 500);
+        } catch(e) { console.log('bg music error', e); }
+    }
+
+    function stopBackgroundMusic() {
+        if (bgInterval) {
+            clearInterval(bgInterval);
+            bgInterval = null;
+        }
+    }
+
     // ==================== BANCO DE PALAVRAS ====================
-    
+
     // 🌊 MUNDO MARÍTIMO (Tema do oceano)
     const databaseMaritimo = {
         "🧜‍♀️ CRIATURAS MARINHAS": ["SEREIA", "TRITÃO", "NETUNO", "POLVO", "TUBARÃO", "BALEIA", "GOLFINHO", "TARTARUGA", "CAVALO MARINHO", "ESTRELA DO MAR", "AGUA VIVA", "LULA", "CARANGUEJO", "LAGOSTA", "SALMAO", "ATUM", "BACALHAU", "PEPINO DO MAR", "OURICO DO MAR"],
@@ -446,31 +570,28 @@
         ...databaseGeral
     };
 
-    let currentDatabase = databaseMaritimo; // Padrão: Mundo Marítimo
+    let currentDatabase = databaseMaritimo;
     let currentModo = "maritimo";
-    
-    let currentWordRaw = ""; 
-    let currentWordNormalized = ""; 
+
+    let currentWordRaw = "";
+    let currentWordNormalized = "";
     let currentCategory = "";
     let guessedLetters = [];
     let mistakes = 0;
-    let musicPlaying = false;
-    
+
     const bodyParts = ['head-group', 'body', 'arm-l', 'arm-r', 'tail', 'tail-r'];
 
     // ==================== FUNÇÃO PARA SELECIONAR MODO ====================
     function selecionarModo(modo) {
         currentModo = modo;
-        
-        // Atualizar visual dos botões
+
         document.querySelectorAll('.modo-btn').forEach(btn => {
             btn.classList.remove('ativo');
             if (btn.getAttribute('data-modo') === modo) {
                 btn.classList.add('ativo');
             }
         });
-        
-        // Selecionar o banco de dados correto
+
         if (modo === "maritimo") {
             currentDatabase = databaseMaritimo;
             mostrarMensagemTemporaria("🌊 MODO MUNDO MARÍTIMO! Explore o fundo do mar! 🌊", "#7ec8ff");
@@ -481,11 +602,10 @@
             currentDatabase = databaseMisterio;
             mostrarMensagemTemporaria("🎲 MODO MISTÉRIO! Todos os mundos se misturam! 🎲", "#ffaa66");
         }
-        
-        // Reiniciar o jogo com o novo modo
+
         initGame();
     }
-    
+
     function mostrarMensagemTemporaria(msg, cor) {
         const msgDiv = document.getElementById('message');
         msgDiv.innerHTML = msg;
@@ -501,10 +621,10 @@
     // ==================== FUNÇÃO PARA VOLTAR À PÁGINA ANTERIOR ====================
     function voltarParaPaginaAnterior() {
         if (typeof confetti !== 'undefined') {
-            confetti({ 
-                particleCount: 60, 
-                spread: 60, 
-                origin: { y: 0.3 }, 
+            confetti({
+                particleCount: 60,
+                spread: 60,
+                origin: { y: 0.3 },
                 colors: ['#ffd700', '#48cae4', '#ffaa33'],
                 startVelocity: 10
             });
@@ -525,29 +645,6 @@
         }
     }
 
-    function playSnd(id) {
-        const snd = document.getElementById(id);
-        if (snd) {
-            snd.currentTime = 0;
-            snd.play().catch(e => console.log("audio error", e));
-        }
-    }
-
-    function toggleMusic() {
-        const bg = document.getElementById('snd-bg');
-        const btn = document.getElementById('bg-music-btn');
-        if (!musicPlaying) { 
-            bg.play().catch(e => console.log("bg music error")); 
-            btn.innerHTML = "🔊 MÚSICA";
-            btn.style.background = "rgba(100,200,255,0.4)";
-        } else { 
-            bg.pause(); 
-            btn.innerHTML = "🔇 MÚSICA";
-            btn.style.background = "rgba(0,0,0,0.6)";
-        }
-        musicPlaying = !musicPlaying;
-    }
-
     function normalize(str) {
         return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
     }
@@ -557,7 +654,7 @@
         currentCategory = categories[Math.floor(Math.random() * categories.length)];
         const wordsInCategory = currentDatabase[currentCategory];
         currentWordRaw = wordsInCategory[Math.floor(Math.random() * wordsInCategory.length)].toUpperCase();
-        
+
         currentWordNormalized = normalize(currentWordRaw);
         guessedLetters = [];
         mistakes = 0;
@@ -566,7 +663,7 @@
         if (currentModo === "maritimo") icone = "🌊";
         else if (currentModo === "geral") icone = "🌍";
         else icone = "🎲";
-        
+
         document.getElementById('category-info').innerHTML = icone + " " + currentCategory + " " + icone;
         document.getElementById('reset-btn').style.display = "none";
         document.getElementById('dead-details').style.display = "none";
@@ -574,15 +671,15 @@
             const element = document.getElementById(p);
             if (element) element.style.display = "none";
         });
-        
+
         renderWord();
         renderKeyboard();
-        
+
         let msgInicial = "";
         if (currentModo === "maritimo") msgInicial = "🐚 Mergulhe no fundo do mar e adivinhe a palavra! 🐚";
         else if (currentModo === "geral") msgInicial = "📚 Aprenda novas palavras do seu dia a dia! 📚";
         else msgInicial = "🔮 O mistério está no ar! Qual será a palavra? 🔮";
-        
+
         document.getElementById('message').innerHTML = msgInicial;
         document.getElementById('message').style.color = "#b9e6ff";
     }
@@ -627,11 +724,11 @@
 
         if (currentWordNormalized.includes(l)) {
             guessedLetters.push(l);
-            playSnd('snd-acerto');
+            playAcerto();
             renderWord();
         } else {
             mistakes++;
-            playSnd('snd-erro');
+            playErro();
             const partId = bodyParts[mistakes-1];
             const element = document.getElementById(partId);
             if (element) element.style.display = "block";
@@ -645,7 +742,7 @@
     function endGame(win) {
         const msg = document.getElementById('message');
         if (win) {
-            playSnd('snd-vitoria');
+            playVitoria();
             let msgVitoria = "";
             if (currentModo === "maritimo") msgVitoria = "🧜‍♀️ PARABÉNS! A SEREIA ESCAPOU! 🧜‍♀️✨";
             else if (currentModo === "geral") msgVitoria = "🎉 PARABÉNS! VOCÊ APRENDEU MAIS UMA PALAVRA! 🎉";
@@ -656,6 +753,7 @@
                 confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ffd700', '#48cae4', '#ffaa33'] });
             }
         } else {
+            playDerrota();
             let msgDerrota = "";
             if (currentModo === "maritimo") msgDerrota = "💔 OH NÃO! A SEREIA FOI CAPTURADA! A PALAVRA ERA: " + currentWordRaw + " 💔";
             else if (currentModo === "geral") msgDerrota = "😢 QUE PENA! VOCÊ PODE TENTAR DE NOVO! A PALAVRA ERA: " + currentWordRaw;
@@ -668,8 +766,24 @@
         document.getElementById('reset-btn').style.display = "block";
     }
 
-    function nextRound() { 
-        initGame(); 
+    function nextRound() {
+        initGame();
+    }
+
+    // ==================== CONTROLE DE MÚSICA ====================
+    function toggleMusic() {
+        const btn = document.getElementById('bg-music-btn');
+        if (!musicPlaying) {
+            musicPlaying = true;
+            btn.innerHTML = "🔊 MÚSICA";
+            btn.style.background = "rgba(100,200,255,0.4)";
+            playBackgroundMusic();
+        } else {
+            musicPlaying = false;
+            btn.innerHTML = "🔇 MÚSICA";
+            btn.style.background = "rgba(0,0,0,0.6)";
+            stopBackgroundMusic();
+        }
     }
 
     // ==================== ELEMENTOS FLUTUANTES (BOLHAS E CONCHAS) ====================
@@ -721,15 +835,14 @@
     window.onload = () => {
         criarBolhasMarinhas();
         criarConchasFlutuantes();
-        
-        // Marcar o botão ativo padrão (Mundo Marítimo)
+
         document.querySelector('.modo-btn[data-modo="maritimo"]').classList.add('ativo');
-        
+
         initGame();
-        
+
         // Tentativa automática de fullscreen
         document.documentElement.requestFullscreen().catch(e => console.log("fullscreen não permitido automaticamente"));
-        
+
         // Mensagem de boas-vindas
         setTimeout(() => {
             const msg = document.getElementById('message');
