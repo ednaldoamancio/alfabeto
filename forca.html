@@ -412,7 +412,6 @@
 
 <button id="reset-btn" onclick="nextRound()">✨ PRÓXIMA PALAVRA ✨</button>
 
-<!-- Áudios (gerados via Web Audio API para evitar dependências externas) -->
 <script>
     // ==================== GERADOR DE SONS VIA WEB AUDIO API ====================
     const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -572,6 +571,9 @@
 
     let currentDatabase = databaseMaritimo;
     let currentModo = "maritimo";
+    
+    // VARIÁVEL NOVA: Armazena as palavras que ainda não foram jogadas
+    let wordPool = [];
 
     let currentWordRaw = "";
     let currentWordNormalized = "";
@@ -580,6 +582,24 @@
     let mistakes = 0;
 
     const bodyParts = ['head-group', 'body', 'arm-l', 'arm-r', 'tail', 'tail-r'];
+
+    // FUNÇÃO NOVA: Gera e embaralha uma lista de palavras baseada no modo atual
+    function gerarPilhaDePalavras() {
+        wordPool = [];
+        
+        // Adiciona todas as palavras do modo atual na lista
+        for (const category in currentDatabase) {
+            currentDatabase[category].forEach(word => {
+                wordPool.push({ category: category, word: word });
+            });
+        }
+        
+        // Embaralha a lista (Algoritmo Fisher-Yates) para que as categorias fiquem misturadas
+        for (let i = wordPool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [wordPool[i], wordPool[j]] = [wordPool[j], wordPool[i]];
+        }
+    }
 
     // ==================== FUNÇÃO PARA SELECIONAR MODO ====================
     function selecionarModo(modo) {
@@ -603,6 +623,8 @@
             mostrarMensagemTemporaria("🎲 MODO MISTÉRIO! Todos os mundos se misturam! 🎲", "#ffaa66");
         }
 
+        // Toda vez que muda de modo, recria a pilha com as novas palavras
+        gerarPilhaDePalavras();
         initGame();
     }
 
@@ -650,10 +672,19 @@
     }
 
     function initGame() {
-        const categories = Object.keys(currentDatabase);
-        currentCategory = categories[Math.floor(Math.random() * categories.length)];
-        const wordsInCategory = currentDatabase[currentCategory];
-        currentWordRaw = wordsInCategory[Math.floor(Math.random() * wordsInCategory.length)].toUpperCase();
+        // Se a pilha de palavras estiver vazia, gera ela novamente
+        if (wordPool.length === 0) {
+            gerarPilhaDePalavras();
+            // Mostra aviso de que as palavras reiniciaram
+            setTimeout(() => {
+               mostrarMensagemTemporaria("🔄 Todas as palavras foram usadas! Reiniciando a lista...", "#ffdd99");
+            }, 2600); // Aparece logo após a mensagem inicial do modo, caso aconteçam juntas
+        }
+
+        // Retira a última palavra da pilha já embaralhada (garante que não repete)
+        const palavraSorteada = wordPool.pop();
+        currentCategory = palavraSorteada.category;
+        currentWordRaw = palavraSorteada.word.toUpperCase();
 
         currentWordNormalized = normalize(currentWordRaw);
         guessedLetters = [];
@@ -838,6 +869,8 @@
 
         document.querySelector('.modo-btn[data-modo="maritimo"]').classList.add('ativo');
 
+        // Gera as palavras antes de iniciar o jogo pela primeira vez
+        gerarPilhaDePalavras();
         initGame();
 
         // Tentativa automática de fullscreen
