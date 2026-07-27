@@ -332,6 +332,59 @@
             text-align: center;
         }
 
+        /* ========== ESTILOS DO MODAL DE MÍDIA ========== */
+        .media-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+        }
+        
+        .media-content {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .media-content video, .media-content img {
+            width: 100%;
+            max-height: 75vh;
+            object-fit: contain;
+            border: 4px solid #ffcd7e;
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(255,205,126,0.5);
+            background: #000;
+        }
+        
+        #closeMediaBtn {
+            padding: 12px 35px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ff6f61, #d32f2f);
+            color: white;
+            border: 2px solid #ffcd7e;
+            border-radius: 40px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255,111,97,0.6);
+            font-family: 'Nunito', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        #closeMediaBtn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 5px 25px rgba(255,111,97,0.9);
+        }
+
         @media (max-width: 560px) {
             .letter-btn { width: 40px; height: 40px; font-size: 1rem; }
             .btn-acao { padding: 5px 10px; font-size: 0.65rem; }
@@ -342,6 +395,15 @@
     </style>
 </head>
 <body>
+
+<!-- MODAL DE VÍDEO/IMAGEM -->
+<div id="mediaModal" class="media-modal" style="display: none;">
+    <div class="media-content">
+        <video id="letterVideo" controls autoplay playsinline style="display: none;"></video>
+        <img id="letterImg" style="display: none;" />
+        <button id="closeMediaBtn" onclick="fecharMidia()">Continuar ➡️</button>
+    </div>
+</div>
 
 <div class="app">
     <div class="card">
@@ -409,8 +471,42 @@
     // Para o Modo Mistério: fila de letras (26 letras únicas + repetições de erros)
     let misterioQueue = [];
     let currentMisterioIndex = 0;
-    let letrasErradas = []; // Armazena letras que a criança errou para repetir
+    let letrasErradas = [];
     let repeticoesPendentes = [];
+
+    // Tabela de Mídias (Vídeos e Imagens de Suporte)
+    const midiasLetras = {
+        'A': { video: 'a-abelha.mp4', img: 'letra-a.jpg' },
+        'B': { video: 'b-baleia.mp4', img: 'letra-b.jpg' },
+        'C': { video: 'c-coroa.mp4', img: 'letra-c.jpg' },
+        'D': { video: 'd-dado.mp4', img: 'letra-d.jpg' },
+        'E': { video: 'e-elefante.mp4', img: 'letra-e.jpg' },
+        'F': { video: 'f-foca.mp4', img: 'letra-f.jpg' },
+        'G': { video: 'g-gato.mp4', img: 'letra-g.jpg' },
+        'H': { video: 'h-hipopotamo.mp4', img: 'letra-h.jpg' },
+        'I': { video: 'i-iguana.mp4', img: 'letra-i.jpg' },
+        'J': { video: 'j-joaninha.mp4', img: 'letra-j.jpg' },
+        'K': { video: 'k-kiwui.mp4', img: 'letra-k.jpg' },
+        'L': { video: 'l-lobo.mp4', img: 'letra-l.jpg' },
+        'M': { video: 'm-mao.mp4', img: 'letra-m.jpg' },
+        'N': { video: 'n-ninho.mp4', img: 'letra-n.jpg' },
+        'O': { video: 'o-onça.mp4', img: 'letra-o.jpg' },
+        'P': { video: 'p-papagaio.mp4', img: 'letra-p.jpg' },
+        'Q': { video: 'q-queijo.mp4', img: 'letra-q.jpg' },
+        'R': { video: 'r-rato.mp4', img: 'letra-r.jpg' },
+        'S': { video: 's-sapo.mp4', img: 'letra-s.jpg' },
+        'T': { video: 't-tomate.mp4', img: 'letra-t.jpg' },
+        'U': { video: 'u-uva.mp4', img: 'letra-u.jpg' },
+        'V': { video: 'v-vaca.mp4', img: 'letra-v.jpg' },
+        'W': { video: 'w-wafer.mp4', img: 'letra-w.jpg' },
+        'X': { video: 'x-xilofone.mp4', img: 'letra-x.jpg' },
+        'Y': { video: 'y-yaki.mp4', img: 'letra-y.jpg' },
+        'Z': { video: 'z-zebra.mp4', img: 'letra-z.jpg' },
+        'CH': { video: 'ch-chocolate.mp4', img: 'letra-ch.jpg' } // Extra, se houver digrafo no futuro
+    };
+
+    let cbAposMidia = null;
+    let imgFallbackTimeout = null;
 
     // Elementos de áudio especiais
     const audioS = document.getElementById("sfxS");
@@ -563,31 +659,22 @@
 
     // ==================== CONSTRUÇÃO DA FILA DO MODO MISTÉRIO ====================
     function construirFilaMisterio() {
-        // 1. Criar uma lista com todas as 26 letras em ordem aleatória
         let todasLetras = [...letters];
         for (let i = todasLetras.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [todasLetras[i], todasLetras[j]] = [todasLetras[j], todasLetras[i]];
         }
-        
-        // 2. Inicializar a fila com as 26 letras
         misterioQueue = [...todasLetras];
-        
-        // 3. Resetar controles de repetição
         letrasErradas = [];
         repeticoesPendentes = [];
         currentMisterioIndex = 0;
     }
     
-    // Função para adicionar repetições de uma letra que a criança errou
     function adicionarRepeticaoLetra(letra) {
-        // Verificar se a letra já não foi completada
         const letraIndex = letters.indexOf(letra);
         if (completed[letraIndex]) return;
         
-        // Adicionar 3 repetições desta letra em posições aleatórias no futuro da fila
         for (let r = 0; r < 3; r++) {
-            // Inserir em posição aleatória após o índice atual
             const posInsercao = currentMisterioIndex + 1 + Math.floor(Math.random() * (misterioQueue.length - currentMisterioIndex + 1));
             misterioQueue.splice(posInsercao, 0, letra);
         }
@@ -595,7 +682,6 @@
     
     function getProximaLetraMisterio() {
         if (currentMisterioIndex >= misterioQueue.length) {
-            // Verificar se ainda há letras não completadas (caso de segurança)
             for (let i = 0; i < 26; i++) {
                 if (!completed[i]) return letters[i];
             }
@@ -619,18 +705,16 @@
         } else if (currentGameMode === "aleatorio") {
             nextIndex = getProximaLetraAleatoria();
             if (nextIndex !== -1) nextLetter = letters[nextIndex];
-        } else { // Modo Mistério
+        } else {
             nextLetter = getProximaLetraMisterio();
             if (nextLetter !== -1) nextIndex = letters.indexOf(nextLetter);
         }
         
         if (nextIndex === -1 || !nextLetter) {
-            // Verificar se todas as letras estão completadas
             const todasCompletadas = completed.every(c => c === true);
             if (todasCompletadas) {
                 finalizarJogo();
             } else {
-                // Caso de segurança: encontrar a primeira letra não completada
                 for (let i = 0; i < 26; i++) {
                     if (!completed[i]) {
                         nextIndex = i;
@@ -714,6 +798,70 @@
         }
     }
 
+    // ==================== ABRIR VÍDEO/IMAGEM (NOVO RECURSO) ====================
+    function abrirMidiaLetra(letra, callback) {
+        cbAposMidia = callback;
+        const modal = document.getElementById("mediaModal");
+        const videoEl = document.getElementById("letterVideo");
+        const imgEl = document.getElementById("letterImg");
+        
+        const dados = midiasLetras[letra.toUpperCase()];
+        
+        modal.style.display = "flex";
+        videoEl.style.display = "none";
+        imgEl.style.display = "none";
+        
+        // Reduz o som ambiente para o video se destacar
+        if (audioEnabled) bgMusic.volume = 0.05;
+
+        if (dados) {
+            // Tenta carregar e tocar o vídeo
+            videoEl.src = dados.video;
+            videoEl.style.display = "block";
+            
+            // Se o vídeo não for encontrado (404), ele mostra a imagem correspondente
+            videoEl.onerror = function() {
+                videoEl.style.display = "none";
+                imgEl.src = dados.img;
+                imgEl.style.display = "block";
+            };
+            
+            // Fecha quando o vídeo terminar de tocar
+            videoEl.onended = function() {
+                fecharMidia();
+            };
+
+            videoEl.play().catch(e => {
+                console.log("Auto-play prevenido ou erro de vídeo:", e);
+                // Se play der erro, mostra a imagem de fallback
+                videoEl.style.display = "none";
+                imgEl.src = dados.img;
+                imgEl.style.display = "block";
+            });
+
+        } else {
+            fecharMidia();
+        }
+    }
+
+    function fecharMidia() {
+        const modal = document.getElementById("mediaModal");
+        const videoEl = document.getElementById("letterVideo");
+        
+        videoEl.pause();
+        videoEl.src = ""; // descarrega
+        modal.style.display = "none";
+        
+        // Restaura o volume
+        if (audioEnabled) bgMusic.volume = 0.2;
+        
+        if (cbAposMidia) {
+            const cb = cbAposMidia;
+            cbAposMidia = null;
+            cb();
+        }
+    }
+
     function verificarResposta(resposta) {
         if (jogoFinalizado) return;
         
@@ -726,26 +874,29 @@
             atualizarInterface();
             atualizarProgresso();
             
-            // Avançar para a próxima letra (no modo mistério, avança o índice da fila)
-            if (currentGameMode === "misterio") {
-                avancarMisterio();
-            }
-            
-            const completados = completed.filter(c => c === true).length;
-            if (completados === 26) {
-                finalizarJogo();
-            } else {
-                carregarProximaLetra();
-            }
+            // Espera a celebração sumir um pouco e depois abre a mídia da letra
+            setTimeout(() => {
+                abrirMidiaLetra(letraCorreta, () => {
+                    // Este código executa DEPOIS que o usuário/criança fechar o vídeo ou a imagem
+                    if (currentGameMode === "misterio") {
+                        avancarMisterio();
+                    }
+                    
+                    const completados = completed.filter(c => c === true).length;
+                    if (completados === 26) {
+                        finalizarJogo();
+                    } else {
+                        carregarProximaLetra();
+                    }
+                });
+            }, 1200); // Mostra o pop-up após 1.2s da comemoração de acerto
+
         } else if (!completed[currentLetterIndex]) {
             mostrarErro();
             
-            // No modo mistério, adicionar repetições da letra que errou
             if (currentGameMode === "misterio") {
                 adicionarRepeticaoLetra(letraCorreta);
             }
-            
-            // Repetir o som da letra correta para ajudar
             falarLetra(letraCorreta);
         }
         
@@ -820,7 +971,7 @@
         } else if (currentGameMode === "aleatorio") {
             const restantes = atualizarLetrasRestantes();
             currentLetterIndex = restantes.length > 0 ? restantes[0] : 0;
-        } else { // Modo Mistério
+        } else {
             construirFilaMisterio();
             currentMisterioIndex = 0;
             const primeiraLetra = getProximaLetraMisterio();
@@ -898,7 +1049,6 @@
         document.querySelector('.game-mode-btn[data-gamemode="sequencial"]').classList.add('ativo');
         document.querySelector('.modo-btn[data-modo="print-maius"]').classList.add('ativo');
         
-        // Inicializar fila do modo mistério
         construirFilaMisterio();
         
         atualizarInterface();
@@ -944,7 +1094,7 @@
         iniciarJogo();
         bgMusic.volume = 0.2;
         bgMusic.play().catch(e => console.log("autoplay bloqueado"));
-        document.documentElement.requestFullscreen().catch(e => console.log("fullscreen não permitido"));
+        //document.documentElement.requestFullscreen().catch(e => console.log("fullscreen não permitido")); //comentado para melhor ux
     };
 </script>
 </body>
