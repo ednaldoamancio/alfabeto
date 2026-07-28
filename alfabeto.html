@@ -314,8 +314,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(0,0,0,0.8);
-            padding: 10px 20px;
-            border-radius: 40px;
+            padding: 10px 20px;            border-radius: 40px;
             z-index: 200;
         }
 
@@ -434,8 +433,9 @@
         </div>
 
         <div class="manual-area">
-            <div class="manual-label">🎤 Digite a letra que você ouviu:</div>
-            <input type="text" class="manual-input" id="manualInput" maxlength="1" placeholder="?" autocomplete="off" spellcheck="false">
+            <div class="manual-label">🎤 Digite ou clique na letra que você ouviu:</div>
+            <!-- INPUT READONLY PARA NÃO ABRIR O TECLADO DO CELULAR -->
+            <input type="text" class="manual-input" id="manualInput" placeholder="?" readonly>
         </div>
 
         <div class="alphabet-grid" id="alphabetGrid"></div>
@@ -489,8 +489,8 @@
         'K': { video: 'k-kiwui.mp4', img: 'letra-k.jpg' },
         'L': { video: 'l-lobo.mp4', img: 'letra-l.jpg' },
         'M': { video: 'm-mao.mp4', img: 'letra-m.jpg' },
-        'N': { video: 'n-ninho.mp4', img: 'letra-n.jpg' },
-        'O': { video: 'o-onça.mp4', img: 'letra-o.jpg' },
+        'N': { video: 'n-navio.mp4', img: 'n-navio.jpg' }, // ATUALIZADO AQUI
+        'O': { video: 'o-ovelha.mp4', img: 'letra-o.jpg' }, // ATUALIZADO AQUI
         'P': { video: 'p-papagaio.mp4', img: 'letra-p.jpg' },
         'Q': { video: 'q-queijo.mp4', img: 'letra-q.jpg' },
         'R': { video: 'r-rato.mp4', img: 'letra-r.jpg' },
@@ -798,7 +798,7 @@
         }
     }
 
-    // ==================== ABRIR VÍDEO/IMAGEM (NOVO RECURSO) ====================
+    // ==================== ABRIR VÍDEO/IMAGEM ====================
     function abrirMidiaLetra(letra, callback) {
         cbAposMidia = callback;
         const modal = document.getElementById("mediaModal");
@@ -811,29 +811,24 @@
         videoEl.style.display = "none";
         imgEl.style.display = "none";
         
-        // Reduz o som ambiente para o video se destacar
         if (audioEnabled) bgMusic.volume = 0.05;
 
         if (dados) {
-            // Tenta carregar e tocar o vídeo
             videoEl.src = dados.video;
             videoEl.style.display = "block";
             
-            // Se o vídeo não for encontrado (404), ele mostra a imagem correspondente
             videoEl.onerror = function() {
                 videoEl.style.display = "none";
                 imgEl.src = dados.img;
                 imgEl.style.display = "block";
             };
             
-            // Fecha quando o vídeo terminar de tocar
             videoEl.onended = function() {
                 fecharMidia();
             };
 
             videoEl.play().catch(e => {
                 console.log("Auto-play prevenido ou erro de vídeo:", e);
-                // Se play der erro, mostra a imagem de fallback
                 videoEl.style.display = "none";
                 imgEl.src = dados.img;
                 imgEl.style.display = "block";
@@ -849,10 +844,9 @@
         const videoEl = document.getElementById("letterVideo");
         
         videoEl.pause();
-        videoEl.src = ""; // descarrega
+        videoEl.src = "";
         modal.style.display = "none";
         
-        // Restaura o volume
         if (audioEnabled) bgMusic.volume = 0.2;
         
         if (cbAposMidia) {
@@ -874,10 +868,8 @@
             atualizarInterface();
             atualizarProgresso();
             
-            // Espera a celebração sumir um pouco e depois abre a mídia da letra
             setTimeout(() => {
                 abrirMidiaLetra(letraCorreta, () => {
-                    // Este código executa DEPOIS que o usuário/criança fechar o vídeo ou a imagem
                     if (currentGameMode === "misterio") {
                         avancarMisterio();
                     }
@@ -889,7 +881,7 @@
                         carregarProximaLetra();
                     }
                 });
-            }, 1200); // Mostra o pop-up após 1.2s da comemoração de acerto
+            }, 1200); 
 
         } else if (!completed[currentLetterIndex]) {
             mostrarErro();
@@ -899,9 +891,6 @@
             }
             falarLetra(letraCorreta);
         }
-        
-        manualInput.value = "";
-        manualInput.focus();
     }
 
     function atualizarProgresso() {
@@ -997,9 +986,6 @@
         setTimeout(() => {
             if (!jogoFinalizado) falarLetra(letters[currentLetterIndex]);
         }, 300);
-        
-        manualInput.value = "";
-        manualInput.focus();
     }
 
     function repetirLetra() {
@@ -1018,11 +1004,11 @@
             btn.setAttribute("data-letter", letra);
             btn.textContent = getLetraTransformada(letra);
             btn.style.fontFamily = modoFontes[modoAtual].fontFamily;
+            
+            // AGORA OS BOTÕES AGEM COMO O TECLADO VIRTUAL DO PROGRAMA
             btn.onclick = () => {
-                if (!completed[idx] && !jogoFinalizado && idx === currentLetterIndex) {
+                if (!jogoFinalizado) {
                     verificarResposta(letra);
-                } else if (!completed[idx] && !jogoFinalizado && idx !== currentLetterIndex) {
-                    falarLetra(letters[currentLetterIndex]);
                 }
             };
             alphabetGrid.appendChild(btn);
@@ -1060,17 +1046,7 @@
             falarLetra(letters[0]);
         }, 500);
         
-        manualInput.addEventListener('input', (e) => {
-            let val = e.target.value;
-            if (val.length > 0) {
-                const ultimaLetra = val[val.length-1].toUpperCase();
-                if (/[A-Z]/i.test(ultimaLetra)) {
-                    verificarResposta(ultimaLetra);
-                }
-                manualInput.value = "";
-            }
-        });
-        
+        // MANTIDO PARA COMPUTADORES COM TECLADO FÍSICO
         document.addEventListener('keydown', (e) => {
             if (jogoFinalizado) return;
             const key = e.key.toUpperCase();
@@ -1079,8 +1055,6 @@
                 verificarResposta(key);
             }
         });
-        
-        manualInput.focus();
     }
 
     document.getElementById("btnRepetir").onclick = repetirLetra;
@@ -1094,7 +1068,6 @@
         iniciarJogo();
         bgMusic.volume = 0.2;
         bgMusic.play().catch(e => console.log("autoplay bloqueado"));
-        //document.documentElement.requestFullscreen().catch(e => console.log("fullscreen não permitido")); //comentado para melhor ux
     };
 </script>
 </body>
