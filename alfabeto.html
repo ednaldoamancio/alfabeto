@@ -26,13 +26,22 @@
             padding: 0;
         }
 
+        /* CORREÇÃO TELA CHEIA: touch-action impede o atraso no clique */
+        button {
+            touch-action: manipulation; 
+        }
+
+        html, body {
+            width: 100%;
+            background: linear-gradient(145deg, #021a2b 0%, #043b5c 40%, #01121f 100%);
+        }
+
         body {
             font-family: 'Nunito', 'Segoe UI', sans-serif;
-            background: linear-gradient(145deg, #021a2b 0%, #043b5c 40%, #01121f 100%);
             min-height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+            /* CORREÇÃO TELA CHEIA: Removido o align-items: center para evitar corte dos botões */
             padding: 16px;
             position: relative;
         }
@@ -63,6 +72,8 @@
             justify-content: center;
             position: relative;
             z-index: 10;
+            /* CORREÇÃO TELA CHEIA: O 'margin: auto' centraliza com segurança sem jogar itens pra fora da tela */
+            margin: auto; 
         }
 
         .card {
@@ -230,15 +241,13 @@
             margin-bottom: 8px;
         }
 
+        /* CORREÇÃO TECLADO: Substituído Grid por Flexbox para alinhamento perfeito no centro */
         .alphabet-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 8px;
             margin: 15px 0;
-        }
-
-        @media (max-width: 640px) {
-            .alphabet-grid { grid-template-columns: repeat(6, 1fr); }
         }
 
         .letter-btn {
@@ -258,6 +267,7 @@
         }
 
         .letter-btn:active { transform: scale(0.95); }
+        
         .letter-btn.completed { opacity: 0.5; filter: grayscale(0.3); cursor: default; transform: none; }
 
         .c1 { background: linear-gradient(135deg, #ff8a65, #ffb74d); }
@@ -314,7 +324,8 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(0,0,0,0.8);
-            padding: 10px 20px;            border-radius: 40px;
+            padding: 10px 20px;
+            border-radius: 40px;
             z-index: 200;
         }
 
@@ -489,8 +500,8 @@
         'K': { video: 'k-kiwi.mp4', img: 'letra-k.jpg' },
         'L': { video: 'l-lobo.mp4', img: 'letra-l.jpg' },
         'M': { video: 'm-mao.mp4', img: 'letra-m.jpg' },
-        'N': { video: 'n-navio.mp4', img: 'n-navio.jpg' }, // ATUALIZADO AQUI
-        'O': { video: 'o-ovelha.mp4', img: 'letra-o.jpg' }, // ATUALIZADO AQUI
+        'N': { video: 'n-navio.mp4', img: 'n-navio.jpg' },
+        'O': { video: 'o-ovelha.mp4', img: 'letra-o.jpg' },
         'P': { video: 'p-papagaio.mp4', img: 'letra-p.jpg' },
         'Q': { video: 'q-queijo.mp4', img: 'letra-q.jpg' },
         'R': { video: 'r-rato.mp4', img: 'letra-r.jpg' },
@@ -502,11 +513,10 @@
         'X': { video: 'x-xilofone.mp4', img: 'letra-x.jpg' },
         'Y': { video: 'y-yaki.mp4', img: 'letra-y.jpg' },
         'Z': { video: 'z-zebra.mp4', img: 'letra-z.jpg' },
-        'CH': { video: 'ch-chocolate.mp4', img: 'letra-ch.jpg' } // Extra, se houver digrafo no futuro
+        'CH': { video: 'ch-chocolate.mp4', img: 'letra-ch.jpg' }
     };
 
     let cbAposMidia = null;
-    let imgFallbackTimeout = null;
 
     // Elementos de áudio especiais
     const audioS = document.getElementById("sfxS");
@@ -542,9 +552,22 @@
         window.location.href = 'https://alfabeto-mu.vercel.app/';
     }
 
+    // CORREÇÃO TELA CHEIA: Adicionados prefixos extras de compatibilidade
     function toggleFullscreen() {
-        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-        else document.exitFullscreen();
+        const elem = document.documentElement;
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(err => console.log(err));
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+        }
     }
 
     function toggleAudio() {
@@ -636,6 +659,7 @@
                 const letraTransformada = getLetraTransformada(letra);
                 btns[idx].textContent = letraTransformada;
                 btns[idx].style.fontFamily = modoFontes[modoAtual].fontFamily;
+                
                 if (completed[idx]) {
                     btns[idx].classList.add('completed');
                 } else {
@@ -1005,7 +1029,6 @@
             btn.textContent = getLetraTransformada(letra);
             btn.style.fontFamily = modoFontes[modoAtual].fontFamily;
             
-            // AGORA OS BOTÕES AGEM COMO O TECLADO VIRTUAL DO PROGRAMA
             btn.onclick = () => {
                 if (!jogoFinalizado) {
                     verificarResposta(letra);
@@ -1046,7 +1069,6 @@
             falarLetra(letters[0]);
         }, 500);
         
-        // MANTIDO PARA COMPUTADORES COM TECLADO FÍSICO
         document.addEventListener('keydown', (e) => {
             if (jogoFinalizado) return;
             const key = e.key.toUpperCase();
@@ -1070,5 +1092,6 @@
         bgMusic.play().catch(e => console.log("autoplay bloqueado"));
     };
 </script>
+
 </body>
 </html>
