@@ -465,8 +465,6 @@
 <audio id="bgMusic" src="ocean_ambience.mp3" loop></audio>
 <audio id="sfxCorrect" src="splash.mp3"></audio>
 <audio id="sfxApplause" src="aplausos.mp3"></audio>
-<audio id="sfxS" src="s.mp3"></audio>
-<audio id="sfxN" src="n.mp3"></audio>
 
 <script>
     // ==================== CONFIGURAÇÕES INICIAIS ====================
@@ -519,8 +517,6 @@
     let cbAposMidia = null;
 
     // Elementos de áudio especiais
-    const audioS = document.getElementById("sfxS");
-    const audioN = document.getElementById("sfxN");
     const bgMusic = document.getElementById("bgMusic");
     const sfxCorrect = document.getElementById("sfxCorrect");
     const sfxApplause = document.getElementById("sfxApplause");
@@ -532,11 +528,38 @@
         "cursive-minus": { transform: (l) => l.toLowerCase(), fontFamily: "'Playwrite BR', cursive", label: "Manuscrito Minúsculo" }
     };
 
+    // MAPA FONÉTICO: grafias ajustadas para o sintetizador (Web Speech API / pt-BR)
+    // pronunciar melhor exige "enganar" o motor de TTS com grafias que forcem
+    // a vogal tônica correta e evitem que a sílaba final seja engolida.
+    // Terminar a grafia em "i" (em vez de "e" mudo) ajuda o motor a manter
+    // o som da consoante final bem articulado, deixando a fala menos robótica.
     const pronunciaMap = {
-        "A": "á", "B": "bê", "C": "cê", "D": "dê", "E": "ê", "F": "efe",
-        "G": "gê", "H": "agá", "I": "i", "J": "jóta", "K": "cá", "L": "éle",
-        "M": "ême", "O": "ô", "P": "pê", "Q": "quê", "R": "érre",
-        "T": "tê", "U": "u", "V": "vê", "W": "dáblio", "X": "xis", "Y": "ípsilon", "Z": "zê"
+        "A": "á",
+        "B": "bê",
+        "C": "cê",
+        "D": "dê",
+        "E": "é",
+        "F": "éfi",
+        "G": "gê",
+        "H": "agá",
+        "I": "í",
+        "J": "jóta",
+        "K": "cá",
+        "L": "éli",
+        "M": "êmi",
+        "N": "êni",
+        "O": "ó",
+        "P": "pê",
+        "Q": "quê",
+        "R": "érri",
+        "S": "éssi",
+        "T": "tê",
+        "U": "ú",
+        "V": "vê",
+        "W": "dáblio",
+        "X": "xís",
+        "Y": "ípsilon",
+        "Z": "zê"
     };
 
     const alphabetGrid = document.getElementById("alphabetGrid");
@@ -597,24 +620,15 @@
         currentUtterance = utterance;
     }
 
+    // Pronúncia 100% sintetizada (Web Speech API) para todas as letras,
+    // incluindo N e S, que antes usavam arquivos de áudio gravados.
     function tocarAudioLetra(letra, callback) {
         const chave = letra.toUpperCase().trim();
-        
-        if (chave === "S" && audioS) {
-            audioS.currentTime = 0;
-            audioS.play().catch(e => console.log("erro s.mp3"));
-            if (callback) setTimeout(callback, 500);
-        } else if (chave === "N" && audioN) {
-            audioN.currentTime = 0;
-            audioN.play().catch(e => console.log("erro n.mp3"));
-            if (callback) setTimeout(callback, 500);
+        const pronuncia = pronunciaMap[chave];
+        if (pronuncia) {
+            falar(pronuncia, callback);
         } else {
-            const pronuncia = pronunciaMap[chave];
-            if (pronuncia) {
-                falar(pronuncia, callback);
-            } else {
-                falar(chave, callback);
-            }
+            falar(chave, callback);
         }
     }
 
