@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Famílias Silábicas - Pesca Divertida | EdHumanas</title>
 
-    <!-- Google Fonts: Caveat para cursiva escolar (manuscrita, esférica e adequada à alfabetização) + Comic Neue para forma -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Playwrite+BR:wght@100..400&display=swap" rel="stylesheet">
@@ -323,27 +322,34 @@
             pointer-events: none;
         }
         @media (min-width: 768px) { .peixe-corpo { font-size: 80px; } }
+        
+        /* ======== ALTERAÇÕES AQUI ======== */
         .silaba-peixe {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
-            color: #FFFDE7;
-            background: rgba(0,0,0,0.6);
-            padding: 4px 8px;
-            border-radius: 25px;
+            color: #000000; /* Texto escuro para melhor contraste */
+            background: #ffffff; /* Fundo branco para virar um "quadrado" */
+            padding: 6px 14px;
+            border-radius: 6px; /* Borda menos arredondada, formando um quadrado/retângulo */
+            border: 3px solid var(--secondary); /* Borda laranja dando destaque */
             position: absolute;
+            bottom: -35px; /* Movido para FORA do peixe, bem abaixo dele */
             z-index: 2;
-            text-shadow: 1px 1px 0 #0a2f5a;
+            text-shadow: none; /* Sombra removida para texto mais limpo */
             letter-spacing: 1px;
             pointer-events: none;
             white-space: nowrap;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.5); /* Sombreamento para saltar da tela */
         }
+        /* ================================== */
+
         .silaba-peixe.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; }
         .silaba-peixe.modo-minusc-forma { font-family: 'Comic Neue', sans-serif; text-transform: lowercase; }
         .silaba-peixe.modo-maiusc-cursiva { font-family: var(--cursive-school); font-size: 24px; font-weight: 400; }
         .silaba-peixe.modo-minusc-cursiva { font-family: var(--cursive-school); text-transform: lowercase; font-weight: 400; font-size: 24px; }
 
         @media (min-width: 768px) {
-            .silaba-peixe { font-size: 28px; padding: 5px 12px; }
+            .silaba-peixe { font-size: 28px; padding: 8px 18px; bottom: -45px; border-radius: 8px; } /* Ajuste de tamanho para telas maiores */
             .silaba-peixe.modo-maiusc-cursiva, .silaba-peixe.modo-minusc-cursiva { font-size: 32px; }
             .instrucao { font-size: 22px; padding: 8px 24px; }
             #silabaAlvo { font-size: 32px; }
@@ -578,7 +584,6 @@
 <div id="game-wrapper">
     <div class="game-header">
         <div class="top-bar">
-            <!-- BOTÃO DOURADO CINTILANTE - VOLTAR PARA PÁGINA ANTERIOR -->
             <button class="btn-dourado" id="btnVoltarDourado" title="Voltar para a página anterior">
                 ⬅️⭐ Voltar
             </button>
@@ -620,7 +625,6 @@
     <div class="dica-som">💡 Clique na sílaba para ouvi-la</div>
 </div>
 
-<!-- Modais -->
 <div id="modal-alfabeto">
     <div class="icone-vitoria">🔤📖</div>
     <div class="vitoria-texto">Escolha o formato do alfabeto</div>
@@ -736,7 +740,6 @@
 
     // ========== BOTÃO DOURADO - VOLTAR PARA PÁGINA ANTERIOR ==========
     function voltarParaPaginaAnterior() {
-        // Efeito de confete dourado
         if (typeof confetti !== 'undefined') {
             confetti({ 
                 particleCount: 80, 
@@ -747,10 +750,8 @@
             });
         }
         
-        // URL da página anterior (Pesca das Letrinhas)
         const urlDestino = 'https://alfabeto-mu.vercel.app/';
         
-        // Se estiver em modo fullscreen, propaga a flag
         if (document.fullscreenElement) {
             const separador = urlDestino.includes('?') ? '&' : '?';
             const novaUrl = urlDestino + separador + 'fullscreen=force';
@@ -823,8 +824,15 @@
     }
 
     function criarPeixe(silabaOriginal, alvoOriginal){
-        let peixe=document.createElement("div"); peixe.className="peixinho"; peixe.style.top=Math.random()*70+10+"%";
-        let direita=Math.random()>0.5; let duracao=(Math.random()*6)+5;
+        let peixe=document.createElement("div"); 
+        peixe.className="peixinho"; 
+        // Alteração: Margem de respawn para evitar que o peixe nasça muito colado embaixo e a letra saia da tela
+        peixe.style.top=Math.random()*60+15+"%";
+        
+        let direita=Math.random()>0.5; 
+        // Alteração: Velocidade reduzida (aumento do tempo de animação)
+        let duracao=(Math.random()*10)+15; 
+        
         peixe.style.animation=direita?`nadar-direita ${duracao}s linear infinite`:`nadar-esquerda ${duracao}s linear infinite`;
         let emoji=emojisPeixe[Math.floor(Math.random()*emojisPeixe.length)]; let flip=direita?'transform: scaleX(-1);':'';
         let textoPeixe=getTextoTransformado(silabaOriginal);
