@@ -351,13 +351,23 @@
         @media (min-width: 768px) { .peixe-corpo { font-size: 75px; } }
         @media (min-width: 1024px) { .peixe-corpo { font-size: 85px; } }
         
+        /* ======== ALTERAÇÕES AQUI ======== */
         .letra-peixe {
             font-size: 22px;
             font-weight: bold;
-            color: #fff9c4;
+            color: #000000; /* Texto escuro para contraste */
+            background: #ffffff; /* Fundo branco formando um quadrado */
+            padding: 6px 14px;
+            border-radius: 6px; 
+            border: 3px solid var(--secondary); /* Borda em destaque */
             position: absolute;
+            bottom: -35px; /* Movido para fora do corpo do peixe */
             z-index: 2;
-            text-shadow: 2px 2px 0 #0a2f5a;
+            text-shadow: none; /* Sombra removida para maior nitidez */
+            letter-spacing: 1px;
+            pointer-events: none;
+            white-space: nowrap;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.5); /* Sombra da caixinha */
         }
         
         .letra-peixe.modo-maiusc-forma { font-family: 'Comic Neue', sans-serif; }
@@ -366,13 +376,14 @@
         .letra-peixe.modo-minusc-cursiva { font-family: var(--cursive-school); text-transform: lowercase; font-weight: 400; font-size: 26px; }
         
         @media (min-width: 768px) {
-            .letra-peixe { font-size: 30px; }
+            .letra-peixe { font-size: 28px; padding: 8px 18px; bottom: -45px; border-radius: 8px; }
             .letra-peixe.modo-maiusc-cursiva, .letra-peixe.modo-minusc-cursiva { font-size: 36px; }
         }
         @media (min-width: 1024px) {
             .letra-peixe { font-size: 35px; }
             .letra-peixe.modo-maiusc-cursiva, .letra-peixe.modo-minusc-cursiva { font-size: 42px; }
         }
+        /* ================================== */
 
         .pescado {
             animation: subir-vertical 0.7s ease-in forwards !important;
@@ -863,7 +874,6 @@
 
     // ========== BOTÃO DOURADO - VOLTAR PARA PÁGINA ANTERIOR (Pesca de Letrinhas) ==========
     function voltarParaPaginaAnterior() {
-        // Efeito de confete dourado
         if (typeof confetti !== 'undefined') {
             confetti({ 
                 particleCount: 80, 
@@ -874,10 +884,8 @@
             });
         }
         
-        // URL CORRETA: Pesca de Letrinhas (página anterior)
         const urlDestino = 'https://alfabeto-mu.vercel.app/';
         
-        // Se estiver em modo fullscreen, propaga a flag
         if (document.fullscreenElement) {
             const separador = urlDestino.includes('?') ? '&' : '?';
             const novaUrl = urlDestino + separador + 'fullscreen=force';
@@ -889,7 +897,6 @@
     }
     
     const btnVoltarDourado = document.getElementById('btnVoltarDourado');
-    // Remove qualquer listener anterior e adiciona o novo
     btnVoltarDourado.removeEventListener('click', voltarParaPaginaAnterior);
     btnVoltarDourado.addEventListener('click', voltarParaPaginaAnterior);
     btnVoltarDourado.addEventListener('touchstart', voltarParaPaginaAnterior, { passive: false });
@@ -902,8 +909,11 @@
     document.addEventListener('webkitfullscreenchange', atualizarEstadoFullscreen);
     atualizarEstadoFullscreen();
 
+    // ======= ALTERAÇÃO NA VELOCIDADE DE NAVEGAÇÃO =======
     function obterDuracaoPeixe() {
-        return faseAtual === 1 ? (Math.random() * 5) + 7 : (Math.random() * 2.5) + 3.5;
+        // Fase 1: 15 a 25 segundos (mais lento)
+        // Fase 2: 10 a 15 segundos (pouco mais rápido, mas ainda acessível)
+        return faseAtual === 1 ? (Math.random() * 10) + 15 : (Math.random() * 5) + 10;
     }
     
     if (window.innerWidth < 768) peixesNaTela = 3;
@@ -1084,7 +1094,10 @@
     function criarPeixe(letraDisplay, letraCertaDisplay, isCerta) {
         const peixe = document.createElement("div");
         peixe.className = "peixinho";
-        peixe.style.top = Math.floor(Math.random() * 65 + 15) + "%";
+        
+        // ======= ALTERAÇÃO NA MARGEM DE NASCIMENTO =======
+        // Limitado a nascer até 55% da tela para evitar que a letra vaze para fora do visor
+        peixe.style.top = Math.floor(Math.random() * 55 + 15) + "%"; 
 
         const dir = Math.random() > 0.5;
         const duracao = obterDuracaoPeixe();
