@@ -44,6 +44,7 @@
             z-index: -1;
         }
 
+        /* Bolhas decorativas */
         .bubble-marine {
             position: fixed;
             pointer-events: none;
@@ -100,6 +101,7 @@
             color: transparent;
         }
 
+        /* Seletor de modo */
         .modo-selector {
             display: flex;
             gap: 8px;
@@ -158,6 +160,7 @@
             box-shadow: 0 0 15px rgba(255,205,126,0.5);
         }
 
+        /* Botão Dourado Cintilante */
         .btn-dourado {
             background: linear-gradient(135deg, #f5b042, #ffd700, #f5a623);
             border: 2px solid #fff2b5;
@@ -209,41 +212,17 @@
             padding: 10px;
             backdrop-filter: blur(4px);
             overflow: hidden;
-            position: relative;
         }
 
-        /* IMAGEM DA FORCA (FUNDO) */
-        #hangman-bg-img {
+        /* IMAGEM DA FORCA (Será trocada via JavaScript) */
+        #hangman-img {
             height: 100%;
             width: auto;
             max-height: 100%;
             object-fit: contain;
             display: block;
-            position: absolute;
-            z-index: 1;
+            transition: opacity 0.2s ease;
         }
-
-        /* SVG DO BONECO (FRENTE) */
-        #hangman-svg {
-            height: 100%;
-            width: auto;
-            max-height: 100%;
-            position: relative;
-            z-index: 2;
-            /* Pequeno ajuste para centralizar perfeitamente o SVG sobre a imagem */
-            transform: scale(0.98); 
-        }
-
-        /* Estilo das linhas do boneco */
-        line, circle, path { 
-            stroke: #48cae4; 
-            stroke-width: 5; 
-            fill: none; 
-            stroke-linecap: round; 
-            stroke-linejoin: round;
-        }
-        
-        .dead-face { stroke: #ff6b6b !important; }
 
         #keyboard-container {
             flex: 1.5;
@@ -415,32 +394,8 @@
 <div id="game-area">
     <div id="top-row">
         <div id="hangman-container">
-            
-            <!-- CAMADA 1: A Imagem da Forca de Madeira (Fundo) -->
-            <img id="hangman-bg-img" src="forca.png" alt="Forca Submarina">
-            
-            <!-- CAMADA 2: O SVG do Boneco (Desenhado por cima) -->
-            <svg id="hangman-svg" viewBox="0 0 200 250">
-                <!-- Cabeça e olhos (Inicia oculto) -->
-                <g id="head-group" style="display:none">
-                    <circle id="head-circle" cx="130" cy="75" r="18" stroke="#ffb347" stroke-width="5"/>
-                    <g id="dead-details" style="display:none">
-                        <line x1="120" y1="68" x2="126" y2="74" class="dead-face" stroke-width="4"/>
-                        <line x1="126" y1="68" x2="120" y2="74" class="dead-face" stroke-width="4"/>
-                        <line x1="134" y1="68" x2="140" y2="74" class="dead-face" stroke-width="4"/>
-                        <line x1="140" y1="68" x2="134" y2="74" class="dead-face" stroke-width="4"/>
-                        <path d="M 120 85 Q 130 78 140 85" class="dead-face" stroke-width="4" fill="none"/>
-                    </g>
-                </g>
-                
-                <!-- Corpo, Braços e Cauda (Iniciam ocultos) -->
-                <line id="body" x1="130" y1="93" x2="130" y2="165" stroke="#ffb347" stroke-width="5" style="display:none"/>
-                <line id="arm-l" x1="130" y1="115" x2="105" y2="145" stroke="#ffb347" stroke-width="5" style="display:none"/>
-                <line id="arm-r" x1="130" y1="115" x2="155" y2="145" stroke="#ffb347" stroke-width="5" style="display:none"/>
-                <path id="tail" d="M 130 165 Q 110 200 90 210" stroke="#48cae4" stroke-width="5" fill="none" style="display:none"/>
-                <path id="tail-r" d="M 130 165 Q 150 200 170 210" stroke="#48cae4" stroke-width="5" fill="none" style="display:none"/>
-            </svg>
-
+            <!-- AGORA: Apenas a imagem, que será trocada dinamicamente -->
+            <img id="hangman-img" src="forca.png" alt="Forca Submarina">
         </div>
 
         <div id="keyboard-container">
@@ -472,6 +427,7 @@
         return audioCtx;
     }
 
+    // Som de acerto (splash suave)
     function playAcerto() {
         try {
             const ctx = ensureAudioContext();
@@ -489,6 +445,7 @@
         } catch(e) { console.log('audio error', e); }
     }
 
+    // Som de erro (bolha estourando)
     function playErro() {
         try {
             const ctx = ensureAudioContext();
@@ -510,6 +467,7 @@
         } catch(e) { console.log('audio error', e); }
     }
 
+    // Som de vitória (trinado alegre)
     function playVitoria() {
         try {
             const ctx = ensureAudioContext();
@@ -530,26 +488,23 @@
         } catch(e) { console.log('audio error', e); }
     }
 
-    function playDerrota() {
+    // Som de derrota (com suplicas.mp3)
+    function playSuplicas() {
         try {
             const ctx = ensureAudioContext();
-            const notas = [523.25, 493.88, 440.00, 392.00, 349.23];
-            notas.forEach((freq, i) => {
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.type = 'sine';
-                osc.frequency.value = freq;
-                const start = ctx.currentTime + i * 0.1;
-                gain.gain.setValueAtTime(0.10, start);
-                gain.gain.exponentialRampToValueAtTime(0.01, start + 0.2);
-                osc.start(start);
-                osc.stop(start + 0.2);
-            });
+            // Cria um elemento de áudio para tocar o arquivo MP3
+            const audioElement = new Audio('suplicas.mp3');
+            audioElement.volume = 0.7; // Ajuste o volume se necessário
+            
+            // Conecta o elemento ao contexto do navegador para funcionar junto com o resto
+            const track = ctx.createMediaElementSource(audioElement);
+            track.connect(ctx.destination);
+            
+            audioElement.play().catch(e => console.log("Erro ao tocar áudio de súplicas:", e));
         } catch(e) { console.log('audio error', e); }
     }
 
+    // Música de fundo
     let bgInterval = null;
     let musicPlaying = false;
 
@@ -619,8 +574,17 @@
     let guessedLetters = [];
     let mistakes = 0;
 
-    // Lista de Partes do corpo para desenhar por cima da imagem
-    const bodyParts = ['head-group', 'body', 'arm-l', 'arm-r', 'tail', 'tail-r'];
+    // Sequência de imagens da forca: 0 = base, 6 = enforcado completo
+    // O jogo permite 6 erros no total.
+    const forcaImages = [
+        'forca.png',     // 0 erros
+        'forca_1.png',   // 1 erro (cabeça)
+        'forca_2.png',   // 2 erros (corpo)
+        'forca_3.png',   // 3 erros (braço 1)
+        'forca_4.png',   // 4 erros (braço 2)
+        'forca_5.png',   // 5 erros (perna 1)
+        'forca_6.png'    // 6 erros (perna 2 + língua de fora - Derrota!)
+    ];
 
     function gerarPilhaDePalavras() {
         wordPool = [];
@@ -724,12 +688,9 @@
         document.getElementById('category-info').innerHTML = icone + " " + currentCategory + " " + icone;
         document.getElementById('reset-btn').style.display = "none";
         
-        // Esconde todas as partes do corpo no SVG
-        document.getElementById('dead-details').style.display = "none";
-        bodyParts.forEach(p => {
-            const element = document.getElementById(p);
-            if (element) element.style.display = "none";
-        });
+        // Reinicia a imagem da forca para o estado inicial (0 erros)
+        const imgElement = document.getElementById('hangman-img');
+        imgElement.src = forcaImages[0];
 
         renderWord();
         renderKeyboard();
@@ -789,14 +750,13 @@
             mistakes++;
             playErro();
             
-            // Lógica original do SVG: revela a parte do corpo correspondente ao erro
-            const partId = bodyParts[mistakes-1];
-            const element = document.getElementById(partId);
-            if (element) element.style.display = "block";
-            
-            // Se atingir 6 erros, mostra o rosto triste
+            // ALTERADO: Troca a imagem da forca baseada na contagem de erros
+            const imgElement = document.getElementById('hangman-img');
+            imgElement.src = forcaImages[mistakes];
+
+            // Se atingir 6 erros, toca o áudio cômico e termina o jogo
             if (mistakes === 6) {
-                document.getElementById('dead-details').style.display = "block";
+                playSuplicas();
                 endGame(false);
             }
         }
@@ -816,7 +776,8 @@
                 confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ffd700', '#48cae4', '#ffaa33'] });
             }
         } else {
-            playDerrota();
+            // PlaySuplicas já foi chamado no 6º erro, mas deixamos aqui para garantir
+            playSuplicas(); 
             let msgDerrota = "";
             if (currentModo === "maritimo") msgDerrota = "💔 OH NÃO! A SEREIA FOI CAPTURADA! A PALAVRA ERA: " + currentWordRaw + " 💔";
             else if (currentModo === "geral") msgDerrota = "😢 QUE PENA! VOCÊ PODE TENTAR DE NOVO! A PALAVRA ERA: " + currentWordRaw;
