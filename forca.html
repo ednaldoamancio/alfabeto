@@ -17,7 +17,14 @@
         }
 
         body {
-            background: linear-gradient(145deg, #021a2b 0%, #043b5c 40%, #01121f 100%);
+            /* ALTERADO: Plano de fundo substituído pela imagem do oceano */
+            background-image: url('fundo_forca.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-color: #043b5c;
+            
             color: #eef5ff;
             font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif;
             display: flex;
@@ -27,6 +34,15 @@
             padding: 5px 15px;
             overflow: hidden;
             position: relative;
+        }
+
+        /* Sobreposição escura para melhorar a leitura do texto */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(1, 20, 35, 0.3);
+            z-index: -1;
         }
 
         /* Bolhas decorativas */
@@ -191,13 +207,22 @@
             height: 80%;
             display: flex;
             justify-content: center;
-            background: rgba(0, 30, 50, 0.5);
+            align-items: center;
+            background: rgba(0, 30, 50, 0.3);
             border-radius: 30px;
             padding: 10px;
             backdrop-filter: blur(4px);
+            overflow: hidden;
         }
 
-        #hangman-svg { height: 100%; width: auto; }
+        /* ALTERADO: Ajuste da imagem da Forca (PNG) */
+        #hangman-img {
+            height: 100%;
+            width: auto;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+        }
 
         #keyboard-container {
             flex: 1.5;
@@ -291,9 +316,6 @@
             font-family: 'Dancing Script', cursive;
         }
 
-        line, circle, path { stroke: #7ec8ff; stroke-width: 5; fill: none; stroke-linecap: round; }
-        .dead-face { stroke: #ff6b6b !important; }
-
         #reset-btn {
             position: fixed;
             top: 50%;
@@ -372,27 +394,8 @@
 <div id="game-area">
     <div id="top-row">
         <div id="hangman-container">
-            <svg id="hangman-svg" viewBox="0 0 200 250">
-                <line x1="20" y1="230" x2="180" y2="230" stroke="#48cae4" stroke-width="6"/>
-                <line x1="50" y1="230" x2="50" y2="20" stroke="#48cae4" stroke-width="6"/>
-                <line x1="50" y1="20" x2="130" y2="20" stroke="#48cae4" stroke-width="6"/>
-                <line x1="130" y1="20" x2="130" y2="50" stroke="#48cae4" stroke-width="6"/>
-                <g id="head-group" style="display:none">
-                    <circle id="head-circle" cx="130" cy="75" r="18" stroke="#ffb347" stroke-width="5"/>
-                    <g id="dead-details" style="display:none">
-                        <line x1="120" y1="68" x2="126" y2="74" class="dead-face" stroke-width="4"/>
-                        <line x1="126" y1="68" x2="120" y2="74" class="dead-face" stroke-width="4"/>
-                        <line x1="134" y1="68" x2="140" y2="74" class="dead-face" stroke-width="4"/>
-                        <line x1="140" y1="68" x2="134" y2="74" class="dead-face" stroke-width="4"/>
-                        <path d="M 120 85 Q 130 78 140 85" class="dead-face" stroke-width="4" fill="none"/>
-                    </g>
-                </g>
-                <line id="body" x1="130" y1="93" x2="130" y2="165" stroke="#ffb347" stroke-width="5" style="display:none"/>
-                <line id="arm-l" x1="130" y1="115" x2="105" y2="145" stroke="#ffb347" stroke-width="5" style="display:none"/>
-                <line id="arm-r" x1="130" y1="115" x2="155" y2="145" stroke="#ffb347" stroke-width="5" style="display:none"/>
-                <path id="tail" d="M 130 165 Q 110 200 90 210" stroke="#48cae4" stroke-width="5" fill="none" style="display:none"/>
-                <path id="tail-r" d="M 130 165 Q 150 200 170 210" stroke="#48cae4" stroke-width="5" fill="none" style="display:none"/>
-            </svg>
+            <!-- ALTERADO: Substituído o SVG pela imagem da forca.png -->
+            <img id="hangman-img" src="forca.png" alt="Forca Submarina" style="display: none;">
         </div>
 
         <div id="keyboard-container">
@@ -581,7 +584,17 @@
     let guessedLetters = [];
     let mistakes = 0;
 
-    const bodyParts = ['head-group', 'body', 'arm-l', 'arm-r', 'tail', 'tail-r'];
+    // ALTERADO: Substituímos as partes do corpo pelos índices das imagens da forca (Partes da forca.png)
+    // A lógica de derrota agora funcionará trocando o src da imagem da forca
+    const forcaImages = [
+        'forca.png', // 0 erros
+        'forca_1.png', // 1 erro
+        'forca_2.png', // 2 erros
+        'forca_3.png', // 3 erros
+        'forca_4.png', // 4 erros
+        'forca_5.png', // 5 erros
+        'forca_6.png'  // 6 erros (enforcado)
+    ];
 
     // FUNÇÃO NOVA: Gera e embaralha uma lista de palavras baseada no modo atual
     function gerarPilhaDePalavras() {
@@ -678,10 +691,10 @@
             // Mostra aviso de que as palavras reiniciaram
             setTimeout(() => {
                mostrarMensagemTemporaria("🔄 Todas as palavras foram usadas! Reiniciando a lista...", "#ffdd99");
-            }, 2600); // Aparece logo após a mensagem inicial do modo, caso aconteçam juntas
+            }, 2600); 
         }
 
-        // Retira a última palavra da pilha já embaralhada (garante que não repete)
+        // Retira a última palavra da pilha já embaralhada
         const palavraSorteada = wordPool.pop();
         currentCategory = palavraSorteada.category;
         currentWordRaw = palavraSorteada.word.toUpperCase();
@@ -697,11 +710,11 @@
 
         document.getElementById('category-info').innerHTML = icone + " " + currentCategory + " " + icone;
         document.getElementById('reset-btn').style.display = "none";
-        document.getElementById('dead-details').style.display = "none";
-        bodyParts.forEach(p => {
-            const element = document.getElementById(p);
-            if (element) element.style.display = "none";
-        });
+
+        // ALTERADO: Inicializa a forca como a imagem principal (sem erros)
+        const imgElement = document.getElementById('hangman-img');
+        imgElement.src = forcaImages[0];
+        imgElement.style.display = 'block';
 
         renderWord();
         renderKeyboard();
@@ -760,11 +773,14 @@
         } else {
             mistakes++;
             playErro();
-            const partId = bodyParts[mistakes-1];
-            const element = document.getElementById(partId);
-            if (element) element.style.display = "block";
+            
+            // ALTERADO: Atualiza a imagem da forca baseada nos erros
+            const imgElement = document.getElementById('hangman-img');
+            if (mistakes < forcaImages.length) {
+                imgElement.src = forcaImages[mistakes];
+            }
+
             if (mistakes === 6) {
-                document.getElementById('dead-details').style.display = "block";
                 endGame(false);
             }
         }
