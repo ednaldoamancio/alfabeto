@@ -488,12 +488,12 @@
         } catch(e) { console.log('audio error', e); }
     }
 
-    // Som de derrota (com suplicas.mp3)
-    function playSuplicas() {
+    // Som de derrota (com suplica.mp3)
+    function playSuplica() {
         try {
             const ctx = ensureAudioContext();
             // Cria um elemento de áudio para tocar o arquivo MP3
-            const audioElement = new Audio('suplicas.mp3');
+            const audioElement = new Audio('suplica.mp3');
             audioElement.volume = 0.7; // Ajuste o volume se necessário
             
             // Conecta o elemento ao contexto do navegador para funcionar junto com o resto
@@ -756,7 +756,7 @@
 
             // Se atingir 6 erros, toca o áudio cômico e termina o jogo
             if (mistakes === 6) {
-                playSuplicas();
+                playSuplica();
                 endGame(false);
             }
         }
@@ -776,8 +776,8 @@
                 confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ffd700', '#48cae4', '#ffaa33'] });
             }
         } else {
-            // PlaySuplicas já foi chamado no 6º erro, mas deixamos aqui para garantir
-            playSuplicas(); 
+            // PlaySuplica já foi chamado no 6º erro, mas deixamos aqui para garantir
+            playSuplica(); 
             let msgDerrota = "";
             if (currentModo === "maritimo") msgDerrota = "💔 OH NÃO! A SEREIA FOI CAPTURADA! A PALAVRA ERA: " + currentWordRaw + " 💔";
             else if (currentModo === "geral") msgDerrota = "😢 QUE PENA! VOCÊ PODE TENTAR DE NOVO! A PALAVRA ERA: " + currentWordRaw;
