@@ -17,7 +17,7 @@
         }
 
         body {
-            /* ALTERADO: Plano de fundo substituído pela imagem do oceano */
+            /* Plano de fundo pelo oceano */
             background-image: url('fundo_forca.png');
             background-size: cover;
             background-position: center;
@@ -36,7 +36,6 @@
             position: relative;
         }
 
-        /* Sobreposição escura para melhorar a leitura do texto */
         body::before {
             content: '';
             position: absolute;
@@ -45,7 +44,6 @@
             z-index: -1;
         }
 
-        /* Bolhas decorativas */
         .bubble-marine {
             position: fixed;
             pointer-events: none;
@@ -102,7 +100,6 @@
             color: transparent;
         }
 
-        /* Seletor de modo */
         .modo-selector {
             display: flex;
             gap: 8px;
@@ -161,7 +158,6 @@
             box-shadow: 0 0 15px rgba(255,205,126,0.5);
         }
 
-        /* Botão Dourado Cintilante */
         .btn-dourado {
             background: linear-gradient(135deg, #f5b042, #ffd700, #f5a623);
             border: 2px solid #fff2b5;
@@ -213,17 +209,41 @@
             padding: 10px;
             backdrop-filter: blur(4px);
             overflow: hidden;
+            position: relative;
         }
 
-        /* ALTERADO: Ajuste da imagem da Forca (PNG) */
-        #hangman-img {
+        /* IMAGEM DA FORCA (FUNDO) */
+        #hangman-bg-img {
             height: 100%;
             width: auto;
             max-height: 100%;
             object-fit: contain;
             display: block;
-            transition: opacity 0.3s ease, filter 0.3s ease;
+            position: absolute;
+            z-index: 1;
         }
+
+        /* SVG DO BONECO (FRENTE) */
+        #hangman-svg {
+            height: 100%;
+            width: auto;
+            max-height: 100%;
+            position: relative;
+            z-index: 2;
+            /* Pequeno ajuste para centralizar perfeitamente o SVG sobre a imagem */
+            transform: scale(0.98); 
+        }
+
+        /* Estilo das linhas do boneco */
+        line, circle, path { 
+            stroke: #48cae4; 
+            stroke-width: 5; 
+            fill: none; 
+            stroke-linecap: round; 
+            stroke-linejoin: round;
+        }
+        
+        .dead-face { stroke: #ff6b6b !important; }
 
         #keyboard-container {
             flex: 1.5;
@@ -395,8 +415,32 @@
 <div id="game-area">
     <div id="top-row">
         <div id="hangman-container">
-            <!-- ALTERADO: Substituído o SVG pela imagem da forca.png -->
-            <img id="hangman-img" src="forca.png" alt="Forca Submarina">
+            
+            <!-- CAMADA 1: A Imagem da Forca de Madeira (Fundo) -->
+            <img id="hangman-bg-img" src="forca.png" alt="Forca Submarina">
+            
+            <!-- CAMADA 2: O SVG do Boneco (Desenhado por cima) -->
+            <svg id="hangman-svg" viewBox="0 0 200 250">
+                <!-- Cabeça e olhos (Inicia oculto) -->
+                <g id="head-group" style="display:none">
+                    <circle id="head-circle" cx="130" cy="75" r="18" stroke="#ffb347" stroke-width="5"/>
+                    <g id="dead-details" style="display:none">
+                        <line x1="120" y1="68" x2="126" y2="74" class="dead-face" stroke-width="4"/>
+                        <line x1="126" y1="68" x2="120" y2="74" class="dead-face" stroke-width="4"/>
+                        <line x1="134" y1="68" x2="140" y2="74" class="dead-face" stroke-width="4"/>
+                        <line x1="140" y1="68" x2="134" y2="74" class="dead-face" stroke-width="4"/>
+                        <path d="M 120 85 Q 130 78 140 85" class="dead-face" stroke-width="4" fill="none"/>
+                    </g>
+                </g>
+                
+                <!-- Corpo, Braços e Cauda (Iniciam ocultos) -->
+                <line id="body" x1="130" y1="93" x2="130" y2="165" stroke="#ffb347" stroke-width="5" style="display:none"/>
+                <line id="arm-l" x1="130" y1="115" x2="105" y2="145" stroke="#ffb347" stroke-width="5" style="display:none"/>
+                <line id="arm-r" x1="130" y1="115" x2="155" y2="145" stroke="#ffb347" stroke-width="5" style="display:none"/>
+                <path id="tail" d="M 130 165 Q 110 200 90 210" stroke="#48cae4" stroke-width="5" fill="none" style="display:none"/>
+                <path id="tail-r" d="M 130 165 Q 150 200 170 210" stroke="#48cae4" stroke-width="5" fill="none" style="display:none"/>
+            </svg>
+
         </div>
 
         <div id="keyboard-container">
@@ -428,7 +472,6 @@
         return audioCtx;
     }
 
-    // Som de acerto (splash suave)
     function playAcerto() {
         try {
             const ctx = ensureAudioContext();
@@ -446,7 +489,6 @@
         } catch(e) { console.log('audio error', e); }
     }
 
-    // Som de erro (bolha estourando)
     function playErro() {
         try {
             const ctx = ensureAudioContext();
@@ -468,7 +510,6 @@
         } catch(e) { console.log('audio error', e); }
     }
 
-    // Som de vitória (trinado alegre)
     function playVitoria() {
         try {
             const ctx = ensureAudioContext();
@@ -489,7 +530,6 @@
         } catch(e) { console.log('audio error', e); }
     }
 
-    // Som de derrota (descendente melancólico)
     function playDerrota() {
         try {
             const ctx = ensureAudioContext();
@@ -510,7 +550,6 @@
         } catch(e) { console.log('audio error', e); }
     }
 
-    // Música de fundo (ambiente oceânico com notas suaves)
     let bgInterval = null;
     let musicPlaying = false;
 
@@ -548,7 +587,6 @@
 
     // ==================== BANCO DE PALAVRAS ====================
 
-    // 🌊 MUNDO MARÍTIMO (Tema do oceano)
     const databaseMaritimo = {
         "🧜‍♀️ CRIATURAS MARINHAS": ["SEREIA", "TRITÃO", "NETUNO", "POLVO", "TUBARÃO", "BALEIA", "GOLFINHO", "TARTARUGA", "CAVALO MARINHO", "ESTRELA DO MAR", "AGUA VIVA", "LULA", "CARANGUEJO", "LAGOSTA", "SALMAO", "ATUM", "BACALHAU", "PEPINO DO MAR", "OURICO DO MAR"],
         "🏰 REINO DE ATLÂNTIDA": ["ATLANTIDA", "TRIDENTE", "CORAL", "CONCHA", "PEROLA", "CASTELO", "PALACIO", "JARDIM MARINHO", "RECIFE", "ALGA", "TESOURO", "BAU", "COROA", "POSEIDON", "OCEANO", "MARE", "FUNDO DO MAR", "ABISMO"],
@@ -557,7 +595,6 @@
         "💎 TESOUROS DO MAR": ["PEROLA", "CRISTAL", "RUBI", "ESMERALDA", "DIAMANTE", "OURO", "PRATA", "BRONZE", "CORAL", "MAPAS", "BUSSOLA", "CONCHA", "AMONITE", "MARFIM"]
     };
 
-    // 🌍 APRENDIZADO GERAL (Categorias educativas do dia a dia)
     const databaseGeral = {
         "🐶 ANIMAIS": ["CACHORRO", "GATO", "ELEFANTE", "GIRAFA", "LEAO", "TIGRE", "ZEBRA", "MACACO", "COELHO", "RATO", "CAVALO", "VACA", "PORCO", "GALINHA", "PATO", "OVELHA", "BODE", "URSO", "LOBO", "RAPOSA", "ESQUILO", "CANGURU", "PANDA", "PINGUIM", "TUBARAO", "BALEIA", "JACARE", "COBRA", "SAPO", "ABELHA", "FORMIGA", "BORBOLETA", "MORCEGO", "CORUJA", "AGUIA", "PAPAGAIO", "HIPOPOTAMO", "RINOCERONTE", "COALA"],
         "🏠 CASA": ["CADEIRA", "MESA", "SOFA", "CAMA", "ARMARIO", "GELADEIRA", "FOGAO", "TELEVISAO", "JANELA", "PORTA", "TAPETE", "CORTINA", "LAMPADA", "ESPELHO", "TRAVESSEIRO", "LENCOL", "TOALHA", "CHUVEIRO", "VASO", "PIA", "COPO", "PRATO", "TALHER", "PANELA", "VASSOURA", "BALDE", "RELÓGIO", "QUADRO", "ESTANTE", "MICROONDAS", "GARFO", "FACA", "COLHER", "XICARA", "COBERTOR", "CABIDE", "PENTE"],
@@ -567,7 +604,6 @@
         "🧠 CORPO HUMANO": ["CABECA", "OMBRO", "JOELHO", "PE", "OLHO", "OUVIDO", "BOCA", "NARIZ", "MAO", "DEDO", "BRACO", "PERNA", "BARRIGA", "COSTA", "PESCOCO", "DENTE", "LINGUA", "UNHA", "CABELO", "CORACAO", "PULMAO", "ESTOMAGO", "CEREBRO", "SANGUE", "OSSO"]
     };
 
-    // 🎲 MISTÉRIO (Junta todas as categorias dos dois mundos)
     const databaseMisterio = {
         ...databaseMaritimo,
         ...databaseGeral
@@ -576,37 +612,31 @@
     let currentDatabase = databaseMaritimo;
     let currentModo = "maritimo";
     
-    // VARIÁVEL NOVA: Armazena as palavras que ainda não foram jogadas
     let wordPool = [];
-
     let currentWordRaw = "";
     let currentWordNormalized = "";
     let currentCategory = "";
     let guessedLetters = [];
     let mistakes = 0;
 
-    // FUNÇÃO NOVA: Gera e embaralha uma lista de palavras baseada no modo atual
+    // Lista de Partes do corpo para desenhar por cima da imagem
+    const bodyParts = ['head-group', 'body', 'arm-l', 'arm-r', 'tail', 'tail-r'];
+
     function gerarPilhaDePalavras() {
         wordPool = [];
-        
-        // Adiciona todas as palavras do modo atual na lista
         for (const category in currentDatabase) {
             currentDatabase[category].forEach(word => {
                 wordPool.push({ category: category, word: word });
             });
         }
-        
-        // Embaralha a lista (Algoritmo Fisher-Yates) para que as categorias fiquem misturadas
         for (let i = wordPool.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [wordPool[i], wordPool[j]] = [wordPool[j], wordPool[i]];
         }
     }
 
-    // ==================== FUNÇÃO PARA SELECIONAR MODO ====================
     function selecionarModo(modo) {
         currentModo = modo;
-
         document.querySelectorAll('.modo-btn').forEach(btn => {
             btn.classList.remove('ativo');
             if (btn.getAttribute('data-modo') === modo) {
@@ -625,7 +655,6 @@
             mostrarMensagemTemporaria("🎲 MODO MISTÉRIO! Todos os mundos se misturam! 🎲", "#ffaa66");
         }
 
-        // Toda vez que muda de modo, recria a pilha com as novas palavras
         gerarPilhaDePalavras();
         initGame();
     }
@@ -642,7 +671,6 @@
         }, 2500);
     }
 
-    // ==================== FUNÇÃO PARA VOLTAR À PÁGINA ANTERIOR ====================
     function voltarParaPaginaAnterior() {
         if (typeof confetti !== 'undefined') {
             confetti({
@@ -656,7 +684,6 @@
         window.location.href = 'https://ilha-das-vogais.vercel.app/';
     }
 
-    // ==================== FUNÇÃO DE TELA CHEIA ====================
     function toggleFullscreen() {
         if (!document.fullscreenElement) {
             document.documentElement.requestFullscreen().catch(err => {});
@@ -674,16 +701,13 @@
     }
 
     function initGame() {
-        // Se a pilha de palavras estiver vazia, gera ela novamente
         if (wordPool.length === 0) {
             gerarPilhaDePalavras();
-            // Mostra aviso de que as palavras reiniciaram
             setTimeout(() => {
                mostrarMensagemTemporaria("🔄 Todas as palavras foram usadas! Reiniciando a lista...", "#ffdd99");
             }, 2600); 
         }
 
-        // Retira a última palavra da pilha já embaralhada
         const palavraSorteada = wordPool.pop();
         currentCategory = palavraSorteada.category;
         currentWordRaw = palavraSorteada.word.toUpperCase();
@@ -699,11 +723,13 @@
 
         document.getElementById('category-info').innerHTML = icone + " " + currentCategory + " " + icone;
         document.getElementById('reset-btn').style.display = "none";
-
-        // ALTERADO: Inicializa a forca como a imagem principal sem nenhum filtro
-        const imgElement = document.getElementById('hangman-img');
-        imgElement.style.opacity = '1';
-        imgElement.style.filter = 'none';
+        
+        // Esconde todas as partes do corpo no SVG
+        document.getElementById('dead-details').style.display = "none";
+        bodyParts.forEach(p => {
+            const element = document.getElementById(p);
+            if (element) element.style.display = "none";
+        });
 
         renderWord();
         renderKeyboard();
@@ -763,15 +789,14 @@
             mistakes++;
             playErro();
             
-            // ALTERADO: Aqui está a correção! 
-            // Em vez de tentar carregar imagens que não existem (o que gera o ícone de erro),
-            // nós apenas esmaecemos a imagem principal a cada erro.
-            const imgElement = document.getElementById('hangman-img');
-            const opacidade = 1 - (mistakes * 0.1666); // 1 erro = 83%, 6 erros = 0% (invisível)
-            imgElement.style.opacity = opacidade;
+            // Lógica original do SVG: revela a parte do corpo correspondente ao erro
+            const partId = bodyParts[mistakes-1];
+            const element = document.getElementById(partId);
+            if (element) element.style.display = "block";
             
-            // Se atingiu 6 erros, termina o jogo
+            // Se atingir 6 erros, mostra o rosto triste
             if (mistakes === 6) {
+                document.getElementById('dead-details').style.display = "block";
                 endGame(false);
             }
         }
@@ -808,7 +833,6 @@
         initGame();
     }
 
-    // ==================== CONTROLE DE MÚSICA ====================
     function toggleMusic() {
         const btn = document.getElementById('bg-music-btn');
         if (!musicPlaying) {
@@ -824,7 +848,6 @@
         }
     }
 
-    // ==================== ELEMENTOS FLUTUANTES (BOLHAS E CONCHAS) ====================
     function criarBolhasMarinhas() {
         for (let i = 0; i < 20; i++) {
             setTimeout(() => {
@@ -869,21 +892,17 @@
         }
     }
 
-    // ==================== INICIALIZAÇÃO ====================
     window.onload = () => {
         criarBolhasMarinhas();
         criarConchasFlutuantes();
 
         document.querySelector('.modo-btn[data-modo="maritimo"]').classList.add('ativo');
 
-        // Gera as palavras antes de iniciar o jogo pela primeira vez
         gerarPilhaDePalavras();
         initGame();
 
-        // Tentativa automática de fullscreen
         document.documentElement.requestFullscreen().catch(e => console.log("fullscreen não permitido automaticamente"));
 
-        // Mensagem de boas-vindas
         setTimeout(() => {
             const msg = document.getElementById('message');
             msg.innerHTML = "🧜‍♀️ Bem-vinda(o) ao Reino de Netuno! Escolha um modo de jogo acima! 🧜‍♂️";
