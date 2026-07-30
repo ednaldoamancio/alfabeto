@@ -378,7 +378,6 @@
                 flex: 1;
             }
 
-            /* Forca ocupa boa parte da tela horizontalmente */
             #hangman-container {
                 width: 100%;
                 flex: 1.5;
@@ -394,7 +393,6 @@
                 max-width: 100%;
             }
 
-            /* Teclado mais largura e botões maiores */
             #keyboard-container {
                 width: 100%;
                 max-width: 100%;
@@ -435,7 +433,6 @@
             }
         }
 
-        /* Ajuste extra para telas muito pequenas */
         @media (max-width: 400px) {
             .key {
                 padding: 14px 0;
@@ -622,23 +619,44 @@
             }
         }
 
-        // ==================== BANCO DE PALAVRAS ====================
+        // ==================== BANCO DE PALAVRAS COM ACENTOS ====================
         const database = {
-            "🌎 PAÍSES": ["BRASIL", "ARGENTINA", "CHILE", "MEXICO", "CANADA", "ESTADOS UNIDOS", "PORTUGAL", "ESPANHA",
-                "FRANCA", "ITALIA"
+            "🌎 PAÍSES": ["BRASIL", "ARGENTINA", "CHILE", "MÉXICO", "CANADÁ", "ESTADOS UNIDOS", "PORTUGAL", "ESPANHA",
+                "FRANÇA", "ITÁLIA"
             ],
-            "🍎 FRUTAS": ["BANANA", "MACA", "LARANJA", "UVA", "MORANGO", "MELANCIA", "ABACAXI", "PERA", "MAMAO",
-            "LIMAO"],
-            "👨‍⚕️ PROFISSÕES": ["PROFESSOR", "MEDICO", "DENTISTA", "POLICIAL", "BOMBEIRO", "PADEIRO", "MOTORISTA",
+            "🍎 FRUTAS": ["BANANA", "MAÇÃ", "LARANJA", "UVA", "MORANGO", "MELANCIA", "ABACAXI", "PÊRA", "MAMÃO",
+            "LIMÃO"],
+            "👨‍⚕️ PROFISSÕES": ["PROFESSOR", "MÉDICO", "DENTISTA", "POLICIAL", "BOMBEIRO", "PADEIRO", "MOTORISTA",
                 "COZINHEIRO", "PINTOR", "PEDREIRO"
             ]
         };
+
+        // Mapeamento de teclas simples para caracteres acentuados/cedilha
+        const charMap = {
+            'A': ['A', 'Á', 'À', 'Â', 'Ã'],
+            'E': ['E', 'É', 'È', 'Ê'],
+            'I': ['I', 'Í', 'Ì', 'Î'],
+            'O': ['O', 'Ó', 'Ò', 'Ô', 'Õ'],
+            'U': ['U', 'Ú', 'Ù', 'Û'],
+            'C': ['C', 'Ç'],
+            'N': ['N', 'Ñ']
+        };
+
+        function getBaseChar(char) {
+            const normalized = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+            if (char === 'Ç' || char === 'ç') return 'C';
+            return normalized;
+        }
+
+        function isAccentedOrSpecial(char) {
+            return char !== getBaseChar(char) || char === 'Ç' || char === 'ç';
+        }
 
         let wordPool = [];
         let currentWordRaw = "";
         let currentWordNormalized = "";
         let currentCategory = "";
-        let guessedLetters = [];
+        let guessedLetters = []; // Armazena as letras base já tentadas (A, E, I, O, U, C, etc.)
         let mistakes = 0;
 
         const forcaImages = [
@@ -742,21 +760,27 @@
         function renderWord() {
             const container = document.getElementById('word-display');
             let displayStr = "";
-            let winCounter = 0;
+            let allRevealed = true;
+
             for (let i = 0; i < currentWordRaw.length; i++) {
                 const charRaw = currentWordRaw[i];
                 const charNorm = currentWordNormalized[i];
+
                 if (charRaw === " " || charRaw === "-") {
                     displayStr += charRaw === " " ? "  " : "- ";
-                } else if (guessedLetters.includes(charNorm)) {
-                    displayStr += charRaw + " ";
                 } else {
-                    displayStr += "_ ";
-                    winCounter++;
+                    const baseChar = getBaseChar(charRaw);
+                    if (guessedLetters.includes(baseChar)) {
+                        // Mostra o caractere original com acento/cedilha
+                        displayStr += charRaw + " ";
+                    } else {
+                        displayStr += "_ ";
+                        allRevealed = false;
+                    }
                 }
             }
             container.innerText = displayStr.trimEnd();
-            if (winCounter === 0 && currentWordRaw !== "") endGame(true);
+            if (allRevealed && currentWordRaw !== "") endGame(true);
         }
 
         function renderKeyboard() {
@@ -768,17 +792,37 @@
                 b.className = 'key';
                 b.id = 'k-' + l;
                 b.onclick = () => handleGuess(l);
+                // Desabilita se a letra base já foi tentada
+                if (guessedLetters.includes(l)) {
+                    b.disabled = true;
+                }
                 kb.appendChild(b);
             });
         }
 
-        function handleGuess(l) {
-            if (guessedLetters.includes(l) || mistakes >= 6) return;
-            const keyBtn = document.getElementById('k-' + l);
+        function handleGuess(letter) {
+            if (guessedLetters.includes(letter) || mistakes >= 6) return;
+
+            // Marca a letra base como tentada
+            guessedLetters.push(letter);
+            const keyBtn = document.getElementById('k-' + letter);
             if (keyBtn) keyBtn.disabled = true;
 
-            if (currentWordNormalized.includes(l)) {
-                guessedLetters.push(l);
+            // Verifica se a letra base ou qualquer variante acentuada está na palavra
+            const variants = charMap[letter] || [letter];
+            let found = false;
+
+            for (let i = 0; i < currentWordRaw.length; i++) {
+                const charRaw = currentWordRaw[i];
+                const baseChar = getBaseChar(charRaw);
+
+                if (baseChar === letter) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found) {
                 playAcerto();
                 renderWord();
             } else {
@@ -814,9 +858,12 @@
                 msg.innerHTML = "😢 QUE PENA! A PALAVRA ERA: " + currentWordRaw;
                 msg.style.color = "#ff8888";
                 const display = document.getElementById('word-display');
+                // Mostra a palavra completa com acentos
                 display.innerText = currentWordRaw.split('').join(' ');
             }
             document.getElementById('reset-btn').style.display = "block";
+            // Desabilita todas as teclas
+            document.querySelectorAll('.key').forEach(key => key.disabled = true);
         }
 
         function nextRound() {
