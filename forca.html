@@ -222,6 +222,7 @@
             max-height: 100%;
             object-fit: contain;
             display: block;
+            transition: opacity 0.3s ease, filter 0.3s ease;
         }
 
         #keyboard-container {
@@ -395,7 +396,7 @@
     <div id="top-row">
         <div id="hangman-container">
             <!-- ALTERADO: Substituído o SVG pela imagem da forca.png -->
-            <img id="hangman-img" src="forca.png" alt="Forca Submarina" style="display: none;">
+            <img id="hangman-img" src="forca.png" alt="Forca Submarina">
         </div>
 
         <div id="keyboard-container">
@@ -584,18 +585,6 @@
     let guessedLetters = [];
     let mistakes = 0;
 
-    // ALTERADO: Substituímos as partes do corpo pelos índices das imagens da forca (Partes da forca.png)
-    // A lógica de derrota agora funcionará trocando o src da imagem da forca
-    const forcaImages = [
-        'forca.png', // 0 erros
-        'forca_1.png', // 1 erro
-        'forca_2.png', // 2 erros
-        'forca_3.png', // 3 erros
-        'forca_4.png', // 4 erros
-        'forca_5.png', // 5 erros
-        'forca_6.png'  // 6 erros (enforcado)
-    ];
-
     // FUNÇÃO NOVA: Gera e embaralha uma lista de palavras baseada no modo atual
     function gerarPilhaDePalavras() {
         wordPool = [];
@@ -711,10 +700,10 @@
         document.getElementById('category-info').innerHTML = icone + " " + currentCategory + " " + icone;
         document.getElementById('reset-btn').style.display = "none";
 
-        // ALTERADO: Inicializa a forca como a imagem principal (sem erros)
+        // ALTERADO: Inicializa a forca como a imagem principal sem nenhum filtro
         const imgElement = document.getElementById('hangman-img');
-        imgElement.src = forcaImages[0];
-        imgElement.style.display = 'block';
+        imgElement.style.opacity = '1';
+        imgElement.style.filter = 'none';
 
         renderWord();
         renderKeyboard();
@@ -774,12 +763,14 @@
             mistakes++;
             playErro();
             
-            // ALTERADO: Atualiza a imagem da forca baseada nos erros
+            // ALTERADO: Aqui está a correção! 
+            // Em vez de tentar carregar imagens que não existem (o que gera o ícone de erro),
+            // nós apenas esmaecemos a imagem principal a cada erro.
             const imgElement = document.getElementById('hangman-img');
-            if (mistakes < forcaImages.length) {
-                imgElement.src = forcaImages[mistakes];
-            }
-
+            const opacidade = 1 - (mistakes * 0.1666); // 1 erro = 83%, 6 erros = 0% (invisível)
+            imgElement.style.opacity = opacidade;
+            
+            // Se atingiu 6 erros, termina o jogo
             if (mistakes === 6) {
                 endGame(false);
             }
