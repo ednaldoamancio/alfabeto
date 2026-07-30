@@ -1,878 +1,517 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🧜‍♀️ Forca Submarina - Reino de Netuno 🧜‍♂️</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Nunito:wght@400;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <style>
-        * {
-            box-sizing: border-box;
-            touch-action: manipulation;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Forca Submarina • Netuno</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            /* Plano de fundo pelo oceano */
-            background-image: url('fundo_forca.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-color: #043b5c;
-            
-            color: #eef5ff;
-            font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            margin: 0;
-            padding: 5px 15px;
-            overflow: hidden;
-            position: relative;
-        }
+    body {
+      background: linear-gradient(145deg, #001f3f 0%, #003b6a 100%);
+      font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 10px;
+    }
 
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(1, 20, 35, 0.3);
-            z-index: -1;
-        }
+    .game-container {
+      width: 100%;
+      max-width: 450px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 48px;
+      padding: 20px 16px 25px;
+      box-shadow: 0 30px 45px rgba(0, 0, 0, 0.5), inset 0 2px 8px rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
 
-        /* Bolhas decorativas */
-        .bubble-marine {
-            position: fixed;
-            pointer-events: none;
-            z-index: 0;
-            background: radial-gradient(circle, rgba(200, 240, 255, 0.4), rgba(100, 200, 255, 0.1));
-            border-radius: 50%;
-            animation: flutuarBolha linear infinite;
-        }
+    /* Área da forca – agora bem alta e visível */
+    .hangman-area {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0, 20, 40, 0.6);
+      border-radius: 70px;
+      padding: 12px 10px;
+      box-shadow: inset 0 0 25px #00a6ff33, 0 15px 20px rgba(0,0,0,0.5);
+      border: 1px solid #4ad9ff;
+    }
 
-        @keyframes flutuarBolha {
-            0% { transform: translateY(100vh) scale(0.3); opacity: 0; }
-            20% { opacity: 0.5; }
-            80% { opacity: 0.4; }
-            100% { transform: translateY(-20vh) scale(1); opacity: 0; }
-        }
+    canvas#hangmanCanvas {
+      width: 100%;
+      height: auto;
+      max-height: 280px;
+      display: block;
+      background: transparent;
+      border-radius: 20px;
+    }
 
-        .concha {
-            position: fixed;
-            font-size: 28px;
-            pointer-events: none;
-            z-index: 0;
-            animation: flutuarConcha 12s infinite ease-in-out;
-            filter: drop-shadow(0 0 5px rgba(255,215,0,0.3));
-        }
+    /* Palavra oculta */
+    .word-display {
+      font-size: 2.4rem;
+      letter-spacing: 12px;
+      font-weight: 700;
+      color: #f7e05e;
+      text-shadow: 0 0 15px #ffbb2e, 0 4px 8px black;
+      background: rgba(0, 30, 60, 0.7);
+      padding: 10px 18px;
+      border-radius: 80px;
+      margin: 5px 0;
+      text-align: center;
+      word-break: break-all;
+      border: 1px solid #ffd966;
+      backdrop-filter: blur(5px);
+      width: fit-content;
+      min-width: 200px;
+    }
 
-        @keyframes flutuarConcha {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.3; }
-            50% { transform: translate(15px, -20px) rotate(8deg); opacity: 0.7; }
-        }
+    /* Categoria e dica */
+    .category-badge {
+      background: #ffd966;
+      color: #002856;
+      font-weight: bold;
+      font-size: 1.1rem;
+      padding: 6px 22px;
+      border-radius: 30px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 10px black;
+      text-transform: uppercase;
+    }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            background: rgba(2, 40, 60, 0.7);
-            backdrop-filter: blur(8px);
-            border-radius: 50px;
-            padding: 8px 15px;
-            margin-bottom: 10px;
-            z-index: 10;
-            border: 1px solid #ffcd7e;
-        }
+    /* Teclado amplo e confortável para touch */
+    .keyboard {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      width: 100%;
+      margin: 5px 0 8px;
+      touch-action: manipulation;
+    }
 
-        h1 {
-            font-family: 'Cinzel Decorative', cursive;
-            font-size: 0.9rem;
-            margin: 0;
-            letter-spacing: 2px;
-            background: linear-gradient(135deg, #ffdd99, #ffbc6e);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
+    .key {
+      background: #023e8a;
+      border: 2px solid #90e0ff;
+      color: white;
+      font-weight: bold;
+      font-size: 1.5rem;
+      padding: 14px 0;
+      border-radius: 18px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #001b3a, 0 10px 15px rgba(0, 0, 0, 0.5);
+      transition: all 0.05s ease;
+      background: linear-gradient(180deg, #0077be 0%, #003d6b 100%);
+      user-select: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-        /* Seletor de modo */
-        .modo-selector {
-            display: flex;
-            gap: 8px;
-            background: rgba(0,0,0,0.4);
-            padding: 4px 10px;
-            border-radius: 40px;
-            backdrop-filter: blur(4px);
-        }
+    .key:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #001b3a, 0 6px 10px black;
+      background: #00a6ff;
+    }
 
-        .modo-btn {
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid #7ec8ff;
-            color: #7ec8ff;
-            padding: 4px 12px;
-            cursor: pointer;
-            font-weight: bold;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            transition: all 0.3s;
-            font-family: 'Nunito', sans-serif;
-        }
+    .key.disabled {
+      opacity: 0.4;
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #001b3a;
+      pointer-events: none;
+      background: #2c3e50;
+      border-color: #5d6d7e;
+    }
 
-        .modo-btn.ativo {
-            background: linear-gradient(135deg, #1e5f8e, #0d3a5c);
-            border-color: #ffcd7e;
-            color: #ffeaac;
-            box-shadow: 0 0 10px rgba(255,205,126,0.4);
-        }
+    /* Botão novo jogo */
+    .new-game-btn {
+      background: #f4a261;
+      border: none;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #00243d;
+      padding: 14px 28px;
+      border-radius: 40px;
+      letter-spacing: 1px;
+      box-shadow: 0 8px 0 #b85e1a, 0 12px 20px black;
+      cursor: pointer;
+      transition: 0.08s linear;
+      background: linear-gradient(180deg, #ffb347 0%, #e76f00 100%);
+      border: 2px solid #ffe5b9;
+      margin-top: 5px;
+      width: fit-content;
+      touch-action: manipulation;
+    }
 
-        .modo-btn:hover {
-            transform: scale(1.05);
-            background: rgba(30, 95, 142, 0.6);
-        }
+    .new-game-btn:active {
+      transform: translateY(5px);
+      box-shadow: 0 3px 0 #b85e1a, 0 8px 12px black;
+    }
 
-        .audio-controls {
-            display: flex;
-            gap: 8px;
-        }
+    .message-area {
+      font-weight: bold;
+      color: #ffd966;
+      background: #001b33cc;
+      padding: 6px 20px;
+      border-radius: 30px;
+      font-size: 1.2rem;
+    }
 
-        .audio-btn, .btn-dourado {
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid #ffcd7e;
-            color: #ffeaac;
-            padding: 6px 12px;
-            cursor: pointer;
-            font-weight: bold;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            transition: all 0.3s;
-            font-family: 'Nunito', sans-serif;
-        }
-
-        .audio-btn:hover, .btn-dourado:hover {
-            transform: scale(1.05);
-            background: rgba(255, 205, 126, 0.3);
-            box-shadow: 0 0 15px rgba(255,205,126,0.5);
-        }
-
-        /* Botão Dourado Cintilante */
-        .btn-dourado {
-            background: linear-gradient(135deg, #f5b042, #ffd700, #f5a623);
-            border: 2px solid #fff2b5;
-            color: #3a2a1a;
-            animation: brilhoDourado 1.5s ease-in-out infinite alternate;
-        }
-
-        @keyframes brilhoDourado {
-            0% {
-                box-shadow: 0 0 5px rgba(255, 215, 0, 0.4);
-                background: linear-gradient(135deg, #f5b042, #ffd700);
-            }
-            100% {
-                box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-                background: linear-gradient(135deg, #ffcc44, #ffea8c);
-            }
-        }
-
-        #fullscreen-btn {
-            border-color: #48cae4;
-            color: #48cae4;
-        }
-
-        #game-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
-            z-index: 5;
-        }
-
-        #top-row {
-            display: flex;
-            flex: 1;
-            align-items: center;
-            justify-content: space-around;
-            gap: 10px;
-            min-height: 0;
-        }
-
-        #hangman-container {
-            flex: 1;
-            height: 80%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: rgba(0, 30, 50, 0.3);
-            border-radius: 30px;
-            padding: 10px;
-            backdrop-filter: blur(4px);
-            overflow: hidden;
-        }
-
-        /* IMAGEM DA FORCA (Será trocada via JavaScript) */
-        #hangman-img {
-            height: 100%;
-            width: auto;
-            max-height: 100%;
-            object-fit: contain;
-            display: block;
-            transition: opacity 0.2s ease;
-        }
-
-        #keyboard-container {
-            flex: 1.5;
-            max-width: 450px;
-        }
-
-        #keyboard {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-        }
-
-        .key {
-            background: rgba(10, 40, 60, 0.9);
-            color: #ffeaac;
-            border: 2px solid #7ec8ff;
-            padding: 10px 0;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 12px;
-            transition: all 0.2s;
-            cursor: pointer;
-            font-family: 'Nunito', sans-serif;
-        }
-
-        .key:active { transform: scale(0.95); background: #1e5f8e; }
-
-        .key:disabled {
-            opacity: 0.3;
-            border-color: #333;
-            color: #666;
-            cursor: default;
-            transform: none;
-        }
-
-        #display-section {
-            padding: 15px 0 25px 0;
-            text-align: center;
-            background: rgba(1, 30, 45, 0.6);
-            backdrop-filter: blur(8px);
-            border-radius: 40px;
-            margin-top: 10px;
-            flex-shrink: 0;
-            border: 1px solid #ffcd7e;
-        }
-
-        #category-info {
-            font-size: 0.9rem;
-            color: #ffeaac;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            font-weight: bold;
-            font-family: 'Dancing Script', cursive;
-        }
-
-        #word-display {
-            font-size: 2rem;
-            letter-spacing: 8px;
-            font-weight: 900;
-            text-transform: uppercase;
-            line-height: 1.2;
-            font-family: 'Cinzel Decorative', monospace;
-            color: #ffdd99;
-            text-shadow: 0 0 10px rgba(255, 200, 100, 0.5);
-        }
-
-        footer {
-            height: 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.7rem;
-            color: #8ab3cf;
-            flex-shrink: 0;
-        }
-
-        #message {
-            position: absolute;
-            top: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-weight: bold;
-            z-index: 20;
-            text-align: center;
-            width: 90%;
-            font-size: 1rem;
-            background: rgba(0,0,0,0.7);
-            padding: 8px 16px;
-            border-radius: 40px;
-            backdrop-filter: blur(8px);
-            font-family: 'Dancing Script', cursive;
-        }
-
-        #reset-btn {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 15px 30px;
-            font-size: 1.3rem;
-            background: linear-gradient(135deg, #ffd700, #ffaa33);
-            color: #2c1a2e;
-            font-weight: bold;
-            z-index: 100;
-            display: none;
-            border-radius: 60px;
-            border: 3px solid #fff2b5;
-            cursor: pointer;
-            font-family: 'Nunito', sans-serif;
-            animation: pulse-glow 1.5s infinite;
-            box-shadow: 0 0 20px rgba(255,215,0,0.5);
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 10px rgba(255,215,0,0.5); transform: translate(-50%, -50%) scale(1); }
-            50% { box-shadow: 0 0 30px rgba(255,215,0,0.9); transform: translate(-50%, -50%) scale(1.05); }
-        }
-
-        .tridente-decor {
-            position: fixed;
-            bottom: 10px;
-            left: 20px;
-            font-size: 40px;
-            opacity: 0.2;
-            z-index: 0;
-            pointer-events: none;
-            filter: drop-shadow(0 0 5px cyan);
-        }
-
-        @media (max-width: 768px) {
-            header { flex-direction: column; border-radius: 20px; }
-            .modo-selector { order: 2; }
-            .audio-controls { order: 1; }
-            h1 { order: 0; }
-            #top-row { flex-direction: column; padding-top: 10px; }
-            #hangman-container { height: 25%; min-height: 110px; }
-            #keyboard { grid-template-columns: repeat(9, 1fr); gap: 4px; }
-            .key { padding: 8px 0; font-size: 0.8rem; }
-            #word-display { font-size: 1.3rem; letter-spacing: 4px; }
-            #display-section { padding-bottom: 15px; }
-            h1 { font-size: 0.8rem; }
-            .audio-btn, .btn-douardo, .modo-btn { padding: 4px 8px; font-size: 0.6rem; }
-            #message { top: 95px; font-size: 0.8rem; }
-        }
-    </style>
+    /* Ajuste para telas menores */
+    @media (max-width: 400px) {
+      .key {
+        font-size: 1.3rem;
+        padding: 12px 0;
+      }
+      .word-display {
+        font-size: 2rem;
+        letter-spacing: 8px;
+      }
+    }
+  </style>
 </head>
 <body>
+<div class="game-container">
+  <!-- Área da forca ampliada verticalmente -->
+  <div class="hangman-area">
+    <canvas id="hangmanCanvas" width="300" height="280" aria-label="Desenho da forca"></canvas>
+  </div>
 
-<!-- Decorações marinhas -->
-<div class="tridente-decor">🔱🐚</div>
-<div id="particulas-container"></div>
+  <!-- Categoria atual -->
+  <div class="category-badge" id="categoryDisplay">PAÍSES</div>
 
-<header>
-    <h1>🧜‍♀️ FORCA SUBMARINA - REINO DE NETUNO 🧜‍♂️</h1>
-    <div class="modo-selector">
-        <button class="modo-btn" data-modo="maritimo" onclick="selecionarModo('maritimo')">🌊 Mundo Marítimo</button>
-        <button class="modo-btn" data-modo="geral" onclick="selecionarModo('geral')">🌍 Aprendizado Geral</button>
-        <button class="modo-btn" data-modo="misterio" onclick="selecionarModo('misterio')">🎲 Mistério</button>
-    </div>
-    <div class="audio-controls">
-        <button id="btn-voltar-dourado" class="btn-dourado" onclick="voltarParaPaginaAnterior()">⬅️⭐</button>
-        <button id="fullscreen-btn" class="audio-btn" onclick="toggleFullscreen()">⛶ TELA CHEIA</button>
-        <button id="bg-music-btn" class="audio-btn" onclick="toggleMusic()">🔇 MÚSICA</button>
-    </div>
-</header>
+  <!-- Palavra mascarada -->
+  <div class="word-display" id="wordDisplay"></div>
 
-<div id="message"></div>
+  <!-- Status / mensagens -->
+  <div class="message-area" id="messageBox">Clique nas letras</div>
 
-<div id="game-area">
-    <div id="top-row">
-        <div id="hangman-container">
-            <!-- AGORA: Apenas a imagem, que será trocada dinamicamente -->
-            <img id="hangman-img" src="forca.png" alt="Forca Submarina">
-        </div>
+  <!-- Teclado virtual grande -->
+  <div class="keyboard" id="keyboardContainer"></div>
 
-        <div id="keyboard-container">
-            <div id="keyboard"></div>
-        </div>
-    </div>
-
-    <div id="display-section">
-        <div id="category-info">🌊 CATEGORIA MARINHA 🌊</div>
-        <div id="word-display">_ _ _ _ _</div>
-    </div>
+  <!-- Botão de novo jogo (substitui modos) -->
+  <button class="new-game-btn" id="newGameButton">🌊 NOVO JOGO</button>
 </div>
 
-<footer>
-    🧜‍♀️ Ajude a Sereia! Escolha um modo acima e clique nas letras para formar as palavras 🧜‍♂️
-</footer>
-
-<button id="reset-btn" onclick="nextRound()">✨ PRÓXIMA PALAVRA ✨</button>
-
 <script>
-    // ==================== GERADOR DE SONS VIA WEB AUDIO API ====================
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    let audioCtx = null;
-
-    function ensureAudioContext() {
-        if (!audioCtx) {
-            audioCtx = new AudioContext();
-        }
-        return audioCtx;
-    }
-
-    // Som de acerto (splash suave)
-    function playAcerto() {
-        try {
-            const ctx = ensureAudioContext();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(1200, ctx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.1);
-            gain.gain.setValueAtTime(0.15, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
-            osc.start(ctx.currentTime);
-            osc.stop(ctx.currentTime + 0.15);
-        } catch(e) { console.log('audio error', e); }
-    }
-
-    // Som de erro (bolha estourando)
-    function playErro() {
-        try {
-            const ctx = ensureAudioContext();
-            const bufferSize = ctx.sampleRate * 0.08;
-            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-            const data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.3));
-            }
-            const noise = ctx.createBufferSource();
-            noise.buffer = buffer;
-            const gain = ctx.createGain();
-            gain.gain.setValueAtTime(0.12, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
-            noise.connect(gain);
-            gain.connect(ctx.destination);
-            noise.start(ctx.currentTime);
-            noise.stop(ctx.currentTime + 0.08);
-        } catch(e) { console.log('audio error', e); }
-    }
-
-    // Som de vitória (trinado alegre)
-    function playVitoria() {
-        try {
-            const ctx = ensureAudioContext();
-            const notas = [523.25, 659.25, 783.99, 1046.50];
-            notas.forEach((freq, i) => {
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.type = 'sine';
-                osc.frequency.value = freq;
-                const start = ctx.currentTime + i * 0.08;
-                gain.gain.setValueAtTime(0.12, start);
-                gain.gain.exponentialRampToValueAtTime(0.01, start + 0.15);
-                osc.start(start);
-                osc.stop(start + 0.15);
-            });
-        } catch(e) { console.log('audio error', e); }
-    }
-
-    // Som de derrota (com suplica.mp3)
-    function playSuplica() {
-        try {
-            const ctx = ensureAudioContext();
-            // Cria um elemento de áudio para tocar o arquivo MP3
-            const audioElement = new Audio('suplica.mp3');
-            audioElement.volume = 0.7; // Ajuste o volume se necessário
-            
-            // Conecta o elemento ao contexto do navegador para funcionar junto com o resto
-            const track = ctx.createMediaElementSource(audioElement);
-            track.connect(ctx.destination);
-            
-            audioElement.play().catch(e => console.log("Erro ao tocar áudio de súplicas:", e));
-        } catch(e) { console.log('audio error', e); }
-    }
-
-    // Música de fundo
-    let bgInterval = null;
-    let musicPlaying = false;
-
-    function playBackgroundMusic() {
-        if (bgInterval) return;
-        try {
-            const ctx = ensureAudioContext();
-            let noteIndex = 0;
-            const notas = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25];
-            bgInterval = setInterval(() => {
-                if (!musicPlaying) return;
-                try {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.type = 'sine';
-                    osc.frequency.value = notas[noteIndex % notas.length];
-                    gain.gain.setValueAtTime(0.04, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-                    osc.start(ctx.currentTime);
-                    osc.stop(ctx.currentTime + 0.4);
-                    noteIndex++;
-                } catch(e) { /* ignora erros de áudio */ }
-            }, 500);
-        } catch(e) { console.log('bg music error', e); }
-    }
-
-    function stopBackgroundMusic() {
-        if (bgInterval) {
-            clearInterval(bgInterval);
-            bgInterval = null;
-        }
-    }
-
-    // ==================== BANCO DE PALAVRAS ====================
-
-    const databaseMaritimo = {
-        "🧜‍♀️ CRIATURAS MARINHAS": ["SEREIA", "TRITÃO", "NETUNO", "POLVO", "TUBARÃO", "BALEIA", "GOLFINHO", "TARTARUGA", "CAVALO MARINHO", "ESTRELA DO MAR", "AGUA VIVA", "LULA", "CARANGUEJO", "LAGOSTA", "SALMAO", "ATUM", "BACALHAU", "PEPINO DO MAR", "OURICO DO MAR"],
-        "🏰 REINO DE ATLÂNTIDA": ["ATLANTIDA", "TRIDENTE", "CORAL", "CONCHA", "PEROLA", "CASTELO", "PALACIO", "JARDIM MARINHO", "RECIFE", "ALGA", "TESOURO", "BAU", "COROA", "POSEIDON", "OCEANO", "MARE", "FUNDO DO MAR", "ABISMO"],
-        "👑 PERSONAGENS DA SEREIA": ["ARIEL", "PRINCIPE ERIC", "URSULA", "REI TRITAO", "CARANGUEJO SEBASTIAO", "PEIXE LINGUADO", "BRUXA DO MAR", "POLVO MALVADO", "PRINCESA SEREIA"],
-        "🌊 OCEANO E MAR": ["ONDA", "MARE ALTA", "TEMPORAL", "PRAIA", "AREIA", "COQUEIRO", "BARCO", "VELA", "ANCORA", "REMOS", "NAUFRAGIO", "ILHA", "ARQUIPELAGO", "LAGUNA", "CORRENTE"],
-        "💎 TESOUROS DO MAR": ["PEROLA", "CRISTAL", "RUBI", "ESMERALDA", "DIAMANTE", "OURO", "PRATA", "BRONZE", "CORAL", "MAPAS", "BUSSOLA", "CONCHA", "AMONITE", "MARFIM"]
+  (function() {
+    // ---------- BANCO DE PALAVRAS (sem mundo marítimo) ----------
+    const WORD_BANK = {
+      países: [
+        "BRASIL", "CHILE", "FRANCA", "JAPAO", "CANADA", "MEXICO", "ALEMANHA", "ITALIA", 
+        "ESPANHA", "ARGENTINA", "PERU", "CHINA", "INDIA", "EGITO", "SUECIA", "NORUEGA",
+        "PORTUGAL", "RUSSIA", "AUSTRALIA", "COREIA"
+      ],
+      frutas: [
+        "ABACAXI", "BANANA", "MORANGO", "LARANJA", "UVA", "MELANCIA", "MANGA", "PERA",
+        "KIWI", "CEREJA", "ABACATE", "GOIABA", "CAQUI", "FIGO", "LIMÃO", "AMEIXA",
+        "CARAMBOLA", "JABUTICABA", "FRAMBOESA", "CUPUACU"
+      ],
+      profissões: [
+        "MEDICO", "ENGENHEIRO", "PROFESSOR", "BOMBEIRO", "POLICIAL", "ARQUITETO", "JORNALISTA",
+        "PILOTO", "MOTORISTA", "PINTOR", "COZINHEIRO", "ADVOGADO", "DENTISTA", "VETERINARIO",
+        "FARMACEUTICO", "ELETRICISTA", "MECANICO", "PSICOLOGO", "BIOLOGO", "ATOR"
+      ]
     };
 
-    const databaseGeral = {
-        "🐶 ANIMAIS": ["CACHORRO", "GATO", "ELEFANTE", "GIRAFA", "LEAO", "TIGRE", "ZEBRA", "MACACO", "COELHO", "RATO", "CAVALO", "VACA", "PORCO", "GALINHA", "PATO", "OVELHA", "BODE", "URSO", "LOBO", "RAPOSA", "ESQUILO", "CANGURU", "PANDA", "PINGUIM", "TUBARAO", "BALEIA", "JACARE", "COBRA", "SAPO", "ABELHA", "FORMIGA", "BORBOLETA", "MORCEGO", "CORUJA", "AGUIA", "PAPAGAIO", "HIPOPOTAMO", "RINOCERONTE", "COALA"],
-        "🏠 CASA": ["CADEIRA", "MESA", "SOFA", "CAMA", "ARMARIO", "GELADEIRA", "FOGAO", "TELEVISAO", "JANELA", "PORTA", "TAPETE", "CORTINA", "LAMPADA", "ESPELHO", "TRAVESSEIRO", "LENCOL", "TOALHA", "CHUVEIRO", "VASO", "PIA", "COPO", "PRATO", "TALHER", "PANELA", "VASSOURA", "BALDE", "RELÓGIO", "QUADRO", "ESTANTE", "MICROONDAS", "GARFO", "FACA", "COLHER", "XICARA", "COBERTOR", "CABIDE", "PENTE"],
-        "🌎 PAÍSES": ["BRASIL", "ARGENTINA", "CHILE", "MEXICO", "CANADA", "ESTADOS UNIDOS", "PORTUGAL", "ESPANHA", "FRANCA", "ITALIA", "ALEMANHA", "INGLATERRA", "JAPAO", "CHINA", "EGITO", "AUSTRALIA", "RUSSIA", "INDIA", "ANGOLA", "GRECIA", "URUGUAI", "PARAGUAI", "PERU", "COLOMBIA", "NORUEGA", "SUECIA", "MARROCOS"],
-        "🍎 ALIMENTOS": ["BANANA", "MACA", "LARANJA", "UVA", "MORANGO", "MELANCIA", "ABACAXI", "PERA", "MAMAO", "LIMAO", "BATATA", "CENOURA", "TOMATE", "ALFACE", "FEIJAO", "ARROZ", "MACARRAO", "CARNE", "OVO", "LEITE", "PAO", "QUEIJO", "BOLO", "BISCOITO", "SUCO", "PIPOCA", "GELATINA", "CHOCOLATE", "PIZZA", "HAMBURGUER"],
-        "👨‍⚕️ PROFISSÕES": ["PROFESSOR", "MEDICO", "DENTISTA", "POLICIAL", "BOMBEIRO", "PADEIRO", "MOTORISTA", "COZINHEIRO", "PINTOR", "PEDREIRO", "CARPINTEIRO", "MECANICO", "VENDEDOR", "ARTISTA", "CANTOR", "DANCARINO", "ATLETA", "JORNALISTA", "CIENTISTA", "ASTRONAUTA", "VETERINARIO", "ADVOGADO", "PILOTO", "CARTEIRO", "JARDINEIRO"],
-        "🧠 CORPO HUMANO": ["CABECA", "OMBRO", "JOELHO", "PE", "OLHO", "OUVIDO", "BOCA", "NARIZ", "MAO", "DEDO", "BRACO", "PERNA", "BARRIGA", "COSTA", "PESCOCO", "DENTE", "LINGUA", "UNHA", "CABELO", "CORACAO", "PULMAO", "ESTOMAGO", "CEREBRO", "SANGUE", "OSSO"]
-    };
-
-    const databaseMisterio = {
-        ...databaseMaritimo,
-        ...databaseGeral
-    };
-
-    let currentDatabase = databaseMaritimo;
-    let currentModo = "maritimo";
+    const CATEGORIES = ["países", "frutas", "profissões"];
     
-    let wordPool = [];
-    let currentWordRaw = "";
-    let currentWordNormalized = "";
-    let currentCategory = "";
-    let guessedLetters = [];
-    let mistakes = 0;
+    // Estado do jogo
+    let currentCategory = "países";
+    let secretWord = "";
+    let guessedLetters = new Set();
+    let wrongGuesses = 0;
+    const maxWrong = 6;
+    let gameOver = false;
 
-    // Sequência de imagens da forca: 0 = base, 6 = enforcado completo
-    // O jogo permite 6 erros no total.
-    const forcaImages = [
-        'forca.png',     // 0 erros
-        'forca_1.png',   // 1 erro (cabeça)
-        'forca_2.png',   // 2 erros (corpo)
-        'forca_3.png',   // 3 erros (braço 1)
-        'forca_4.png',   // 4 erros (braço 2)
-        'forca_5.png',   // 5 erros (perna 1)
-        'forca_6.png'    // 6 erros (perna 2 + língua de fora - Derrota!)
-    ];
+    // Elementos DOM
+    const canvas = document.getElementById("hangmanCanvas");
+    const ctx = canvas.getContext("2d");
+    const categoryDisplay = document.getElementById("categoryDisplay");
+    const wordDisplay = document.getElementById("wordDisplay");
+    const messageBox = document.getElementById("messageBox");
+    const keyboardDiv = document.getElementById("keyboardContainer");
+    const newGameBtn = document.getElementById("newGameButton");
 
-    function gerarPilhaDePalavras() {
-        wordPool = [];
-        for (const category in currentDatabase) {
-            currentDatabase[category].forEach(word => {
-                wordPool.push({ category: category, word: word });
-            });
-        }
-        for (let i = wordPool.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [wordPool[i], wordPool[j]] = [wordPool[j], wordPool[i]];
-        }
+    // ---------- DESENHO DA FORCA (grande e vertical) ----------
+    function drawHangman(wrongCount) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Base e postes (estilo submarino/tritão)
+      ctx.strokeStyle = "#b0e0e6";
+      ctx.lineWidth = 5;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.shadowColor = "#00ffff";
+      ctx.shadowBlur = 8;
+      
+      // Base
+      ctx.beginPath();
+      ctx.moveTo(40, 250);
+      ctx.lineTo(180, 250);
+      ctx.stroke();
+      
+      // Poste vertical
+      ctx.beginPath();
+      ctx.moveTo(90, 250);
+      ctx.lineTo(90, 40);
+      ctx.stroke();
+      
+      // Topo horizontal
+      ctx.beginPath();
+      ctx.moveTo(86, 40);
+      ctx.lineTo(200, 40);
+      ctx.stroke();
+      
+      // Corda
+      ctx.beginPath();
+      ctx.moveTo(200, 40);
+      ctx.lineTo(200, 80);
+      ctx.stroke();
+      
+      // Sombra menor para o corpo
+      ctx.shadowBlur = 6;
+      ctx.strokeStyle = "#f0e68c";
+      ctx.fillStyle = "#ffe484";
+      
+      // Desenho progressivo do boneco
+      if (wrongCount >= 1) {
+        // Cabeça
+        ctx.beginPath();
+        ctx.arc(200, 100, 24, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fillStyle = "#ffdb8e";
+        ctx.fill();
+        ctx.stroke();
+      }
+      if (wrongCount >= 2) {
+        // Tronco
+        ctx.beginPath();
+        ctx.moveTo(200, 124);
+        ctx.lineTo(200, 185);
+        ctx.stroke();
+      }
+      if (wrongCount >= 3) {
+        // Braço esquerdo
+        ctx.beginPath();
+        ctx.moveTo(200, 140);
+        ctx.lineTo(165, 165);
+        ctx.stroke();
+      }
+      if (wrongCount >= 4) {
+        // Braço direito
+        ctx.beginPath();
+        ctx.moveTo(200, 140);
+        ctx.lineTo(235, 165);
+        ctx.stroke();
+      }
+      if (wrongCount >= 5) {
+        // Perna esquerda
+        ctx.beginPath();
+        ctx.moveTo(200, 185);
+        ctx.lineTo(170, 225);
+        ctx.stroke();
+      }
+      if (wrongCount >= 6) {
+        // Perna direita
+        ctx.beginPath();
+        ctx.moveTo(200, 185);
+        ctx.lineTo(230, 225);
+        ctx.stroke();
+      }
+      
+      // Detalhe extra: tridente ou bolhas quando enforcado (opcional)
+      if (wrongCount >= 6) {
+        ctx.fillStyle = "#ff5555";
+        ctx.beginPath();
+        ctx.arc(190, 85, 5, 0, Math.PI*2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(210, 85, 5, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.arc(188, 83, 2, 0, Math.PI*2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(208, 83, 2, 0, Math.PI*2);
+        ctx.fill();
+      }
+      
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = "transparent";
     }
 
-    function selecionarModo(modo) {
-        currentModo = modo;
-        document.querySelectorAll('.modo-btn').forEach(btn => {
-            btn.classList.remove('ativo');
-            if (btn.getAttribute('data-modo') === modo) {
-                btn.classList.add('ativo');
-            }
+    // ---------- LÓGICA DO JOGO ----------
+    function getMaskedWord() {
+      return secretWord
+        .split("")
+        .map(letter => (guessedLetters.has(letter) ? letter : "_"))
+        .join(" ");
+    }
+
+    function updateUI() {
+      wordDisplay.textContent = getMaskedWord();
+      drawHangman(wrongGuesses);
+      
+      // Atualizar botões do teclado (desabilitar usadas)
+      document.querySelectorAll(".key").forEach(btn => {
+        const letter = btn.getAttribute("data-letter");
+        if (guessedLetters.has(letter)) {
+          btn.classList.add("disabled");
+        } else {
+          btn.classList.remove("disabled");
+        }
+      });
+    }
+
+    function checkGameStatus() {
+      const masked = getMaskedWord().replace(/\s/g, "");
+      if (masked === secretWord) {
+        gameOver = true;
+        messageBox.textContent = "🎉 Você venceu!";
+        disableAllKeys();
+        return true;
+      }
+      if (wrongGuesses >= maxWrong) {
+        gameOver = true;
+        messageBox.textContent = `💀 Perdeu! Palavra: ${secretWord}`;
+        disableAllKeys();
+        // Revelar palavra inteira
+        wordDisplay.textContent = secretWord.split("").join(" ");
+        return true;
+      }
+      messageBox.textContent = "Escolha uma letra...";
+      return false;
+    }
+
+    function disableAllKeys() {
+      document.querySelectorAll(".key").forEach(btn => btn.classList.add("disabled"));
+    }
+
+    function handleLetterGuess(letter) {
+      if (gameOver) {
+        messageBox.textContent = "Jogo encerrado. Novo jogo?";
+        return;
+      }
+      if (guessedLetters.has(letter)) return;
+      
+      guessedLetters.add(letter);
+      
+      if (!secretWord.includes(letter)) {
+        wrongGuesses++;
+      }
+      
+      updateUI();
+      checkGameStatus();
+    }
+
+    // Escolhe palavra aleatória da categoria atual
+    function pickRandomWord(category) {
+      const list = WORD_BANK[category];
+      if (!list || list.length === 0) return "BRASIL";
+      return list[Math.floor(Math.random() * list.length)].toUpperCase();
+    }
+
+    function resetGame() {
+      // Escolher categoria aleatória entre as três disponíveis
+      const randomIndex = Math.floor(Math.random() * CATEGORIES.length);
+      currentCategory = CATEGORIES[randomIndex];
+      secretWord = pickRandomWord(currentCategory);
+      guessedLetters.clear();
+      wrongGuesses = 0;
+      gameOver = false;
+      
+      // Atualizar nome da categoria na interface
+      const categoryNames = {
+        países: "PAÍSES",
+        frutas: "FRUTAS",
+        profissões: "PROFISSÕES"
+      };
+      categoryDisplay.textContent = categoryNames[currentCategory] || currentCategory.toUpperCase();
+      
+      messageBox.textContent = "Nova partida!";
+      updateUI();
+      buildKeyboard(); // reconstroi teclado fresco
+    }
+
+    // ---------- TECLADO VIRTUAL ----------
+    function buildKeyboard() {
+      keyboardDiv.innerHTML = "";
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+      letters.forEach(letter => {
+        const btn = document.createElement("div");
+        btn.className = "key";
+        btn.setAttribute("data-letter", letter);
+        btn.textContent = letter;
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          handleLetterGuess(letter);
         });
-
-        if (modo === "maritimo") {
-            currentDatabase = databaseMaritimo;
-            mostrarMensagemTemporaria("🌊 MODO MUNDO MARÍTIMO! Explore o fundo do mar! 🌊", "#7ec8ff");
-        } else if (modo === "geral") {
-            currentDatabase = databaseGeral;
-            mostrarMensagemTemporaria("🌍 MODO APRENDIZADO GERAL! Aprenda palavras do dia a dia! 🌍", "#ffeaac");
-        } else if (modo === "misterio") {
-            currentDatabase = databaseMisterio;
-            mostrarMensagemTemporaria("🎲 MODO MISTÉRIO! Todos os mundos se misturam! 🎲", "#ffaa66");
-        }
-
-        gerarPilhaDePalavras();
-        initGame();
-    }
-
-    function mostrarMensagemTemporaria(msg, cor) {
-        const msgDiv = document.getElementById('message');
-        msgDiv.innerHTML = msg;
-        msgDiv.style.color = cor;
-        setTimeout(() => {
-            if (msgDiv.innerHTML === msg) {
-                msgDiv.innerHTML = "🐚 Escolha uma letra para ajudar a Sereia! 🐚";
-                msgDiv.style.color = "#b9e6ff";
-            }
-        }, 2500);
-    }
-
-    function voltarParaPaginaAnterior() {
-        if (typeof confetti !== 'undefined') {
-            confetti({
-                particleCount: 60,
-                spread: 60,
-                origin: { y: 0.3 },
-                colors: ['#ffd700', '#48cae4', '#ffaa33'],
-                startVelocity: 10
-            });
-        }
-        window.location.href = 'https://ilha-das-vogais.vercel.app/';
-    }
-
-    function toggleFullscreen() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(err => {});
-            document.getElementById('fullscreen-btn').innerHTML = "✖ SAIR TELA";
-        } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-                document.getElementById('fullscreen-btn').innerHTML = "⛶ TELA CHEIA";
-            }
-        }
-    }
-
-    function normalize(str) {
-        return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
-    }
-
-    function initGame() {
-        if (wordPool.length === 0) {
-            gerarPilhaDePalavras();
-            setTimeout(() => {
-               mostrarMensagemTemporaria("🔄 Todas as palavras foram usadas! Reiniciando a lista...", "#ffdd99");
-            }, 2600); 
-        }
-
-        const palavraSorteada = wordPool.pop();
-        currentCategory = palavraSorteada.category;
-        currentWordRaw = palavraSorteada.word.toUpperCase();
-
-        currentWordNormalized = normalize(currentWordRaw);
-        guessedLetters = [];
-        mistakes = 0;
-
-        let icone = "";
-        if (currentModo === "maritimo") icone = "🌊";
-        else if (currentModo === "geral") icone = "🌍";
-        else icone = "🎲";
-
-        document.getElementById('category-info').innerHTML = icone + " " + currentCategory + " " + icone;
-        document.getElementById('reset-btn').style.display = "none";
-        
-        // Reinicia a imagem da forca para o estado inicial (0 erros)
-        const imgElement = document.getElementById('hangman-img');
-        imgElement.src = forcaImages[0];
-
-        renderWord();
-        renderKeyboard();
-
-        let msgInicial = "";
-        if (currentModo === "maritimo") msgInicial = "🐚 Mergulhe no fundo do mar e adivinhe a palavra! 🐚";
-        else if (currentModo === "geral") msgInicial = "📚 Aprenda novas palavras do seu dia a dia! 📚";
-        else msgInicial = "🔮 O mistério está no ar! Qual será a palavra? 🔮";
-
-        document.getElementById('message').innerHTML = msgInicial;
-        document.getElementById('message').style.color = "#b9e6ff";
-    }
-
-    function renderWord() {
-        const container = document.getElementById('word-display');
-        let displayStr = "";
-        let winCounter = 0;
-        for (let i = 0; i < currentWordRaw.length; i++) {
-            const charRaw = currentWordRaw[i];
-            const charNorm = currentWordNormalized[i];
-            if (charRaw === " " || charRaw === "-") {
-                displayStr += charRaw === " " ? "  " : "- ";
-            } else if (guessedLetters.includes(charNorm)) {
-                displayStr += charRaw + " ";
-            } else {
-                displayStr += "_ ";
-                winCounter++;
-            }
-        }
-        container.innerText = displayStr.trimEnd();
-        if (winCounter === 0 && currentWordRaw !== "") endGame(true);
-    }
-
-    function renderKeyboard() {
-        const kb = document.getElementById('keyboard');
-        kb.innerHTML = "";
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').forEach(l => {
-            const b = document.createElement('button');
-            b.innerText = l;
-            b.className = 'key';
-            b.id = 'k-' + l;
-            b.onclick = () => handleGuess(l);
-            kb.appendChild(b);
+        // Para touch, evitar zoom duplo etc
+        btn.addEventListener("touchend", (e) => {
+          e.preventDefault();
+          handleLetterGuess(letter);
         });
+        keyboardDiv.appendChild(btn);
+      });
+      
+      // Sincronizar estado disabled caso já existam letras usadas (reset)
+      updateUI();
     }
 
-    function handleGuess(l) {
-        if (guessedLetters.includes(l) || mistakes >= 6) return;
-        const keyBtn = document.getElementById('k-' + l);
-        if (keyBtn) keyBtn.disabled = true;
+    // Evento novo jogo
+    newGameBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      resetGame();
+    });
+    newGameBtn.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      resetGame();
+    });
 
-        if (currentWordNormalized.includes(l)) {
-            guessedLetters.push(l);
-            playAcerto();
-            renderWord();
-        } else {
-            mistakes++;
-            playErro();
-            
-            // ALTERADO: Troca a imagem da forca baseada na contagem de erros
-            const imgElement = document.getElementById('hangman-img');
-            imgElement.src = forcaImages[mistakes];
-
-            // Se atingir 6 erros, toca o áudio cômico e termina o jogo
-            if (mistakes === 6) {
-                playSuplica();
-                endGame(false);
-            }
-        }
+    // Inicialização
+    function initialGame() {
+      // Define categoria inicial aleatória
+      const startCat = CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
+      currentCategory = startCat;
+      secretWord = pickRandomWord(currentCategory);
+      guessedLetters.clear();
+      wrongGuesses = 0;
+      gameOver = false;
+      
+      const categoryNames = {
+        países: "PAÍSES",
+        frutas: "FRUTAS",
+        profissões: "PROFISSÕES"
+      };
+      categoryDisplay.textContent = categoryNames[currentCategory] || currentCategory.toUpperCase();
+      messageBox.textContent = "Clique nas letras!";
+      drawHangman(0);
+      buildKeyboard();
+      wordDisplay.textContent = getMaskedWord();
     }
 
-    function endGame(win) {
-        const msg = document.getElementById('message');
-        if (win) {
-            playVitoria();
-            let msgVitoria = "";
-            if (currentModo === "maritimo") msgVitoria = "🧜‍♀️ PARABÉNS! A SEREIA ESCAPOU! 🧜‍♀️✨";
-            else if (currentModo === "geral") msgVitoria = "🎉 PARABÉNS! VOCÊ APRENDEU MAIS UMA PALAVRA! 🎉";
-            else msgVitoria = "🔮 PARABÉNS! O MISTÉRIO FOI REVELADO! 🔮✨";
-            msg.innerHTML = msgVitoria;
-            msg.style.color = "#44ffaa";
-            if (typeof confetti !== 'undefined') {
-                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ffd700', '#48cae4', '#ffaa33'] });
-            }
-        } else {
-            // PlaySuplica já foi chamado no 6º erro, mas deixamos aqui para garantir
-            playSuplica(); 
-            let msgDerrota = "";
-            if (currentModo === "maritimo") msgDerrota = "💔 OH NÃO! A SEREIA FOI CAPTURADA! A PALAVRA ERA: " + currentWordRaw + " 💔";
-            else if (currentModo === "geral") msgDerrota = "😢 QUE PENA! VOCÊ PODE TENTAR DE NOVO! A PALAVRA ERA: " + currentWordRaw;
-            else msgDerrota = "😱 O MISTÉRIO PERMANECE! A PALAVRA ERA: " + currentWordRaw;
-            msg.innerHTML = msgDerrota;
-            msg.style.color = "#ff8888";
-            const display = document.getElementById('word-display');
-            display.innerText = currentWordRaw.split('').join(' ');
-        }
-        document.getElementById('reset-btn').style.display = "block";
-    }
+    // Ajustar canvas no redimensionamento (não altera tamanho interno)
+    window.addEventListener('resize', () => {
+      drawHangman(wrongGuesses);
+    });
 
-    function nextRound() {
-        initGame();
-    }
-
-    function toggleMusic() {
-        const btn = document.getElementById('bg-music-btn');
-        if (!musicPlaying) {
-            musicPlaying = true;
-            btn.innerHTML = "🔊 MÚSICA";
-            btn.style.background = "rgba(100,200,255,0.4)";
-            playBackgroundMusic();
-        } else {
-            musicPlaying = false;
-            btn.innerHTML = "🔇 MÚSICA";
-            btn.style.background = "rgba(0,0,0,0.6)";
-            stopBackgroundMusic();
-        }
-    }
-
-    function criarBolhasMarinhas() {
-        for (let i = 0; i < 20; i++) {
-            setTimeout(() => {
-                const bolha = document.createElement('div');
-                bolha.className = 'bubble-marine';
-                const tamanho = Math.random() * 30 + 6;
-                bolha.style.width = tamanho + 'px';
-                bolha.style.height = tamanho + 'px';
-                bolha.style.left = Math.random() * 100 + '%';
-                bolha.style.animationDuration = Math.random() * 6 + 3 + 's';
-                bolha.style.animationDelay = Math.random() * 5 + 's';
-                bolha.style.opacity = Math.random() * 0.4 + 0.2;
-                document.body.appendChild(bolha);
-                setTimeout(() => bolha.remove(), 10000);
-            }, i * 150);
-        }
-        setInterval(() => {
-            const bolha = document.createElement('div');
-            bolha.className = 'bubble-marine';
-            const tamanho = Math.random() * 25 + 5;
-            bolha.style.width = tamanho + 'px';
-            bolha.style.height = tamanho + 'px';
-            bolha.style.left = Math.random() * 100 + '%';
-            bolha.style.animationDuration = Math.random() * 5 + 3 + 's';
-            document.body.appendChild(bolha);
-            setTimeout(() => bolha.remove(), 9000);
-        }, 2000);
-    }
-
-    function criarConchasFlutuantes() {
-        const conchasSimbolos = ['🐚', '⭐', '🌟', '🐟', '🧜‍♀️', '🔱', '🌊', '🐠', '🐙'];
-        for (let i = 0; i < 10; i++) {
-            const concha = document.createElement('div');
-            concha.className = 'concha';
-            concha.innerText = conchasSimbolos[Math.floor(Math.random() * conchasSimbolos.length)];
-            concha.style.left = Math.random() * 100 + '%';
-            concha.style.top = Math.random() * 100 + '%';
-            concha.style.fontSize = Math.random() * 20 + 16 + 'px';
-            concha.style.animationDuration = Math.random() * 12 + 8 + 's';
-            concha.style.animationDelay = Math.random() * 8 + 's';
-            document.body.appendChild(concha);
-        }
-    }
-
-    window.onload = () => {
-        criarBolhasMarinhas();
-        criarConchasFlutuantes();
-
-        document.querySelector('.modo-btn[data-modo="maritimo"]').classList.add('ativo');
-
-        gerarPilhaDePalavras();
-        initGame();
-
-        document.documentElement.requestFullscreen().catch(e => console.log("fullscreen não permitido automaticamente"));
-
-        setTimeout(() => {
-            const msg = document.getElementById('message');
-            msg.innerHTML = "🧜‍♀️ Bem-vinda(o) ao Reino de Netuno! Escolha um modo de jogo acima! 🧜‍♂️";
-            msg.style.color = "#ffeaac";
-            setTimeout(() => {
-                if (msg.innerHTML.includes("Bem-vinda")) msg.innerHTML = "🌊 Clique no botão do modo que quiser e comece a brincadeira! 🌊";
-            }, 3500);
-        }, 500);
-    };
+    // Iniciar tudo
+    initialGame();
+  })();
 </script>
 </body>
 </html>
